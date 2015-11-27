@@ -4,6 +4,8 @@ package
 	import flash.display.BitmapData;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
+	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DTextureFormat;
@@ -20,9 +22,12 @@ package
 	 * ...
 	 * @author lizhi
 	 */
-	public class TestStage3D
+	public class TestStage3D extends Sprite
 	{
-		
+		private var ctx:Context3D;
+		private var ibuffer:IndexBuffer3D;
+		private var matr:Matrix3D = new Matrix3D();
+		private var bmd:BitmapData;
 		public function TestStage3D() 
 		{
 			var loader:Loader = new Loader();
@@ -30,15 +35,32 @@ package
 			loader.load(new URLRequest("../../wood.jpg"));
 		}
 		
+		private function enterFrame(e:Event):void 
+		{
+			//draw
+			matr.appendRotation(1, Vector3D.Z_AXIS);
+			ctx.clear();
+			ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, matr);
+			ctx.drawTriangles(ibuffer);
+			ctx.present();
+		}
+		
 		private function loader_complete(e:Event):void 
 		{
+			var target:LoaderInfo = e.currentTarget as LoaderInfo;
+			bmd = (target.content as Bitmap).bitmapData;
 			//init gl
-			var ctx:Context3D = new Context3D;
+			stage.stage3Ds[0].addEventListener(Event.CONTEXT3D_CREATE, context3dCreate);
+			stage.stage3Ds[0].requestContext3D();
+			
+		}
+		
+		private function context3dCreate(e:Event):void 
+		{
+			ctx = stage.stage3Ds[0].context3D;
 			ctx.configureBackBuffer(400, 400, 2);
 			
 			//init texture
-			var target:LoaderInfo = e.currentTarget as LoaderInfo;
-			var bmd:BitmapData = (target.content as Bitmap).bitmapData;
 			var texture:Texture = ctx.createTexture(bmd.width, bmd.height, Context3DTextureFormat.BGRA, false);
 			texture.uploadFromBitmapData(bmd);
 			
@@ -69,26 +91,18 @@ package
 			var colorBuffer:VertexBuffer3D = ctx.createVertexBuffer(colorData.length/3,3);
 			colorBuffer.uploadFromVector(Vector.<Number>(colorData),0,colorData.length/3);
 			var iData:Array = [0,1,2];
-			var ibuffer:IndexBuffer3D = ctx.createIndexBuffer(iData.length);
+			ibuffer = ctx.createIndexBuffer(iData.length);
 			ibuffer.uploadFromVector(Vector.<uint>(iData),0,iData.length);
 			ctx.setVertexBufferAt(0, posBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
 			ctx.setVertexBufferAt(1, colorBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
 			ctx.setTextureAt(0, texture);
 			
-			//draw
-			var matr:Matrix3D = new Matrix3D();
-			setInterval(function():void { 
-				matr.appendRotation(1, Vector3D.Z_AXIS);
-				ctx.clear();
-				ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, matr);
-				ctx.drawTriangles(ibuffer);
-				ctx.present();
-			}, 1000/60);
+			
+			addEventListener(Event.ENTER_FRAME, enterFrame);
 		}
 			
 		public function start():void
 		{
-			
 		}
 		
 	}

@@ -46,20 +46,20 @@ package flash.events
       
      public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false) : void{
 		 var funcs:Array = listeners[type] = listeners[type] || [];
-		 //var i:int = funcs.indexOf(listener);
-		// if (i!=-1) {
-		//	funcs.splice(i, 1);
-		 //}
+		 var i:Object = funcs.indexOf(listener);
+		 if (i!=-1) {
+			funcs.splice(i, 1);
+		 }
 		 funcs.push(listener);
 	 }
       
      public function removeEventListener(type:String, listener:Function, useCapture:Boolean = false) : void{
 		var funcs:Array = listeners[type];
 		if (funcs) {
-			//var i:int = funcs.indexOf(listener);
-			 //if (i!=-1) {
-			//	funcs.splice(i, 1);
-			 //}
+			var i:Object = funcs.indexOf(listener);
+			 if (i!=-1) {
+				funcs.splice(i, 1);
+			 }
 		}
 	 }
       

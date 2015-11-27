@@ -23,6 +23,8 @@ package flash.display
       
        public function get bitmapData() : BitmapData{return _bitmapData}
       
-       public function set bitmapData(param1:BitmapData) : void{}
+       public function set bitmapData(param1:BitmapData) : void{
+		   _bitmapData = param1;
+	   }
    }
 }

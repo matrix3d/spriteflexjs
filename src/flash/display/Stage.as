@@ -1,27 +1,63 @@
 package flash.display
 {
-   import flash.geom.Rectangle;
    import flash.errors.*;
-   import flash.geom.Transform;
-   import flash.accessibility.AccessibilityProperties;
-   import flash.accessibility.AccessibilityImplementation;
    import flash.events.Event;
-   import flash.text.TextSnapshot;
-   import flash.ui.ContextMenu;
+   import flash.events.EventDispatcher;
+   import flash.geom.Rectangle;
    
-   public class Stage extends DisplayObject
+   public class Stage extends EventDispatcher
    {
-      
+	   private var _frameRate:int;
+	   private var _stage3Ds:Vector.<Stage3D>;
       private static const kInvalidParamError:uint = 2004;
-       
+	  private var intervalID:Number;
+	  private var children:Array = [];
       public function Stage()
       {
          super();
+		 frameRate = 60;
+		 _stage3Ds = Vector.<Stage3D>([new Stage3D,new Stage3D,new Stage3D,new Stage3D]);
       }
+	  
+	  public function addChild(node:DisplayObject):DisplayObject {
+		var i:Object = children.indexOf(node);
+		if (i!=-1) {
+			children.splice(i, 1);
+		}
+		children.push(node);
+		return node;
+	  }
+	  
+	  public function removeChild(node:DisplayObject):DisplayObject {
+		 var i:Object = children.indexOf(node);
+		if (i!=-1) {
+			children.splice(i, 1);
+		}
+		  return node;
+	  }
+	  
       
-     public function get frameRate() : Number{return 0}
+     public function get frameRate() : Number{return _frameRate}
       
-     public function set frameRate(param1:Number) : void{}
+     public function set frameRate(v:Number) : void{
+		 _frameRate = v;
+		 clearInterval(intervalID);
+		intervalID= setInterval(update, 1000/v);
+	 }
+	 
+	 private function update():void {
+		dispatchEvent(new Event(Event.ENTER_FRAME));
+		
+		//render
+		for each(var node:DisplayObject in children) {
+			updateChild(node);
+		}
+	 }
+	 
+	 private function updateChild(node:DisplayObject):void 
+	 {
+		 node.dispatchEvent(new Event(Event.ENTER_FRAME));
+	 }
       
      public function invalidate() : void{}
       
@@ -76,7 +112,7 @@ package flash.display
       
     // public function get stageVideos() : Vector.<StageVideo>{return null}
       
-     public function get stage3Ds() : Vector.<Stage3D>{return null}
+     public function get stage3Ds() : Vector.<Stage3D>{return _stage3Ds}
       
      public function get color() : uint{return 0}
       

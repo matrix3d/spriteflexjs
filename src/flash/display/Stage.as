@@ -10,6 +10,7 @@ package flash.display
 	   private var _frameRate:int;
 	   private var _stage3Ds:Vector.<Stage3D>;
       private static const kInvalidParamError:uint = 2004;
+	  static private var canvas:HTMLCanvasElement;
 	  private var intervalID:Number;
 	  private var children:Array = [];
       public function Stage()
@@ -57,6 +58,10 @@ package flash.display
 	 private function updateChild(node:DisplayObject):void 
 	 {
 		 node.dispatchEvent(new Event(Event.ENTER_FRAME));
+		 if (node is Sprite) {
+		//	var g:Graphics = (node as Sprite).graphics;
+		//	g.moveTo(0, 0);
+		 }
 	 }
       
      public function invalidate() : void{}
@@ -137,6 +142,19 @@ package flash.display
      public function get browserZoomFactor() : Number{return 0}
       
      private function requireOwnerPermissions() : void{}
+	 
+	 static public function getCanvas():CanvasRenderingContext2D 
+	 {
+		 
+		if (!canvas)
+		{
+			canvas = document.createElement("canvas") as HTMLCanvasElement;
+			canvas.width = 400;
+			canvas.height = 400;
+			document.body.appendChild(canvas as HTMLCanvasElement);
+		}
+		return canvas.getContext("2d") as CanvasRenderingContext2D;
+	 }
       
      public function get displayContextInfo() : String{return null}
       

@@ -34,7 +34,7 @@ package flash.net
          /*var re:RegExp = new RegExp("^(\\x21|[\\x23-\\x26]|\\x2A|\\x2B|\\x2D|\\x2E|[\\x30-\\x39]|[\\x41-\\x5A]|[\\x5E-\\x7A])+$");
          if(!re.test(value))
          {
-            Error.throwError(ArgumentError,kInvalidParamError);
+            Error.throwError(null,kInvalidParamError);
          }
          this.setMethod(value);*/
       }
@@ -49,14 +49,14 @@ package flash.net
       
       public function set requestHeaders(value:Array) : void
       {
-         if(value != null)
-         {
+         //if(value != null)
+         //{
             //this.setRequestHeaders(value.filter(this.filterRequestHeaders));
-         }
-         else
-         {
+         //}
+         //else
+         //{
             //this.setRequestHeaders(value);
-         }
+         //}
       }
       
       private function setRequestHeaders(param1:Array) : void{}

@@ -38,7 +38,7 @@ package flash.display
          var deblockingFilter:Number = 0.0;
          if(_context.imageDecodingPolicy == null)
          {
-            throw new ArgumentError();
+            throw new null();
          }
          deblockingFilter = this._getJPEGLoaderContextdeblockingfilter(_context);
          if(_context.parameters != null)

@@ -6,10 +6,10 @@ package flash.display
       public function Bitmap(bitmapData:BitmapData = null, pixelSnapping:String = "auto", smoothing:Boolean = false)
       {
          super();
-         this.ctor(bitmapData,pixelSnapping,smoothing);
+         this.ctorbmp(bitmapData,pixelSnapping,smoothing);
       }
       
-       private function ctor(bitmapData:BitmapData, pixelSnapping:String, smoothing:Boolean) : void{
+       private function ctorbmp(bitmapData:BitmapData, pixelSnapping:String, smoothing:Boolean) : void{
 		   _bitmapData = bitmapData;
 	   }
       

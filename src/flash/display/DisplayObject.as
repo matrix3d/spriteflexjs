@@ -1,5 +1,6 @@
 package flash.display 
 {
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -18,7 +19,8 @@ package flash.display
 		{
 			if (id == 0) {
 				_stage = new Stage;
-				_stage.addChild(this);
+				//_stage.addChild(this);
+				_stage.addEventListener(Event.ENTER_FRAME, js_enterFrame);
 			}
 		}
 	
@@ -84,7 +86,7 @@ package flash.display
       
        public function set rotationZ(param1:Number) : void{}
       
-       public function get alpha() : Number{return 0}
+       public function get alpha() : Number{return 1}
       
        public function set alpha(param1:Number) : void{}
       
@@ -158,7 +160,20 @@ package flash.display
       
        public function get metaData() : Object{return null}
       
-       public function set metaData(param1:Object) : void{}
+       public function set metaData(param1:Object) : void { }
+	  
+	   public function updateJS():void {
+			
+		   
+	   }
+	   
+		private function js_enterFrame(e:Event):void 
+		{
+			var ctx:CanvasRenderingContext2D = stage.ctx;
+			 ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.clearRect(0, 0, stage.stageWidth, stage.stageHeight);
+			updateJS();
+		}
 	}
 
 }

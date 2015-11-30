@@ -10,9 +10,9 @@ package flash.display
 	   private var _frameRate:int;
 	   private var _stage3Ds:Vector.<Stage3D>;
       private static const kInvalidParamError:uint = 2004;
-	  static private var canvas:HTMLCanvasElement;
+	  private var _canvas:HTMLCanvasElement;
 	  private var intervalID:Number;
-	  private var children:Array = [];
+	  //private var children:Array = [];
       public function Stage()
       {
          super();
@@ -20,7 +20,7 @@ package flash.display
 		 _stage3Ds = Vector.<Stage3D>([new Stage3D,new Stage3D,new Stage3D,new Stage3D]);
       }
 	  
-	  public function addChild(node:DisplayObject):DisplayObject {
+	  /*public function addChild(node:DisplayObject):DisplayObject {
 		var i:Object = children.indexOf(node);
 		if (i!=-1) {
 			children.splice(i, 1);
@@ -35,7 +35,7 @@ package flash.display
 			children.splice(i, 1);
 		}
 		  return node;
-	  }
+	  }*/
 	  
       
      public function get frameRate() : Number{return _frameRate}
@@ -50,19 +50,20 @@ package flash.display
 		dispatchEvent(new Event(Event.ENTER_FRAME));
 		
 		//render
-		for each(var node:DisplayObject in children) {
+		/*for each(var node:DisplayObject in children) {
 			updateChild(node);
-		}
+		}*/
 	 }
 	 
-	 private function updateChild(node:DisplayObject):void 
+	/* private function updateChild(node:DisplayObject):void 
 	 {
 		 node.dispatchEvent(new Event(Event.ENTER_FRAME));
-		 if (node is Sprite) {
+		 node.updateJS();
+		 //if (node is Sprite) {
 		//	var g:Graphics = (node as Sprite).graphics;
 		//	g.moveTo(0, 0);
-		 }
-	 }
+		 //}
+	 }*/
       
      public function invalidate() : void{}
       
@@ -74,11 +75,11 @@ package flash.display
       
      public function set align(param1:String) : void{}
       
-     public function get stageWidth() : int{return 0}
+     public function get stageWidth() : int{return canvas.width}
       
      public function set stageWidth(param1:int) : void{}
       
-     public function get stageHeight() : int{return 0}
+     public function get stageHeight() : int{return canvas.height}
       
      public function set stageHeight(param1:int) : void{}
       
@@ -143,16 +144,20 @@ package flash.display
       
      private function requireOwnerPermissions() : void{}
 	 
-	 static public function getCanvas():CanvasRenderingContext2D 
+	 public function get canvas():HTMLCanvasElement 
 	 {
 		 
-		if (!canvas)
+		if (!_canvas)
 		{
-			canvas = document.createElement("canvas") as HTMLCanvasElement;
-			canvas.width = 400;
-			canvas.height = 400;
-			document.body.appendChild(canvas as HTMLCanvasElement);
+			_canvas = document.createElement("canvas") as HTMLCanvasElement;
+			_canvas.width = 400;
+			_canvas.height = 400;
+			document.body.appendChild(_canvas as HTMLCanvasElement);
 		}
+		return _canvas;
+	 }
+	 public function get ctx():CanvasRenderingContext2D 
+	 {
 		return canvas.getContext("2d") as CanvasRenderingContext2D;
 	 }
       

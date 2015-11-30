@@ -11,7 +11,10 @@ package flash.display
       }
 	  
 	    public function get graphics() : Graphics {
-			if (_graphics == null)_graphics = new Graphics;
+			if (_graphics == null) {
+				_graphics = new Graphics;
+				//_graphics.sprite = this;
+			}
 			return _graphics;
 		}
       
@@ -40,5 +43,11 @@ package flash.display
        //public function get soundTransform() : SoundTransform;
       
        //public function set soundTransform(param1:SoundTransform) : void;
+	   
+	   override public function updateJS():void 
+	   {
+		   super.updateJS();
+		   graphics.draw(stage.ctx);
+	   }
    }
 }

@@ -44,10 +44,11 @@ package flash.display
       
        //public function set soundTransform(param1:SoundTransform) : void;
 	   
-	   override public function updateJS():void 
+	   override public function innerUpdate():void 
 	   {
-		   super.updateJS();
-		   graphics.draw(stage.ctx);
+		   super.innerUpdate();
+		   if(stage)
+		   graphics.draw(stage.ctx,worldMatrix);
 	   }
    }
 }

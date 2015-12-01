@@ -12,30 +12,12 @@ package flash.display
       private static const kInvalidParamError:uint = 2004;
 	  private var _canvas:HTMLCanvasElement;
 	  private var intervalID:Number;
-	  //private var children:Array = [];
       public function Stage()
       {
          super();
 		 frameRate = 60;
 		 _stage3Ds = Vector.<Stage3D>([new Stage3D,new Stage3D,new Stage3D,new Stage3D]);
       }
-	  
-	  /*public function addChild(node:DisplayObject):DisplayObject {
-		var i:Object = children.indexOf(node);
-		if (i!=-1) {
-			children.splice(i, 1);
-		}
-		children.push(node);
-		return node;
-	  }
-	  
-	  public function removeChild(node:DisplayObject):DisplayObject {
-		 var i:Object = children.indexOf(node);
-		if (i!=-1) {
-			children.splice(i, 1);
-		}
-		  return node;
-	  }*/
 	  
       
      public function get frameRate() : Number{return _frameRate}
@@ -48,22 +30,7 @@ package flash.display
 	 
 	 private function update():void {
 		dispatchEvent(new Event(Event.ENTER_FRAME));
-		
-		//render
-		/*for each(var node:DisplayObject in children) {
-			updateChild(node);
-		}*/
 	 }
-	 
-	/* private function updateChild(node:DisplayObject):void 
-	 {
-		 node.dispatchEvent(new Event(Event.ENTER_FRAME));
-		 node.updateJS();
-		 //if (node is Sprite) {
-		//	var g:Graphics = (node as Sprite).graphics;
-		//	g.moveTo(0, 0);
-		 //}
-	 }*/
       
      public function invalidate() : void{}
       

@@ -168,7 +168,6 @@ package flash.geom
          return "(a=" + this.a + ", b=" + this.b + ", c=" + this.c + ", d=" + this.d + ", tx=" + this.tx + ", ty=" + this.ty + ")";
       }
       
-      [API("674")]
       public function copyFrom(sourceMatrix:Matrix) : void
       {
          this.a = sourceMatrix.a;
@@ -179,7 +178,6 @@ package flash.geom
          this.ty = sourceMatrix.ty;
       }
       
-      [API("674")]
       public function setTo(aa:Number, ba:Number, ca:Number, da:Number, txa:Number, tya:Number) : void
       {
          this.a = aa;
@@ -190,7 +188,6 @@ package flash.geom
          this.ty = tya;
       }
       
-      [API("674")]
       public function copyRowTo(row:uint, vector3D:Vector3D) : void
       {
          switch(row)
@@ -215,7 +212,6 @@ package flash.geom
          }
       }
       
-      [API("674")]
       public function copyColumnTo(column:uint, vector3D:Vector3D) : void
       {
          switch(column)
@@ -240,7 +236,6 @@ package flash.geom
          }
       }
       
-      [API("674")]
       public function copyRowFrom(row:uint, vector3D:Vector3D) : void
       {
          switch(row)
@@ -260,7 +255,6 @@ package flash.geom
          }
       }
       
-      [API("674")]
       public function copyColumnFrom(column:uint, vector3D:Vector3D) : void
       {
          switch(column)

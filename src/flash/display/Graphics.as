@@ -6,6 +6,7 @@ package flash.display
    {
 	public var graphicsData:Vector.<IGraphicsData> = new Vector.<IGraphicsData>;
 	private var lastStroke:IGraphicsStroke;
+	private var lastFill:IGraphicsFill;
 	private var lastPath:GraphicsPath;
       public function Graphics()
       {
@@ -19,17 +20,20 @@ package flash.display
       
        public function beginFill(color:uint, alpha:Number = 1.0):void 
 		{
-			graphicsData.push(new GraphicsSolidFill(color,alpha));
+			lastFill = new GraphicsSolidFill(color, alpha);
+			graphicsData.push(lastFill);
 		}
       
        public function beginGradientFill(type:String, colors:Array, alphas:Array, ratios:Array, matrix:* = null, spreadMethod:String = "pad", interpolationMethod:String = "rgb", focalPointRatio:Number = 0):void 
 		{
-			graphicsData.push(new GraphicsGradientFill(type,colors,alphas,ratios,matrix,spreadMethod,interpolationMethod,focalPointRatio));
+			lastFill = new GraphicsGradientFill(type, colors, alphas, ratios, matrix, spreadMethod, interpolationMethod, focalPointRatio);
+			graphicsData.push(lastFill);
 		}
       
        public function beginBitmapFill(bitmap:BitmapData, matrix:Matrix = null, repeat:Boolean = true, smooth:Boolean = false):void 
 		{
-			graphicsData.push(new GraphicsBitmapFill(bitmap, matrix, repeat, smooth));
+			lastFill = new GraphicsBitmapFill(bitmap, matrix, repeat, smooth);
+			graphicsData.push(lastFill);
 		}
       // public function beginShaderFill(param1:Shader, param2:Matrix = null) : void;
       
@@ -42,9 +46,8 @@ package flash.display
       
       public function lineStyle(thickness:Number = NaN, color:uint = 0, alpha:Number = 1.0, pixelHinting:Boolean = false, scaleMode:String = "normal", caps:String = null, joints:String = null, miterLimit:Number = 3):void
 		{
-			var stroke:IGraphicsStroke = new GraphicsStroke(thickness, pixelHinting, scaleMode, caps, joints, miterLimit, new GraphicsSolidFill(color, alpha));
-			lastStroke = stroke;
-			graphicsData.push(stroke);
+			lastStroke = new GraphicsStroke(thickness, pixelHinting, scaleMode, caps, joints, miterLimit, new GraphicsSolidFill(color, alpha));
+			graphicsData.push(lastStroke);
 		}
        public function drawRect(x:Number, y:Number, width:Number, height:Number):void 
 		{
@@ -55,18 +58,30 @@ package flash.display
 			lineTo(x,y);
 		}
       
-       public function drawRoundRect(param1:Number, param2:Number, param3:Number, param4:Number, param5:Number, param6:Number = undefined) : void{}
+       public function drawRoundRect(x:Number, y:Number, width:Number, height:Number, ellipseWidth:Number, ellipseHeight:Number=NaN) : void{
+		   if (isNaN(ellipseHeight))
+			ellipseHeight = ellipseWidth;
+			moveTo(x + ellipseWidth, y);
+			lineTo(x + width - ellipseWidth, y);
+			curveTo(x + width, y, x + width, y + ellipseHeight);
+			lineTo(x + width, y + height - ellipseHeight);
+			curveTo(x + width, y + height, x + width - ellipseWidth, y + height);
+			lineTo(x + ellipseWidth, y + height);
+			curveTo(x, y + height, x, y + height - ellipseHeight);
+			lineTo(x, y + ellipseHeight);
+			curveTo(x, y, x + ellipseWidth, y);
+	   }
       
-       public function drawRoundRectComplex(param1:Number, param2:Number, param3:Number, param4:Number, param5:Number, param6:Number, param7:Number, param8:Number) : void{}
+       public function drawRoundRectComplex(x:Number, y:Number, width:Number, height:Number, topLeftRadius:Number, topRightRadius:Number, bottomLeftRadius:Number, bottomRightRadius:Number) : void{}
       
       public function drawCircle(x:Number, y:Number, radius:Number) : void
       {
-         this.drawRoundRect(x - radius,y - radius,radius * 2,radius * 2,radius * 2,radius * 2);
+         this.drawRoundRect(x - radius,y - radius,radius*2 ,radius *2,radius ,radius);
       }
       
       public function drawEllipse(x:Number, y:Number, width:Number, height:Number) : void
       {
-         this.drawRoundRect(x,y,width,height,width,height);
+         this.drawRoundRect(x,y,width/2,height/2,width/2,height/2);
       }
       
        public function moveTo(x:Number, y:Number) : void{
@@ -253,12 +268,18 @@ package flash.display
          return vec;
       }
 	  
-	  public function draw(ctx:CanvasRenderingContext2D):void {
+	  public function draw(ctx:CanvasRenderingContext2D, m:Matrix):void {
+		  ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+		  ctx.beginPath();
 		  for each(var igd:IGraphicsData in graphicsData) {
 				igd.draw(ctx);
 			}
 			ctx.closePath();
 			ctx.fill();
+			if (lastStroke) ctx.stroke();
+			
+			ctx.fillStyle = null;
+			ctx.strokeStyle = null;
 		}
    }
 }

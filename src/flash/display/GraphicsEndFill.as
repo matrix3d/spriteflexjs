@@ -8,7 +8,8 @@ package flash.display
          super();
       }
 	  public function draw(ctx:CanvasRenderingContext2D):void {
-		trace("endfill");
+		ctx.closePath();
+		ctx.fill();;
 	  }
    }
 }

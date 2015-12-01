@@ -23,7 +23,10 @@ package flash.display
       }
 	  
 	  public function draw(ctx:CanvasRenderingContext2D):void {
-		trace("bmdfill");
+		  if(bitmapData){
+			//ctx.fillStyle =ctx.createPattern(bitmapData.image,this.repeat? "repeat":"no-repeat");
+			ctx.beginPath();
+		  }
 	  }
    }
 }

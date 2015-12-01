@@ -4,14 +4,15 @@ package flash.geom
    
    public class Transform extends Object
    {
-       
+       private var _matrix:Matrix;
       public function Transform(displayObject:DisplayObject)
       {
          super();
          this.ctor(displayObject);
+		 _matrix = new Matrix;
       }
       
-       public function get matrix() : Matrix{return null}
+       public function get matrix() : Matrix{return _matrix}
       
        public function set matrix(param1:Matrix) : void{}
       

@@ -65,13 +65,13 @@ package
 			texture.uploadFromBitmapData(bmd);
 			
 			//init shader
-			var vcode:String = "attribute vec3 pos;" +
-				"attribute vec3 color;" +
+			var vcode:String = "attribute vec3 va0;" +
+				"attribute vec3 va1;" +
 				"varying vec3 vColor;"+
 				"uniform mat4 vc0;"+
 				"void main(void) {" +
-					"vColor=color;"+
-					"gl_Position =vc0*vec4(pos, 1.0);"+
+					"vColor=va1;"+
+					"gl_Position =vc0*vec4(va0, 1.0);"+
 				"}";
 			var fcode:String = "precision mediump float;" +
 				"varying vec3 vColor;"+

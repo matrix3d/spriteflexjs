@@ -20,8 +20,8 @@
 
 
 <project name="native buttonexample" default="main" basedir=".">
-    <property name="FLEXJS_HOME" location="E:/sdk/flexjs5"/>
-    <property name="example" value="TestGraphics" />
+    <property name="FLEXJS_HOME" location="E:/sdk/flexjs6"/>
+    <property name="example" value="TestStage3D" />
     
     <property file="${FLEXJS_HOME}/env.properties"/>
     <property environment="env"/>

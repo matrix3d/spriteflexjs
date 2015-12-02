@@ -30,7 +30,7 @@ package
 			addChild(s2);
 			s2.graphics.beginFill(0xff00ff);
 			s2.graphics.lineStyle(0, 0xffff);
-			s2.graphics.drawRoundRect( -50, -50, 100, 100, 10, 10);
+			s2.graphics.drawCircle(0, 0, 50);// .drawRoundRect( -50, -50, 100, 100, 10, 10);
 			addEventListener(Event.ENTER_FRAME, enterFrame);
 			s2.x = 150;
 			s2.y = 150;

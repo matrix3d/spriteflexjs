@@ -16,10 +16,10 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
-    <class path="E:\sdk\flexjs5\js\libs" />
     <class path="C:\Users\aaaa\Documents\GitHub\FlashShader\example\src" />
     <class path="C:\Users\aaaa\Documents\GitHub\FlashShader\src" />
     <class path="E:\sdk\flexjs5\frameworks\libs\player\19.0" />
+    <class path="E:\sdk\flexjs6\js\libs" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -56,7 +56,7 @@
   </includeLibraries>
   <!-- SWC Libraries -->
   <libraryPaths>
-    <element path="E:\sdk\flexjs5\js\libs\js.swc" />
+    <element path="E:\sdk\flexjs6\js\libs\js.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

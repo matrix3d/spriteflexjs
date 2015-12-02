@@ -84,6 +84,7 @@ package flash.display3D
      public function setProgramConstantsFromByteArray(programType:String, firstRegister:int, numRegisters:int, data:ByteArray, byteArrayOffset:uint) : void{}
       
      public function setVertexBufferAt(index:int, buffer:VertexBuffer3D, bufferOffset:int=0, format:String="float4") : void{
+		gl.enableVertexAttribArray(gl.getAttribLocation(currentProgram.program,"va"+index));
 		gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, buffer.buff);
 		var size:int = 0;
 		switch(format) {
@@ -101,7 +102,6 @@ package flash.display3D
 				break;
 		}
 		gl.vertexAttribPointer(index, size, WebGLRenderingContext.FLOAT, false, 0, bufferOffset);
-		gl.enableVertexAttribArray(index);
 	 }
       
      public function setBlendFactors(sourceFactor:int, destinationFactor:int) : void{

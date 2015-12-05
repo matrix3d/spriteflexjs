@@ -13,12 +13,12 @@ package flash.display3D
          super();
       }
       
-     public function upload(vcode:String, fcode:String) : void{
+     public function upload(vcode:ByteArray, fcode:ByteArray) : void{
 		fshader = gl.createShader(WebGLRenderingContext.FRAGMENT_SHADER);
 		vshader = gl.createShader(WebGLRenderingContext.VERTEX_SHADER);
-		gl.shaderSource(fshader,fcode);
+		gl.shaderSource(fshader,fcode.readUTFBytes(0));
 		gl.compileShader(fshader);
-		gl.shaderSource(vshader,vcode);
+		gl.shaderSource(vshader,vcode.readUTFBytes(0));
 		gl.compileShader(vshader);
 
 		gl.attachShader(program,vshader);

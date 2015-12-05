@@ -18,6 +18,7 @@ package
 	import flash.geom.Vector3D;
 	import flash.net.URLRequest;
 	import flash.events.Event;
+	import flash.utils.ByteArray;
 	/**
 	 * ...
 	 * @author lizhi
@@ -80,7 +81,11 @@ package
 					"gl_FragColor = /*vec4(vColor,1)*/texture2D(fs0,vColor.xy);"+
 				"}";
 			var program:Program3D = ctx.createProgram();
-			program.upload(vcode, fcode);
+			var vb:ByteArray = new ByteArray;
+			vb.writeUTFBytes( vcode);
+			var fb:ByteArray = new ByteArray;
+			fb.writeUTFBytes( fcode);
+			program.upload(vb, fb);
 			ctx.setProgram(program);
 			
 			//init buffer

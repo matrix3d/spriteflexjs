@@ -2,7 +2,7 @@ package flash.utils
 {
    public class ByteArray
    {
-      
+	   private var string:String="";
       private static var _defaultObjectEncoding:uint;
       
       public function ByteArray()
@@ -36,7 +36,9 @@ package flash.utils
       
      public function writeUTF(param1:String) : void{}
       
-     public function writeUTFBytes(param1:String) : void{}
+     public function writeUTFBytes(param1:String) : void{
+		 string += param1;
+	 }
       
      public function readBoolean() : Boolean{return false}
       
@@ -60,7 +62,7 @@ package flash.utils
       
      public function readUTF() : String{return null}
       
-     public function readUTFBytes(param1:uint) : String{return null}
+     public function readUTFBytes(param1:uint) : String { return string; }
       
      public function get length() : uint{return 0}
       

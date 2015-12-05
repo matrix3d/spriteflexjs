@@ -14,7 +14,7 @@ package flash.display
 	public class DisplayObject extends EventDispatcher
 	{
 		private static var  ID:int = 0;
-		public var id:int;
+		public var innerID:int;
 		private var _stage:Stage;
 		private var _rotation:Number = 0;
 		private var rsin:Number = 0;
@@ -27,8 +27,8 @@ package flash.display
 		{
 			_transform = new Transform(this);
 			_worldMatrix = new Matrix;
-			id = ID++;
-			if (id == 0) {
+			innerID = ID++;
+			if (innerID == 0) {
 				_stage = new Stage;
 				_stage.addEventListener(Event.ENTER_FRAME, js_enterFrame);
 			}

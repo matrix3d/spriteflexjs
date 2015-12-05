@@ -104,18 +104,18 @@ package flash.display3D
 		gl.vertexAttribPointer(index, size, WebGLRenderingContext.FLOAT, false, 0, bufferOffset);
 	 }
       
-     public function setBlendFactors(sourceFactor:int, destinationFactor:int) : void{
+     public function setBlendFactors(sourceFactor:String, destinationFactor:String) : void{
 		 gl.enable(WebGLRenderingContext.BLEND);
 		 gl.blendEquation(WebGLRenderingContext.FUNC_ADD);
-		 gl.blendFunc(sourceFactor, destinationFactor);
+		 gl.blendFunc(Context3DBlendFactor.getGLVal(sourceFactor), Context3DBlendFactor.getGLVal(destinationFactor));
 	 }
       
      public function setColorMask(red:Boolean, green:Boolean, blue:Boolean, alpha:Boolean) : void{
 		gl.colorMask(red, green, blue, alpha);
 	 }
       
-     public function setDepthTest(depthMask:Boolean, passCompareMode:int) : void {
-		gl.depthFunc(passCompareMode);
+     public function setDepthTest(depthMask:Boolean, passCompareMode:String) : void {
+		gl.depthFunc(Context3DCompareMode.getGLVal(passCompareMode));
 		gl.depthMask(depthMask);
 	 }
       
@@ -169,12 +169,12 @@ package flash.display3D
       
      private function setRenderToTextureInternal(param1:TextureBase, param2:int, param3:Boolean, param4:int, param5:int, param6:int) : void{}
       
-	 public function setCulling(triangleFaceToCull:int) : void{
-		 if (triangleFaceToCull==WebGLRenderingContext.NONE) {
+	 public function setCulling(triangleFaceToCull:String) : void{
+		 if (triangleFaceToCull==Context3DTriangleFace.NONE) {
 			gl.disable(WebGLRenderingContext.CULL_FACE);
 		 }else {
 			gl.enable(WebGLRenderingContext.CULL_FACE);
-			gl.cullFace(triangleFaceToCull);
+			gl.cullFace(Context3DTriangleFace.getGLVal(triangleFaceToCull));
 		 }
 	 }
       

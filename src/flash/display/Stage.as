@@ -119,6 +119,10 @@ package flash.display
 			_canvas = document.createElement("canvas") as HTMLCanvasElement;
 			_canvas.width = 400;
 			_canvas.height = 400;
+			_canvas.style.position = "absolute";
+			_canvas.style.left = 0;
+			_canvas.style.top = 0;
+			_canvas.style.zIndex = 1;
 			document.body.appendChild(_canvas as HTMLCanvasElement);
 		}
 		return _canvas;

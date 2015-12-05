@@ -31,6 +31,9 @@ package
 		private var bmd:BitmapData;
 		public function TestStage3D() 
 		{
+			graphics.beginFill(0xff0000);
+			graphics.drawCircle(100, 50, 50);
+			
 			var loader:Loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loader_complete);
 			loader.load(new URLRequest("../../wood.jpg"));

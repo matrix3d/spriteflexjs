@@ -19,9 +19,9 @@
 -->
 
 
-<project name="native buttonexample" default="main" basedir=".">
+<project name="spriteflexjs" default="main" basedir=".">
     <property name="FLEXJS_HOME" location="E:/sdk/flexjs6"/>
-    <property name="example" value="TestStage3D" />
+    <property name="example" value="TestGraphics" />
     
     <property file="${FLEXJS_HOME}/env.properties"/>
     <property environment="env"/>

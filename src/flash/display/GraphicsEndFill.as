@@ -1,15 +1,34 @@
 package flash.display
 {
-   public final class GraphicsEndFill extends Object implements IGraphicsFill, IGraphicsData
-   {
-       
-      public function GraphicsEndFill()
-      {
-         super();
-      }
-	  public function draw(ctx:CanvasRenderingContext2D):void {
-		ctx.closePath();
-		ctx.fill();;
-	  }
-   }
+	import flash.geom.Matrix;
+	
+	public final class GraphicsEndFill extends Object implements IGraphicsFill, IGraphicsData
+	{
+		public var fill:IGraphicsFill
+		public function GraphicsEndFill()
+		{
+			super();
+		}
+		
+		public function draw(ctx:CanvasRenderingContext2D):void
+		{
+			ctx.closePath();
+			if (fill) {
+				if(fill is GraphicsBitmapFill){
+				var bfill:GraphicsBitmapFill = fill as GraphicsBitmapFill;
+					if (bfill.matrix) {
+						var m:Matrix = bfill.matrix;
+					}
+				}
+				if(m){
+					ctx.save();
+					ctx.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+				}
+				ctx.fill();
+				if (m) {
+					ctx.restore();
+				}
+			}
+		}
+	}
 }

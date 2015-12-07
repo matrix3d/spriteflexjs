@@ -4,7 +4,7 @@
   <output>
     <movie outputType="CustomBuild" />
     <movie input="" />
-    <movie path="bin\flexjs5.swf" />
+    <movie path="" />
     <movie fps="30" />
     <movie width="800" />
     <movie height="600" />
@@ -18,8 +18,8 @@
     <class path="src" />
     <class path="C:\Users\aaaa\Documents\GitHub\FlashShader\example\src" />
     <class path="C:\Users\aaaa\Documents\GitHub\FlashShader\src" />
-    <class path="E:\sdk\flexjs5\frameworks\libs\player\19.0" />
     <class path="E:\sdk\flexjs6\js\libs" />
+    <class path="E:\sdk\flexjs6\frameworks\libs" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -83,13 +83,13 @@
     <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>build.bat</preBuildCommand>
+  <preBuildCommand />
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="False" />
-    <option testMovie="Custom" />
+    <option testMovie="Webserver" />
     <option testMovieCommand="" />
   </options>
   <!-- Plugin storage -->

@@ -6,6 +6,7 @@ package
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.geom.Matrix;
 	import flash.net.URLRequest;
 	/**
 	 * ...
@@ -14,7 +15,7 @@ package
 	public class TestGraphics extends Sprite
 	{
 		private var s2:Sprite;
-		
+		private var matr:Matrix = new Matrix;
 		public function TestGraphics() 
 		{
 			var s:Sprite = new Sprite;
@@ -47,13 +48,16 @@ package
 			var bmd:BitmapData = bmp.bitmapData;
 			
 			var s3:Sprite = new Sprite;
-			s3.graphics.beginBitmapFill(bmd);
+			s3.graphics.beginBitmapFill(bmd,matr);
 			s3.graphics.drawRect(0, 0, 100, 100);
 			addChild(s3);
+			s3.graphics.beginFill(0xff0000);
+			s3.graphics.drawRect(50, 50, 100, 100);
 		}
 		
 		private function enterFrame(e:Event):void 
 		{
+			matr.rotate(1/180*Math.PI);
 			s2.rotation++;
 		}
 		

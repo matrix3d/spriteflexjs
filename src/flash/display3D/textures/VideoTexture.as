@@ -1,9 +1,6 @@
 package flash.display3D.textures
 {
-   import flash.net.NetStream;
-  // import flash.media.Camera;
    
-   [Event(name="renderState",type="flash.events.TextureVideoEvent")]
    public final class VideoTexture extends TextureBase
    {
        

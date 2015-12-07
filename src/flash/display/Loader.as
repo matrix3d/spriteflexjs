@@ -1,7 +1,6 @@
 package flash.display
 {
    import flash.net.URLRequest;
-   import flash.system.*;
    import flash.utils.ByteArray;
    import flash.errors.*;
    import flash.events.*;

@@ -8,6 +8,7 @@ package flash.display
 	private var lastStroke:IGraphicsStroke;
 	private var lastFill:IGraphicsFill;
 	private var lastPath:GraphicsPath;
+	private static var endFillInstance:GraphicsEndFill=new GraphicsEndFill;
       public function Graphics()
       {
          super();
@@ -20,18 +21,21 @@ package flash.display
       
        public function beginFill(color:uint, alpha:Number = 1.0):void 
 		{
+			endFill();
 			lastFill = new GraphicsSolidFill(color, alpha);
 			graphicsData.push(lastFill);
 		}
       
        public function beginGradientFill(type:String, colors:Array, alphas:Array, ratios:Array, matrix:* = null, spreadMethod:String = "pad", interpolationMethod:String = "rgb", focalPointRatio:Number = 0):void 
 		{
+			endFill();
 			lastFill = new GraphicsGradientFill(type, colors, alphas, ratios, matrix, spreadMethod, interpolationMethod, focalPointRatio);
 			graphicsData.push(lastFill);
 		}
       
        public function beginBitmapFill(bitmap:BitmapData, matrix:Matrix = null, repeat:Boolean = true, smooth:Boolean = false):void 
 		{
+			endFill();
 			lastFill = new GraphicsBitmapFill(bitmap, matrix, repeat, smooth);
 			graphicsData.push(lastFill);
 		}
@@ -110,8 +114,14 @@ package flash.display
 			}
 		}
 		
-       public function endFill() : void{
-			graphicsData.push(new GraphicsEndFill);
+       public function endFill() : void {
+		   if(lastFill){
+				var efill:GraphicsEndFill = new GraphicsEndFill;
+				efill.fill = lastFill;
+				graphicsData.push(efill);
+				lastFill = null;
+				lastPath = null;
+		   }
 	   }
       
        public function copyFrom(g:Graphics) : void{
@@ -275,7 +285,12 @@ package flash.display
 				igd.draw(ctx);
 			}
 			ctx.closePath();
-			ctx.fill();
+			
+			if(lastFill){
+				endFillInstance.fill = lastFill;
+				endFillInstance.draw(ctx);
+			}
+			
 			if (lastStroke) ctx.stroke();
 			
 			ctx.fillStyle = null;

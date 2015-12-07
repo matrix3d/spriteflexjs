@@ -1,6 +1,5 @@
 package flash.display
 {
-   import flash.system.ApplicationDomain;
    import flash.errors.*;
    import flash.utils.ByteArray;
    import flash.events.*;

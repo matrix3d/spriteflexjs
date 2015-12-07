@@ -1,2 +1,0 @@
-ant main
-pause

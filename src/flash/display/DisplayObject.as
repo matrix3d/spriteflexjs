@@ -239,9 +239,10 @@ package flash.display
       
        public function get metaData() : Object{return null}
       
-       public function set metaData(param1:Object) : void { }
+       public function set metaData(param1:Object) : void {}
 	  
 	   public function innerUpdate():void {
+		   if(hasEventListener(Event.ENTER_FRAME))
 			dispatchEvent(new Event(Event.ENTER_FRAME));
 	   }
 	   

@@ -11,6 +11,7 @@ package flash.display
 	   private var _stage3Ds:Vector.<Stage3D>;
       private static const kInvalidParamError:uint = 2004;
 	  private var _canvas:HTMLCanvasElement;
+	  private var _ctx:CanvasRenderingContext2D
 	  private var intervalID:Number;
       public function Stage()
       {
@@ -129,7 +130,10 @@ package flash.display
 	 }
 	 public function get ctx():CanvasRenderingContext2D 
 	 {
-		return canvas.getContext("2d") as CanvasRenderingContext2D;
+		 if (!_ctx) {
+			_ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+		 }
+		return _ctx;
 	 }
       
      public function get displayContextInfo() : String{return null}

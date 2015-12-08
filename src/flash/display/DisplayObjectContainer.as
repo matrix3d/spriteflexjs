@@ -55,7 +55,7 @@ package flash.display
       
        public function removeChildren(param1:int = 0, param2:int = 2147483647) : void{}
       
-       public function stopAllMovieClips() : void { }
+       public function stopAllMovieClips() : void {}
 	  
 	   override public function innerUpdate():void 
 	   {

@@ -273,9 +273,10 @@ package flash.display
       
       public function readGraphicsData(recurse:Boolean = true) : Vector.<IGraphicsData>
       {
-         var vec:Vector.<IGraphicsData> = new Vector.<IGraphicsData>();
+        /* var vec:Vector.<IGraphicsData> = new Vector.<IGraphicsData>();
          this.GetGraphicsData(vec,recurse);
-         return vec;
+         return vec;*/
+		 return graphicsData.slice();
       }
 	  
 	  public function draw(ctx:CanvasRenderingContext2D, m:Matrix):void {

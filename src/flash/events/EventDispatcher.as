@@ -6,7 +6,7 @@ package flash.events
    [Event(name="activate",type="flash.events.Event")]
    public class EventDispatcher
    {
-       private var listeners:Object = { };
+       private var listeners:Object = {};
       public function EventDispatcher(target:EventDispatcher = null)
       {
          super();
@@ -60,6 +60,10 @@ package flash.events
 			 if (i!=-1) {
 				funcs.splice(i, 1);
 			 }
+			 if (funcs.length==0) {
+				listeners[type] = null;
+				delete listeners[type];
+			 }
 		}
 	 }
       
@@ -72,7 +76,9 @@ package flash.events
          return this.dispatchEventFunction(event);
       }
       
-     public function hasEventListener(type:String) : Boolean{return false}
+     public function hasEventListener(type:String) : Boolean {
+		 return listeners[type] != null;
+	 }
       
      public function willTrigger(param1:String) : Boolean{return false}
       

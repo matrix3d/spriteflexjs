@@ -87,7 +87,7 @@ package flash.display
 		  ctx.lineWidth = thickness;
 		  if (fill is GraphicsSolidFill) {
 			 var sf:GraphicsSolidFill = fill as GraphicsSolidFill;
-			 ctx.strokeStyle="rgba("+(sf.color>>16&0xff)+","+(sf.color>>8&0xff)+","+(sf.color&0xff)+","+sf.alpha+")";
+			 ctx.strokeStyle = sf.cssColor;
 		  }
 	  }
    }

@@ -13,6 +13,8 @@ package flash.display
 		
 		public var smooth:Boolean;
 		
+		private var pattern:CanvasPattern;
+		
 		public function GraphicsBitmapFill(bitmapData:BitmapData = null, matrix:Matrix = null, repeat:Boolean = true, smooth:Boolean = false)
 		{
 			super();
@@ -27,11 +29,10 @@ package flash.display
 		 */
 		public function draw(ctx:CanvasRenderingContext2D):void
 		{
-			if (bitmapData)
-			{
-				ctx.fillStyle = ctx.createPattern(bitmapData.image, this.repeat ? "repeat" : "no-repeat") as String;
-				ctx.beginPath();
+			if (pattern==null&&bitmapData) {
+				pattern = ctx.createPattern(bitmapData.image, this.repeat ? "repeat" : "no-repeat");
 			}
+			ctx.fillStyle = pattern as String;
 		}
 	}
 }

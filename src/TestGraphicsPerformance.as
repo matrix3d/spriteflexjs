@@ -20,6 +20,7 @@ package
 		private function add():void {
 			var s:Sprite = new Sprite;
 			s.graphics.beginFill(0xffffff * Math.random());
+			s.graphics.lineStyle(0, 0xffffff * Math.random());
 			s.graphics.drawRect( -25, -25, 50, 50);
 			s.x = 400 * Math.random();
 			s.y = 400 * Math.random();

@@ -20,7 +20,6 @@ package flash.display
 		public function draw(ctx:CanvasRenderingContext2D):void
 		{
 			ctx.fillStyle = cssColor;
-			ctx.beginPath();
 		}
 	}
 }

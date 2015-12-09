@@ -122,30 +122,34 @@ package flash.display
 		
 		public function draw(ctx:CanvasRenderingContext2D):void
 		{
-			var p:int = 0;
-			for each (var cmd:int in commands)
-			{
-				switch (cmd)
+			if (commands.length) {
+				ctx.beginPath();
+				var p:int = 0;
+				for each (var cmd:int in commands)
 				{
-				case GraphicsPathCommand.MOVE_TO: 
-					ctx.moveTo(data[p++], data[p++]);
-					break;
-				case GraphicsPathCommand.LINE_TO: 
-					ctx.lineTo(data[p++], data[p++]);
-					break;
-				case GraphicsPathCommand.CURVE_TO: 
-					ctx.quadraticCurveTo(data[p++], data[p++], data[p++], data[p++]);
-					break;
-				case GraphicsPathCommand.WIDE_MOVE_TO: 
-					ctx.bezierCurveTo(data[p++], data[p++], data[p++], data[p++], data[p++], data[p++]);
-					break;
-				case GraphicsPathCommand.WIDE_LINE_TO: 
-					ctx.moveTo(data[p++], data[p++]);
-					break;
-				case GraphicsPathCommand.CUBIC_CURVE_TO: 
-					ctx.lineTo(data[p++], data[p++]);
-					break;
+					switch (cmd)
+					{
+					case GraphicsPathCommand.MOVE_TO: 
+						ctx.moveTo(data[p++], data[p++]);
+						break;
+					case GraphicsPathCommand.LINE_TO: 
+						ctx.lineTo(data[p++], data[p++]);
+						break;
+					case GraphicsPathCommand.CURVE_TO: 
+						ctx.quadraticCurveTo(data[p++], data[p++], data[p++], data[p++]);
+						break;
+					case GraphicsPathCommand.WIDE_MOVE_TO: 
+						ctx.bezierCurveTo(data[p++], data[p++], data[p++], data[p++], data[p++], data[p++]);
+						break;
+					case GraphicsPathCommand.WIDE_LINE_TO: 
+						ctx.moveTo(data[p++], data[p++]);
+						break;
+					case GraphicsPathCommand.CUBIC_CURVE_TO: 
+						ctx.lineTo(data[p++], data[p++]);
+						break;
+					}
 				}
+				ctx.closePath();
 			}
 		}
 	}

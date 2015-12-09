@@ -12,10 +12,9 @@ package flash.display
 		
 		public function draw(ctx:CanvasRenderingContext2D):void
 		{
-			ctx.closePath();
 			if (fill) {
 				if(fill is GraphicsBitmapFill){
-				var bfill:GraphicsBitmapFill = fill as GraphicsBitmapFill;
+					var bfill:GraphicsBitmapFill = fill as GraphicsBitmapFill;
 					if (bfill.matrix) {
 						var m:Matrix = bfill.matrix;
 					}

@@ -8,6 +8,7 @@ package
 	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.net.URLRequest;
+	import flash.text.TextField;
 	/**
 	 * ...
 	 * @author lizhi
@@ -21,11 +22,14 @@ package
 			var s:Sprite = new Sprite;
 			addChild(s);
 			
-			s.graphics.lineStyle(0, 0xff00);
+			//s.graphics.lineStyle(0, 0xff00);
 			s.graphics.beginFill(0xff0000);
-			s.graphics.moveTo(0, 0);
-			s.graphics.lineTo(1000, 1000);
+			s.graphics.lineStyle(0, 0xff);
 			s.graphics.drawRect(100, 100, 100, 100);
+			
+			s.graphics.beginFill(0xff);
+			s.graphics.lineStyle(5, 0xff00ff);
+			s.graphics.drawRect(200, 200, 100, 100);
 			
 			s2 = new Sprite;
 			addChild(s2);
@@ -35,6 +39,11 @@ package
 			addEventListener(Event.ENTER_FRAME, enterFrame);
 			s2.x = 150;
 			s2.y = 150;
+			
+			var tf:TextField = new TextField;
+			tf.text = "textfield";
+			addChild(tf);
+			tf.y = 200;
 			
 			var loader:Loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loader_complete);
@@ -53,6 +62,9 @@ package
 			addChild(s3);
 			s3.graphics.beginFill(0xff0000);
 			s3.graphics.drawRect(50, 50, 100, 100);
+			
+			addChild(bmp);
+			bmp.y = 300;
 		}
 		
 		private function enterFrame(e:Event):void 

@@ -43,8 +43,10 @@ package flash.display
 			graphicsData.push(lastFill);
 		}
 		
-		public function endStrokAndFill():void {
-			if(lastPath){
+		public function endStrokAndFill():void
+		{
+			if (lastPath)
+			{
 				if (lastFill)
 				{
 					var efill:GraphicsEndFill = new GraphicsEndFill;
@@ -52,7 +54,8 @@ package flash.display
 					graphicsData.push(efill);
 					lastFill = null;
 				}
-				if (lastStroke&&!isNaN(lastStroke.thickness)) {
+				if (lastStroke && !isNaN(lastStroke.thickness))
+				{
 					lastStroke = new GraphicsStroke(NaN);
 					graphicsData.push(lastStroke);
 				}
@@ -74,8 +77,9 @@ package flash.display
 		public function lineStyle(thickness:Number = NaN, color:uint = 0, alpha:Number = 1.0, pixelHinting:Boolean = false, scaleMode:String = "normal", caps:String = null, joints:String = null, miterLimit:Number = 3):void
 		{
 			endStrokAndFill();
-			if(!isNaN(thickness)){
-				lastStroke = new GraphicsStroke(thickness==0?1:thickness, pixelHinting, scaleMode, caps, joints, miterLimit, new GraphicsSolidFill(color, alpha));
+			if (!isNaN(thickness))
+			{
+				lastStroke = new GraphicsStroke(thickness == 0 ? 1 : thickness, pixelHinting, scaleMode, caps, joints, miterLimit, new GraphicsSolidFill(color, alpha));
 				graphicsData.push(lastStroke);
 			}
 		}
@@ -111,12 +115,26 @@ package flash.display
 		
 		public function drawCircle(x:Number, y:Number, radius:Number):void
 		{
-			this.drawRoundRect(x - radius, y - radius, radius * 2, radius * 2, radius, radius);
+			makePath();
+			lastPath.arc(x, y, radius, 0, Math.PI * 2);
+			//this.drawRoundRect(x - radius, y - radius, radius * 2, radius * 2, radius, radius);
 		}
 		
-		public function drawEllipse(x:Number, y:Number, width:Number, height:Number):void
+		//http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
+		public function drawEllipse(centerX:Number, centerY:Number, width:Number, height:Number):void
 		{
-			this.drawRoundRect(x, y, width / 2, height / 2, width / 2, height / 2);
+			moveTo(centerX, centerY - height / 2);
+
+			cubicCurveTo(
+				centerX + width / 2, centerY - height / 2,
+				centerX + width / 2, centerY + height / 2,
+				centerX, centerY + height / 2
+			);
+			cubicCurveTo(
+				centerX - width / 2, centerY + height / 2,
+				centerX - width / 2, centerY - height / 2,
+				centerX, centerY - height / 2
+			);
 		}
 		
 		public function moveTo(x:Number, y:Number):void
@@ -140,7 +158,7 @@ package flash.display
 		public function cubicCurveTo(controlX1:Number, controlY1:Number, controlX2:Number, controlY2:Number, anchorX:Number, anchorY:Number):void
 		{
 			makePath();
-			lastPath.cubicCurveTo(controlX1, controlY2, controlX2, controlY2, anchorX, anchorY);
+			lastPath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
 		}
 		
 		private function makePath():void
@@ -173,12 +191,14 @@ package flash.display
 		
 		// public function lineShaderStyle(param1:Shader, param2:Matrix = null) : void;
 		
-		public function drawPath(param1:Vector.<int>, param2:Vector.<Number>, param3:String = "evenOdd"):void
+		public function drawPath(commands:Vector.<int>, data:Vector.<Number>, winding:String="evenOdd"):void
 		{
-		
+			makePath();
+			lastPath.commands.push.apply(null, commands);
+			lastPath.data.push.apply(null, data);
 		}
 		
-		public function drawTriangles(param1:Vector.<Number>, param2:Vector.<int> = null, param3:Vector.<Number> = null, param4:String = "none"):void
+		public function drawTriangles(vertices:Vector.<Number>, indices:Vector.<int>=null, uvtData:Vector.<Number>=null, culling:String="none"):void
 		{
 		
 		}
@@ -312,9 +332,9 @@ package flash.display
 		}
 		
 		/*private function GetGraphicsData(param1:Vector.<IGraphicsData>, recurse:Boolean):void
-		{
+		   {
 		
-		}*/
+		   }*/
 		
 		public function readGraphicsData(recurse:Boolean = true):Vector.<IGraphicsData>
 		{
@@ -326,7 +346,8 @@ package flash.display
 		
 		public function draw(ctx:CanvasRenderingContext2D, m:Matrix):void
 		{
-			if(graphicsData.length){
+			if (graphicsData.length)
+			{
 				ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 				for each (var igd:IGraphicsData in graphicsData)
 				{
@@ -338,7 +359,8 @@ package flash.display
 					endFillInstance.draw(ctx);
 				}
 				
-				if (lastStroke) {
+				if (lastStroke)
+				{
 					ctx.stroke();
 				}
 				ctx.fillStyle = null;

@@ -38,76 +38,54 @@ package flash.display
 		
 		public function moveTo(x:Number, y:Number):void
 		{
-			if (this.commands == null)
-			{
-				this.commands = new Vector.<int>();
-			}
-			if (this.data == null)
-			{
-				this.data = new Vector.<Number>();
-			}
+			initData();
 			this.commands.push(GraphicsPathCommand.MOVE_TO);
 			this.data.push(x, y);
 		}
 		
 		public function lineTo(x:Number, y:Number):void
 		{
-			if (this.commands == null)
-			{
-				this.commands = new Vector.<int>();
-			}
-			if (this.data == null)
-			{
-				this.data = new Vector.<Number>();
-			}
+			initData();
 			this.commands.push(GraphicsPathCommand.LINE_TO);
 			this.data.push(x, y);
 		}
 		
 		public function curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void
 		{
-			if (this.commands == null)
-			{
-				this.commands = new Vector.<int>();
-			}
-			if (this.data == null)
-			{
-				this.data = new Vector.<Number>();
-			}
+			initData();
 			this.commands.push(GraphicsPathCommand.CURVE_TO);
 			this.data.push(controlX, controlY, anchorX, anchorY);
 		}
 		
 		public function cubicCurveTo(controlX1:Number, controlY1:Number, controlX2:Number, controlY2:Number, anchorX:Number, anchorY:Number):void
 		{
-			if (this.commands == null)
-			{
-				this.commands = new Vector.<int>();
-			}
-			if (this.data == null)
-			{
-				this.data = new Vector.<Number>();
-			}
+			initData();
 			this.commands.push(GraphicsPathCommand.CUBIC_CURVE_TO);
 			this.data.push(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
 		}
 		
 		public function wideLineTo(x:Number, y:Number):void
 		{
-			if (this.commands == null)
-			{
-				this.commands = new Vector.<int>();
-			}
-			if (this.data == null)
-			{
-				this.data = new Vector.<Number>();
-			}
+			initData();
 			this.commands.push(GraphicsPathCommand.WIDE_LINE_TO);
 			this.data.push(0.0, 0.0, x, y);
 		}
 		
 		public function wideMoveTo(x:Number, y:Number):void
 		{
+			initData();
+			this.commands.push(GraphicsPathCommand.WIDE_MOVE_TO);
+			this.data.push(0.0, 0.0, x, y);
+		}
+		
+		public function arc(x:Number, y:Number,r:Number,r0:Number,r1:Number):void
+		{
+			initData();
+			this.commands.push(GraphicsPathCommand.ARC);
+			this.data.push(x,y,r,r0,r1);
+		}
+		
+		private function initData():void {
 			if (this.commands == null)
 			{
 				this.commands = new Vector.<int>();
@@ -116,8 +94,6 @@ package flash.display
 			{
 				this.data = new Vector.<Number>();
 			}
-			this.commands.push(GraphicsPathCommand.WIDE_MOVE_TO);
-			this.data.push(0.0, 0.0, x, y);
 		}
 		
 		public function draw(ctx:CanvasRenderingContext2D):void
@@ -138,14 +114,17 @@ package flash.display
 					case GraphicsPathCommand.CURVE_TO: 
 						ctx.quadraticCurveTo(data[p++], data[p++], data[p++], data[p++]);
 						break;
-					case GraphicsPathCommand.WIDE_MOVE_TO: 
+					case GraphicsPathCommand.CUBIC_CURVE_TO: 
 						ctx.bezierCurveTo(data[p++], data[p++], data[p++], data[p++], data[p++], data[p++]);
 						break;
-					case GraphicsPathCommand.WIDE_LINE_TO: 
+					case GraphicsPathCommand.WIDE_MOVE_TO: 
 						ctx.moveTo(data[p++], data[p++]);
 						break;
-					case GraphicsPathCommand.CUBIC_CURVE_TO: 
+					case GraphicsPathCommand.WIDE_LINE_TO: 
 						ctx.lineTo(data[p++], data[p++]);
+						break;
+					case GraphicsPathCommand.ARC: 
+						ctx.arc(data[p++], data[p++], data[p++], data[p++], data[p++]);
 						break;
 					}
 				}

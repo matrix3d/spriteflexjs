@@ -1,6 +1,5 @@
 package flash.events
 {
-	import flash.display.Sprite;
    
    public class MouseEvent extends Event
    {
@@ -41,7 +40,7 @@ package flash.events
       
       public static const CONTEXT_MENU:String = "contextMenu";
        
-      private var m_relatedObject:Sprite;
+      private var m_relatedObject:Object;
       
       private var m_ctrlKey:Boolean;
       
@@ -55,11 +54,13 @@ package flash.events
       
       private var m_isRelatedObjectInaccessible:Boolean;
       
-      public function MouseEvent(type:String, bubbles:Boolean = true, cancelable:Boolean = false, localX:Number = undefined, localY:Number = undefined, relatedObject:Sprite = null, ctrlKey:Boolean = false, altKey:Boolean = false, shiftKey:Boolean = false, buttonDown:Boolean = false, delta:int = 0)
+	  private var _localX:Number = 0;
+	  private var _localY:Number = 0;
+      public function MouseEvent(type:String, bubbles:Boolean = true, cancelable:Boolean = false, localX:Number = undefined, localY:Number = undefined, relatedObject:Object = null, ctrlKey:Boolean = false, altKey:Boolean = false, shiftKey:Boolean = false, buttonDown:Boolean = false, delta:int = 0)
       {
          super(type,bubbles,cancelable);
-         this.localX = localX;
-         this.localY = localY;
+         _localX = localX;
+         _localY = localY;
          this.m_relatedObject = relatedObject;
          this.m_ctrlKey = ctrlKey;
          this.m_altKey = altKey;
@@ -78,20 +79,20 @@ package flash.events
          return formatToString("MouseEvent","type","bubbles","cancelable","eventPhase","localX","localY","stageX","stageY","relatedObject","ctrlKey","altKey","shiftKey","buttonDown","delta");
       }
       
-     public function get localX() : Number{return 0}
+     public function get localX() : Number { return _localX; }
       
-     public function set localX(param1:Number) : void{}
+     public function set localX(v:Number) : void { _localX = v; }
       
-     public function get localY() : Number{return 0}
+     public function get localY() : Number{return _localY}
       
-     public function set localY(param1:Number) : void{}
+     public function set localY(v:Number) : void { _localY = v; }
       
-      public function get relatedObject() : Sprite
+      public function get relatedObject() : Object
       {
          return this.m_relatedObject;
       }
       
-      public function set relatedObject(value:Sprite) : void
+      public function set relatedObject(value:Object) : void
       {
          this.m_relatedObject = value;
       }

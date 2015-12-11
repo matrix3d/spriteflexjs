@@ -1,6 +1,7 @@
 package flash.display
 {
 	import flash.geom.Matrix;
+	import flash.geom.Rectangle;
 	
 	public final class Graphics extends Object
 	{
@@ -9,7 +10,9 @@ package flash.display
 		private var lastFill:IGraphicsFill;
 		private var lastPath:GraphicsPath;
 		private static var endFillInstance:GraphicsEndFill = new GraphicsEndFill;
-		
+		public var bound:Rectangle = new Rectangle(Number.MAX_VALUE,Number.MAX_VALUE,-Number.MAX_VALUE,-Number.MAX_VALUE);
+		private var lockBound:Boolean = false;
+		public static var debug:Boolean = false;
 		public function Graphics()
 		{
 			super();
@@ -20,6 +23,7 @@ package flash.display
 			lastStroke = null;
 			lastPath = null;
 			graphicsData = new Vector.<IGraphicsData>;
+			bound.setEmpty();
 		}
 		
 		public function beginFill(color:uint, alpha:Number = 1.0):void
@@ -86,15 +90,20 @@ package flash.display
 		
 		public function drawRect(x:Number, y:Number, width:Number, height:Number):void
 		{
+			lockBound = true;
 			moveTo(x, y);
 			lineTo(x + width, y);
 			lineTo(x + width, y + height);
 			lineTo(x, y + height);
 			lineTo(x, y);
+			lockBound = false;
+			inflateBound(x, y);
+			inflateBound(x + width, y + height);
 		}
 		
 		public function drawRoundRect(x:Number, y:Number, width:Number, height:Number, ellipseWidth:Number, ellipseHeight:Number = NaN):void
 		{
+			lockBound = true;
 			if (isNaN(ellipseHeight))
 				ellipseHeight = ellipseWidth;
 			moveTo(x + ellipseWidth, y);
@@ -106,6 +115,9 @@ package flash.display
 			curveTo(x, y + height, x, y + height - ellipseHeight);
 			lineTo(x, y + ellipseHeight);
 			curveTo(x, y, x + ellipseWidth, y);
+			lockBound = false;
+			inflateBound(x, y);
+			inflateBound(x + width, y + height);
 		}
 		
 		public function drawRoundRectComplex(x:Number, y:Number, width:Number, height:Number, topLeftRadius:Number, topRightRadius:Number, bottomLeftRadius:Number, bottomRightRadius:Number):void
@@ -118,47 +130,76 @@ package flash.display
 			makePath();
 			lastPath.arc(x, y, radius, 0, Math.PI * 2);
 			//this.drawRoundRect(x - radius, y - radius, radius * 2, radius * 2, radius, radius);
+			inflateBound(x-radius, y-radius);
+			inflateBound(x+radius, y+radius);
 		}
 		
 		//http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
-		public function drawEllipse(centerX:Number, centerY:Number, width:Number, height:Number):void
+		public function drawEllipse(x:Number, y:Number, w:Number, h:Number):void
 		{
-			moveTo(centerX, centerY - height / 2);
+			lockBound = true;
+			
+			var kappa:Number = .5522848,
+			ox:Number = (w / 2) * kappa, // control point offset horizontal
+			oy:Number = (h / 2) * kappa, // control point offset vertical
+			xe:Number = x + w/2,           // x-end
+			ye:Number = y + h / 2;           // y-end
 
-			cubicCurveTo(
-				centerX + width / 2, centerY - height / 2,
-				centerX + width / 2, centerY + height / 2,
-				centerX, centerY + height / 2
-			);
-			cubicCurveTo(
-				centerX - width / 2, centerY + height / 2,
-				centerX - width / 2, centerY - height / 2,
-				centerX, centerY - height / 2
-			);
+			moveTo(x-w/2, y);
+			cubicCurveTo(x-w/2, y - oy, x - ox, y-h/2, x, y-h/2);
+			cubicCurveTo(x + ox, y-h/2, xe, y - oy, xe, y);
+			cubicCurveTo(xe, y + oy, x + ox, ye, x, ye);
+			cubicCurveTo(x - ox, ye, x-w/2, y + oy, x-w/2, y);
+			lockBound = false;
+			inflateBound(x-w/2, y-h/2);
+			inflateBound(x+w/2, y+h/2);
 		}
 		
 		public function moveTo(x:Number, y:Number):void
 		{
 			makePath();
 			lastPath.moveTo(x, y);
+			inflateBound(x, y);
 		}
 		
 		public function lineTo(x:Number, y:Number):void
 		{
 			makePath();
 			lastPath.lineTo(x, y);
+			inflateBound(x, y);
 		}
 		
 		public function curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void
 		{
 			makePath();
 			lastPath.curveTo(controlX, controlY, anchorX, anchorY);
+			inflateBound(controlX, controlY);
+			inflateBound(anchorX, anchorY);
 		}
 		
 		public function cubicCurveTo(controlX1:Number, controlY1:Number, controlX2:Number, controlY2:Number, anchorX:Number, anchorY:Number):void
 		{
 			makePath();
 			lastPath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
+			inflateBound(controlX1, controlY1);
+			inflateBound(controlX2, controlY2);
+			inflateBound(anchorX, anchorY);
+		}
+		
+		private function inflateBound(x:Number, y:Number):void {
+			if (lockBound) return;
+			if (bound.left>x) {
+				bound.left = x;
+			}
+			if (bound.right<x) {
+				bound.right = x;
+			}
+			if (bound.top>y) {
+				bound.top = y;
+			}
+			if (bound.bottom<y) {
+				bound.bottom = y;
+			}
 		}
 		
 		private function makePath():void
@@ -364,6 +405,12 @@ package flash.display
 					ctx.stroke();
 				}
 				ctx.fillStyle = null;
+				if (debug) {
+					ctx.beginPath();
+					ctx.strokeColor = "#ff00ff";
+					ctx.strokeRect(bound.left, bound.top, bound.width, bound.height);
+					ctx.stroke();
+				}
 				ctx.strokeStyle = null;
 			}
 		}

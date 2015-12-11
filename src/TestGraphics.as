@@ -2,10 +2,12 @@ package
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.DisplayObject;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.net.URLRequest;
 	import flash.text.TextField;
@@ -17,19 +19,18 @@ package
 	{
 		private var s2:Sprite;
 		private var matr:Matrix = new Matrix;
+		private var tf:TextField;
 		public function TestGraphics() 
 		{
 			var s:Sprite = new Sprite;
 			addChild(s);
 			
 			//s.graphics.lineStyle(0, 0xff00);
+			s.graphics.lineStyle(0);
 			s.graphics.beginFill(0xff0000);
-			s.graphics.lineStyle(0, 0xff);
-			s.graphics.drawRect(100, 100, 100, 100);
-			
-			s.graphics.beginFill(0xff);
-			s.graphics.lineStyle(5, 0xff00ff);
-			s.graphics.drawRect(200, 200, 100, 100);
+			s.graphics.moveTo(200, 0);
+			s.graphics.curveTo(300, 0, 300, 100);
+			addChild(s);
 			
 			s2 = new Sprite;
 			addChild(s2);
@@ -38,12 +39,13 @@ package
 			s2.graphics.drawCircle(0, 0, 50);
 			s2.graphics.drawRoundRect( 70, -50, 100, 100, 10, 10);
 			s2.graphics.drawEllipse( 300, 0, 200, 100);
+			s2.rotation = 30;
 			
 			addEventListener(Event.ENTER_FRAME, enterFrame);
 			s2.x = 150;
 			s2.y = 150;
 			
-			var tf:TextField = new TextField;
+			tf = new TextField;
 			tf.text = "textfield";
 			addChild(tf);
 			tf.y = 200;
@@ -51,6 +53,19 @@ package
 			var loader:Loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loader_complete);
 			loader.load(new URLRequest("../../wood.jpg"));
+			
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, stage_mouseMove);
+		}
+		
+		private function stage_mouseMove(e:MouseEvent):void 
+		{
+			tf.text = e.localX + "," + e.localY;
+			for (var i:int = 0; i < numChildren;i++ ) {
+				var c:DisplayObject = getChildAt(i);
+				if (c.hitTestPoint(e.localX,e.localY)) {
+					tf.text+="hittest,"
+				}
+			}
 		}
 		
 		private function loader_complete(e:Event):void 

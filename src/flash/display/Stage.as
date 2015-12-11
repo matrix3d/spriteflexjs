@@ -1,8 +1,8 @@
 package flash.display
 {
-	import flash.errors.*;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	
 	public class Stage extends EventDispatcher
@@ -22,13 +22,6 @@ package flash.display
 			frameRate = 60;
 			_stage3Ds = Vector.<Stage3D>([new Stage3D, new Stage3D, new Stage3D, new Stage3D]);
 			window.addEventListener("resize", window_resize, false);
-		}
-		
-		private function window_mousemove(e:MouseEvent):void 
-		{
-			var rect:ClientRect = canvas.getBoundingClientRect();
-			_mouseX = e.clientX - rect.left;
-			_mouseY = e.clientY - rect.top;
 		}
 		
 		private function window_resize(e:Object):void
@@ -144,6 +137,17 @@ package flash.display
 				document.body.appendChild(_canvas as HTMLCanvasElement);
 			}
 			return _canvas;
+		}
+		
+		
+		private function window_mousemove(e:Object):void 
+		{
+			var rect:ClientRect = canvas.getBoundingClientRect();
+			_mouseX = e.clientX - rect.left;
+			_mouseY = e.clientY - rect.top;
+			if (hasEventListener(MouseEvent.MOUSE_MOVE)) {
+				dispatchEvent(new MouseEvent(MouseEvent.MOUSE_MOVE,true,false,_mouseX,_mouseY));
+			}
 		}
 		
 		public function get ctx():CanvasRenderingContext2D

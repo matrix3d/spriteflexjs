@@ -117,10 +117,12 @@ package flash.display
 					case GraphicsPathCommand.CUBIC_CURVE_TO: 
 						ctx.bezierCurveTo(data[p++], data[p++], data[p++], data[p++], data[p++], data[p++]);
 						break;
-					case GraphicsPathCommand.WIDE_MOVE_TO: 
+					case GraphicsPathCommand.WIDE_MOVE_TO:
+						p += 2;
 						ctx.moveTo(data[p++], data[p++]);
 						break;
 					case GraphicsPathCommand.WIDE_LINE_TO: 
+						p += 2;
 						ctx.lineTo(data[p++], data[p++]);
 						break;
 					case GraphicsPathCommand.ARC: 
@@ -128,7 +130,7 @@ package flash.display
 						break;
 					}
 				}
-				ctx.closePath();
+				//ctx.closePath();
 			}
 		}
 	}

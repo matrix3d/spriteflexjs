@@ -23,7 +23,7 @@ package flash.display
 			lastStroke = null;
 			lastPath = null;
 			graphicsData = new Vector.<IGraphicsData>;
-			bound.setEmpty();
+			bound.setTo(Number.MAX_VALUE,Number.MAX_VALUE,-Number.MAX_VALUE,-Number.MAX_VALUE);
 		}
 		
 		public function beginFill(color:uint, alpha:Number = 1.0):void
@@ -122,7 +122,19 @@ package flash.display
 		
 		public function drawRoundRectComplex(x:Number, y:Number, width:Number, height:Number, topLeftRadius:Number, topRightRadius:Number, bottomLeftRadius:Number, bottomRightRadius:Number):void
 		{
-		
+			lockBound = true;
+			moveTo(x + topLeftRadius, y);
+			lineTo(x + width - topRightRadius, y);
+			curveTo(x + width, y, x + width, y + topRightRadius);
+			lineTo(x + width, y + height - bottomRightRadius);
+			curveTo(x + width, y + height, x + width - bottomRightRadius, y + height);
+			lineTo(x + bottomLeftRadius, y + height);
+			curveTo(x, y + height, x, y + height - bottomLeftRadius);
+			lineTo(x, y + topLeftRadius);
+			curveTo(x, y, x + topLeftRadius, y);
+			lockBound = false;
+			inflateBound(x, y);
+			inflateBound(x + width, y + height);
 		}
 		
 		public function drawCircle(x:Number, y:Number, radius:Number):void

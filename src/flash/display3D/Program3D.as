@@ -16,9 +16,10 @@ package flash.display3D
      public function upload(vcode:ByteArray, fcode:ByteArray) : void{
 		fshader = gl.createShader(WebGLRenderingContext.FRAGMENT_SHADER);
 		vshader = gl.createShader(WebGLRenderingContext.VERTEX_SHADER);
-		gl.shaderSource(fshader,fcode.readUTFBytes(0));
+		vcode.position = fcode.position = 0;
+		gl.shaderSource(fshader,fcode.readUTFBytes(fcode.length));
 		gl.compileShader(fshader);
-		gl.shaderSource(vshader,vcode.readUTFBytes(0));
+		gl.shaderSource(vshader,vcode.readUTFBytes(vcode.length));
 		gl.compileShader(vshader);
 
 		gl.attachShader(program,vshader);

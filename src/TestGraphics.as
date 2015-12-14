@@ -37,7 +37,8 @@ package
 			s2.graphics.beginFill(0xff00ff);
 			s2.graphics.lineStyle(0, 0xffff);
 			s2.graphics.drawCircle(0, 0, 50);
-			s2.graphics.drawRoundRect( 70, -50, 100, 100, 10, 10);
+			//s2.graphics.drawRoundRect( 70, -50, 100, 100, 10, 10);
+			s2.graphics.drawRoundRectComplex( 70, -50, 100, 100, 10, 20,30,40);
 			s2.graphics.drawEllipse( 300, 0, 200, 100);
 			s2.rotation = 30;
 			

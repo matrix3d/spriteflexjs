@@ -26,7 +26,7 @@ package
 			addChild(s);
 			
 			//s.graphics.lineStyle(0, 0xff00);
-			s.graphics.lineStyle(0);
+			s.graphics.lineStyle(5);
 			s.graphics.beginFill(0xff0000);
 			s.graphics.moveTo(200, 0);
 			s.graphics.curveTo(300, 0, 300, 100);

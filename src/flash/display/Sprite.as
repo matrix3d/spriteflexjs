@@ -18,7 +18,6 @@ package flash.display
 			if (_graphics == null)
 			{
 				_graphics = new Graphics;
-					//_graphics.sprite = this;
 			}
 			return _graphics;
 		}

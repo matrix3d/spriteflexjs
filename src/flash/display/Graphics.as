@@ -150,21 +150,23 @@ package flash.display
 		public function drawEllipse(x:Number, y:Number, w:Number, h:Number):void
 		{
 			lockBound = true;
-			
 			var kappa:Number = .5522848,
 			ox:Number = (w / 2) * kappa, // control point offset horizontal
 			oy:Number = (h / 2) * kappa, // control point offset vertical
-			xe:Number = x + w/2,           // x-end
-			ye:Number = y + h / 2;           // y-end
+			xe:Number = x + w,           // x-end
+			ye:Number = y + h,           // y-end
+			xm:Number = x + w / 2,       // x-middle
+			ym:Number = y + h / 2;       // y-middle
 
-			moveTo(x-w/2, y);
-			cubicCurveTo(x-w/2, y - oy, x - ox, y-h/2, x, y-h/2);
-			cubicCurveTo(x + ox, y-h/2, xe, y - oy, xe, y);
-			cubicCurveTo(xe, y + oy, x + ox, ye, x, ye);
-			cubicCurveTo(x - ox, ye, x-w/2, y + oy, x-w/2, y);
+			moveTo(x, ym);
+			cubicCurveTo(x, ym - oy, xm - ox, y, xm, y);
+			cubicCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+			cubicCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+			cubicCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+			//ctx.closePath(); // not used correctly, see comments (use to close off open path)
 			lockBound = false;
-			inflateBound(x-w/2, y-h/2);
-			inflateBound(x+w/2, y+h/2);
+			inflateBound(x, y);
+			inflateBound(x+w, y+h);
 		}
 		
 		public function moveTo(x:Number, y:Number):void

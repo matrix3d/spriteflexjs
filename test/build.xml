@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="spriteflexjs" default="main" basedir=".">
     <property name="FLEXJS_HOME" location="E:/sdk/flexjs6"/>
-    <property name="main" value="TestGraphics" />
+    <property name="main" value="PuyoDot3JS" />
         
     <available file="${FLEXJS_HOME}/js/lib/google/closure-library/closure/goog/base.js"
         type="file"
@@ -22,7 +22,7 @@
             <jvmarg line="-Dflexlib=${FLEXJS_HOME}/frameworks}"/>
             <arg value="+flexlib=${FLEXJS_HOME}/frameworks" />
             <arg value="-compiler.source-path=C:/Users/aaaa/Documents/GitHub/FlashShader/example/src" />
-            <arg value="-compiler.source-path=C:/Users/aaaa/Documents/GitHub/FlashShader/src" />
+            <arg value="-compiler.source-path=../src" />
             <arg value="-define=CONFIG::as_only,false" />
             <arg value="-define=CONFIG::js_only,true" />
             <arg value="-external-library-path=${JS.SWC}" />

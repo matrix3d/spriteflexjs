@@ -288,9 +288,6 @@ package  flash.geom{
 			var m : Matrix3D = this.clone();
 			var mr : Vector.<Number> = m.rawData.concat();
 			var pos : flash.geom.Vector3D = new flash.geom.Vector3D(mr[12],mr[13],mr[14]);
-			mr[12] = 0;
-			mr[13] = 0;
-			mr[14] = 0;
 			var scale : flash.geom.Vector3D = new flash.geom.Vector3D();
 			scale.x = Math.sqrt(mr[0] * mr[0] + mr[1] * mr[1] + mr[2] * mr[2]);
 			scale.y = Math.sqrt(mr[4] * mr[4] + mr[5] * mr[5] + mr[6] * mr[6]);

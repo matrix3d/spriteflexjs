@@ -1,6 +1,7 @@
 package flash.display
 {
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	
 	public class Bitmap extends DisplayObject
 	{
@@ -36,6 +37,12 @@ package flash.display
 		public function set bitmapData(param1:BitmapData):void
 		{
 			_bitmapData = param1;
+		}
+		
+		override public function hitTestPoint(x:Number, y:Number, shapeFlag:Boolean = false):Boolean 
+		{
+			if(bitmapData)return bitmapData.rect.containsPoint(invMatrix.transformPoint(new Point(x,y)));
+			return false;
 		}
 		
 		override public function innerUpdate():void

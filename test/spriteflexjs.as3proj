@@ -16,10 +16,9 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
-    <class path="C:\Users\aaaa\Documents\GitHub\FlashShader\example\src" />
-    <class path="C:\Users\aaaa\Documents\GitHub\FlashShader\src" />
     <class path="E:\sdk\flexjs6\js\libs" />
     <class path="E:\sdk\flexjs6\frameworks\libs" />
+    <class path="..\src" />
   </classpaths>
   <!-- Build options -->
   <build>

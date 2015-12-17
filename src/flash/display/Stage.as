@@ -126,8 +126,18 @@ package flash.display
 			
 			if (!_canvas)
 			{
+				//http://www.w3schools.com/jsref/dom_obj_event.asp
 				_canvas = document.createElement("canvas") as HTMLCanvasElement;
-				_canvas.addEventListener("mousemove", window_mousemove,false);
+				_canvas.addEventListener("click", canvas_mouseevent,false);
+				_canvas.addEventListener("contextmenu", canvas_mouseevent,false);
+				_canvas.addEventListener("dblclick", canvas_mouseevent,false);
+				_canvas.addEventListener("mousedown", canvas_mouseevent,false);
+				_canvas.addEventListener("mouseenter", canvas_mouseevent,false);
+				_canvas.addEventListener("mouseleave", canvas_mouseevent,false);
+				_canvas.addEventListener("mousemove", canvas_mouseevent,false);
+				_canvas.addEventListener("mouseover", canvas_mouseevent,false);
+				_canvas.addEventListener("mouseout", canvas_mouseevent,false);
+				_canvas.addEventListener("mouseup", canvas_mouseevent,false);
 				_canvas.width = stageWidth;
 				_canvas.height = stageHeight;
 				_canvas.style.position = "absolute";
@@ -140,13 +150,50 @@ package flash.display
 		}
 		
 		
-		private function window_mousemove(e:Object):void 
+		private function canvas_mouseevent(e:Object):void 
 		{
-			var rect:ClientRect = canvas.getBoundingClientRect();
-			_mouseX = e.clientX - rect.left;
-			_mouseY = e.clientY - rect.top;
-			if (hasEventListener(MouseEvent.MOUSE_MOVE)) {
-				dispatchEvent(new MouseEvent(MouseEvent.MOUSE_MOVE,true,false,_mouseX,_mouseY));
+			var jsType:String = e.type;
+			var flashType:String;
+			switch(jsType) {
+				case "click":
+					flashType = MouseEvent.CLICK;
+					break;
+				case "contextmenu":
+					flashType = MouseEvent.CONTEXT_MENU;
+					break;
+				case "dblclick":
+					flashType = MouseEvent.DOUBLE_CLICK;
+					break;
+				case "mousedown":
+					flashType = MouseEvent.MOUSE_DOWN;
+					break;
+				case "mouseenter":
+					flashType = MouseEvent.ROLL_OVER;
+					break;
+				case "mouseleave":
+					flashType = MouseEvent.MOUSE_OUT;
+					break;
+				case "mousemove":
+					flashType = MouseEvent.MOUSE_MOVE;
+					break;
+				case "mouseover":
+					flashType = MouseEvent.MOUSE_OVER;
+					break;
+				case "mouseout":
+					flashType = MouseEvent.MOUSE_OUT;
+					break;
+				case "mouseup":
+					flashType = MouseEvent.MOUSE_UP;
+					break;
+					
+			}
+			if(flashType){
+				var rect:ClientRect = canvas.getBoundingClientRect();
+				_mouseX = e.clientX - rect.left;
+				_mouseY = e.clientY - rect.top;
+				if (hasEventListener(flashType)) {
+					dispatchEvent(new MouseEvent(flashType,true,false,_mouseX,_mouseY));
+				}
 			}
 		}
 		

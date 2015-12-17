@@ -78,11 +78,11 @@ package flash.display
 			this.data.push(0.0, 0.0, x, y);
 		}
 		
-		public function arc(x:Number, y:Number,r:Number,r0:Number,r1:Number):void
+		public function arc(x:Number, y:Number,r:Number,a0:Number,a1:Number):void
 		{
 			initData();
 			this.commands.push(GraphicsPathCommand.ARC);
-			this.data.push(x,y,r,r0,r1);
+			this.data.push(x,y,r,a0,a1);
 		}
 		
 		private function initData():void {

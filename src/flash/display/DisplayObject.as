@@ -133,9 +133,17 @@ package flash.display
 		
 		public function set scaleZ(v:Number):void  {/**/ }
 		
-		public function get mouseX():Number  { return 0 }
+		public function get mouseX():Number  {
+			if(stage)
+			return invMatrix.transformPoint(new Point(stage.mouseX, stage.mouseY)).x;
+			return 0;
+		}
 		
-		public function get mouseY():Number  { return 0 }
+		public function get mouseY():Number  { 
+			if(stage)
+			return invMatrix.transformPoint(new Point(stage.mouseX, stage.mouseY)).y;
+			return 0;
+		}
 		
 		public function get rotation():Number  { return _rotation }
 		

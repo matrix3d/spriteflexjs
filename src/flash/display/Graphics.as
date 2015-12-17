@@ -140,6 +140,7 @@ package flash.display
 		public function drawCircle(x:Number, y:Number, radius:Number):void
 		{
 			makePath();
+			lastPath.moveTo(x+radius, y);
 			lastPath.arc(x, y, radius, 0, Math.PI * 2);
 			//this.drawRoundRect(x - radius, y - radius, radius * 2, radius * 2, radius, radius);
 			inflateBound(x-radius, y-radius);

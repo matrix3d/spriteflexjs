@@ -333,17 +333,20 @@ package flash.text
 		
 		public function set useRichTextClipboard(param1:Boolean):void  {/**/ }
 		
-		override public function innerUpdate():void
+		override public function __update():void
 		{
-			super.innerUpdate();
-			if (stage && _text != null)
+			super.__update();
+			if (stage && _text != null&&visible)
 			{
 				var m:Matrix = worldMatrix;
 				var ctx:CanvasRenderingContext2D = stage.ctx;
+				var ga:Number = ctx.globalAlpha;
+				ctx.globalAlpha *= alpha;
 				ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 				ctx.fillStyle = cssTextColor;
 				//ctx.font = defaultTextFormat.css;
 				ctx.fillText(_text, 0, 0);
+				ctx.globalAlpha = ga;
 			}
 		}
 	}

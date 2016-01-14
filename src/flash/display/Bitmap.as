@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	
@@ -45,16 +46,33 @@ package flash.display
 			return false;
 		}
 		
-		override public function innerUpdate():void
+		override public function __update():void
 		{
-			super.innerUpdate();
-			if (stage && _bitmapData&&_bitmapData.image)
+			super.__update();
+			if (stage && _bitmapData&&_bitmapData.image&&visible)
 			{
 				var m:Matrix = worldMatrix;
 				var ctx:CanvasRenderingContext2D = stage.ctx;
+				var ga:Number = ctx.globalAlpha;
+				ctx.globalAlpha *= alpha;
 				ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 				ctx.drawImage(_bitmapData.image, 0, 0);
+				ctx.globalAlpha = ga;
 			}
+		}
+		
+		override protected function __doMouse(e:flash.events.MouseEvent):DisplayObject 
+		{
+			if (stage) {
+				var obj:DisplayObject = super.__doMouse(e);
+				if (obj) {
+					return obj;
+				}
+				if (hitTestPoint(stage.mouseX, stage.mouseY)) {
+					return this;
+				}
+			}
+			return null;
 		}
 	}
 }

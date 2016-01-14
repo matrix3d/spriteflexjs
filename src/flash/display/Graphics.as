@@ -400,11 +400,13 @@ package flash.display
 			return graphicsData.slice();
 		}
 		
-		public function draw(ctx:CanvasRenderingContext2D, m:Matrix):void
+		public function draw(ctx:CanvasRenderingContext2D, m:Matrix,alpha:Number):void
 		{
 			if (graphicsData.length)
 			{
 				ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+				var ga:Number = ctx.globalAlpha;
+				ctx.globalAlpha *= alpha;
 				for each (var igd:IGraphicsData in graphicsData)
 				{
 					igd.draw(ctx);
@@ -427,6 +429,7 @@ package flash.display
 					ctx.stroke();
 				}
 				ctx.strokeStyle = null;
+				ctx.globalAlpha = ga;
 			}
 		}
 	}

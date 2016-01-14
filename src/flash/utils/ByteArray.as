@@ -118,37 +118,37 @@ package flash.utils
 		}
 		
 		public function readShort():int  { 
-			var v:int = dataView.getInt16(_position);
+			var v:int = dataView.getInt16(_position,isLittleEndian);
 			_position+=2;
 			return v;
 		}
 		
 		public function readUnsignedShort():uint  { 
-			var v:uint = dataView.getUint16(_position);
+			var v:uint = dataView.getUint16(_position,isLittleEndian);
 			_position+=2;
 			return v;
 		}
 		
 		public function readInt():int  { 
-			var v:int = dataView.getInt32(_position);
+			var v:int = dataView.getInt32(_position,isLittleEndian);
 			_position+=4;
 			return v;
 		}
 		
 		public function readUnsignedInt():uint  { 
-			var v:uint = dataView.getUint32(_position);
+			var v:uint = dataView.getUint32(_position,isLittleEndian);
 			_position+=4;
 			return v;
 		}
 		
 		public function readFloat():Number  { 
-			var v:Number = dataView.getFloat32(_position);
+			var v:Number = dataView.getFloat32(_position,isLittleEndian);
 			_position+=4;
 			return v;
 		}
 		
 		public function readDouble():Number  { 
-			var v:Number = dataView.getFloat64(_position);
+			var v:Number = dataView.getFloat64(_position,isLittleEndian);
 			_position+=8;
 			return v;
 		}

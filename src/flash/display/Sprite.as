@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -53,11 +54,25 @@ package flash.display
 			return graphics.bound.containsPoint(invMatrix.transformPoint(new Point(x,y)));
 		}
 		
-		override public function innerUpdate():void
+		override public function __update():void
 		{
-			super.innerUpdate();
-			if (stage)
-				graphics.draw(stage.ctx, worldMatrix);
+			super.__update();
+			if (stage&&visible)
+				graphics.draw(stage.ctx, worldMatrix,alpha);
+		}
+		
+		override protected function __doMouse(e:flash.events.MouseEvent):DisplayObject 
+		{
+			if (stage && mouseEnabled) {
+				var obj:DisplayObject = super.__doMouse(e);
+				if (obj) {
+					return obj;
+				}
+				if (hitTestPoint(stage.mouseX, stage.mouseY)) {
+					return this;
+				}
+			}
+			return null;
 		}
 	}
 }

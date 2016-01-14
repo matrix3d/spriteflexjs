@@ -17,6 +17,7 @@ package flash.display
 	{
 		private static var ID:int = 0;
 		public var innerID:int;
+		private var _name:String;
 		private var _stage:Stage;
 		private var _rotation:Number = 0;
 		private var rsin:Number = 0;
@@ -27,18 +28,26 @@ package flash.display
 		private var invDirty:Boolean = true;
 		private var _invMatrix:Matrix;
 		public var _parent:DisplayObject;
-		
+		private var _alpha:Number = 1;
+		private var _visible:Boolean = true;
+		private var lastMouseOverObj:DisplayObject;
 		public function DisplayObject()
 		{
 			_transform = new Transform(this);
 			_worldMatrix = new Matrix;
 			_invMatrix = new Matrix;
 			innerID = ID++;
+			name = "instance" + innerID;
 			if (innerID == 0)
 			{
 				_stage = new Stage;
-				_stage.addEventListener(Event.ENTER_FRAME, js_enterFrame);
-				_stage.addEventListener(MouseEvent.MOUSE_MOVE, stage_mouseMove);
+				_stage.addEventListener(Event.ENTER_FRAME, __enterFrame);
+				_stage.addEventListener(MouseEvent.CLICK, __mouseevent);
+				_stage.addEventListener(MouseEvent.CONTEXT_MENU, __mouseevent);
+				_stage.addEventListener(MouseEvent.DOUBLE_CLICK, __mouseevent);
+				_stage.addEventListener(MouseEvent.MOUSE_DOWN, __mouseevent);
+				_stage.addEventListener(MouseEvent.MOUSE_MOVE, __mouseevent);
+				_stage.addEventListener(MouseEvent.MOUSE_UP, __mouseevent);
 			}
 		}
 		
@@ -48,19 +57,23 @@ package flash.display
 		
 		public function get root():DisplayObject  { return null }
 		
-		public function get name():String  { return null; }
+		public function get name():String  { return _name; }
 		
-		public function set name(param1:String):void  {/**/ }
+		public function set name(v:String):void  {
+			_name = v;
+		}
 		
-		public function get parent():DisplayObject/*DisplayObjectContainer*/  { return null }
+		public function get parent():DisplayObject/*DisplayObjectContainer*/  { return _parent; }
 		
 		public function get mask():DisplayObject  { return null }
 		
 		public function set mask(param1:DisplayObject):void  {/**/ }
 		
-		public function get visible():Boolean  { return true }
+		public function get visible():Boolean  { return _visible }
 		
-		public function set visible(param1:Boolean):void  {/**/ }
+		public function set visible(v:Boolean):void  {
+			_visible = v;
+		}
 		
 		public function get x():Number  { return transform.matrix.tx }
 		
@@ -175,9 +188,9 @@ package flash.display
 		
 		public function set rotationZ(v:Number):void  {/**/ }
 		
-		public function get alpha():Number  { return 1 }
+		public function get alpha():Number  { return _alpha; }
 		
-		public function set alpha(v:Number):void  {/**/ }
+		public function set alpha(v:Number):void  { _alpha = v; }
 		
 		public function get width():Number  { return 0 }
 		
@@ -286,25 +299,67 @@ package flash.display
 		
 		public function set metaData(param1:Object):void  {/**/ }
 		
-		public function innerUpdate():void
+		public function __update():void
 		{
 			if (hasEventListener(Event.ENTER_FRAME))
 				dispatchEvent(new Event(Event.ENTER_FRAME));
 		}
 		
-		private function js_enterFrame(e:Event):void
+		private function __enterFrame(e:Event):void
 		{
 			var ctx:CanvasRenderingContext2D = stage.ctx;
+			ctx.globalAlpha = 1;
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.clearRect(0, 0, stage.stageWidth, stage.stageHeight);
-			innerUpdate();
+			__update();
 		}
 		
-		private function stage_mouseMove(e:flash.events.MouseEvent):void 
+		private function __mouseevent(e:flash.events.MouseEvent):void 
 		{
-			if (hasEventListener(e.type)) {
-				dispatchEvent(e);
+			//从叶子遍历 找到鼠标经过node
+			//如果找到向上遍历父级，抛出事件
+			var obj:DisplayObject = __doMouse(e);
+			if (e.type==MouseEvent.MOUSE_MOVE) {
+				//如果类型是mousemove 处理mouseover 和 mouseout事件
+				//如果上次鼠标经过obj不在obj上层节点
+				//递归抛出mouseout事件直到为null或当前节点
+				if (lastMouseOverObj) {
+					var isSendMouseOut:Boolean = false;
+					var t:DisplayObject = obj;
+					while (t) {
+						if (t==lastMouseOverObj) {
+							isSendMouseOut = true;
+							break;
+						}
+						t = t.parent;
+					}
+					if (!isSendMouseOut) {
+						var out:MouseEvent = new MouseEvent(MouseEvent.MOUSE_OUT);
+						t = lastMouseOverObj;
+						while (t) {
+							t.dispatchEvent(out);
+							t = t.parent;
+						}
+					}
+				}
+				
+				//mouse over
+				var t2:DisplayObject = obj;
+				var over:MouseEvent = new MouseEvent(MouseEvent.MOUSE_OVER);
+				while (t2 && t2 != t) {
+					t2.dispatchEvent(over);
+					t2 = t2.parent;
+				}
+				lastMouseOverObj = obj;
 			}
+			while (obj) {
+				obj.dispatchEvent(e);
+				obj = obj.parent;
+			}
+		}
+		
+		protected function __doMouse(e:flash.events.MouseEvent):DisplayObject {
+			return null;
 		}
 	}
 

@@ -1,11 +1,12 @@
 package flash.display
 {
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
 	public class DisplayObjectContainer extends InteractiveObject
 	{
 		private var children:Array = [];
-		
+		private var _mouseChildren:Boolean = true;
 		public function DisplayObjectContainer()
 		{
 			super();
@@ -13,13 +14,15 @@ package flash.display
 		
 		public function addChild(child:DisplayObject):DisplayObject
 		{
-			children.push(child);
+			return addChildAt(child,children.length);
+		}
+		
+		public function addChildAt(child:DisplayObject, index:int):DisplayObject  {
+			children.splice(index,0,child);
 			child.stage = stage;
 			child._parent = this;
 			return child;
 		}
-		
-		public function addChildAt(child:DisplayObject, param2:int):DisplayObject  { return null }
 		
 		public function removeChild(child:DisplayObject):DisplayObject  { return null }
 		
@@ -45,11 +48,13 @@ package flash.display
 		
 		public function set tabChildren(v:Boolean):void  {/**/ }
 		
-		public function get mouseChildren():Boolean  { return false }
+		public function get mouseChildren():Boolean  { return _mouseChildren; }
 		
-		public function set mouseChildren(v:Boolean):void  {/**/ }
+		public function set mouseChildren(v:Boolean):void  { _mouseChildren = v; }
 		
-		public function contains(child:DisplayObject):Boolean  { return false }
+		public function contains(child:DisplayObject):Boolean  { 
+			return children.indexOf(child) != -1;
+		}
 		
 		public function swapChildrenAt(param1:int, param2:int):void  {/**/ }
 		
@@ -62,12 +67,12 @@ package flash.display
 		
 		}
 		
-		override public function innerUpdate():void
+		override public function __update():void
 		{
-			super.innerUpdate();
+			super.__update();
 			for each (var c:DisplayObject in children)
 			{
-				c.innerUpdate();
+				c.__update();
 			}
 		}
 		
@@ -78,6 +83,19 @@ package flash.display
 			{
 				c.updateTransforms();
 			}
+		}
+		
+		override protected function __doMouse(e:flash.events.MouseEvent):DisplayObject 
+		{
+			if (mouseEnabled&&mouseChildren) {
+				for (var i:int = children.length - 1; i >= 0; i-- ) {
+					var obj:DisplayObject = children[i].__doMouse(e);
+					if (obj) {
+						return obj;
+					}
+				}
+			}
+			return null;
 		}
 	}
 }

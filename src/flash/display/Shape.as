@@ -18,11 +18,11 @@ package flash.display
 			return _graphics;
 		}
 		
-		override public function innerUpdate():void
+		override public function __update():void
 		{
-			super.innerUpdate();
-			if (stage)
-				graphics.draw(stage.ctx, worldMatrix);
+			super.__update();
+			if (stage&&visible)
+				graphics.draw(stage.ctx, worldMatrix,alpha);
 		}
 	}
 }

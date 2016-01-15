@@ -2,6 +2,7 @@ package
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
@@ -76,6 +77,7 @@ package
 			var bmd:BitmapData = bmp.bitmapData;
 			
 			var s3:Sprite = new Sprite;
+			s3.blendMode = BlendMode.ADD;
 			s3.graphics.beginBitmapFill(bmd,matr);
 			s3.graphics.drawRect(0, 0, 100, 100);
 			addChild(s3);

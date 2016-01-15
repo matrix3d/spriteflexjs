@@ -37,12 +37,19 @@ package flash.display
 		public function set frameRate(v:Number):void
 		{
 			_frameRate = v;
-			clearInterval(intervalID);
-			intervalID = setInterval(update, 1000 / v);
+			//http://creativejs.com/resources/requestanimationframe/
+			//clearInterval(intervalID);
+			//intervalID = setInterval(update, 1000 / v);
+			___update();
 		}
 		
-		private function update():void
+		private function ___update():void
 		{
+			setTimeout(__update,1000 / _frameRate);
+		}
+		
+		private function __update():void{
+			requestAnimationFrame(___update);
 			dispatchEvent(new Event(Event.ENTER_FRAME));
 		}
 		

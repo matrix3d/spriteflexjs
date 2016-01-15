@@ -31,6 +31,7 @@ package flash.display
 		private var _alpha:Number = 1;
 		private var _visible:Boolean = true;
 		private var lastMouseOverObj:DisplayObject;
+		private var _blendMode:String;
 		public function DisplayObject()
 		{
 			_transform = new Transform(this);
@@ -216,9 +217,9 @@ package flash.display
 		
 		public function set filters(v:Array):void  {/**/ }
 		
-		public function get blendMode():String  { return null }
+		public function get blendMode():String  { return _blendMode }
 		
-		public function set blendMode(v:String):void  {/**/ }
+		public function set blendMode(v:String):void  { _blendMode = v; }
 		
 		public function get transform():Transform  { return _transform }
 		

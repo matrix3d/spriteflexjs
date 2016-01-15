@@ -55,6 +55,7 @@ package flash.display
 				var ctx:CanvasRenderingContext2D = stage.ctx;
 				var ga:Number = ctx.globalAlpha;
 				ctx.globalAlpha *= alpha;
+				ctx.globalCompositeOperation = BlendMode.getCompVal(blendMode);
 				ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 				ctx.drawImage(_bitmapData.image, 0, 0);
 				ctx.globalAlpha = ga;

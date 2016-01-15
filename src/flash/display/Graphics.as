@@ -400,13 +400,14 @@ package flash.display
 			return graphicsData.slice();
 		}
 		
-		public function draw(ctx:CanvasRenderingContext2D, m:Matrix,alpha:Number):void
+		public function draw(ctx:CanvasRenderingContext2D, m:Matrix,alpha:Number,blendMode:String):void
 		{
 			if (graphicsData.length)
 			{
 				ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 				var ga:Number = ctx.globalAlpha;
 				ctx.globalAlpha *= alpha;
+				ctx.globalCompositeOperation = BlendMode.getCompVal(blendMode);
 				for each (var igd:IGraphicsData in graphicsData)
 				{
 					igd.draw(ctx);

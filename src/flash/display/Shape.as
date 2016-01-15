@@ -22,7 +22,7 @@ package flash.display
 		{
 			super.__update();
 			if (stage&&visible)
-				graphics.draw(stage.ctx, worldMatrix,alpha);
+				graphics.draw(stage.ctx, worldMatrix,alpha,blendMode);
 		}
 	}
 }

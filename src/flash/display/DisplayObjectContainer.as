@@ -24,17 +24,45 @@ package flash.display
 			return child;
 		}
 		
-		public function removeChild(child:DisplayObject):DisplayObject  { return null }
+		public function removeChild(child:DisplayObject):DisplayObject  { 
+			var i:int = children.indexOf(child);
+			if (i!=-1) {
+				return removeChildAt(i);
+			}
+			return child;
+		}
 		
-		public function removeChildAt(child:int):DisplayObject  { return null }
+		public function removeChildAt(i:int):DisplayObject  { 
+			var child:DisplayObject = children[i];
+			if(child){
+				child._parent = null;
+				child.stage = null;
+			}
+			children.splice(i, 1);
+			return child;
+		}
 		
-		public function getChildIndex(child:DisplayObject):int  { return 0 }
+		public function getChildIndex(child:DisplayObject):int  { 
+			return children.indexOf(child);
+		}
 		
-		public function setChildIndex(child:DisplayObject, index:int):void  {/**/ }
+		public function setChildIndex(child:DisplayObject, index:int):void  {
+			removeChild(child);
+			addChildAt(child, index);
+		}
 		
-		public function getChildAt(index:int):DisplayObject  { return children[index]; }
+		public function getChildAt(index:int):DisplayObject  { 
+			return children[index]; 
+		}
 		
-		public function getChildByName(name:String):DisplayObject  { return null }
+		public function getChildByName(name:String):DisplayObject  { 
+			for each(var c:DisplayObject in children) {
+				if (c.name==name) {
+					return c;
+				}
+			}
+			return null;
+		}
 		
 		public function get numChildren():int  { return children.length; }
 		
@@ -56,11 +84,21 @@ package flash.display
 			return children.indexOf(child) != -1;
 		}
 		
-		public function swapChildrenAt(param1:int, param2:int):void  {/**/ }
+		public function swapChildrenAt(i1:int, i2:int):void  {
+			var temp:DisplayObject = children[i1];
+			children[i1] = children[i2];
+			children[i2] = temp;
+		}
 		
-		public function swapChildren(param1:DisplayObject, param2:DisplayObject):void  {/**/ }
+		public function swapChildren(c1:DisplayObject, c2:DisplayObject):void  {
+			swapChildrenAt(getChildIndex(c1), getChildIndex(c2));
+		}
 		
-		public function removeChildren(param1:int = 0, param2:int = 2147483647):void  {/**/ }
+		public function removeChildren(start:int = 0, len:int = 2147483647):void  {
+			for (var i:int = Math.min(numChildren - 1, start + len - 1); i >= start;i-- ) {
+				removeChildAt(i);
+			}
+		}
 		
 		public function stopAllMovieClips():void
 		{

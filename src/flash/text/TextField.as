@@ -1,5 +1,6 @@
 package flash.text
 {
+	import flash.display.BlendMode;
 	import flash.display.InteractiveObject;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
@@ -342,6 +343,7 @@ package flash.text
 				var ctx:CanvasRenderingContext2D = stage.ctx;
 				var ga:Number = ctx.globalAlpha;
 				ctx.globalAlpha *= alpha;
+				ctx.globalCompositeOperation = BlendMode.getCompVal(blendMode);
 				ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 				ctx.fillStyle = cssTextColor;
 				//ctx.font = defaultTextFormat.css;

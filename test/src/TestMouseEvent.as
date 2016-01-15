@@ -40,6 +40,7 @@ package
 		private function s_mouseevent(e:MouseEvent):void 
 		{
 			tf.text = e.type;
+			trace(e.type,e.localX,e.localY);
 		}
 		
 		private function s_mouseOut(e:MouseEvent):void 

@@ -3,6 +3,7 @@ package flash.display
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
 	import flash.geom.Rectangle;
 	
 	public class Stage extends EventDispatcher
@@ -138,6 +139,11 @@ package flash.display
 				_canvas.addEventListener("mouseover", canvas_mouseevent,false);
 				_canvas.addEventListener("mouseout", canvas_mouseevent,false);
 				_canvas.addEventListener("mouseup", canvas_mouseevent,false);
+				_canvas.addEventListener("mousewheel", canvas_mouseevent,false);
+				_canvas.addEventListener("touchcancel", canvas_touchevent,false);
+				_canvas.addEventListener("touchend", canvas_touchevent,false);
+				_canvas.addEventListener("touchmove", canvas_touchevent,false);
+				_canvas.addEventListener("touchstart", canvas_touchevent,false);
 				_canvas.width = stageWidth;
 				_canvas.height = stageHeight;
 				_canvas.style.position = "absolute";
@@ -150,6 +156,43 @@ package flash.display
 		}
 		
 		
+		private function canvas_touchevent(e:Object):void 
+		{
+			e.preventDefault();
+			var jsType:String = e.type;
+			var flashType:String;
+			var flashType2:String;
+			switch(jsType) {
+				case "touchcancel":
+					flashType = TouchEvent.TOUCH_END;
+					flashType2 = MouseEvent.MOUSE_UP;
+					break;
+				case "touchend":
+					flashType = TouchEvent.TOUCH_END;
+					flashType2 = MouseEvent.MOUSE_UP;
+					break;
+				case "touchmove":
+					flashType = TouchEvent.TOUCH_MOVE;
+					flashType2 = MouseEvent.MOUSE_MOVE;
+					break;
+				case "touchstart":
+					flashType = TouchEvent.TOUCH_BEGIN;
+					flashType2 = MouseEvent.MOUSE_DOWN;
+					break;
+					
+			}
+			if (flashType) {
+				var rect:ClientRect = canvas.getBoundingClientRect();
+				_mouseX = e.touches[0].pageX - rect.left;
+				_mouseY = e.touches[0].pageY - rect.top;
+				if (hasEventListener(flashType)) {
+					dispatchEvent(new TouchEvent(flashType,true,false,0,true,_mouseX,_mouseY));
+				}
+				if (hasEventListener(flashType2)) {
+					dispatchEvent(new MouseEvent(flashType2,true,false,_mouseX,_mouseY));
+				}
+			}
+		}
 		private function canvas_mouseevent(e:Object):void 
 		{
 			var jsType:String = e.type;
@@ -185,6 +228,9 @@ package flash.display
 				case "mouseup":
 					flashType = MouseEvent.MOUSE_UP;
 					break;
+				case "mousewheel":
+					flashType = MouseEvent.MOUSE_WHEEL;
+					break;
 					
 			}
 			if(flashType){
@@ -192,11 +238,10 @@ package flash.display
 				_mouseX = e.clientX - rect.left;
 				_mouseY = e.clientY - rect.top;
 				if (hasEventListener(flashType)) {
-					dispatchEvent(new MouseEvent(flashType,true,false,_mouseX,_mouseY));
+					dispatchEvent(new MouseEvent(flashType,true,false,_mouseX,_mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,e.button>0,e.wheelDelta));
 				}
 			}
 		}
-		
 		public function get ctx():CanvasRenderingContext2D
 		{
 			if (!_ctx)

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="spriteflexjs" default="main" basedir=".">
     <property name="FLEXJS_HOME" location="E:/sdk/flexjs6"/>
-    <property name="main" value="TestMouseEvent" />
+    <property name="main" value="PuyoDot3JS" />
         
     <available file="${FLEXJS_HOME}/js/lib/google/closure-library/closure/goog/base.js"
         type="file"
@@ -13,7 +13,7 @@
         property="JS.SWC"
         value="${FLEXJS_HOME}/js/libs/js.swc" />
 
-    <target name="main" depends="clean,build" description="Clean build">
+    <target name="main" depends="build" description="build">
     </target>
     
     <target name="build">
@@ -45,9 +45,5 @@
                 </not>
             </condition>
         </fail>        
-    </target>
-    
-    <target name="clean">
-        <delete dir="${basedir}/bin" failonerror="false" />
     </target>
 </project>

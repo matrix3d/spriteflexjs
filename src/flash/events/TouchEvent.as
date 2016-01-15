@@ -1,8 +1,5 @@
 package flash.events
 {
-	import flash.display.Sprite;
-   
-   [Version("10.1")]
    public class TouchEvent extends Event
    {
       
@@ -46,7 +43,7 @@ package flash.events
       
       private var m_pressure:Number;
       
-      private var m_relatedObject:Sprite;
+      private var m_relatedObject:Object;
       
       private var m_isRelatedObjectInaccessible:Boolean;
       
@@ -56,7 +53,7 @@ package flash.events
       
       private var m_shiftKey:Boolean;
       
-      public function TouchEvent(type:String, bubbles:Boolean = true, cancelable:Boolean = false, touchPointID:int = 0, isPrimaryTouchPoint:Boolean = false, localX:Number = NaN, localY:Number = NaN, sizeX:Number = NaN, sizeY:Number = NaN, pressure:Number = NaN, relatedObject:Sprite = null, ctrlKey:Boolean = false, altKey:Boolean = false, shiftKey:Boolean = false)
+      public function TouchEvent(type:String, bubbles:Boolean = true, cancelable:Boolean = false, touchPointID:int = 0, isPrimaryTouchPoint:Boolean = false, localX:Number = NaN, localY:Number = NaN, sizeX:Number = NaN, sizeY:Number = NaN, pressure:Number = NaN, relatedObject:Object = null, ctrlKey:Boolean = false, altKey:Boolean = false, shiftKey:Boolean = false)
       {
          super(type,bubbles,cancelable);
          this.m_touchPointID = touchPointID;
@@ -140,12 +137,12 @@ package flash.events
          this.m_pressure = value;
       }
       
-      public function get relatedObject() : Sprite
+      public function get relatedObject() : Object
       {
          return this.m_relatedObject;
       }
       
-      public function set relatedObject(value:Sprite) : void
+      public function set relatedObject(value:Object) : void
       {
          this.m_relatedObject = value;
       }

@@ -158,7 +158,6 @@ package flash.display
 		
 		private function canvas_touchevent(e:Object):void 
 		{
-			e.preventDefault();
 			var jsType:String = e.type;
 			var flashType:String;
 			var flashType2:String;
@@ -178,13 +177,14 @@ package flash.display
 				case "touchstart":
 					flashType = TouchEvent.TOUCH_BEGIN;
 					flashType2 = MouseEvent.MOUSE_DOWN;
+					e.preventDefault();
 					break;
-					
 			}
 			if (flashType) {
-				var rect:ClientRect = canvas.getBoundingClientRect();
-				_mouseX = e.touches[0].pageX - rect.left;
-				_mouseY = e.touches[0].pageY - rect.top;
+				if (e.targetTouches.length) {
+					_mouseX = e.targetTouches[0].pageX - canvas.offsetLeft;
+					_mouseY = e.targetTouches[0].pageY - canvas.offsetTop;
+				}
 				if (hasEventListener(flashType)) {
 					dispatchEvent(new TouchEvent(flashType,true,false,0,true,_mouseX,_mouseY));
 				}
@@ -234,9 +234,8 @@ package flash.display
 					
 			}
 			if(flashType){
-				var rect:ClientRect = canvas.getBoundingClientRect();
-				_mouseX = e.clientX - rect.left;
-				_mouseY = e.clientY - rect.top;
+				_mouseX = e.pageX - canvas.offsetLeft;
+				_mouseY = e.pageY - canvas.offsetTop;
 				if (hasEventListener(flashType)) {
 					dispatchEvent(new MouseEvent(flashType,true,false,_mouseX,_mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,e.button>0,e.wheelDelta));
 				}

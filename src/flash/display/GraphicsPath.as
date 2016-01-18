@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.geom.ColorTransform;
 	
 	public final class GraphicsPath extends Object implements IGraphicsPath, IGraphicsData
 	{
@@ -96,7 +97,7 @@ package flash.display
 			}
 		}
 		
-		public function draw(ctx:CanvasRenderingContext2D):void
+		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{
 			if (commands.length) {
 				ctx.beginPath();

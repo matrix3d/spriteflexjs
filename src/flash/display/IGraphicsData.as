@@ -1,8 +1,10 @@
 package flash.display
 {
-   public interface IGraphicsData
-   {
-	   function draw(ctx:CanvasRenderingContext2D):void;
-    }
-	   
+	import flash.geom.ColorTransform;
+	
+	public interface IGraphicsData
+	{
+		function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void;
+	}
+
 }

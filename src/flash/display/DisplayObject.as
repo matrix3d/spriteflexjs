@@ -8,6 +8,7 @@ package flash.display
 	import flash.geom.Rectangle;
 	import flash.geom.Transform;
 	import flash.geom.Vector3D;
+	import flash.utils.getTimer;
 	
 	/**
 	 * ...
@@ -49,6 +50,7 @@ package flash.display
 				_stage.addEventListener(MouseEvent.MOUSE_DOWN, __mouseevent);
 				_stage.addEventListener(MouseEvent.MOUSE_MOVE, __mouseevent);
 				_stage.addEventListener(MouseEvent.MOUSE_UP, __mouseevent);
+				SpriteFlexjs.startTime = (new Date()).getTime();
 			}
 		}
 		
@@ -308,18 +310,33 @@ package flash.display
 		
 		private function __enterFrame(e:Event):void
 		{
+			var time:Number = getTimer();
+			if (stage.canvas.width != stage.stageWidth) {
+				stage.canvas.width = stage.stageWidth;
+			}
+			if (stage.canvas.height != stage.stageHeight) {
+				stage.canvas.height = stage.stageHeight;
+			}
 			var ctx:CanvasRenderingContext2D = stage.ctx;
 			ctx.globalAlpha = 1;
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.clearRect(0, 0, stage.stageWidth, stage.stageHeight);
 			__update();
+			//if (SpriteFlexjs.debug) {
+				//trace("__update",getTimer() - time);
+			//}
 		}
 		
 		private function __mouseevent(e:flash.events.MouseEvent):void 
 		{
 			//从叶子遍历 找到鼠标经过node
 			//如果找到向上遍历父级，抛出事件
+			var time:Number = getTimer();
 			var obj:DisplayObject = __doMouse(e);
+			if(SpriteFlexjs.debug){
+				trace("__doMouse", getTimer() - time);
+			}
+			time = getTimer();
 			if (e.type==MouseEvent.MOUSE_MOVE) {
 				//如果类型是mousemove 处理mouseover 和 mouseout事件
 				//如果上次鼠标经过obj不在obj上层节点
@@ -335,10 +352,12 @@ package flash.display
 						t = t.parent;
 					}
 					if (!isSendMouseOut) {
-						var out:MouseEvent = new MouseEvent(MouseEvent.MOUSE_OUT);
+						var out:MouseEvent = new MouseEvent(MouseEvent.MOUSE_OUT,true,false,e.localX,e.localY);
 						t = lastMouseOverObj;
 						while (t) {
-							t.dispatchEvent(out);
+							if(t.hasEventListener(out.type)){
+								t.dispatchEvent(out);
+							}
 							t = t.parent;
 						}
 					}
@@ -346,16 +365,23 @@ package flash.display
 				
 				//mouse over
 				var t2:DisplayObject = obj;
-				var over:MouseEvent = new MouseEvent(MouseEvent.MOUSE_OVER);
+				var over:MouseEvent = new MouseEvent(MouseEvent.MOUSE_OVER,true,false,e.localX,e.localY);
 				while (t2 && t2 != t) {
-					t2.dispatchEvent(over);
+					if(t2.hasEventListener(over.type)){
+						t2.dispatchEvent(over);
+					}
 					t2 = t2.parent;
 				}
 				lastMouseOverObj = obj;
 			}
 			while (obj) {
-				obj.dispatchEvent(e);
+				if(obj.hasEventListener(e.type)){
+					obj.dispatchEvent(e);
+				}
 				obj = obj.parent;
+			}
+			if(SpriteFlexjs.debug){
+				trace("__dispatchmouseevent", getTimer() - time);
 			}
 		}
 		

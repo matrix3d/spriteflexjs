@@ -5,7 +5,7 @@ package flash.geom
 	public class Transform extends Object
 	{
 		private var _matrix:Matrix;
-		
+		public var _colorTransform:ColorTransform;
 		public function Transform(displayObject:DisplayObject)
 		{
 			super();
@@ -17,9 +17,14 @@ package flash.geom
 		
 		public function set matrix(param1:Matrix):void  {/**/ }
 		
-		public function get colorTransform():ColorTransform  { return null }
+		public function get colorTransform():ColorTransform  {
+			if (_colorTransform == null)_colorTransform = new ColorTransform;
+			return _colorTransform;
+		}
 		
-		public function set colorTransform(param1:ColorTransform):void  {/**/ }
+		public function set colorTransform(v:ColorTransform):void  {
+			_colorTransform = v;
+		}
 		
 		public function get concatenatedMatrix():Matrix  { return null }
 		

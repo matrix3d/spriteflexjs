@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.geom.ColorTransform;
 	
 	public final class GraphicsStroke extends Object implements IGraphicsStroke, IGraphicsData
 	{
@@ -84,7 +85,7 @@ package flash.display
 			this._scaleMode = value;
 		}
 		
-		public function draw(ctx:CanvasRenderingContext2D):void
+		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{
 			
 			if (isNaN(thickness))
@@ -97,7 +98,7 @@ package flash.display
 				if (fill is GraphicsSolidFill)
 				{
 					var sf:GraphicsSolidFill = fill as GraphicsSolidFill;
-					ctx.strokeStyle = sf.cssColor;
+					ctx.strokeStyle = sf.getCssColor(colorTransform);
 				}
 			}
 		}

@@ -1,5 +1,6 @@
 package 
 {
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
@@ -9,7 +10,7 @@ package
 	 * ...
 	 * @author lizhi
 	 */
-	public class TestByteArray 
+	public class TestByteArray extends Sprite
 	{
 		private var loader:URLLoader;	
 		public function TestByteArray() 

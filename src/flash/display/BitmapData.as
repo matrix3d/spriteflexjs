@@ -5,20 +5,34 @@ package flash.display
 	
 	public class BitmapData
 	{
-		public var image:Image;
+		private var data:Uint8ClampedArray;
+		private var imageData:ImageData;
+		public var image:HTMLCanvasElement;
+		private var _lock:Boolean = false;
+		private var ctx:CanvasRenderingContext2D;
+		private var _transparent:Boolean;
 		private var _width:int;
 		private var _height:int;
-		
-		public function BitmapData(width:int, height:int, transparent:Boolean = true, fillColor:uint = 4.294967295E9)
+		public function BitmapData(width:int, height:int, transparent:Boolean = true, fillColor:uint = 0xffffffff)
 		{
 			super();
 			this.ctor(width, height, transparent, fillColor);
 		}
 		
-		private function ctor(width:int, height:int, transparent:Boolean = true, fillColor:uint = 4.294967295E9):void
+		private function ctor(width:int, height:int, transparent:Boolean = true, fillColor:uint = 0xffffffff):void
 		{
-			_width = width;
-			_height = height;
+			_transparent = transparent;
+			image = document.createElement("canvas") as HTMLCanvasElement;
+			image.width =_width= width;
+			image.height = _height=height;
+			ctx = image.getContext("2d") as CanvasRenderingContext2D;
+			imageData = ctx.getImageData(0, 0, width, height);
+			data = imageData.data;
+			fillRect(rect, fillColor);
+		}
+		
+		public function fromImage(img:Image):void {
+			ctx.drawImage(img, 0, 0);
 		}
 		
 		public function clone():BitmapData  { return null }
@@ -27,28 +41,53 @@ package flash.display
 		
 		public function get height():int  { return _height }
 		
-		public function get transparent():Boolean  { return true }
+		public function get transparent():Boolean  { return _transparent; }
 		
 		public function get rect():Rectangle
 		{
 			return new Rectangle(0, 0, this.width, this.height);
 		}
 		
-		public function getPixel(param1:int, param2:int):uint  { return 0 }
+		public function getPixel(x:int, y:int):uint  { 
+			var p:int = (y * width + x) * 4;
+			return (data[p] << 16) | (data[p + 1] << 8) | data[p + 2];
+		}
 		
-		public function getPixel32(param1:int, param2:int):uint  { return 0 }
+		public function getPixel32(x:int, y:int):uint  { 
+			var p:int = (y * width + x) * 4;
+			return (data[p + 3] << 24) | (data[p] << 16) | (data[p + 1] << 8) | data[p + 2]; 
+		}
 		
-		public function setPixel(param1:int, param2:int, param3:uint):void  {/**/ }
+		public function setPixel(x:int, y:int, color:uint):void  {
+			var p:int = (y * width + x) * 4;
+			data[p] = (color>>16)&0xff;//r
+			data[p + 1] = (color>>8)&0xff;//g
+			data[p + 2] = color & 0xff;//b
+			if (!_lock) {
+				ctx.putImageData(imageData,0,0);
+			}
+		}
 		
-		public function setPixel32(param1:int, param2:int, param3:uint):void  {/**/ }
+		public function setPixel32(x:int, y:int, color:uint):void  {
+			var p:int = (y * width + x) * 4;
+			data[p] = (color>>16)&0xff;//r
+			data[p + 1] = (color>>8)&0xff;//g
+			data[p + 2] = color&0xff;//b
+			data[p + 3] = color >>> 24;//a
+			if (!_lock) {
+				ctx.putImageData(imageData,0,0);
+			}
+		}
 		
 		//native public function applyFilter(param1:BitmapData, param2:Rectangle, param3:Point, param4:BitmapFilter) : void;
 		
-		//native public function colorTransform(param1:Rectangle, param2:ColorTransform) : void;
+		public function colorTransform(rect:Rectangle, ct:ColorTransform) : void {
+			
+		}
 		
-		public function compare(param1:BitmapData):Object  { return null }
+		public function compare(b:BitmapData):Object  { return null }
 		
-		public function copyChannel(param1:BitmapData, param2:Rectangle, param3:Point, param4:uint, param5:uint):void  {/**/ }
+		public function copyChannel(b:BitmapData, r:Rectangle, p:Point, param4:uint, param5:uint):void  {/**/ }
 		
 		public function copyPixels(param1:BitmapData, param2:Rectangle, param3:Point, param4:BitmapData = null, param5:Point = null, param6:Boolean = false):void  {/**/ }
 		
@@ -58,7 +97,15 @@ package flash.display
 		
 		public function drawWithQuality(param1:BitmapData, param2:Matrix = null, param3:Object/*ColorTransform*/ = null, param4:String = null, param5:Rectangle = null, param6:Boolean = false, param7:String = null):void  {/**/ }
 		
-		public function fillRect(param1:Rectangle, param2:uint):void  {/**/ }
+		public function fillRect(rect:Rectangle, fillColor:uint):void  {
+			lock();
+			for (var y:int = 0; y < width; ++y) {
+				for (var x:int = 0; x < height; ++x) {
+					setPixel32(x, y,transparent?fillColor:(0xff000000|fillColor));
+				}
+			}
+			unlock();
+		}
 		
 		public function floodFill(param1:int, param2:int, param3:uint):void  {/**/ }
 		
@@ -76,7 +123,15 @@ package flash.display
 		
 		public function merge(param1:BitmapData, param2:Rectangle, param3:Point, param4:uint, param5:uint, param6:uint, param7:uint):void  {/**/ }
 		
-		public function noise(param1:int, param2:uint = 0, param3:uint = 255, param4:uint = 7, param5:Boolean = false):void  {/**/ }
+		public function noise(randomSeed:int, low:uint=0, high:uint=255, channelOptions:uint=7, grayScale:Boolean=false):void  {
+			lock();
+			for (var y:int = 0; y < width; ++y) {
+				for (var x:int = 0; x < height; ++x) {
+					setPixel32(x, y, transparent? (0xffffffff * Math.random()):(0xff000000|0xffffff*Math.random()));
+				}
+			}
+			unlock();
+		}
 		
 		public function paletteMap(param1:BitmapData, param2:Rectangle, param3:Point, param4:Array = null, param5:Array = null, param6:Array = null, param7:Array = null):void  {/**/ }
 		
@@ -92,9 +147,14 @@ package flash.display
 		
 		public function threshold(param1:BitmapData, param2:Rectangle, param3:Point, param4:String, param5:uint, param6:uint = 0, param7:uint = 4.294967295E9, param8:Boolean = false):uint  { return 0 }
 		
-		public function lock():void  {/**/ }
+		public function lock():void  {
+			_lock = true;
+		}
 		
-		public function unlock(param1:Rectangle = null):void  {/**/ }
+		public function unlock(param1:Rectangle = null):void  {
+			_lock = false;
+			ctx.putImageData(imageData, 0, 0);
+		}
 		
 		public function histogram(param1:Rectangle = null):Vector.<Vector.<Number>>  { return null }
 		

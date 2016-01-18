@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	
 	public final class GraphicsGradientFill extends Object implements IGraphicsFill, IGraphicsData
@@ -92,7 +93,7 @@ package flash.display
 		/**
 		 * @flexjsignorecoercion String
 		 */
-		public function draw(ctx:CanvasRenderingContext2D):void
+		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{
 			if (gradient == null) {
 				if (type==GradientType.LINEAR) {

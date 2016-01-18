@@ -27,8 +27,6 @@ package flash.display
 		
 		private function window_resize(e:Object):void
 		{
-			canvas.width = stageWidth;
-			canvas.height = stageHeight;
 			dispatchEvent(new Event(Event.RESIZE));
 		}
 		

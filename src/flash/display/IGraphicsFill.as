@@ -1,6 +1,7 @@
 package flash.display
 {
-   public interface IGraphicsFill
-   {
-       }
+	
+	public interface IGraphicsFill
+	{
+	}
 }

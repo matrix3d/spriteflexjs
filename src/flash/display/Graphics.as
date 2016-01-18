@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	
@@ -400,7 +401,7 @@ package flash.display
 			return graphicsData.slice();
 		}
 		
-		public function draw(ctx:CanvasRenderingContext2D, m:Matrix,alpha:Number,blendMode:String):void
+		public function draw(ctx:CanvasRenderingContext2D, m:Matrix,alpha:Number,blendMode:String,colorTransform:ColorTransform):void
 		{
 			if (graphicsData.length)
 			{
@@ -410,12 +411,12 @@ package flash.display
 				ctx.globalCompositeOperation = BlendMode.getCompVal(blendMode);
 				for each (var igd:IGraphicsData in graphicsData)
 				{
-					igd.draw(ctx);
+					igd.draw(ctx,colorTransform);
 				}
 				if (lastFill)
 				{
 					endFillInstance.fill = lastFill;
-					endFillInstance.draw(ctx);
+					endFillInstance.draw(ctx,colorTransform);
 				}
 				
 				if (lastStroke)

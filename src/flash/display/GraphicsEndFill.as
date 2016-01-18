@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	
 	public final class GraphicsEndFill extends Object implements IGraphicsFill, IGraphicsData
@@ -10,7 +11,7 @@ package flash.display
 			super();
 		}
 		
-		public function draw(ctx:CanvasRenderingContext2D):void
+		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{
 			if (fill) {
 				if(fill is GraphicsBitmapFill){

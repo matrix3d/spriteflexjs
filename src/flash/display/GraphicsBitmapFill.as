@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	
 	public final class GraphicsBitmapFill extends Object implements IGraphicsFill, IGraphicsData
@@ -27,7 +28,7 @@ package flash.display
 		/**
 		 * @flexjsignorecoercion String
 		 */
-		public function draw(ctx:CanvasRenderingContext2D):void
+		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{
 			if (pattern==null&&bitmapData) {
 				pattern = ctx.createPattern(bitmapData.image, this.repeat ? "repeat" : "no-repeat");

@@ -2,6 +2,6 @@ package flash.utils
 {
 	public function getTimer():int
 	{
-		return 0;
+		return (new Date()).getTime() - SpriteFlexjs.startTime;
 	}
 }

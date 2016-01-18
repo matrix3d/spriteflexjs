@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.geom.ColorTransform;
 	
 	public final class GraphicsSolidFill extends Object implements IGraphicsFill, IGraphicsData
 	{
@@ -7,8 +8,7 @@ package flash.display
 		public var color:uint = 0;
 		
 		public var alpha:Number = 1.0;
-		public var cssColor:String;
-		
+		private var cssColor:String;
 		public function GraphicsSolidFill(color:uint = 0, alpha:Number = 1.0)
 		{
 			super();
@@ -17,9 +17,20 @@ package flash.display
 			cssColor = "rgba(" + (color >> 16 & 0xff) + "," + (color >> 8 & 0xff) + "," + (color & 0xff) + "," + this.alpha + ")";
 		}
 		
-		public function draw(ctx:CanvasRenderingContext2D):void
+		/**
+		 * @flexjsignorecoercion String
+		 */
+		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{
-			ctx.fillStyle = cssColor;
+			ctx.fillStyle = getCssColor(colorTransform);
+		}
+		
+		public function getCssColor(ct:ColorTransform):String 
+		{
+			if (ct==null) {
+				return cssColor;
+			}
+			return "rgba(" + ((color >> 16 & 0xff)*ct.redMultiplier+ct.redOffset) + "," + ((color >> 8 & 0xff)*ct.greenMultiplier+ct.greenOffset) + "," + ((color & 0xff)*ct.greenMultiplier+ct.greenOffset) + "," + (this.alpha*ct.alphaMultiplier+ct.alphaOffset) + ")";
 		}
 	}
 }

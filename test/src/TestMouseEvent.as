@@ -4,6 +4,7 @@ package
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.geom.ColorTransform;
 	import flash.text.TextField;
 	/**
 	 * ...
@@ -13,6 +14,8 @@ package
 	{
 		private var tf:TextField;
 		private var moving:Sprite;
+		private var ct:ColorTransform = new ColorTransform(0,0,0);
+		private var ctnull:ColorTransform = new ColorTransform();
 		public function TestMouseEvent() 
 		{
 			for (var i:int = 0; i < 100;i++ ) {
@@ -29,16 +32,19 @@ package
 				s.addEventListener(MouseEvent.MOUSE_DOWN, s_mouseDown);
 				addChild(s);
 				s.addEventListener(MouseEvent.CLICK, s_mouseevent);
-				s.addEventListener(MouseEvent.CONTEXT_MENU, s_mouseevent);
+				//s.addEventListener(MouseEvent.CONTEXT_MENU, s_mouseevent);
 				s.addEventListener(MouseEvent.DOUBLE_CLICK, s_mouseevent);
 				s.addEventListener(MouseEvent.MOUSE_DOWN, s_mouseevent);
 				s.addEventListener(MouseEvent.MOUSE_MOVE, s_mouseevent);
+				s.addEventListener(MouseEvent.MOUSE_OUT, s_mouseevent);
+				s.addEventListener(MouseEvent.MOUSE_OVER, s_mouseevent);
 				s.addEventListener(MouseEvent.MOUSE_UP, s_mouseevent);
 			}
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, stage_mouseMove);
 			stage.addEventListener(MouseEvent.MOUSE_UP, stage_mouseUp);
 			tf = new TextField;
 			tf.y = 200;
+			tf.mouseEnabled = false;
 			addChild(tf);
 		}
 		
@@ -50,8 +56,8 @@ package
 		private function stage_mouseMove(e:MouseEvent):void 
 		{
 			if (moving) {
-				moving.x = e.localX;
-				moving.y = e.localY;
+				moving.x = mouseX;
+				moving.y = mouseY;
 			}
 		}
 		
@@ -70,15 +76,15 @@ package
 		private function s_mouseOut(e:MouseEvent):void 
 		{
 			var t:DisplayObject = e.currentTarget as DisplayObject;
-			t.alpha = 1;
 			t.scaleX = t.scaleY = 1;
+			t.transform.colorTransform = ctnull;
 		}
 		
 		private function s_mouseOver(e:MouseEvent):void 
 		{
 			var t:DisplayObject = e.currentTarget as DisplayObject;
-			t.alpha = .5;
 			t.scaleX = t.scaleY = 1.2;
+			t.transform.colorTransform = ct;
 		}
 		
 	}

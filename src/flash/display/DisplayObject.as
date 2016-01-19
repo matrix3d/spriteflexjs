@@ -50,7 +50,6 @@ package flash.display
 				_stage.addEventListener(MouseEvent.MOUSE_DOWN, __mouseevent);
 				_stage.addEventListener(MouseEvent.MOUSE_MOVE, __mouseevent);
 				_stage.addEventListener(MouseEvent.MOUSE_UP, __mouseevent);
-				SpriteFlexjs.startTime = (new Date()).getTime();
 			}
 		}
 		

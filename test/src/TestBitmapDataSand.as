@@ -14,8 +14,8 @@ package
 	{
 		private var fp:P;
 		private var bmd:BitmapData;
-		private var w:int = 200;
-		private var h:int = 200;
+		private var w:int = 400;
+		private var h:int = 400;
 		
 		public function TestBitmapDataSand()
 		{
@@ -49,13 +49,12 @@ package
 			var mx:Number = mouseX;
 			var my:Number = mouseY;
 			var p:P = fp;
-			var r2:Number = -r;
 			bmd.lock();
 			while (p)
 			{
 				var dx:Number = p.x - mx;
 				var dy:Number = p.y - my;
-				if (dx < r2 || dx > r || dy < r2 || dy > r)
+				if (dx < -r || dx > r || dy < -r || dy > r)
 				{
 					
 				}
@@ -117,7 +116,7 @@ package
 						p.vy *= -1;
 					}
 				}
-				bmd.setPixel(p.x, p.y, p.c);
+				bmd.setPixel(int(p.x), int(p.y), p.c);
 				p = p.next;
 			}
 			bmd.unlock();

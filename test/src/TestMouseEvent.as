@@ -14,8 +14,6 @@ package
 	{
 		private var tf:TextField;
 		private var moving:Sprite;
-		private var ct:ColorTransform = new ColorTransform(0,0,0);
-		private var ctnull:ColorTransform = new ColorTransform();
 		public function TestMouseEvent() 
 		{
 			for (var i:int = 0; i < 100;i++ ) {
@@ -77,14 +75,14 @@ package
 		{
 			var t:DisplayObject = e.currentTarget as DisplayObject;
 			t.scaleX = t.scaleY = 1;
-			t.transform.colorTransform = ctnull;
+			t.alpha = 1;
 		}
 		
 		private function s_mouseOver(e:MouseEvent):void 
 		{
 			var t:DisplayObject = e.currentTarget as DisplayObject;
 			t.scaleX = t.scaleY = 1.2;
-			t.transform.colorTransform = ct;
+			t.alpha = .8;
 		}
 		
 	}

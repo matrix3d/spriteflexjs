@@ -6,6 +6,7 @@ package flash.display
 	public class BitmapData
 	{
 		private var data:Uint8ClampedArray;
+		//private var data32:Uint32Array;
 		private var imageData:ImageData;
 		public var image:HTMLCanvasElement;
 		private var _lock:Boolean = false;
@@ -28,6 +29,7 @@ package flash.display
 			ctx = image.getContext("2d") as CanvasRenderingContext2D;
 			imageData = ctx.getImageData(0, 0, width, height);
 			data = imageData.data;
+			//data32 = new Uint32Array(imageData.data);
 			fillRect(rect, fillColor);
 		}
 		
@@ -51,11 +53,15 @@ package flash.display
 		public function getPixel(x:int, y:int):uint  { 
 			var p:int = (y * width + x) * 4;
 			return (data[p] << 16) | (data[p + 1] << 8) | data[p + 2];
+			/*var p:int = y * width + x;
+			return data32[p]&0xffffff;*/
 		}
 		
 		public function getPixel32(x:int, y:int):uint  { 
 			var p:int = (y * width + x) * 4;
-			return (data[p + 3] << 24) | (data[p] << 16) | (data[p + 1] << 8) | data[p + 2]; 
+			return (data[p + 3] << 24) | (data[p] << 16) | (data[p + 1] << 8) | data[p + 2];
+			/*var p:int = y * width + x;
+			return data32[p];*/
 		}
 		
 		public function setPixel(x:int, y:int, color:uint):void  {
@@ -63,6 +69,8 @@ package flash.display
 			data[p] = (color>>16)&0xff;//r
 			data[p + 1] = (color>>8)&0xff;//g
 			data[p + 2] = color & 0xff;//b
+			/*var p:int = y * width + x;
+			data32[p] = 0xff000000 | color;*/
 			if (!_lock) {
 				ctx.putImageData(imageData,0,0);
 			}
@@ -74,6 +82,8 @@ package flash.display
 			data[p + 1] = (color>>8)&0xff;//g
 			data[p + 2] = color&0xff;//b
 			data[p + 3] = color >>> 24;//a
+			/*var p:int = y * width + x;
+			data32[p] = color;*/
 			if (!_lock) {
 				ctx.putImageData(imageData,0,0);
 			}

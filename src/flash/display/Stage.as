@@ -5,6 +5,7 @@ package flash.display
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Rectangle;
+	import flash.utils.getTimer;
 	
 	public class Stage extends EventDispatcher
 	{
@@ -15,11 +16,17 @@ package flash.display
 		private var _ctx:CanvasRenderingContext2D
 		private var _mouseX:Number = 0;
 		private var _mouseY:Number = 0;
-		private var intervalID:Number;
-		
+		//private var intervalID:Number;
+		private var needSendMouseMove:Boolean = false;
+		private var needSendTouchMove:Boolean = false;
+		private var lastUpdateTime:int = -1000;
+		private var requestAnimationFrameHander:Number;
 		public function Stage()
 		{
 			super();
+			if (SpriteFlexjs.startTime==0) {
+				SpriteFlexjs.startTime = (new Date()).getTime();
+			}
 			frameRate = 60;
 			_stage3Ds = Vector.<Stage3D>([new Stage3D, new Stage3D, new Stage3D, new Stage3D]);
 			window.addEventListener("resize", window_resize, false);
@@ -37,18 +44,28 @@ package flash.display
 			_frameRate = v;
 			//http://creativejs.com/resources/requestanimationframe/
 			//clearInterval(intervalID);
-			//intervalID = setInterval(update, 1000 / v);
-			___update();
-		}
-		
-		private function ___update():void
-		{
-			setTimeout(__update,1000 / _frameRate);
+			//intervalID = setInterval(__update, 1000 / v);
+			try{
+				cancelRequestAnimationFrame(requestAnimationFrameHander);
+			}catch(e:Object){}
+			__update();
 		}
 		
 		private function __update():void{
-			requestAnimationFrame(___update);
-			dispatchEvent(new Event(Event.ENTER_FRAME));
+			requestAnimationFrameHander = requestAnimationFrame(__update);
+			var t:int = getTimer();
+			if ((t - lastUpdateTime) >= 1000 / frameRate) {
+				lastUpdateTime = t;
+				if (needSendMouseMove) {
+					dispatchEvent(new MouseEvent(MouseEvent.MOUSE_MOVE, true, false, _mouseX, _mouseY);
+					needSendMouseMove = false;
+				}
+				if (needSendTouchMove) {
+					dispatchEvent(new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, 0, true, _mouseX, _mouseY);
+					needSendTouchMove = false;
+				}
+				dispatchEvent(new Event(Event.ENTER_FRAME));
+			}
 		}
 		
 		public function invalidate():void  {/**/ }
@@ -191,10 +208,18 @@ package flash.display
 					_mouseY = e.targetTouches[0].pageY - canvas.offsetTop;
 				}
 				if (hasEventListener(flashType)) {
-					dispatchEvent(new TouchEvent(flashType,true,false,0,true,_mouseX,_mouseY));
+					if(flashType!=MouseEvent.MOUSE_MOVE){
+						dispatchEvent(new TouchEvent(flashType, true, false, 0, true, _mouseX, _mouseY));
+					}else {
+						needSendMouseMove = true;
+					}
 				}
 				if (hasEventListener(flashType2)) {
-					dispatchEvent(new MouseEvent(flashType2,true,false,_mouseX,_mouseY));
+					if(flashType2!=TouchEvent.TOUCH_MOVE){
+						dispatchEvent(new MouseEvent(flashType2, true, false, _mouseX, _mouseY));
+					}else {
+						needSendTouchMove = true;
+					}
 				}
 			}
 		}
@@ -242,7 +267,11 @@ package flash.display
 				_mouseX = e.pageX - canvas.offsetLeft;
 				_mouseY = e.pageY - canvas.offsetTop;
 				if (hasEventListener(flashType)) {
-					dispatchEvent(new MouseEvent(flashType,true,false,_mouseX,_mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,e.button>0,e.wheelDelta));
+					if(flashType!=MouseEvent.MOUSE_MOVE){
+						dispatchEvent(new MouseEvent(flashType,true,false,_mouseX,_mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,e.button>0,e.wheelDelta));
+					}else {
+						needSendMouseMove = true;
+					}
 				}
 			}
 		}

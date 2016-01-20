@@ -108,9 +108,11 @@ package flash.display
 		override public function __update():void
 		{
 			super.__update();
-			for each (var c:DisplayObject in children)
-			{
-				c.__update();
+			if(stage&&visible){
+				for each (var c:DisplayObject in children)
+				{
+					c.__update();
+				}
 			}
 		}
 		
@@ -125,7 +127,7 @@ package flash.display
 		
 		override protected function __doMouse(e:flash.events.MouseEvent):DisplayObject 
 		{
-			if (mouseEnabled&&mouseChildren) {
+			if (mouseEnabled&&mouseChildren&&visible) {
 				for (var i:int = children.length - 1; i >= 0; i-- ) {
 					var obj:DisplayObject = children[i].__doMouse(e);
 					if (obj) {

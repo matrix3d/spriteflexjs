@@ -1,0 +1,236 @@
+{
+    "localName": "particleEmitterConfig",
+    "children": [
+        {
+            "localName": "texture",
+            "attributes": {
+                "name": "texture.png"
+            }
+        },
+        {
+            "localName": "sourcePosition",
+            "attributes": {
+                "y": "300.00",
+                "x": "300.00"
+            }
+        },
+        {
+            "localName": "sourcePositionVariance",
+            "attributes": {
+                "y": "0",
+                "x": "0"
+            }
+        },
+        {
+            "localName": "speed",
+            "attributes": {
+                "value": "500"
+            }
+        },
+        {
+            "localName": "speedVariance",
+            "attributes": {
+                "value": "30"
+            }
+        },
+        {
+            "localName": "particleLifeSpan",
+            "attributes": {
+                "value": "0.35"
+            }
+        },
+        {
+            "localName": "particleLifespanVariance",
+            "attributes": {
+                "value": "0"
+            }
+        },
+        {
+            "localName": "angle",
+            "attributes": {
+                "value": "177.31"
+            }
+        },
+        {
+            "localName": "angleVariance",
+            "attributes": {
+                "value": "360"
+            }
+        },
+        {
+            "localName": "gravity",
+            "attributes": {
+                "y": "-500",
+                "x": "0"
+            }
+        },
+        {
+            "localName": "radialAcceleration",
+            "attributes": {
+                "value": "0.00"
+            }
+        },
+        {
+            "localName": "tangentialAcceleration",
+            "attributes": {
+                "value": "0"
+            }
+        },
+        {
+            "localName": "radialAccelVariance",
+            "attributes": {
+                "value": "0.00"
+            }
+        },
+        {
+            "localName": "tangentialAccelVariance",
+            "attributes": {
+                "value": "0.00"
+            }
+        },
+        {
+            "localName": "startColor",
+            "attributes": {
+                "alpha": "0.41000000000000003",
+                "green": "0",
+                "red": "1",
+                "blue": "0"
+            }
+        },
+        {
+            "localName": "startColorVariance",
+            "attributes": {
+                "alpha": "0",
+                "green": "0",
+                "red": "0",
+                "blue": "0"
+            }
+        },
+        {
+            "localName": "finishColor",
+            "attributes": {
+                "alpha": "0.4",
+                "green": "0.31",
+                "red": "0",
+                "blue": "0.76"
+            }
+        },
+        {
+            "localName": "finishColorVariance",
+            "attributes": {
+                "alpha": "0",
+                "green": "0",
+                "red": "0",
+                "blue": "0"
+            }
+        },
+        {
+            "localName": "maxParticles",
+            "attributes": {
+                "value": "50"
+            }
+        },
+        {
+            "localName": "startParticleSize",
+            "attributes": {
+                "value": "18.51"
+            }
+        },
+        {
+            "localName": "startParticleSizeVariance",
+            "attributes": {
+                "value": "0"
+            }
+        },
+        {
+            "localName": "finishParticleSize",
+            "attributes": {
+                "value": "40"
+            }
+        },
+        {
+            "localName": "FinishParticleSizeVariance",
+            "attributes": {
+                "value": "0"
+            }
+        },
+        {
+            "localName": "duration",
+            "attributes": {
+                "value": "-1.00"
+            }
+        },
+        {
+            "localName": "emitterType",
+            "attributes": {
+                "value": "1"
+            }
+        },
+        {
+            "localName": "maxRadius",
+            "attributes": {
+                "value": "150"
+            }
+        },
+        {
+            "localName": "maxRadiusVariance",
+            "attributes": {
+                "value": "40"
+            }
+        },
+        {
+            "localName": "minRadius",
+            "attributes": {
+                "value": "0"
+            }
+        },
+        {
+            "localName": "rotatePerSecond",
+            "attributes": {
+                "value": "0"
+            }
+        },
+        {
+            "localName": "rotatePerSecondVariance",
+            "attributes": {
+                "value": "0"
+            }
+        },
+        {
+            "localName": "blendFuncSource",
+            "attributes": {
+                "value": "770"
+            }
+        },
+        {
+            "localName": "blendFuncDestination",
+            "attributes": {
+                "value": "1"
+            }
+        },
+        {
+            "localName": "rotationStart",
+            "attributes": {
+                "value": "0.00"
+            }
+        },
+        {
+            "localName": "rotationStartVariance",
+            "attributes": {
+                "value": "0.00"
+            }
+        },
+        {
+            "localName": "rotationEnd",
+            "attributes": {
+                "value": "0.00"
+            }
+        },
+        {
+            "localName": "rotationEndVariance",
+            "attributes": {
+                "value": "0.00"
+            }
+        }
+    ]
+}

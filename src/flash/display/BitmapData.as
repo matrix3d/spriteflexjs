@@ -35,6 +35,8 @@ package flash.display
 		
 		public function fromImage(img:Image):void {
 			ctx.drawImage(img, 0, 0);
+			imageData = ctx.getImageData(0, 0, width, height);
+			this.data = this.imageData.data;
 		}
 		
 		public function clone():BitmapData  { return null }
@@ -99,7 +101,15 @@ package flash.display
 		
 		public function copyChannel(b:BitmapData, r:Rectangle, p:Point, param4:uint, param5:uint):void  {/**/ }
 		
-		public function copyPixels(param1:BitmapData, param2:Rectangle, param3:Point, param4:BitmapData = null, param5:Point = null, param6:Boolean = false):void  {/**/ }
+		public function copyPixels(sourceBitmapData:BitmapData, sourceRect:Rectangle, destPoint:Point, alphaBitmapData:BitmapData=null, alphaPoint:Point=null, mergeAlpha:Boolean=false):void  {
+			lock();
+			for (var x:int = 0; x < sourceRect.width;x++ ) {
+				for (var y:int = 0; y < sourceRect.height; y++ ) {
+					setPixel32(x+destPoint.x, y+destPoint.y, sourceBitmapData.getPixel32(x+sourceRect.x,y+sourceRect.y));
+				}
+			}
+			unlock();
+		}
 		
 		public function dispose():void  {/**/ }
 		

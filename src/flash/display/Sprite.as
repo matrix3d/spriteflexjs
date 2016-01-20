@@ -63,7 +63,7 @@ package flash.display
 		
 		override protected function __doMouse(e:flash.events.MouseEvent):DisplayObject 
 		{
-			if (stage && mouseEnabled) {
+			if (stage && mouseEnabled&&visible) {
 				var obj:DisplayObject = super.__doMouse(e);
 				if (obj) {
 					return obj;

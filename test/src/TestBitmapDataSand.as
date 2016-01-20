@@ -14,14 +14,16 @@ package
 	{
 		private var fp:P;
 		private var bmd:BitmapData;
-		private var w:int = 400;
-		private var h:int = 400;
+		private var w:int = 200;
+		private var h:int = 200;
 		
 		public function TestBitmapDataSand()
 		{
 			bmd = new BitmapData(w, h, false, 0);
 			bmd.noise(0);
-			addChild(new Bitmap(bmd));
+			image = new Bitmap(bmd);
+			addChild(image);
+			image.scaleX = image.scaleY = 2;
 			var cp:P;
 			for (var x:int = 0; x < bmd.width; x++)
 			{
@@ -42,12 +44,13 @@ package
 		
 		private const r:Number = 10;
 		private const help:Number = r * Math.PI / 2;
+		private var image:Bitmap;
 		
 		private function enterFrame(e:Event):void
 		{
 			bmd.fillRect(bmd.rect, 0);
-			var mx:Number = mouseX;
-			var my:Number = mouseY;
+			var mx:Number = image.mouseX;
+			var my:Number = image.mouseY;
 			var p:P = fp;
 			bmd.lock();
 			while (p)

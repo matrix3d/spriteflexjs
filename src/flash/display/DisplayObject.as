@@ -55,7 +55,16 @@ package flash.display
 		
 		public function get stage():Stage  { return _stage; }
 		
-		public function set stage(v:Stage):void  { _stage = v; }
+		public function set stage(v:Stage):void  { 
+			if (_stage != v) {
+				_stage = v;
+				if (_stage) {
+					dispatchEvent(new Event(Event.ADDED_TO_STAGE));
+				}else {
+					dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
+				}
+			}
+		}
 		
 		public function get root():DisplayObject  { return null }
 		
@@ -352,33 +361,39 @@ package flash.display
 					}
 					if (!isSendMouseOut) {
 						var out:MouseEvent = new MouseEvent(MouseEvent.MOUSE_OUT,true,false,e.localX,e.localY);
-						t = lastMouseOverObj;
-						while (t) {
-							if(t.hasEventListener(out.type)){
-								t.dispatchEvent(out);
-							}
-							t = t.parent;
+						//t = lastMouseOverObj;
+						//while (t) {
+						//	if(t.hasEventListener(out.type)){
+						if(t){
+							t.dispatchEvent(out);
 						}
+						//	}
+						//	t = t.parent;
+						//}
 					}
 				}
 				
 				//mouse over
-				var t2:DisplayObject = obj;
+				//var t2:DisplayObject = obj;
 				var over:MouseEvent = new MouseEvent(MouseEvent.MOUSE_OVER,true,false,e.localX,e.localY);
-				while (t2 && t2 != t) {
-					if(t2.hasEventListener(over.type)){
-						t2.dispatchEvent(over);
-					}
-					t2 = t2.parent;
+				//while (t2 && t2 != t) {
+				//	if(t2.hasEventListener(over.type)){
+				if(obj&&obj!=t){
+					obj.dispatchEvent(over);
 				}
+				//	}
+				//	t2 = t2.parent;
+				//}
 				lastMouseOverObj = obj;
 			}
-			while (obj) {
-				if(obj.hasEventListener(e.type)){
-					obj.dispatchEvent(e);
-				}
-				obj = obj.parent;
+			//while (obj) {
+			//	if(obj.hasEventListener(e.type)){
+			if(obj){
+				obj.dispatchEvent(e);
 			}
+			//	}
+			//	obj = obj.parent;
+			//}
 			if(SpriteFlexjs.debug){
 				trace("__dispatchmouseevent", getTimer() - time);
 			}
@@ -386,6 +401,15 @@ package flash.display
 		
 		protected function __doMouse(e:flash.events.MouseEvent):DisplayObject {
 			return null;
+		}
+		
+		override public function dispatchEvent(event:Event):Boolean 
+		{
+			var b:Boolean = super.dispatchEvent(event);
+			if (event.bubbles && parent) {
+				parent.dispatchEvent(event);
+			}
+			return b;
 		}
 	}
 

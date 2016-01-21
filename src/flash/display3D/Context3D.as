@@ -93,7 +93,13 @@ package flash.display3D
 		
 		public function setProgramConstantsFromMatrix(programType:String, firstRegister:int, matrix:Matrix3D, transposedMatrix:Boolean = false):void
 		{
-			gl.uniformMatrix4fv(getUniformLocation(programType, firstRegister), transposedMatrix, matrix.rawData);
+			if (transposedMatrix) {
+				matrix.transpose();
+			}
+			gl.uniformMatrix4fv(getUniformLocation(programType, firstRegister), false, matrix.rawData);
+			if (transposedMatrix) {
+				matrix.transpose();
+			}
 		}
 		
 		private function getUniformLocation(programType:String, register:int):WebGLUniformLocation

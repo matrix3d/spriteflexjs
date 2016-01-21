@@ -154,11 +154,15 @@ package flash.utils
 		}
 		
 		public function readMultiByte(length:uint, charSet:String):String  {
-			var decoder:TextDecoder = new TextDecoder(charSet);
 			var u8:Uint8Array = new Uint8Array(length);
 			u8.set(new Uint8Array(dataView.buffer.slice(_position, _position + length)));
-			var str:String=decoder.decode(u8)
 			_position += length;
+			try{
+				var decoder:TextDecoder = new TextDecoder(charSet);
+				var str:String = decoder.decode(u8);
+			}catch(err:Object){
+				str=String.fromCharCode.apply(null,u8);
+			}
 			return str;
 		}
 		
@@ -244,7 +248,8 @@ package flash.utils
 		}
 		
 		public function clear():void  {
-			
+			position = 0;
+			length = 0;
 		}
 		
 		public function atomicCompareAndSwapIntAt(param1:int, param2:int, param3:int):int  { return 0 }

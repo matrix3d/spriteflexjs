@@ -203,11 +203,19 @@ package flash.display
 		
 		public function set alpha(v:Number):void  { _alpha = v; }
 		
-		public function get width():Number  { return 0 }
+		public function get width():Number  { 
+			var rect:Rectangle = getRect(parent);
+			if (rect) return rect.width;
+			return 0;
+		}
 		
 		public function set width(v:Number):void  {/**/ }
 		
-		public function get height():Number  { return 0 }
+		public function get height():Number  { 
+			var rect:Rectangle = getRect(parent);
+			if (rect) return rect.height;
+			return 0;
+		}
 		
 		public function set height(v:Number):void  {/**/ }
 		
@@ -274,14 +282,32 @@ package flash.display
 		
 		public function set scale9Grid(v:Rectangle):void  {/**/ }
 		
-		public function globalToLocal(v:Point):Point  { return null }
+		public function globalToLocal(v:Point):Point  { 
+			return invMatrix.transformPoint(v);
+		}
 		
-		public function localToGlobal(v:Point):Point  { return null }
+		public function localToGlobal(v:Point):Point  { 
+			return worldMatrix.transformPoint(v);
+		}
 		
-		public function getBounds(v:DisplayObject):Rectangle  { return null }
+		public function getBounds(v:DisplayObject):Rectangle  { 
+			return getRect(v);
+		}
 		
-		public function getRect(param1:DisplayObject):Rectangle  { return null }
+		public function getRect(v:DisplayObject):Rectangle  {
+			var rect:Rectangle = __getRect();
+			if (rect) {
+				if (v==null||v==this) {
+					return rect; 
+				}
+				var ps:Array = [rect.topLeft,rect.bottomRight];
+			}
+			return __getRect(); 
+		}
 		
+		public function __getRect():Rectangle {
+			return null;
+		}
 		//public function get loaderInfo() : LoaderInfo{return null}
 		
 		public function hitTestObject(obj:DisplayObject):Boolean
@@ -291,6 +317,8 @@ package flash.display
 		
 		public function hitTestPoint(x:Number, y:Number, shapeFlag:Boolean = false):Boolean
 		{
+			var rect:Rectangle = __getRect();
+			if(rect)return rect.containsPoint(globalToLocal(new Point(x,y)));
 			return false;
 		}
 		

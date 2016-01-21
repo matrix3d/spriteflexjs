@@ -1,5 +1,7 @@
 package
 {
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	
@@ -19,7 +21,11 @@ package
 		private function init(e:Event = null):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			// entry point
+			var b:Bitmap = new Bitmap(new BitmapData(100, 100));
+			addChild(b);
+			b.scaleX = 2;
+			b.rotation = 45;
+			trace(b.transform.pixelBounds);
 		}
 		
 	}

@@ -49,9 +49,9 @@ package flash.display
 		
 		//public function set soundTransform(param1:SoundTransform) : void;
 		
-		override public function hitTestPoint(x:Number, y:Number, shapeFlag:Boolean = false):Boolean 
+		override public function __getRect():Rectangle 
 		{
-			return graphics.bound.containsPoint(invMatrix.transformPoint(new Point(x,y)));
+			return graphics.bound;
 		}
 		
 		override public function __update():void

@@ -93,5 +93,8 @@ package com.hsharma.hungryHero
 		
 		/** Obstacle speed. */		
 		public static const OBSTACLE_SPEED:Number = 300;
+		
+		public static const stageWidth:int = 1024;
+		public static const stageHeight:int = 768;
 	}
 }

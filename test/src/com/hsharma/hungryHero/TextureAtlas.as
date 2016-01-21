@@ -11,7 +11,7 @@ package com.hsharma.hungryHero
 	{
 		private var xml:Object;
 		private var bmd:BitmapData;
-		private var bmds:Object = { };
+		public var bmds:Object = { };
 		public function TextureAtlas(bmd:BitmapData,xml:Object) 
 		{
 			this.bmd = bmd;

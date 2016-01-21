@@ -3,6 +3,7 @@ package flash.display
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
 	public class Bitmap extends DisplayObject
 	{
@@ -40,10 +41,10 @@ package flash.display
 			_bitmapData = param1;
 		}
 		
-		override public function hitTestPoint(x:Number, y:Number, shapeFlag:Boolean = false):Boolean 
+		override public function __getRect():Rectangle 
 		{
-			if(bitmapData)return bitmapData.rect.containsPoint(invMatrix.transformPoint(new Point(x,y)));
-			return false;
+			if (bitmapData) return bitmapData.rect;
+			return null;
 		}
 		
 		override public function __update():void

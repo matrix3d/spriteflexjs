@@ -11,7 +11,7 @@ package flash.display
 		private var lastFill:IGraphicsFill;
 		private var lastPath:GraphicsPath;
 		private static var endFillInstance:GraphicsEndFill = new GraphicsEndFill;
-		public var bound:Rectangle = new Rectangle(Number.MAX_VALUE,Number.MAX_VALUE,-Number.MAX_VALUE,-Number.MAX_VALUE);
+		public var bound:Rectangle;// = new Rectangle(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
 		private var lockBound:Boolean = false;
 		public static var debug:Boolean = false;
 		public function Graphics()
@@ -24,7 +24,8 @@ package flash.display
 			lastStroke = null;
 			lastPath = null;
 			graphicsData = new Vector.<IGraphicsData>;
-			bound.setTo(Number.MAX_VALUE,Number.MAX_VALUE,-Number.MAX_VALUE,-Number.MAX_VALUE);
+			bound = null;
+			//bound.setTo(Number.MAX_VALUE,Number.MAX_VALUE,-Number.MAX_VALUE,-Number.MAX_VALUE);
 		}
 		
 		public function beginFill(color:uint, alpha:Number = 1.0):void
@@ -204,6 +205,7 @@ package flash.display
 		
 		private function inflateBound(x:Number, y:Number):void {
 			if (lockBound) return;
+			if (bound == null) bound = new Rectangle(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
 			if (bound.left>x) {
 				bound.left = x;
 			}

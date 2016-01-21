@@ -18,6 +18,7 @@ package com.hsharma.hungryHero.ui
 	import com.hsharma.hungryHero.Fonts;
 	import com.hsharma.hungryHero.customObjects.Font;
 	import com.hsharma.hungryHero.events.NavigationEvent;
+	import com.hsharma.hungryHero.GameConstants;
 	import com.hsharma.hungryHero.Quad;
 	import com.hsharma.hungryHero.Sounds;
 	import com.hsharma.hungryHero.StarlingTextField;
@@ -95,28 +96,28 @@ package com.hsharma.hungryHero.ui
 			fontScore = com.hsharma.hungryHero.Fonts.getFont("ScoreLabel");
 			
 			// Background quad.
-			bg = new Quad(stage.stageWidth, stage.stageHeight, 0x000000);
+			bg = new Quad(GameConstants.stageWidth, GameConstants.stageHeight, 0x000000);
 			bg.alpha = 0.75;
 			this.addChild(bg);
 			
 			// Message text field.
-			messageText = new StarlingTextField(stage.stageWidth, stage.stageHeight * 0.5, "HERO WAS KILLED!", fontMessage.fontName, fontMessage.fontSize, 0xf3e75f);
+			messageText = new StarlingTextField(GameConstants.stageWidth, GameConstants.stageHeight * 0.5, "HERO WAS KILLED!", fontMessage.fontName, fontMessage.fontSize, 0xf3e75f);
 			//messageText.vAlign = VAlign.TOP;
 			//messageText.height = messageText.textBounds.height;
-			messageText.y = (stage.stageHeight * 20)/100;
+			messageText.y = (GameConstants.stageHeight * 20)/100;
 			this.addChild(messageText);
 			
 			// Score container.
 			scoreContainer = new Sprite();
-			scoreContainer.y = (stage.stageHeight * 40)/100;
+			scoreContainer.y = (GameConstants.stageHeight * 40)/100;
 			this.addChild(scoreContainer);
 			
-			distanceText = new StarlingTextField(stage.stageWidth, 100, "DISTANCE TRAVELLED: 0000000", fontScore.fontName, fontScore.fontSize, 0xffffff);
+			distanceText = new StarlingTextField(GameConstants.stageWidth, 100, "DISTANCE TRAVELLED: 0000000", fontScore.fontName, fontScore.fontSize, 0xffffff);
 			//distanceText.vAlign = VAlign.TOP;
 			//distanceText.height = distanceText.textBounds.height;
 			scoreContainer.addChild(distanceText);
 			
-			scoreText = new StarlingTextField(stage.stageWidth, 100, "SCORE: 0000000", fontScore.fontName, fontScore.fontSize, 0xffffff);
+			scoreText = new StarlingTextField(GameConstants.stageWidth, 100, "SCORE: 0000000", fontScore.fontName, fontScore.fontSize, 0xffffff);
 			//scoreText.vAlign = VAlign.TOP;
 			scoreText.height = scoreText.height;
 			scoreText.y = distanceText.y+distanceText.height + scoreText.height * 0.5;
@@ -124,7 +125,7 @@ package com.hsharma.hungryHero.ui
 			
 			// Navigation buttons.
 			mainBtn = new Button(com.hsharma.hungryHero.Assets.getAtlas().getTexture("gameOver_mainButton"));
-			mainBtn.y = (stage.stageHeight * 70)/100;
+			mainBtn.y = (GameConstants.stageHeight * 70)/100;
 			mainBtn.addEventListener(MouseEvent.CLICK, onMainClick);
 			this.addChild(mainBtn);
 			
@@ -138,7 +139,7 @@ package com.hsharma.hungryHero.ui
 			aboutBtn.addEventListener(MouseEvent.CLICK, onAboutClick);
 			this.addChild(aboutBtn);
 			
-			mainBtn.x = stage.stageWidth * 0.5 - (mainBtn.width + playAgainBtn.width + aboutBtn.width + 30) * 0.5;
+			mainBtn.x = GameConstants.stageWidth * 0.5 - (mainBtn.width + playAgainBtn.width + aboutBtn.width + 30) * 0.5;
 			playAgainBtn.x = mainBtn.x+mainBtn.width + 10;
 			aboutBtn.x = playAgainBtn.y+playAgainBtn.height + 10;
 		}

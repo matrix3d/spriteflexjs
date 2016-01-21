@@ -65,6 +65,13 @@ package flash.display
 		}
 		
 		public function get numChildren():int  { return children.length; }
+		override public function set stage(value:Stage):void 
+		{
+			super.stage = value;
+			for each(var c:DisplayObject in children) {
+				c.stage = value;
+			}
+		}
 		
 		// public function get textSnapshot() : TextSnapshot;
 		

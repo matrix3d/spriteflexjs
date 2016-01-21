@@ -12,8 +12,6 @@ package com.hsharma.hungryHero
 		public var fontColor:int;
 		public function Button(bmd:BitmapData) 
 		{
-			graphics.beginFill(0,.5);
-			graphics.drawRect(0, 0, bmd.width, bmd.height);
 			addChild(new Bitmap(bmd));
 			buttonMode = true;
 		}

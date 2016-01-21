@@ -14,6 +14,7 @@
 package com.hsharma.hungryHero.gameElements
 {
 	import com.hsharma.hungryHero.Assets;
+	import com.hsharma.hungryHero.GameConstants;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -69,7 +70,7 @@ package com.hsharma.hungryHero.gameElements
 			}
 			
 			image1.x = 0;
-			image1.y = stage.stageHeight - image1.height;
+			image1.y = GameConstants.stageHeight - image1.height;
 			
 			image2.x = image2.width;
 			image2.y = image1.y;

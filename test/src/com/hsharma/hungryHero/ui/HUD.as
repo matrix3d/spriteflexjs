@@ -15,6 +15,7 @@ package com.hsharma.hungryHero.ui
 {
 	import com.hsharma.hungryHero.Fonts;
 	import com.hsharma.hungryHero.customObjects.Font;
+	import com.hsharma.hungryHero.GameConstants;
 	import com.hsharma.hungryHero.StarlingTextField;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -103,7 +104,7 @@ package com.hsharma.hungryHero.ui
 			//distanceLabel.hAlign = HAlign.RIGHT;
 			//distanceLabel.vAlign = VAlign.TOP;
 
-			distanceLabel.x = int(stage.stageWidth - distanceLabel.width - 10);
+			distanceLabel.x = int(GameConstants.stageWidth - distanceLabel.width - 10);
 			distanceLabel.y = 5;
 			this.addChild(distanceLabel);
 			

@@ -306,8 +306,8 @@ package com.hsharma.hungryHero.screens
 			// Start button.
 			startButton = new Button(com.hsharma.hungryHero.Assets.getAtlas().getTexture("startButton"));
 			startButton.fontColor = 0xffffff;
-			startButton.x = stage.stageWidth/2 - startButton.width/2;
-			startButton.y = stage.stageHeight/2 - startButton.height/2;
+			startButton.x = GameConstants.stageWidth/2 - startButton.width/2;
+			startButton.y = GameConstants.stageHeight/2 - startButton.height/2;
 			startButton.addEventListener(MouseEvent.CLICK, onStartButtonClick);
 			this.addChild(startButton);
 			
@@ -412,7 +412,7 @@ package com.hsharma.hungryHero.screens
 		private function foodItemCreate():Item
 		{
 			var foodItem:Item = new Item(Math.ceil(Math.random() * 5));
-			foodItem.x = stage.stageWidth + foodItem.width * 2;
+			foodItem.x = GameConstants.stageWidth + foodItem.width * 2;
 			this.addChild(foodItem);
 			
 			return foodItem;
@@ -425,7 +425,7 @@ package com.hsharma.hungryHero.screens
 		 */
 		private function foodItemClean(item:Item):void
 		{
-			item.x = stage.stageWidth + 100;
+			item.x = GameConstants.stageWidth + 100;
 		}
 		
 		/**
@@ -446,7 +446,7 @@ package com.hsharma.hungryHero.screens
 		private function obstacleCreate():Obstacle
 		{
 			var obstacle:Obstacle = new Obstacle(Math.ceil(Math.random() * 4), Math.random() * 1000 + 1000);
-			obstacle.x = stage.stageWidth + obstacle.width * 2;
+			obstacle.x = GameConstants.stageWidth + obstacle.width * 2;
 			this.addChild(obstacle);
 			
 			return obstacle;
@@ -459,7 +459,7 @@ package com.hsharma.hungryHero.screens
 		 */
 		private function obstacleClean(obstacle:Obstacle):void
 		{
-			obstacle.x = stage.stageWidth + obstacle.width * 2;
+			obstacle.x = GameConstants.stageWidth + obstacle.width * 2;
 		}
 		
 		/**
@@ -480,7 +480,7 @@ package com.hsharma.hungryHero.screens
 		private function eatParticleCreate():Particle
 		{
 			var eatParticle:Particle = new Particle(com.hsharma.hungryHero.GameConstants.PARTICLE_TYPE_1);
-			eatParticle.x = stage.stageWidth + eatParticle.width * 2;
+			eatParticle.x = GameConstants.stageWidth + eatParticle.width * 2;
 			this.addChild(eatParticle);
 			
 			return eatParticle;
@@ -493,7 +493,7 @@ package com.hsharma.hungryHero.screens
 		 */
 		private function eatParticleClean(eatParticle:Particle):void
 		{
-			eatParticle.x = stage.stageWidth + eatParticle.width * 2;
+			eatParticle.x = GameConstants.stageWidth + eatParticle.width * 2;
 		}
 		
 		/**
@@ -514,7 +514,7 @@ package com.hsharma.hungryHero.screens
 		private function windParticleCreate():Particle
 		{
 			var windParticle:Particle = new Particle(com.hsharma.hungryHero.GameConstants.PARTICLE_TYPE_2);
-			windParticle.x = stage.stageWidth + windParticle.width * 2;
+			windParticle.x = GameConstants.stageWidth + windParticle.width * 2;
 			this.addChild(windParticle);
 			
 			return windParticle;
@@ -527,7 +527,7 @@ package com.hsharma.hungryHero.screens
 		 */
 		private function windParticleClean(windParticle:Particle):void
 		{
-			windParticle.x = stage.stageWidth + windParticle.width * 2;
+			windParticle.x = GameConstants.stageWidth + windParticle.width * 2;
 		}
 		
 		/**
@@ -548,7 +548,7 @@ package com.hsharma.hungryHero.screens
 			if (!com.hsharma.hungryHero.Sounds.muted) com.hsharma.hungryHero.Sounds.sndBgGame.play(0, 999);
 			
 			// Define game area.
-			gameArea = new Rectangle(0, 100, stage.stageWidth, stage.stageHeight - 250);
+			gameArea = new Rectangle(0, 100, GameConstants.stageWidth, GameConstants.stageHeight - 250);
 			
 			// Define lives.
 			lives = com.hsharma.hungryHero.GameConstants.HERO_LIVES;
@@ -581,8 +581,8 @@ package com.hsharma.hungryHero.screens
 			gameState = com.hsharma.hungryHero.GameConstants.GAME_STATE_IDLE;
 			
 			// Hero's initial position
-			hero.x = -stage.stageWidth;
-			hero.y = stage.stageHeight/2;
+			hero.x = -GameConstants.stageWidth;
+			hero.y = GameConstants.stageHeight/2;
 			
 			// Reset hero's state to idle.
 			hero.state = com.hsharma.hungryHero.GameConstants.HERO_STATE_IDLE;
@@ -677,8 +677,8 @@ package com.hsharma.hungryHero.screens
 		{
 			//touch = event.getTouch(stage);
 			
-			touchX = event.stageX; //touch.globalX;
-			touchY = event.stageY;// touch.globalY;
+			touchX = stage.mouseX;//event.stageX; //touch.globalX;
+			touchY = stage.mouseY//event.stageY;// touch.globalY;
 		}
 		
 		/**
@@ -694,8 +694,8 @@ package com.hsharma.hungryHero.screens
 				// If no touch co-ordinates, reset touchX and touchY (for touch screen devices).
 				if (isNaN(touchX))
 				{
-					touchX = stage.stageWidth * 0.5;
-					touchY = stage.stageHeight * 0.5;
+					touchX = GameConstants.stageWidth * 0.5;
+					touchY = GameConstants.stageHeight * 0.5;
 				}
 				
 				// If hardware rendering, set the particle emitter's x and y.
@@ -713,9 +713,9 @@ package com.hsharma.hungryHero.screens
 					// Before game starts.
 					case  com.hsharma.hungryHero.GameConstants.GAME_STATE_IDLE:
 						// Take off.
-						if (hero.x < stage.stageWidth * 0.5 * 0.5)
+						if (hero.x < GameConstants.stageWidth * 0.5 * 0.5)
 						{
-							hero.x += ((stage.stageWidth * 0.5 * 0.5 + 10) - hero.x) * 0.05;
+							hero.x += ((GameConstants.stageWidth * 0.5 * 0.5 + 10) - hero.x) * 0.05;
 							hero.y -= (hero.y - touchY) * 0.1;
 							
 							playerSpeed += (com.hsharma.hungryHero.GameConstants.HERO_MIN_SPEED - playerSpeed) * 0.05;
@@ -809,7 +809,7 @@ package com.hsharma.hungryHero.screens
 								hero.y -= (hero.y - (gameArea.top + gameArea.height)/2) * 0.1;
 								
 								// Spin the hero.
-								if (hero.y > stage.stageHeight * 0.5) hero.rotation -= deg2rad(hitObstacle * 2);
+								if (hero.y > GameConstants.stageHeight * 0.5) hero.rotation -= deg2rad(hitObstacle * 2);
 								else hero.rotation += deg2rad(hitObstacle * 2);
 							}
 							
@@ -901,10 +901,10 @@ package com.hsharma.hungryHero.screens
 						
 						// If hero is still on screen, push him down and outside the screen. Also decrease his speed.
 						// Checked for +width below because width is > height. Just a safe value.
-						if (hero.y < stage.stageHeight + hero.width)
+						if (hero.y < GameConstants.stageHeight + hero.width)
 						{
 							playerSpeed -= playerSpeed * elapsed;
-							hero.y += stage.stageHeight * elapsed; 
+							hero.y += GameConstants.stageHeight * elapsed; 
 						}
 						else
 						{
@@ -936,8 +936,8 @@ package com.hsharma.hungryHero.screens
 			var windToTrack:Particle = windParticlesPool.checkOut();
 			
 			// Place the object randomly along hte screen.
-			windToTrack.x = stage.stageWidth;
-			windToTrack.y = Math.random() * stage.stageHeight;
+			windToTrack.x = GameConstants.stageWidth;
+			windToTrack.y = Math.random() * GameConstants.stageHeight;
 			
 			// Set the scale of the wind object randomly.
 			windToTrack.scaleX = windToTrack.scaleY = Math.random() * 0.5 + 0.5;
@@ -1051,7 +1051,7 @@ package com.hsharma.hungryHero.screens
 					itemToTrack.foodItemType = Math.ceil(Math.random() * 5);
 					
 					// Reset position of item.
-					itemToTrack.x = stage.stageWidth + itemToTrack.width;
+					itemToTrack.x = GameConstants.stageWidth + itemToTrack.width;
 					itemToTrack.y = patternPosY;
 					
 					// Mark the item for animation.
@@ -1068,21 +1068,21 @@ package com.hsharma.hungryHero.screens
 						patternPosY = Math.floor(Math.random() * (gameArea.bottom - gameArea.top + 1)) + gameArea.top;
 						
 						// Set a random length not shorter than 0.4 of the screen, and not longer than 0.8 of the screen.
-						patternLength = (Math.random() * 0.4 + 0.4) * stage.stageHeight;
+						patternLength = (Math.random() * 0.4 + 0.4) * GameConstants.stageHeight;
 					}
 					
 					// Set the start position of the food items pattern.
 					patternPosYstart = patternPosY; 
 					
 					// Create a line based on the height of patternLength, but not exceeding the height of the screen.
-					while (patternPosYstart + patternStep < patternPosY + patternLength && patternPosYstart + patternStep < stage.stageHeight * 0.8)
+					while (patternPosYstart + patternStep < patternPosY + patternLength && patternPosYstart + patternStep < GameConstants.stageHeight * 0.8)
 					{
 						// Checkout item from pool and set the type of item.
 						itemToTrack = itemsPool.checkOut();
 						itemToTrack.foodItemType = Math.ceil(Math.random() * 5);
 						
 						// Reset position of item.
-						itemToTrack.x = stage.stageWidth + itemToTrack.width;
+						itemToTrack.x = GameConstants.stageWidth + itemToTrack.width;
 						itemToTrack.y = patternPosYstart;
 						
 						// Mark the item for animation.
@@ -1115,7 +1115,7 @@ package com.hsharma.hungryHero.screens
 						itemToTrack.foodItemType = Math.ceil(Math.random() * 5);
 						
 						// Reset position of item.
-						itemToTrack.x = stage.stageWidth + itemToTrack.width;
+						itemToTrack.x = GameConstants.stageWidth + itemToTrack.width;
 						itemToTrack.y = patternPosY;
 						
 						// Mark the item for animation.
@@ -1146,7 +1146,7 @@ package com.hsharma.hungryHero.screens
 							itemToTrack.foodItemType = Math.ceil(Math.random() * 5);
 							
 							// Reset position of item.
-							itemToTrack.x = stage.stageWidth + itemToTrack.width;
+							itemToTrack.x = GameConstants.stageWidth + itemToTrack.width;
 							itemToTrack.y = patternPosY;
 							
 							// Mark the item for animation.
@@ -1169,7 +1169,7 @@ package com.hsharma.hungryHero.screens
 					itemToTrack.foodItemType = Math.ceil(Math.random() * 2) + 5;
 					
 					// Reset position of item.
-					itemToTrack.x = stage.stageWidth + itemToTrack.width;
+					itemToTrack.x = GameConstants.stageWidth + itemToTrack.width;
 					itemToTrack.y = patternPosY;
 					
 					// Mark the item for animation.
@@ -1187,7 +1187,7 @@ package com.hsharma.hungryHero.screens
 					itemToTrack.foodItemType = Math.ceil(Math.random() * 2) + 5;
 					
 					// Reset position of item.
-					itemToTrack.x = stage.stageWidth + itemToTrack.width;
+					itemToTrack.x = GameConstants.stageWidth + itemToTrack.width;
 					itemToTrack.y = patternPosY;
 					
 					// Mark the item for animation.
@@ -1292,7 +1292,7 @@ package com.hsharma.hungryHero.screens
 			itemsToAnimate.splice(animateId, 1);
 			itemsToAnimateLength--;
 			
-			item.x = stage.stageWidth + item.width * 2;
+			item.x = GameConstants.stageWidth + item.width * 2;
 			
 			itemsPool.checkIn(item);
 		}
@@ -1368,7 +1368,7 @@ package com.hsharma.hungryHero.screens
 			var obstacle:Obstacle = obstaclesPool.checkOut();
 			obstacle.type = _type;
 			obstacle.distance = _distance;
-			obstacle.x = stage.stageWidth;
+			obstacle.x = GameConstants.stageWidth;
 			
 			// For only one of the obstacles, make it appear in either the top or bottom of the screen.
 			if (_type <= com.hsharma.hungryHero.GameConstants.OBSTACLE_TYPE_3)

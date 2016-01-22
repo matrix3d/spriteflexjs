@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="spriteflexjs" default="main" basedir=".">
     <property name="FLEXJS_HOME" location="E:/sdk/flexjsdev"/>
-    <property name="main" value="TestStage3DPhong" />
+    <property name="main" value="TestHungryHero" />
         
     <available file="${FLEXJS_HOME}/js/lib/google/closure-library/closure/goog/base.js"
         type="file"

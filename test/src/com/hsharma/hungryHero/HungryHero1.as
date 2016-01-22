@@ -15,12 +15,15 @@ package com.hsharma.hungryHero
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	
 	/**
 	 * SWF meta data defined for iPad 1 & 2 in landscape mode. 
@@ -54,6 +57,7 @@ package com.hsharma.hungryHero
 			["image", "particles/texture.png"],
 		];
 		private var loading:Array;
+		private var loadingTf:TextField;
 		public function HungryHero1()
 		{
 			super();
@@ -69,7 +73,12 @@ package com.hsharma.hungryHero
 		protected function onAddedToStage(event:Event):void
 		{
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			
+			loadingTf = new TextField;
+			loadingTf.x = GameConstants.stageWidth / 2;
+			loadingTf.y = GameConstants.stageHeight / 2;
+			loadingTf.defaultTextFormat = new TextFormat(null, 50);
+			loadingTf.textColor = 0xffffff;
+			addChild(loadingTf);
 			loadNext();
 			
 		}
@@ -80,7 +89,8 @@ package com.hsharma.hungryHero
 				loadComp();
 			}else {
 				loading = urls.shift();
-				var req:URLRequest= new URLRequest("../../media/"+loading[1])
+				var req:URLRequest = new URLRequest("../../media/" + loading[1])
+				loadingTf.text="loading "+loading[1]
 				if (loading[0]=="image") {
 					var imageloader:Loader = new Loader;
 					imageloader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageloader_complete);
@@ -107,6 +117,9 @@ package com.hsharma.hungryHero
 		
 		private function loadComp():void {
 			// Initialize Starling object.
+			if (loadingTf.parent) {
+				(loadingTf.parent as DisplayObjectContainer).removeChild(loadingTf);
+			}
 			addChild(new Game);
 		}
 	}

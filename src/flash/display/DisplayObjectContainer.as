@@ -2,6 +2,7 @@ package flash.display
 {
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
 	public class DisplayObjectContainer extends InteractiveObject
 	{
@@ -143,6 +144,21 @@ package flash.display
 				}
 			}
 			return null;
+		}
+		
+		override public function getRect(v:DisplayObject):Rectangle 
+		{
+			var rect:Rectangle = super.getRect(v);
+			for each(var c:DisplayObject in children) {
+				var rect1:Rectangle = c.getRect(v);
+				if (rect == null) {
+					rect = rect1;
+				}else if(rect1){
+					rect.inflate(rect1.x, rect1.y);
+					rect.inflate(rect1.right, rect1.bottom);
+				}
+			}
+			return rect;
 		}
 	}
 }

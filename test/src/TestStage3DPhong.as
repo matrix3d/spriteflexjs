@@ -30,8 +30,9 @@ package
 	{
 		private var ctx:Context3D;
 		private var ibuffer:IndexBuffer3D;
+		private var mmatr:Matrix3D = new Matrix3D;
+		private var vmatr:Matrix3D = new Matrix3D;
 		private var pmatr:Matrix3D = new Matrix3D;
-		private var matr:Matrix3D = new Matrix3D();
 		private var bmd:BitmapData;
 		public function TestStage3DPhong() 
 		{
@@ -44,15 +45,26 @@ package
 		{
 			pmatr.copyRawDataFrom(perspectiveFieldOfViewLH(Math.PI/4, stage.stageWidth/ stage.stageHeight, .1,100000));
 			//draw
-			matr.identity();
+			mmatr.identity();
 			var time:Number = (new Date()).getTime();
-			matr.appendRotation(time/100, Vector3D.X_AXIS);
-			matr.appendRotation(time/130, Vector3D.Y_AXIS);
-			matr.appendTranslation(0, 0, 5);
-			matr.append(pmatr);
+			mmatr.appendRotation(time/100, Vector3D.X_AXIS);
+			mmatr.appendRotation(time/130, Vector3D.Y_AXIS);
+			vmatr.identity();
+			vmatr.appendTranslation(0, 0, -10);
+			vmatr.invert();
 			ctx.clear();
 			ctx.setCulling(Context3DTriangleFace.NONE);
-			ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, matr,true);
+			ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, mmatr,true);
+			ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, vmatr,true);
+			ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 8, pmatr,true);
+			ctx.setProgramConstantsFromVector(Context3DProgramType.VERTEX,12,Vector.<Number>([0,20,-10,0]));//light pos
+			ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT,0,Vector.<Number>([10,0,0,0]));//specular
+			ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT,1,Vector.<Number>([.7,.4,.2,1]));//light color
+			ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 2, Vector.<Number>([.5, .5, .5, 1]));//ambient
+			
+			CONFIG::as_only {
+				ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 3, Vector.<Number>([0.7,2,0,0]));
+			}
 			ctx.drawTriangles(ibuffer);
 			ctx.present();
 		}
@@ -80,30 +92,121 @@ package
 			
 			//init shader
 			CONFIG::js_only{
-				var vcode:String = "attribute vec3 va0;" +
-					"attribute vec2 va1;" +
-					"varying vec2 uv;"+
+				var vcode:String = 
 					"uniform mat4 vc0;"+
-					"void main(void) {" +
-						"uv=va1;"+
-						"gl_Position =vec4(va0, 1.0)*vc0;"+
-					"}";
-				var fcode:String = "precision mediump float;" +
-					"varying vec2 uv;"+
+					"uniform mat4 vc4;"+
+					"uniform mat4 vc8;"+
+					"uniform vec4 vc12;"+
+					"varying vec4 v0;"+
+					"varying vec4 v1;"+
+					"varying vec4 v2;"+
+					"varying vec4 v3;"+
+					"attribute vec4 va0;"+
+					"attribute vec4 va1;"+
+					"attribute vec4 va2;"+
+					"void main(){"+
+					"	vec4 vt0 = va0 * vc0;"+
+					"	vec4 vt1 = vt0 * vc4;"+
+					"	vt0 = vt1 * vc8;"+
+					"	gl_Position = vt0;"+
+					"	vt0.xyz = va1 * vc0;"+
+					"	vec4 vt2"+
+					"	vt2.xyz = normalize(vt3.xyz);"+
+					"	vt0 = -vt1;"+
+					"	vec4 vt3"+
+					"	vt3.xyz = normalize(vt0.xyz);"+
+					"	v0 = vt6;"+
+					"	vt0 = vc12;"+
+					"	vt3 = vt0 * vc4;"+
+					"	vt0 = vt3 - vt1;"+
+					"	vt1.xyz = normalize(vt0.xyz);"+
+					"	v1 = vt10;"+
+					"	vt0.xyz = vt4 * vc4;"+
+					"	vt1.xyz = normalize(vt11);"+
+					"	v2 = vt12;"+
+					"	v3 = va2;"+
+					"}"
+				var fcode:String = 
 					"uniform sampler2D fs0;"+
-				   "void main(void) {" +
-						"gl_FragColor = texture2D(fs0,uv.xy);"+
-					"}";
-				var vb:ByteArray = new ByteArray;
-				vb.writeUTFBytes( vcode);
-				var fb:ByteArray = new ByteArray;
-				fb.writeUTFBytes( fcode);
-			}
+					"uniform vec4 fc3;"+
+					"uniform vec4 fc0;"+
+					"uniform vec4 fc1;"+
+					"uniform vec4 fc2;"+
+					"varying vec4 v3;"+
+					"varying vec4 v2;"+
+					"varying vec4 v1;"+
+					"varying vec4 v0;"+
+					"void main(){"+
+					"	vec4 ft0 = texture2D(v3,fs0);"+
+					"	vec4 ft1 = ft0 - fc3;"+
+					"	ft1 = dot(v2,v1);"+
+					"	vec4 ft2 = clamp(ft1,0,1);"+
+					"	ft1.xyz = dot(v1.xyz,v2.xyz);"+
+					"	vec4 ft3 = fc3 * ft1;"+
+					"	ft1 = ft3 * v2;"+
+					"	ft3 = ft1 - v1;"+
+					"	ft1.xyz = normalize(ft3);"+
+					"	ft3.xyz = dot(v0.xyz,ft8.xyz);"+
+					"	ft1 = clamp(ft3,0,1);"+
+					"	ft3 = pow(ft1,fc0);"+
+					"	ft1 = ft2 + ft3;"+
+					"	ft2 = fc1 * ft1;"+
+					"	ft1 = ft2 * fc1;"+
+					"	ft2 = fc2 + ft1;"+
+					"	ft2.w = ft0.x;"+
+					"	ft0 = ft2 * ft0;"+
+					"	gl_FragColor = ft0;"+
+					"}"
+					var vb:ByteArray = new ByteArray;
+					vb.writeUTFBytes( vcode);
+					var fb:ByteArray = new ByteArray;
+					fb.writeUTFBytes( fcode);
+				}
 			
 			CONFIG::as_only{
-				var vcode:String = "mov v0 va1\n"+
-					"m44 op va0 vc0"
-				var fcode:String = "tex oc v0 fs0"
+				var vcode:String = 
+				<![CDATA[
+					m44 vt0 va0 vc0
+					m44 vt1 vt0 vc4
+					m44 vt0 vt1 vc8
+					mov op vt0
+					m33 vt0.xyz va1 vc0
+					nrm vt2.xyz vt0.xyz
+					neg vt0 vt1
+					nrm vt3.xyz vt0
+					mov v0 vt3.xyz
+					mov vt0 vc12
+					m44 vt3 vt0 vc4
+					sub vt0 vt3 vt1
+					nrm vt1.xyz vt0
+					mov v1 vt1.xyz
+					m33 vt0.xyz vt2.xyz vc4
+					nrm vt1.xyz vt0.xyz
+					mov v2 vt1.xyz
+					mov v3 va2
+				]]>
+				var fcode:String =<![CDATA[
+					tex ft0 v3 fs0
+					sub ft1 ft0.w fc3.x
+					kil ft1.x
+					dp3 ft1 v2 v1
+					sat ft2 ft1
+					dp3 ft1 v1 v2
+					mul ft3 fc3.y ft1
+					mul ft1 ft3 v2
+					sub ft3 ft1 v1
+					nrm ft1.xyz ft3
+					dp3 ft3 v0 ft1.xyz
+					sat ft1 ft3
+					pow ft3 ft1 fc0.x
+					add ft1 ft2 ft3
+					mul ft2 fc1 ft1
+					mul ft1 ft2 fc1.w
+					add ft2 fc2 ft1
+					mov ft2.w ft0.w
+					mul ft0 ft2 ft0
+					mov oc ft0
+				]]>
 				var assembler:AGALMiniAssembler = new AGALMiniAssembler;
 				var vb:ByteArray=assembler.assemble(Context3DProgramType.VERTEX, vcode);
 				var fb:ByteArray=assembler.assemble(Context3DProgramType.FRAGMENT, fcode);
@@ -146,6 +249,46 @@ package
             -1.0,  1.0, -1.0];
 			var posBuffer:VertexBuffer3D = ctx.createVertexBuffer(posData.length/3,3);
 			posBuffer.uploadFromVector(Vector.<Number>(posData), 0, posData.length / 3);
+			
+			var normData:Array = 
+            [// Front face
+             0.0,  0.0,  1.0,
+             0.0,  0.0,  1.0,
+             0.0,  0.0,  1.0,
+             0.0,  0.0,  1.0,
+
+            // Back face
+             0.0,  0.0, -1.0,
+             0.0,  0.0, -1.0,
+             0.0,  0.0, -1.0,
+             0.0,  0.0, -1.0,
+
+            // Top face
+             0.0,  1.0,  0.0,
+             0.0,  1.0,  0.0,
+             0.0,  1.0,  0.0,
+             0.0,  1.0,  0.0,
+
+            // Bottom face
+             0.0, -1.0,  0.0,
+             0.0, -1.0,  0.0,
+             0.0, -1.0,  0.0,
+             0.0, -1.0,  0.0,
+
+            // Right face
+             1.0,  0.0,  0.0,
+             1.0,  0.0,  0.0,
+             1.0,  0.0,  0.0,
+             1.0,  0.0,  0.0,
+
+            // Left face
+            -1.0,  0.0,  0.0,
+            -1.0,  0.0,  0.0,
+            -1.0,  0.0,  0.0,
+            -1.0,  0.0,  0.0];
+			var normBuffer:VertexBuffer3D = ctx.createVertexBuffer(normData.length/3,3);
+			normBuffer.uploadFromVector(Vector.<Number>(normData), 0, normData.length / 3);
+			
 			var uvData:Array = [ // Front face
             0.0, 0.0,
             1.0, 0.0,
@@ -187,7 +330,8 @@ package
 			ibuffer = ctx.createIndexBuffer(iData.length);
 			ibuffer.uploadFromVector(Vector.<uint>(iData),0,iData.length);
 			ctx.setVertexBufferAt(0, posBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
-			ctx.setVertexBufferAt(1, uvBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
+			ctx.setVertexBufferAt(1, normBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
+			ctx.setVertexBufferAt(2, uvBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
 			ctx.setTextureAt(0, texture);
 			
 			

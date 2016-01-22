@@ -11,10 +11,9 @@ package flash.text
 		
 		private static var richTextFields:Array = ["font", "size", "color", "bold", "italic", "underline", "url", "target", "align", "leftMargin", "rightMargin", "indent", "leading", "blockIndent", "kerning", "letterSpacing", "display"];
 		private var _text:String;
-		private var _textColor:int;
 		private var _textFormat:TextFormat=new TextFormat;
-		private var cssTextColor:String;
-		
+		private var _width:Number = 100;
+		private var _height:Number = 100;
 		public function TextField()
 		{
 			super();
@@ -138,17 +137,16 @@ package flash.text
 		
 		public function set text(param1:String):void  { _text = param1; }
 		
-		public function get textColor():uint  { return _textColor; }
+		public function get textColor():uint  { return int(_textFormat.color); }
 		
 		public function set textColor(color:uint):void
 		{
-			_textColor = color;
-			cssTextColor = "rgba(" + (color >> 16 & 0xff) + "," + (color >> 8 & 0xff) + "," + (color & 0xff) + "," + this.alpha + ")";
+			_textFormat.color = color;
 		}
 		
-		public function get textHeight():Number  { return 0; }
+		public function get textHeight():Number  { return 100; }
 		
-		public function get textWidth():Number  { return 0; }
+		public function get textWidth():Number  { return 100; }
 		
 		public function get thickness():Number  { return 0; }
 		
@@ -165,6 +163,26 @@ package flash.text
 		public function appendText(newText:String):void
 		{
 			this.replaceText(this.text.length, this.text.length, newText);
+		}
+		
+		override public function get width():Number 
+		{
+			return _width;
+		}
+		
+		override public function set width(value:Number):void 
+		{
+			_width = value;
+		}
+		
+		override public function get height():Number 
+		{
+			return _height;
+		}
+		
+		override public function set height(value:Number):void 
+		{
+			_height = value;
 		}
 		
 		/*private function copyRichText() : String
@@ -194,7 +212,7 @@ package flash.text
 		
 		public function getParagraphLength(param1:int):int  { return 0; }
 		
-		public function getTextFormat(param1:int = -1, param2:int = -1):TextFormat  { return null; }
+		public function getTextFormat(param1:int = -1, param2:int = -1):TextFormat  { return _textFormat; }
 		
 		public function getTextRuns(param1:int = 0, param2:int = 2147483647):Array  { return null; }
 		
@@ -326,7 +344,7 @@ package flash.text
 		
 		public function setSelection(param1:int, param2:int):void  {/**/ }
 		
-		public function setTextFormat(param1:TextFormat, param2:int = -1, param3:int = -1):void  {/**/ }
+		public function setTextFormat(param1:TextFormat, param2:int = -1, param3:int = -1):void  { _textFormat = param1; }
 		
 		public function getImageReference(param1:String):DisplayObject  { return null; }
 		
@@ -345,8 +363,9 @@ package flash.text
 				ctx.globalAlpha *= alpha;
 				ctx.globalCompositeOperation = BlendMode.getCompVal(blendMode);
 				ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-				ctx.fillStyle = cssTextColor;
-				//ctx.font = defaultTextFormat.css;
+				ctx.font = defaultTextFormat.css;
+				ctx.fillStyle = defaultTextFormat.csscolor;
+				ctx.textBaseline = "top";
 				ctx.fillText(_text, 0, 0);
 				ctx.globalAlpha = ga;
 			}

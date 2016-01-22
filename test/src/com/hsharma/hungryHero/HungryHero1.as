@@ -77,7 +77,7 @@ package com.hsharma.hungryHero
 			loadingTf.x = GameConstants.stageWidth / 2;
 			loadingTf.y = GameConstants.stageHeight / 2;
 			loadingTf.defaultTextFormat = new TextFormat(null, 50);
-			loadingTf.textColor = 0xffffff;
+			loadingTf.textColor = 0xff0000;
 			addChild(loadingTf);
 			loadNext();
 			

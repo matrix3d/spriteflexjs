@@ -54,14 +54,14 @@ package com.hsharma.hungryHero
 		/**
 		 * Initialized Sound objects. 
 		 */		
-		public static var sndBgMain:Sound = Assets.getSound("bgGame");//new Sounds.SND_BG_MAIN() as Sound;
-		public static var sndBgGame:Sound = Assets.getSound("bgWelcome");//new Sounds.SND_BG_GAME() as Sound;
-		public static var sndEat:Sound = Assets.getSound("eat");//new Sounds.SND_EAT() as Sound;
-		public static var sndCoffee:Sound = Assets.getSound("coffee");//new Sounds.SND_COFFEE() as Sound;
-		public static var sndMushroom:Sound = Assets.getSound("mushroom");//new Sounds.SND_MUSHROOM() as Sound;
-		public static var sndHit:Sound = Assets.getSound("hit");//new Sounds.SND_HIT() as Sound;
-		public static var sndHurt:Sound = Assets.getSound("hurt");//new Sounds.SND_HURT() as Sound;
-		public static var sndLose:Sound = Assets.getSound("lose");//new Sounds.SND_LOSE() as Sound;
+		public static var sndBgMain:Sound //= Assets.getSound("bgGame");//new Sounds.SND_BG_MAIN() as Sound;
+		public static var sndBgGame:Sound //= Assets.getSound("bgWelcome");//new Sounds.SND_BG_GAME() as Sound;
+		public static var sndEat:Sound //= Assets.getSound("eat");//new Sounds.SND_EAT() as Sound;
+		public static var sndCoffee:Sound //= Assets.getSound("coffee");//new Sounds.SND_COFFEE() as Sound;
+		public static var sndMushroom:Sound //= Assets.getSound("mushroom");//new Sounds.SND_MUSHROOM() as Sound;
+		public static var sndHit:Sound //= Assets.getSound("hit");//new Sounds.SND_HIT() as Sound;
+		public static var sndHurt:Sound //= Assets.getSound("hurt");//new Sounds.SND_HURT() as Sound;
+		public static var sndLose:Sound //= Assets.getSound("lose");//new Sounds.SND_LOSE() as Sound;
 		
 		/**
 		 * Sound mute status. 

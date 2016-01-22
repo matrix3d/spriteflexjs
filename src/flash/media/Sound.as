@@ -4,11 +4,17 @@ package flash.media
 	import flash.net.URLRequest;
 	import flash.utils.ByteArray;
 	
-	[(instance = "SoundObject", methods = "auto", cls = "SoundClass", gc = "exact")][Event(name = "progress", type = "flash.events.ProgressEvent")][Event(name = "open", type = "flash.events.Event")][Event(name = "ioError", type = "flash.events.IOErrorEvent")][Event(name = "id3", type = "flash.events.Event")][Event(name = "complete", type = "flash.events.Event")][Event(name = "sampleData", type = "flash.events.SampleDataEvent")]
+	[Event(name = "progress", type = "flash.events.ProgressEvent")][Event(name = "open", type = "flash.events.Event")][Event(name = "ioError", type = "flash.events.IOErrorEvent")][Event(name = "id3", type = "flash.events.Event")][Event(name = "complete", type = "flash.events.Event")][Event(name = "sampleData", type = "flash.events.SampleDataEvent")]
 	
 	public class Sound extends EventDispatcher
 	{
-		
+		private var xhr:XMLHttpRequest;
+		private var buffer:AudioBuffer;
+		private static var ctx:AudioContext = new AudioContext;
+		private var playing:Boolean = false;
+		private var loops:int;
+		private var sndTransform:SoundTransform;
+		private var startTime:Number;
 		public function Sound(stream:URLRequest = null, context:SoundLoaderContext = null)
 		{
 			super();
@@ -21,12 +27,12 @@ package flash.media
 			this._load(stream, _context.checkPolicyFile, _context.bufferTime);
 		}
 		
-		public function loadCompressedDataFromByteArray(param1:ByteArray, param2:uint):void
+		public function loadCompressedDataFromByteArray(bytes:ByteArray, bytesLength:uint):void
 		{
 		
 		}
 		
-		public function loadPCMFromByteArray(param1:ByteArray, param2:uint, param3:String = "float", param4:Boolean = true, param5:Number = 44100.0):void
+		public function loadPCMFromByteArray(bytes:ByteArray, samples:uint, format:String="float", stereo:Boolean=true, sampleRate:Number=44100):void
 		{
 		
 		}
@@ -40,9 +46,26 @@ package flash.media
 			return context;
 		}
 		
-		private function _load(param1:URLRequest, param2:Boolean, param3:Number):void
+		private function _load(url:URLRequest, checkPolicyFile:Boolean, bufferTime:Number):void
 		{
+			xhr = new XMLHttpRequest;
+			xhr.responseType = "arraybuffer";
+			xhr.open("GET", url.url);
+			xhr.addEventListener("load", xhr_load,true);
+			xhr.send();
+		}
 		
+		private function xhr_load(e:Object):void 
+		{
+			ctx.decodeAudioData(xhr.response, decodeAudioDataSuccess);
+		}
+		
+		private function decodeAudioDataSuccess(buffer:AudioBuffer):void 
+		{
+			this.buffer = buffer;
+			if (playing) {
+				play(startTime,loops,sndTransform);
+			}
 		}
 		
 		public function get url():String
@@ -55,8 +78,19 @@ package flash.media
 			return false;
 		}
 		
-		public function play(param1:Number = 0, param2:int = 0, param3:SoundTransform = null):SoundChannel
+		public function play(startTime:Number=0, loops:int=0, sndTransform:SoundTransform=null):SoundChannel
 		{
+			this.startTime = startTime;
+			this.sndTransform = sndTransform;
+			this.loops = loops;
+			playing = true;
+			if(buffer){
+				var source:AudioBufferSourceNode = ctx.createBufferSource();
+				source.loop = loops>0;
+				source.buffer = buffer;
+				source.connect(ctx.destination);
+				source.start(startTime);
+			}
 			return null;
 		}
 		
@@ -90,7 +124,7 @@ package flash.media
 		
 		}
 		
-		public function extract(param1:ByteArray, param2:Number, param3:Number = -1):Number
+		public function extract(target:ByteArray, length:Number, startPosition:Number=-1):Number
 		{
 			return 0;
 		}

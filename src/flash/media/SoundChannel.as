@@ -21,7 +21,7 @@ package flash.media
 			return null;
 		}
 		
-		public function set soundTransform(param1:SoundTransform):void
+		public function set soundTransform(v:SoundTransform):void
 		{
 		
 		}

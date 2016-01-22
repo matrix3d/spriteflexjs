@@ -74,9 +74,9 @@ package com.hsharma.hungryHero
 		{
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			loadingTf = new TextField;
-			loadingTf.x = GameConstants.stageWidth / 2;
-			loadingTf.y = GameConstants.stageHeight / 2;
-			loadingTf.defaultTextFormat = new TextFormat(null, 50);
+			loadingTf.x = 0
+			loadingTf.y = 100;
+			loadingTf.defaultTextFormat = new TextFormat(null, 30);
 			loadingTf.textColor = 0xff0000;
 			addChild(loadingTf);
 			loadNext();
@@ -120,6 +120,14 @@ package com.hsharma.hungryHero
 			if (loadingTf.parent) {
 				(loadingTf.parent as DisplayObjectContainer).removeChild(loadingTf);
 			}
+			Sounds.sndBgMain = Assets.getSound("bgGame");//new Sounds.SND_BG_MAIN() as Sound;
+			Sounds.sndBgGame = Assets.getSound("bgWelcome");//new Sounds.SND_BG_GAME() as Sound;
+			Sounds.sndEat = Assets.getSound("eat");//new Sounds.SND_EAT() as Sound;
+			Sounds.sndCoffee = Assets.getSound("coffee");//new Sounds.SND_COFFEE() as Sound;
+			Sounds.sndMushroom = Assets.getSound("mushroom");//new Sounds.SND_MUSHROOM() as Sound;
+			Sounds.sndHit = Assets.getSound("hit");//new Sounds.SND_HIT() as Sound;
+			Sounds.sndHurt = Assets.getSound("hurt");//new Sounds.SND_HURT() as Sound;
+			Sounds.sndLose = Assets.getSound("lose");//new Sounds.SND_LOSE() as Sound;
 			addChild(new Game);
 		}
 	}

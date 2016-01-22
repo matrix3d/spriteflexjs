@@ -16,7 +16,7 @@ package flash.media
 			return 0;
 		}
 		
-		public function set volume(param1:Number):void
+		public function set volume(v:Number):void
 		{
 		
 		}
@@ -26,7 +26,7 @@ package flash.media
 			return 0;
 		}
 		
-		public function set leftToLeft(param1:Number):void
+		public function set leftToLeft(v:Number):void
 		{
 		
 		}
@@ -36,7 +36,7 @@ package flash.media
 			return 0;
 		}
 		
-		public function set leftToRight(param1:Number):void
+		public function set leftToRight(v:Number):void
 		{
 		
 		}

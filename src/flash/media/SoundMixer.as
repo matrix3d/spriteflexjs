@@ -15,7 +15,7 @@ package flash.media
 		
 		}
 		
-		public static function computeSpectrum(param1:ByteArray, param2:Boolean = false, param3:int = 0):void
+		public static function computeSpectrum(outputArray:ByteArray, FFTMode:Boolean=false, stretchFactor:int=0):void
 		{
 		
 		}
@@ -50,7 +50,7 @@ package flash.media
 			return null;
 		}
 		
-		public static function set audioPlaybackMode(param1:String):void
+		public static function set audioPlaybackMode(mode:String):void
 		{
 		
 		}
@@ -60,7 +60,7 @@ package flash.media
 			return false;
 		}
 		
-		public static function set useSpeakerphoneForVoice(param1:Boolean):void
+		public static function set useSpeakerphoneForVoice(b:Boolean):void
 		{
 		
 		}

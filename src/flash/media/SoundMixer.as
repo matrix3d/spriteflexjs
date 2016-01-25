@@ -12,7 +12,12 @@ package flash.media
 		
 		public static function stopAll():void
 		{
-		
+			for each(var sound:Sound in Sound.sounds) {
+				sound.playing = false;
+				if (sound.source) {
+					sound.source.stop(0);
+				}
+			}
 		}
 		
 		public static function computeSpectrum(outputArray:ByteArray, FFTMode:Boolean=false, stretchFactor:int=0):void

@@ -16,7 +16,6 @@ package com.hsharma.hungryHero
 				addChild(new Bitmap(bmds[0][0]));
 			}
 		}
-		
 	}
 
 }

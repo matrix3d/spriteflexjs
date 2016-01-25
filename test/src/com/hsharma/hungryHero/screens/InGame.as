@@ -1685,12 +1685,12 @@ package com.hsharma.hungryHero.screens
 		}
 		private function rad2deg(v:Number):Number 
 		{
-			return 0;
+			return v*180/Math.PI;
 		}
 		
 		private function deg2rad(v:Number):Number 
 		{
-			return 0;
+			return v*Math.PI/180;
 		}
 	}
 }

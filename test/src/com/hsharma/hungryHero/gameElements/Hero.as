@@ -99,5 +99,16 @@ package com.hsharma.hungryHero.gameElements
 			if (heroArt) return heroArt.height;
 			else return NaN;
 		}
+		
+		
+		override public function get rotation():Number 
+		{
+			return super.rotation*Math.PI/180;
+		}
+		
+		override public function set rotation(value:Number):void 
+		{
+			super.rotation = value*180/Math.PI;
+		}
 	}
 }

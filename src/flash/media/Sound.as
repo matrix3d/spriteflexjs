@@ -8,16 +8,19 @@ package flash.media
 	
 	public class Sound extends EventDispatcher
 	{
+		public static var sounds:Array = [];
 		private var xhr:XMLHttpRequest;
 		private var buffer:AudioBuffer;
 		private static var ctx:AudioContext = new AudioContext;
-		private var playing:Boolean = false;
+		public var playing:Boolean = false;
 		private var loops:int;
 		private var sndTransform:SoundTransform;
 		private var startTime:Number;
+		public var source:AudioBufferSourceNode;
 		public function Sound(stream:URLRequest = null, context:SoundLoaderContext = null)
 		{
 			super();
+			sounds.push(this);
 			this.load(stream, context);
 		}
 		
@@ -85,7 +88,7 @@ package flash.media
 			this.loops = loops;
 			playing = true;
 			if(buffer){
-				var source:AudioBufferSourceNode = ctx.createBufferSource();
+				source = ctx.createBufferSource();
 				source.loop = loops>0;
 				source.buffer = buffer;
 				source.connect(ctx.destination);

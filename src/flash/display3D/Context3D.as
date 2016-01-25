@@ -10,7 +10,7 @@ package flash.display3D
 	public final class Context3D extends EventDispatcher
 	{
 		private var canvas:HTMLCanvasElement;
-		private var gl:WebGLRenderingContext;
+		public var gl:WebGLRenderingContext;
 		private var currentProgram:Program3D;
 		
 		public function Context3D()

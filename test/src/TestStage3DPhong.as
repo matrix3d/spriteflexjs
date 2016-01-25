@@ -93,75 +93,73 @@ package
 			//init shader
 			CONFIG::js_only{
 				var vcode:String = 
-					"uniform mat4 vc0;"+
-					"uniform mat4 vc4;"+
-					"uniform mat4 vc8;"+
-					"uniform vec4 vc12;"+
-					"varying vec4 v0;"+
-					"varying vec4 v1;"+
-					"varying vec4 v2;"+
-					"varying vec4 v3;"+
-					"attribute vec4 va0;"+
-					"attribute vec4 va1;"+
-					"attribute vec4 va2;"+
-					"void main(){"+
-					"	vec4 vt0 = va0 * vc0;"+
-					"	vec4 vt1 = vt0 * vc4;"+
-					"	vt0 = vt1 * vc8;"+
-					"	gl_Position = vt0;"+
-					"	vt0.xyz = va1 * vc0;"+
-					"	vec4 vt2"+
-					"	vt2.xyz = normalize(vt3.xyz);"+
-					"	vt0 = -vt1;"+
-					"	vec4 vt3"+
-					"	vt3.xyz = normalize(vt0.xyz);"+
-					"	v0 = vt6;"+
-					"	vt0 = vc12;"+
-					"	vt3 = vt0 * vc4;"+
-					"	vt0 = vt3 - vt1;"+
-					"	vt1.xyz = normalize(vt0.xyz);"+
-					"	v1 = vt10;"+
-					"	vt0.xyz = vt4 * vc4;"+
-					"	vt1.xyz = normalize(vt11);"+
-					"	v2 = vt12;"+
-					"	v3 = va2;"+
+					"uniform mat4 vc0;\n"+
+					"uniform mat4 vc4;\n"+
+					"uniform mat4 vc8;\n"+
+					"uniform vec4 vc12;\n"+
+					"varying vec3 v0;\n"+
+					"varying vec3 v1;\n"+
+					"varying vec3 v2;\n"+
+					"varying vec4 v3;\n"+
+					"attribute vec4 va0;\n"+
+					"attribute vec4 va1;\n"+
+					"attribute vec4 va2;\n"+
+					"void main(){\n"+
+					"	vec4 vt0 = va0 * vc0;\n"+
+					"	vec4 vt1 = vt0 * vc4;\n"+
+					"	vt0 = vt1 * vc8;\n"+
+					"	gl_Position = vt0;\n"+
+					"	vt0 = va1 * vc0;\n"+
+					"	vec3 vt2 = normalize(vt0.xyz);\n"+
+					"	vt0 = -vt1;\n"+
+					"	vec3 vt3 = normalize(vt0.xyz);\n"+
+					"	v0 = vt3;\n"+
+					"	vt0 = vc12;\n"+
+					"	vec4 vt34 = vt0 * vc4;\n"+
+					"	vt0 = vt34 - vt1;\n"+
+					"	vec3 vt13 = normalize(vt0.xyz);\n"+
+					"	v1 = vt13;\n"+
+					"	vec3 vt03 = vt2 * mat3(vc4);\n"+
+					"	vt13 = normalize(vt03);\n"+
+					"	v2 = vt13;\n"+
+					"	v3 = va2;\n"+
 					"}"
 				var fcode:String = 
-					"uniform sampler2D fs0;"+
-					"uniform vec4 fc3;"+
-					"uniform vec4 fc0;"+
-					"uniform vec4 fc1;"+
-					"uniform vec4 fc2;"+
-					"varying vec4 v3;"+
-					"varying vec4 v2;"+
-					"varying vec4 v1;"+
-					"varying vec4 v0;"+
-					"void main(){"+
-					"	vec4 ft0 = texture2D(v3,fs0);"+
-					"	vec4 ft1 = ft0 - fc3;"+
-					"	ft1 = dot(v2,v1);"+
-					"	vec4 ft2 = clamp(ft1,0,1);"+
-					"	ft1.xyz = dot(v1.xyz,v2.xyz);"+
-					"	vec4 ft3 = fc3 * ft1;"+
-					"	ft1 = ft3 * v2;"+
-					"	ft3 = ft1 - v1;"+
-					"	ft1.xyz = normalize(ft3);"+
-					"	ft3.xyz = dot(v0.xyz,ft8.xyz);"+
-					"	ft1 = clamp(ft3,0,1);"+
-					"	ft3 = pow(ft1,fc0);"+
-					"	ft1 = ft2 + ft3;"+
-					"	ft2 = fc1 * ft1;"+
-					"	ft1 = ft2 * fc1;"+
-					"	ft2 = fc2 + ft1;"+
-					"	ft2.w = ft0.x;"+
-					"	ft0 = ft2 * ft0;"+
-					"	gl_FragColor = ft0;"+
+					"uniform sampler2D fs0;\n"+
+					"uniform vec4 fc3;\n"+
+					"uniform vec4 fc0;\n"+
+					"uniform vec4 fc1;\n"+
+					"uniform vec4 fc2;\n"+
+					"varying vec4 v3;\n"+
+					"varying vec4 v2;\n"+
+					"varying vec4 v1;\n"+
+					"varying vec4 v0;\n"+
+					"void main(){\n"+
+					"	vec4 ft0 = texture2D(v3,fs0);\n"+
+					"	vec4 ft1 = ft0 - fc3;\n"+
+					"	ft1 = dot(v2,v1);\n"+
+					"	vec4 ft2 = clamp(ft1,0,1);\n"+
+					"	ft1.xyz = dot(v1.xyz,v2.xyz);\n"+
+					"	vec4 ft3 = fc3 * ft1;\n"+
+					"	ft1 = ft3 * v2;\n"+
+					"	ft3 = ft1 - v1;\n"+
+					"	ft1.xyz = normalize(ft3);\n"+
+					"	ft3.xyz = dot(v0.xyz,ft8.xyz);\n"+
+					"	ft1 = clamp(ft3,0,1);\n"+
+					"	ft3 = pow(ft1,fc0);\n"+
+					"	ft1 = ft2 + ft3;\n"+
+					"	ft2 = fc1 * ft1;\n"+
+					"	ft1 = ft2 * fc1;\n"+
+					"	ft2 = fc2 + ft1;\n"+
+					"	ft2.w = ft0.x;\n"+
+					"	ft0 = ft2 * ft0;\n"+
+					"	gl_FragColor = ft0;\n"+
 					"}"
-					var vb:ByteArray = new ByteArray;
-					vb.writeUTFBytes( vcode);
-					var fb:ByteArray = new ByteArray;
-					fb.writeUTFBytes( fcode);
-				}
+				var vb:ByteArray = new ByteArray;
+				vb.writeUTFBytes( vcode);
+				var fb:ByteArray = new ByteArray;
+				fb.writeUTFBytes( fcode);
+			}
 			
 			CONFIG::as_only{
 				var vcode:String = 

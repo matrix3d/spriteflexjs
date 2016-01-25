@@ -56,9 +56,9 @@ package flash.display
 		
 		override public function __update():void
 		{
-			super.__update();
 			if (stage&&visible)
 				graphics.draw(stage.ctx, worldMatrix,alpha,blendMode,transform._colorTransform);
+			super.__update();
 		}
 		
 		override protected function __doMouse(e:flash.events.MouseEvent):DisplayObject 

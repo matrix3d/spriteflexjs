@@ -42,20 +42,20 @@ package flash.display
 		public function set frameRate(v:Number):void
 		{
 			_frameRate = v;
-			//http://creativejs.com/resources/requestanimationframe/
-			//clearInterval(intervalID);
-			//intervalID = setInterval(__update, 1000 / v);
 			try{
 				cancelRequestAnimationFrame(requestAnimationFrameHander);
 			}catch(e:Object){}
 			__update();
 		}
 		
-		private function __update():void{
+		private function __update():void {
+			//http://codetheory.in/controlling-the-frame-rate-with-requestanimationframe/	
 			requestAnimationFrameHander = requestAnimationFrame(__update);
-			var t:int = getTimer();
-			if ((t - lastUpdateTime) >= 1000 / frameRate) {
-				lastUpdateTime = t;
+			var now:Number = getTimer();
+			var interval:Number = 1000/frameRate;
+			var delta:Number = now - lastUpdateTime;
+			if (delta > interval) {
+				lastUpdateTime = now - (delta % interval);
 				if (needSendMouseMove) {
 					dispatchEvent(new MouseEvent(MouseEvent.MOUSE_MOVE, true, false, _mouseX, _mouseY);
 					needSendMouseMove = false;

@@ -22,6 +22,7 @@ package
 	import flash.events.Event;
 	import flash.utils.ByteArray;
 	import flash.utils.getTimer;
+	import spriteflexjs.Stats;
 	/**
 	 * ...
 	 * @author lizhi
@@ -39,6 +40,7 @@ package
 			var loader:Loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loader_complete);
 			loader.load(new URLRequest("../../wood.jpg"));
+			addChild(new Stats);
 		}
 		
 		private function enterFrame(e:Event):void 

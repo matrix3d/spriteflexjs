@@ -677,8 +677,8 @@ package com.hsharma.hungryHero.screens
 		{
 			//touch = event.getTouch(stage);
 			
-			touchX = stage.mouseX;//event.stageX; //touch.globalX;
-			touchY = stage.mouseY//event.stageY;// touch.globalY;
+			touchX = mouseX;//event.stageX; //touch.globalX;
+			touchY = mouseY//event.stageY;// touch.globalY;
 		}
 		
 		/**

@@ -11,7 +11,7 @@ package flash.media
 		public static var sounds:Array = [];
 		private var xhr:XMLHttpRequest;
 		private var buffer:AudioBuffer;
-		private static var ctx:AudioContext = new AudioContext;
+		private static var _ctx:AudioContext;
 		public var playing:Boolean = false;
 		private var loops:int;
 		private var sndTransform:SoundTransform;
@@ -20,14 +20,18 @@ package flash.media
 		public function Sound(stream:URLRequest = null, context:SoundLoaderContext = null)
 		{
 			super();
-			sounds.push(this);
-			this.load(stream, context);
+			if(ctx){
+				sounds.push(this);
+				this.load(stream, context);
+			}
 		}
 		
 		public function load(stream:URLRequest, context:SoundLoaderContext = null):void
 		{
-			var _context:SoundLoaderContext = this._buildLoaderContext(context);
-			this._load(stream, _context.checkPolicyFile, _context.bufferTime);
+			if(ctx){
+				var _context:SoundLoaderContext = this._buildLoaderContext(context);
+				this._load(stream, _context.checkPolicyFile, _context.bufferTime);
+			}
 		}
 		
 		public function loadCompressedDataFromByteArray(bytes:ByteArray, bytesLength:uint):void
@@ -52,8 +56,8 @@ package flash.media
 		private function _load(url:URLRequest, checkPolicyFile:Boolean, bufferTime:Number):void
 		{
 			xhr = new XMLHttpRequest;
-			xhr.responseType = "arraybuffer";
 			xhr.open("GET", url.url);
+			xhr.responseType = "arraybuffer";
 			xhr.addEventListener("load", xhr_load,true);
 			xhr.send();
 		}
@@ -83,16 +87,18 @@ package flash.media
 		
 		public function play(startTime:Number=0, loops:int=0, sndTransform:SoundTransform=null):SoundChannel
 		{
-			this.startTime = startTime;
-			this.sndTransform = sndTransform;
-			this.loops = loops;
-			playing = true;
-			if(buffer){
-				source = ctx.createBufferSource();
-				source.loop = loops>0;
-				source.buffer = buffer;
-				source.connect(ctx.destination);
-				source.start(startTime);
+			if(ctx){
+				this.startTime = startTime;
+				this.sndTransform = sndTransform;
+				this.loops = loops;
+				playing = true;
+				if(buffer){
+					source = ctx.createBufferSource();
+					source.loop = loops>0;
+					source.buffer = buffer;
+					source.connect(ctx.destination);
+					source.start(startTime);
+				}
 			}
 			return null;
 		}
@@ -120,6 +126,20 @@ package flash.media
 		public function get id3():ID3Info
 		{
 			return null;
+		}
+		
+		static public function get ctx():AudioContext 
+		{
+			if (_ctx==null) {
+				if (typeof(AudioContext)!="undefined") {
+					_ctx = new AudioContext;
+				}else if(typeof(webkitAudioContext)!="undefined"){
+					_ctx =new webkitAudioContext;
+				}else {
+					//throw ("can not find AudioContext");
+				}
+			}
+			return _ctx;
 		}
 		
 		public function close():void

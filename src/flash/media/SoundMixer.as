@@ -14,9 +14,9 @@ package flash.media
 		{
 			for each(var sound:Sound in Sound.sounds) {
 				sound.playing = false;
-				if (sound.source) {
+				try{
 					sound.source.stop(0);
-				}
+				}catch(err:Object){}
 			}
 		}
 		

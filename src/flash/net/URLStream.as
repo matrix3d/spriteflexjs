@@ -16,8 +16,8 @@ package flash.net
 		public function load(v:URLRequest):void
 		{
 			xhr = new XMLHttpRequest;
-			xhr.responseType = "arraybuffer";
 			xhr.open("get", v.url);
+			xhr.responseType = "arraybuffer";
 			xhr.onreadystatechange = xhr_onreadystatechange;
 			xhr.send();
 		}

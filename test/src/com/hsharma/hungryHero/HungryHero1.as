@@ -23,6 +23,7 @@ package com.hsharma.hungryHero
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	
 	/**
@@ -76,11 +77,22 @@ package com.hsharma.hungryHero
 			loadingTf = new TextField;
 			loadingTf.x = 0
 			loadingTf.y = 100;
+			loadingTf.autoSize = TextFieldAutoSize.LEFT;
 			loadingTf.defaultTextFormat = new TextFormat(null, 30);
 			loadingTf.textColor = 0xff0000;
 			addChild(loadingTf);
 			loadNext();
 			
+			stage.addEventListener(Event.RESIZE, stage_resize);
+		}
+		
+		private function stage_resize(e:Event):void 
+		{
+			var scale:Number = Math.min(stage.stageWidth/GameConstants.stageWidth,stage.stageHeight/GameConstants.stageHeight);
+			if (scale>1) {
+				scale = 1;
+			}
+			scaleX = scaleY = scale;
 		}
 		
 		private function loadNext():void 

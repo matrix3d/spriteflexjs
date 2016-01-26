@@ -240,9 +240,11 @@ package
         private function onmouseDown(e:MouseEvent):void
         {
             var I:int = 0;
+			trace(mouseX + "," + mouseY);
             for(I = 0; I < blobPuyos.length; I++)
             {
                 blobPuyos[I].detectDrag(mouseX, mouseY);
+				blobPuyos[I].moveDrag(mouseX, mouseY);
             }
         }
         

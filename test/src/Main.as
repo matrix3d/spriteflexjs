@@ -26,6 +26,7 @@ package
 			b.scaleX = 2;
 			b.rotation = 45;
 			trace(b.transform.pixelBounds);
+			trace(typeof Sprite);
 		}
 		
 	}

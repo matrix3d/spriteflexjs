@@ -137,7 +137,7 @@ package com.hsharma.hungryHero.screens
 			fontRegular = com.hsharma.hungryHero.Fonts.getFont("Regular");
 			
 			aboutText = new StarlingTextField(480, 600, "", fontRegular.fontName, fontRegular.fontSize, 0xffffff);
-			aboutText.text = "Hungry Hero is a free and open source game built on Adobe Flash using Starling Framework.\n\nhttp://www.hungryherogame.com\n\n" +
+			aboutText.text = "Hungry Hero is a free and open source game built on html5 using spriteflexjs.\n\nhttp://www.hungryherogame.com\n\n" +
 				" The concept is very simple. The hero is pretty much always hungry and you need to feed him with food." +
 				" You score when your Hero eats food.\n\nThere are different obstacles that fly in with a \"Look out!\"" +
 				" caution before they appear. Avoid them at all costs. You only have 5 lives. Try to score as much as possible and also" +
@@ -159,7 +159,7 @@ package com.hsharma.hungryHero.screens
 			starlingBtn.x = aboutText.x + aboutText.width - starlingBtn.width;//= aboutText.bounds.right - starlingBtn.width;
 			starlingBtn.y = aboutText.y + aboutText.height;//= aboutText.bounds.bottom;
 			starlingBtn.addEventListener(MouseEvent.CLICK, onStarlingBtnClick);
-			this.addChild(starlingBtn);
+			//this.addChild(starlingBtn);
 			
 			backBtn = new Button(com.hsharma.hungryHero.Assets.getAtlas().getTexture("about_backButton"));
 			backBtn.x = 660;

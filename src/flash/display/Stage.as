@@ -208,18 +208,21 @@ package flash.display
 					_mouseY = e.targetTouches[0].pageY - canvas.offsetTop;
 				}
 				if (hasEventListener(flashType)) {
-					if(flashType!=MouseEvent.MOUSE_MOVE){
+					if(flashType!=TouchEvent.TOUCH_MOVE){
 						dispatchEvent(new TouchEvent(flashType, true, false, 0, true, _mouseX, _mouseY));
+					}else {
+						needSendTouchMove = true;
+					}
+				}
+				if (hasEventListener(flashType2)) {
+					if(flashType2!=MouseEvent.MOUSE_MOVE){
+						dispatchEvent(new MouseEvent(flashType2, true, false, _mouseX, _mouseY));
 					}else {
 						needSendMouseMove = true;
 					}
 				}
-				if (hasEventListener(flashType2)) {
-					if(flashType2!=TouchEvent.TOUCH_MOVE){
-						dispatchEvent(new MouseEvent(flashType2, true, false, _mouseX, _mouseY));
-					}else {
-						needSendTouchMove = true;
-					}
+				if (flashType==TouchEvent.TOUCH_END&&hasEventListener(MouseEvent.CLICK)) {
+					dispatchEvent(new MouseEvent(MouseEvent.CLICK, true, false, _mouseX, _mouseY));
 				}
 			}
 		}

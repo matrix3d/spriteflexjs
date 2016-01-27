@@ -1,7 +1,7 @@
 package flash.net
 {
-	public function navigateToURL(param1:URLRequest, param2:String = null):void
+	public function navigateToURL(request:URLRequest, win:String=null):void
 	{
-	
+		window.open(request.url, win);
 	}
 }

@@ -1,7 +1,13 @@
-# spritejs
-flexjs-sprite
+# spriteflexjs
 
+a html5 engine build with flexjs.
 
-<a href='http://matrix3d.github.io/assets/html5/flexjsstage3d/bin/js-release/#test_graphics'>graphics</a>
+support all flash runtime api.
 
-<a href='http://matrix3d.github.io/assets/html5/flexjsstage3d/bin/js-release/#test_stage3d'>stage3d</a>
+support canvas and webgl.
+
+100% ActionScript written code base
+
+### tests
+
+<a href='http://matrix3d.github.io/assets/html5/flexjsstage3d/bin/js-release'>tests</a>

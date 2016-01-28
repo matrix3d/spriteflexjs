@@ -18,6 +18,7 @@ package
 	import flash.display3D.VertexBuffer3D;
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
+	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.events.Event;
 	import flash.utils.ByteArray;
@@ -27,7 +28,7 @@ package
 	 * ...
 	 * @author lizhi
 	 */
-	public class TestStage3DPhong extends Sprite
+	public class TestStage3DGLSL extends Sprite
 	{
 		private var ctx:Context3D;
 		private var ibuffer:IndexBuffer3D;
@@ -35,10 +36,17 @@ package
 		private var vmatr:Matrix3D = new Matrix3D;
 		private var pmatr:Matrix3D = new Matrix3D;
 		private var bmd:BitmapData;
-		public function TestStage3DPhong() 
+		private var vcode:String;
+		private var fcode:String;
+		private var texture:Texture;
+		private var program:Program3D;
+		private var normBuffer:VertexBuffer3D;
+		private var uvBuffer:VertexBuffer3D;
+		private var posBuffer:VertexBuffer3D;
+		public function TestStage3DGLSL() 
 		{
 			var loader:Loader = new Loader();
-			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loader_complete);
+			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, jpg_loader_complete);
 			loader.load(new URLRequest("../../wood.jpg"));
 			addChild(new Stats);
 		}
@@ -49,36 +57,107 @@ package
 			//draw
 			mmatr.identity();
 			var time:Number = (new Date()).getTime();
-			mmatr.appendRotation(time/100, Vector3D.X_AXIS);
-			mmatr.appendRotation(time/130, Vector3D.Y_AXIS);
+			mmatr.appendRotation(time/30, Vector3D.X_AXIS);
+			mmatr.appendRotation(time/40, Vector3D.Y_AXIS);
 			vmatr.identity();
 			vmatr.appendTranslation(0, 0, -10);
 			vmatr.invert();
 			ctx.clear();
-			ctx.setCulling(Context3DTriangleFace.NONE);
-			ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, mmatr,true);
-			ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, vmatr,true);
-			ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 8, pmatr,true);
-			ctx.setProgramConstantsFromVector(Context3DProgramType.VERTEX,12,Vector.<Number>([0,20,-10,0]));//light pos
-			ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT,0,Vector.<Number>([10,0,0,0]));//specular
-			ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT,1,Vector.<Number>([.7,.4,.2,1]));//light color
-			ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 2, Vector.<Number>([.5, .5, .5, 1]));//ambient
-			
 			CONFIG::as_only {
+				ctx.setTextureAt(0, texture);
+				ctx.setVertexBufferAt(0, posBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
+				ctx.setVertexBufferAt(1, normBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
+				ctx.setVertexBufferAt(2, uvBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
+				ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, mmatr,true);
+				ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, vmatr,true);
+				ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 8, pmatr,true);
+				ctx.setProgramConstantsFromVector(Context3DProgramType.VERTEX,12,Vector.<Number>([0,20,-10,0]));//light pos
+				ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT,0,Vector.<Number>([10,0,0,0]));//specular
+				ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT,1,Vector.<Number>([.7,.4,.2,1]));//light color
+				ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 2, Vector.<Number>([.5, .5, .5, 1]));//ambient
 				ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 3, Vector.<Number>([0.7,2,0,0]));
+			}
+			CONFIG::js_only {
+				var shaderProgram:WebGLProgram = program.program;
+				var gl:WebGLRenderingContext = ctx.gl;
+				var vertexPositionAttribute:Number = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+				gl.enableVertexAttribArray(vertexPositionAttribute);
+
+				var vertexNormalAttribute:Number = gl.getAttribLocation(shaderProgram, "aVertexNormal");
+				gl.enableVertexAttribArray(vertexNormalAttribute);
+
+				var textureCoordAttribute:Number = gl.getAttribLocation(shaderProgram, "aTextureCoord");
+				gl.enableVertexAttribArray(textureCoordAttribute);
+
+				var pMatrixUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uPMatrix");
+				var mvMatrixUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+				var nMatrixUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uNMatrix");
+				var samplerUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uSampler");
+				var materialShininessUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uMaterialShininess");
+				var showSpecularHighlightsUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uShowSpecularHighlights");
+				var useTexturesUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uUseTextures");
+				var useLightingUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uUseLighting");
+				var ambientColorUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uAmbientColor");
+				var pointLightingLocationUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uPointLightingLocation");
+				var pointLightingSpecularColorUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uPointLightingSpecularColor");
+				var pointLightingDiffuseColorUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uPointLightingDiffuseColor");
+				
+				//draw
+				gl.uniform1i(showSpecularHighlightsUniform, 1);
+				gl.uniform1i(useLightingUniform, 1);
+				gl.uniform3f(ambientColorUniform, .5, .5, .5);
+				gl.uniform3f(pointLightingLocationUniform, 0, 20, -10);
+				gl.uniform3f(pointLightingSpecularColorUniform, .8, .8, .8);
+				gl.uniform3f(pointLightingDiffuseColorUniform, .8, .8, .8);
+				gl.uniform1i(useTexturesUniform, 1);
+				gl.uniform1i(samplerUniform, 0);
+				gl.uniform1f(materialShininessUniform, 32);
+				gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, posBuffer.buff);
+				gl.vertexAttribPointer(vertexPositionAttribute, 3, WebGLRenderingContext.FLOAT, false, 0, 0);
+				gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, uvBuffer.buff);
+				gl.vertexAttribPointer(textureCoordAttribute, 2, WebGLRenderingContext.FLOAT, false, 0, 0);
+				gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, normBuffer.buff);
+				gl.vertexAttribPointer(vertexNormalAttribute, 3, WebGLRenderingContext.FLOAT, false, 0, 0);
+				
+				
+				gl.activeTexture(WebGLRenderingContext.TEXTURE0);
+				gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture.texture);
+				gl.uniform1i(samplerUniform, 0);
+				
+				gl.uniformMatrix4fv(pMatrixUniform, false, pmatr.rawData);
+				var mvmatr:Matrix3D = mmatr.clone();
+				mvmatr.append(vmatr);
+				gl.uniformMatrix4fv(mvMatrixUniform, false, mvmatr.rawData);
 			}
 			ctx.drawTriangles(ibuffer);
 			ctx.present();
 		}
 		
-		private function loader_complete(e:Event):void 
+		private function jpg_loader_complete(e:Event):void 
 		{
 			var target:LoaderInfo = e.currentTarget as LoaderInfo;
 			bmd = (target.content as Bitmap).bitmapData;
+			
+			var loader:URLLoader = new URLLoader(new URLRequest("../../glsl/per-fragment-lighting.vert"));
+			loader.addEventListener(Event.COMPLETE, vert_loader_complete);
+		}
+		
+		private function vert_loader_complete(e:Event):void 
+		{
+			var loader:URLLoader = e.currentTarget as URLLoader;
+			vcode = loader.data + "";
+			loader = new URLLoader(new URLRequest("../../glsl/per-fragment-lighting.frag"));
+			loader.addEventListener(Event.COMPLETE, frag_loader_complete);
+		}
+		
+		private function frag_loader_complete(e:Event):void 
+		{
+			var loader:URLLoader = e.currentTarget as URLLoader;
+			fcode = loader.data + "";
+			
 			//init gl
 			stage.stage3Ds[0].addEventListener(Event.CONTEXT3D_CREATE, context3dCreate);
 			stage.stage3Ds[0].requestContext3D();
-			
 		}
 		
 		private function context3dCreate(e:Event):void 
@@ -89,74 +168,11 @@ package
 			ctx.configureBackBuffer(stage.stageWidth, stage.stageHeight, 2);
 			
 			//init texture
-			var texture:Texture = ctx.createTexture(bmd.width, bmd.height, Context3DTextureFormat.BGRA, false);
+			texture = ctx.createTexture(bmd.width, bmd.height, Context3DTextureFormat.BGRA, false);
 			texture.uploadFromBitmapData(bmd);
 			
 			//init shader
 			CONFIG::js_only{
-				var vcode:String = 
-					"uniform mat4 vc0;\n"+
-					"uniform mat4 vc4;\n"+
-					"uniform mat4 vc8;\n"+
-					"uniform vec4 vc12;\n"+
-					"varying vec3 v0;\n"+
-					"varying vec3 v1;\n"+
-					"varying vec3 v2;\n"+
-					"varying vec4 v3;\n"+
-					"attribute vec4 va0;\n"+
-					"attribute vec4 va1;\n"+
-					"attribute vec4 va2;\n"+
-					"void main(){\n"+
-					"	vec4 vt0 = va0 * vc0;\n"+
-					"	vec4 vt1 = vt0 * vc4;\n"+
-					"	vt0 = vt1 * vc8;\n"+
-					"	gl_Position = vt0;\n"+
-					"	vt0 = va1 * vc0;\n"+
-					"	vec3 vt2 = normalize(vt0.xyz);\n"+
-					"	vt0 = -vt1;\n"+
-					"	vec3 vt3 = normalize(vt0.xyz);\n"+
-					"	v0 = vt3;\n"+
-					"	vt0 = vc12;\n"+
-					"	vec4 vt34 = vt0 * vc4;\n"+
-					"	vt0 = vt34 - vt1;\n"+
-					"	vec3 vt13 = normalize(vt0.xyz);\n"+
-					"	v1 = vt13;\n"+
-					"	vec3 vt03 = vt2 * mat3(vc4);\n"+
-					"	vt13 = normalize(vt03);\n"+
-					"	v2 = vt13;\n"+
-					"	v3 = va2;\n"+
-					"}"
-				var fcode:String = 
-					"uniform sampler2D fs0;\n"+
-					"uniform vec4 fc3;\n"+
-					"uniform vec4 fc0;\n"+
-					"uniform vec4 fc1;\n"+
-					"uniform vec4 fc2;\n"+
-					"varying vec4 v3;\n"+
-					"varying vec4 v2;\n"+
-					"varying vec4 v1;\n"+
-					"varying vec4 v0;\n"+
-					"void main(){\n"+
-					"	vec4 ft0 = texture2D(v3,fs0);\n"+
-					"	vec4 ft1 = ft0 - fc3;\n"+
-					"	ft1 = dot(v2,v1);\n"+
-					"	vec4 ft2 = clamp(ft1,0,1);\n"+
-					"	ft1.xyz = dot(v1.xyz,v2.xyz);\n"+
-					"	vec4 ft3 = fc3 * ft1;\n"+
-					"	ft1 = ft3 * v2;\n"+
-					"	ft3 = ft1 - v1;\n"+
-					"	ft1.xyz = normalize(ft3);\n"+
-					"	ft3.xyz = dot(v0.xyz,ft8.xyz);\n"+
-					"	ft1 = clamp(ft3,0,1);\n"+
-					"	ft3 = pow(ft1,fc0);\n"+
-					"	ft1 = ft2 + ft3;\n"+
-					"	ft2 = fc1 * ft1;\n"+
-					"	ft1 = ft2 * fc1;\n"+
-					"	ft2 = fc2 + ft1;\n"+
-					"	ft2.w = ft0.x;\n"+
-					"	ft0 = ft2 * ft0;\n"+
-					"	gl_FragColor = ft0;\n"+
-					"}"
 				var vb:ByteArray = new ByteArray;
 				vb.writeUTFBytes( vcode);
 				var fb:ByteArray = new ByteArray;
@@ -164,7 +180,7 @@ package
 			}
 			
 			CONFIG::as_only{
-				var vcode:String = 
+				vcode = 
 				<![CDATA[
 					m44 vt0 va0 vc0
 					m44 vt1 vt0 vc4
@@ -185,7 +201,7 @@ package
 					mov v2 vt1.xyz
 					mov v3 va2
 				]]>
-				var fcode:String =<![CDATA[
+				fcode =<![CDATA[
 					tex ft0 v3 fs0
 					sub ft1 ft0.w fc3.x
 					kil ft1.x
@@ -212,7 +228,7 @@ package
 				var fb:ByteArray=assembler.assemble(Context3DProgramType.FRAGMENT, fcode);
 			}
 			
-			var program:Program3D = ctx.createProgram();
+			program = ctx.createProgram();
 			program.upload(vb, fb);
 			ctx.setProgram(program);
 			
@@ -247,7 +263,7 @@ package
             -1.0, -1.0,  1.0,
             -1.0,  1.0,  1.0,
             -1.0,  1.0, -1.0];
-			var posBuffer:VertexBuffer3D = ctx.createVertexBuffer(posData.length/3,3);
+			posBuffer = ctx.createVertexBuffer(posData.length/3,3);
 			posBuffer.uploadFromVector(Vector.<Number>(posData), 0, posData.length / 3);
 			
 			var normData:Array = 
@@ -286,7 +302,7 @@ package
             -1.0,  0.0,  0.0,
             -1.0,  0.0,  0.0,
             -1.0,  0.0,  0.0];
-			var normBuffer:VertexBuffer3D = ctx.createVertexBuffer(normData.length/3,3);
+			normBuffer = ctx.createVertexBuffer(normData.length/3,3);
 			normBuffer.uploadFromVector(Vector.<Number>(normData), 0, normData.length / 3);
 			
 			var uvData:Array = [ // Front face
@@ -319,7 +335,7 @@ package
             1.0, 0.0,
             1.0, 1.0,
             0.0, 1.0];
-			var uvBuffer:VertexBuffer3D = ctx.createVertexBuffer(uvData.length/2,2);
+			uvBuffer = ctx.createVertexBuffer(uvData.length/2,2);
 			uvBuffer.uploadFromVector(Vector.<Number>(uvData),0,uvData.length/2);
 			var iData:Array = [0, 1, 2,      0, 2, 3,    // Front face
             4, 5, 6,      4, 6, 7,    // Back face
@@ -329,12 +345,6 @@ package
             20, 21, 22,   20, 22, 23]  // Left face;
 			ibuffer = ctx.createIndexBuffer(iData.length);
 			ibuffer.uploadFromVector(Vector.<uint>(iData),0,iData.length);
-			ctx.setVertexBufferAt(0, posBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
-			ctx.setVertexBufferAt(1, normBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
-			ctx.setVertexBufferAt(2, uvBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
-			ctx.setTextureAt(0, texture);
-			
-			
 			addEventListener(Event.ENTER_FRAME, enterFrame);
 		}
 		

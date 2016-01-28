@@ -27,8 +27,8 @@ package
 			b.rotation = 45;
 			trace(b.transform.pixelBounds);
 			trace(typeof Sprite);
+			
+			trace(("1" as Object)>>0);
 		}
-		
 	}
-	
 }

@@ -12,6 +12,7 @@
     <movie minorVersion="0" />
     <movie platform="Flash Player" />
     <movie background="#FFFFFF" />
+    <movie preferredSDK="Apache Flex 4.12.1 FP11.1 AIR3.9 en_US;4.12.1;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
@@ -72,7 +73,7 @@
   </library>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <compile path="src\TestHungryHero.as" />
+    <compile path="src\TestStage3DGLSL.as" />
   </compileTargets>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>

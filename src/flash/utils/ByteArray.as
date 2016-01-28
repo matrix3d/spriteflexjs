@@ -77,8 +77,12 @@ package flash.utils
 		}
 		
 		public function writeMultiByte(str:String, charSet:String):void  {
-			var encoder:TextEncoder = new TextEncoder(charSet);
-			var u8:Uint8Array = encoder.encode(str);
+			try{
+				var encoder:TextEncoder = new TextEncoder(charSet);
+				var u8:Uint8Array = encoder.encode(str);
+			}catch(err:Object){
+				u8 = new Uint8Array(str.split('').map(function(char:String):Number { return char.charCodeAt(0); } ));
+			}
 			for (var i:int = 0; i < u8.length;i++ ) {
 				writeByte(u8[i]);
 			}

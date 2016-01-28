@@ -110,7 +110,6 @@ package
 				gl.uniform3f(pointLightingSpecularColorUniform, .8, .8, .8);
 				gl.uniform3f(pointLightingDiffuseColorUniform, .8, .8, .8);
 				gl.uniform1i(useTexturesUniform, 1);
-				gl.uniform1i(samplerUniform, 0);
 				gl.uniform1f(materialShininessUniform, 32);
 				gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, posBuffer.buff);
 				gl.vertexAttribPointer(vertexPositionAttribute, 3, WebGLRenderingContext.FLOAT, false, 0, 0);
@@ -118,7 +117,6 @@ package
 				gl.vertexAttribPointer(textureCoordAttribute, 2, WebGLRenderingContext.FLOAT, false, 0, 0);
 				gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, normBuffer.buff);
 				gl.vertexAttribPointer(vertexNormalAttribute, 3, WebGLRenderingContext.FLOAT, false, 0, 0);
-				
 				
 				gl.activeTexture(WebGLRenderingContext.TEXTURE0);
 				gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture.texture);

@@ -88,32 +88,53 @@ package flash.display3D
 			//for (var i:int = 0; i < num;i++ ) {
 			//	var au:WebGLActiveInfo = gl(currentProgram.program, i);
 			//}
-			gl.uniform4fv(getUniformLocation(programType, firstRegister), data);
+			setProgramConstantsFromVectorGL(getUniformLocationName(programType, firstRegister), data, numRegisters);
 		}
 		
 		public function setProgramConstantsFromMatrix(programType:String, firstRegister:int, matrix:Matrix3D, transposedMatrix:Boolean = false):void
 		{
-			if (transposedMatrix) {
-				matrix.transpose();
-			}
-			gl.uniformMatrix4fv(getUniformLocation(programType, firstRegister), false, matrix.rawData);
-			if (transposedMatrix) {
-				matrix.transpose();
-			}
-		}
-		
-		private function getUniformLocation(programType:String, register:int):WebGLUniformLocation
-		{
-			return gl.getUniformLocation(currentProgram.program, (Context3DProgramType.VERTEX == programType) ? ("vc" + register) : ("fc" + register));
+			setProgramConstantsFromMatrixGL(getUniformLocationName(programType, firstRegister), matrix, transposedMatrix);
 		}
 		
 		public function setProgramConstantsFromByteArray(programType:String, firstRegister:int, numRegisters:int, data:ByteArray, byteArrayOffset:uint):void
 		{
 		}
+		public function setProgramConstantsFromVectorGL(name:String, data:Vector.<Number>, numRegisters:int = -1):void
+		{
+			gl.uniform4fv(getUniformLocation(name), data);
+		}
+		
+		public function setProgramConstantsFromMatrixGL(name:String, matrix:Matrix3D, transposedMatrix:Boolean = false):void
+		{
+			if (transposedMatrix) {
+				matrix.transpose();
+			}
+			gl.uniformMatrix4fv(getUniformLocation(name), false, matrix.rawData);
+			if (transposedMatrix) {
+				matrix.transpose();
+			}
+		}
+		
+		public function setProgramConstantsFromByteArrayGL(name:String , numRegisters:int, data:ByteArray, byteArrayOffset:uint):void
+		{
+		}
+		
+		private function getUniformLocationName(programType:String, register:int):String
+		{
+			return (Context3DProgramType.VERTEX == programType) ? ("vc" + register) : ("fc" + register);
+		}
+		private function getUniformLocation(name:String):WebGLUniformLocation
+		{
+			return currentProgram.getUniformLocation(name);
+		}
 		
 		public function setVertexBufferAt(index:int, buffer:VertexBuffer3D, bufferOffset:int = 0, format:String = "float4"):void
 		{
-			gl.enableVertexAttribArray(gl.getAttribLocation(currentProgram.program, "va" + index));
+			setVertexBufferAtGL("va" + index, buffer, bufferOffset, format);
+		}
+		
+		public function setVertexBufferAtGL(name:String, buffer:VertexBuffer3D, bufferOffset:int = 0, format:String = "float4"):void {
+			var loc:Number= currentProgram.getAttribLocation(name);
 			gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, buffer.buff);
 			var size:int = 0;
 			switch (format)
@@ -131,7 +152,7 @@ package flash.display3D
 				size = 4;
 				break;
 			}
-			gl.vertexAttribPointer(index, size, WebGLRenderingContext.FLOAT, false, 0, bufferOffset);
+			gl.vertexAttribPointer(loc, size, WebGLRenderingContext.FLOAT, false, 0, bufferOffset);
 		}
 		
 		public function setBlendFactors(sourceFactor:String, destinationFactor:String):void
@@ -289,11 +310,15 @@ package flash.display3D
 		
 		private function setTextureInternal(sampler:int, texture:Texture):void
 		{
+			setTextureAtGL("fs" + sampler, sampler, texture);
+		}
+		
+		public function setTextureAtGL(name:String, sampler:int, texture:Texture):void {
 			if (texture)
 			{
-				gl.activeTexture(WebGLRenderingContext.TEXTURE0);
+				gl.activeTexture(WebGLRenderingContext["TEXTURE"+sampler]);
 				gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture.texture);
-				gl.uniform1i(gl.getUniformLocation(currentProgram.program, "fs" + sampler), 0);
+				gl.uniform1i(currentProgram.getUniformLocation(name), sampler);
 			}
 		}
 		

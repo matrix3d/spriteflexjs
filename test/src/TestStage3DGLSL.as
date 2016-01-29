@@ -78,54 +78,25 @@ package
 				ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 3, Vector.<Number>([0.7,2,0,0]));
 			}
 			CONFIG::js_only {
-				var shaderProgram:WebGLProgram = program.program;
-				var gl:WebGLRenderingContext = ctx.gl;
-				var vertexPositionAttribute:Number = gl.getAttribLocation(shaderProgram, "aVertexPosition");
-				gl.enableVertexAttribArray(vertexPositionAttribute);
-
-				var vertexNormalAttribute:Number = gl.getAttribLocation(shaderProgram, "aVertexNormal");
-				gl.enableVertexAttribArray(vertexNormalAttribute);
-
-				var textureCoordAttribute:Number = gl.getAttribLocation(shaderProgram, "aTextureCoord");
-				gl.enableVertexAttribArray(textureCoordAttribute);
-
-				var pMatrixUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uPMatrix");
-				var mvMatrixUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uMVMatrix");
-				var nMatrixUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uNMatrix");
-				var samplerUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uSampler");
-				var materialShininessUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uMaterialShininess");
-				var showSpecularHighlightsUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uShowSpecularHighlights");
-				var useTexturesUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uUseTextures");
-				var useLightingUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uUseLighting");
-				var ambientColorUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uAmbientColor");
-				var pointLightingLocationUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uPointLightingLocation");
-				var pointLightingSpecularColorUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uPointLightingSpecularColor");
-				var pointLightingDiffuseColorUniform:WebGLUniformLocation = gl.getUniformLocation(shaderProgram, "uPointLightingDiffuseColor");
+				ctx.setTextureAtGL("uSampler", 0, texture);
+				ctx.setVertexBufferAtGL("aVertexPosition", posBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
+				ctx.setVertexBufferAtGL("aVertexNormal", normBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
+				ctx.setVertexBufferAtGL("aTextureCoord", uvBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
 				
+				ctx.setProgramConstantsFromMatrixGL("uMMatrix", mmatr,false);
+				ctx.setProgramConstantsFromMatrixGL("uVMatrix", vmatr,false);
+				ctx.setProgramConstantsFromMatrixGL("uPMatrix", pmatr, false);
+				var gl:WebGLRenderingContext = program.gl;
 				//draw
-				gl.uniform1i(showSpecularHighlightsUniform, 1);
-				gl.uniform1i(useLightingUniform, 1);
-				gl.uniform3f(ambientColorUniform, .5, .5, .5);
-				gl.uniform3f(pointLightingLocationUniform, 0, 20, -10);
-				gl.uniform3f(pointLightingSpecularColorUniform, .8, .8, .8);
-				gl.uniform3f(pointLightingDiffuseColorUniform, .8, .8, .8);
-				gl.uniform1i(useTexturesUniform, 1);
-				gl.uniform1f(materialShininessUniform, 32);
-				gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, posBuffer.buff);
-				gl.vertexAttribPointer(vertexPositionAttribute, 3, WebGLRenderingContext.FLOAT, false, 0, 0);
-				gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, uvBuffer.buff);
-				gl.vertexAttribPointer(textureCoordAttribute, 2, WebGLRenderingContext.FLOAT, false, 0, 0);
-				gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, normBuffer.buff);
-				gl.vertexAttribPointer(vertexNormalAttribute, 3, WebGLRenderingContext.FLOAT, false, 0, 0);
+				gl.uniform1f(program.getUniformLocation("uMaterialShininess"), 32);
+				gl.uniform1i(program.getUniformLocation("uShowSpecularHighlights"), 1);
+				gl.uniform1i(program.getUniformLocation("uUseTextures"), 1);
+				gl.uniform1i(program.getUniformLocation("uUseLighting"), 1);
+				gl.uniform3f(program.getUniformLocation("uAmbientColor"), .5, .5, .5);
+				gl.uniform3f(program.getUniformLocation("uPointLightingLocation"), 0, 20, -10);
+				gl.uniform3f(program.getUniformLocation("uPointLightingSpecularColor"), .8, .8, .8);
+				gl.uniform3f(program.getUniformLocation("uPointLightingDiffuseColor"), .8, .8, .8);
 				
-				gl.activeTexture(WebGLRenderingContext.TEXTURE0);
-				gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture.texture);
-				gl.uniform1i(samplerUniform, 0);
-				
-				gl.uniformMatrix4fv(pMatrixUniform, false, pmatr.rawData);
-				var mvmatr:Matrix3D = mmatr.clone();
-				mvmatr.append(vmatr);
-				gl.uniformMatrix4fv(mvMatrixUniform, false, mvmatr.rawData);
 			}
 			ctx.drawTriangles(ibuffer);
 			ctx.present();

@@ -8,7 +8,8 @@ package flash.display3D
 		public var vshader:WebGLShader;
 		public var program:WebGLProgram;
 		public var gl:WebGLRenderingContext;
-		
+		private var uniformLocations:Object = { };
+		private var attribLocations:Object = { };
 		public function Program3D()
 		{
 			super();
@@ -42,6 +43,23 @@ package flash.display3D
 			gl.deleteShader(fshader);
 			gl.deleteShader(vshader);
 			gl.deleteProgram(program);
+		}
+		
+		public function getUniformLocation(name:String):WebGLUniformLocation {
+			var loc:WebGLUniformLocation = uniformLocations[name];
+			if (loc==null) {
+				loc = uniformLocations[name] = gl.getUniformLocation(program,name);
+			}
+			return loc;
+		}
+		public function getAttribLocation(name:String):Number {
+			var loc:Object = attribLocations[name];
+			if (loc==null) {
+				loc = attribLocations[name] = gl.getAttribLocation(program,name);
+			}
+			var locnum:Number = Number(loc);
+			gl.enableVertexAttribArray(locnum);
+			return locnum;
 		}
 	}
 }

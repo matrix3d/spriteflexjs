@@ -47,7 +47,7 @@ package
 		{
 			var loader:Loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, jpg_loader_complete);
-			loader.load(new URLRequest("../../wood.jpg"));
+			loader.load(new URLRequest("../../assets/wood.jpg"));
 			addChild(new Stats);
 		}
 		
@@ -107,7 +107,7 @@ package
 			var target:LoaderInfo = e.currentTarget as LoaderInfo;
 			bmd = (target.content as Bitmap).bitmapData;
 			
-			var loader:URLLoader = new URLLoader(new URLRequest("../../glsl/per-fragment-lighting.vert"));
+			var loader:URLLoader = new URLLoader(new URLRequest("../../assets/glsl/per-fragment-lighting.vert"));
 			loader.addEventListener(Event.COMPLETE, vert_loader_complete);
 		}
 		
@@ -115,7 +115,7 @@ package
 		{
 			var loader:URLLoader = e.currentTarget as URLLoader;
 			vcode = loader.data + "";
-			loader = new URLLoader(new URLRequest("../../glsl/per-fragment-lighting.frag"));
+			loader = new URLLoader(new URLRequest("../../assets/glsl/per-fragment-lighting.frag"));
 			loader.addEventListener(Event.COMPLETE, frag_loader_complete);
 		}
 		

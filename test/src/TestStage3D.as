@@ -34,7 +34,7 @@ package
 		{
 			var loader:Loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loader_complete);
-			loader.load(new URLRequest("../../wood.jpg"));
+			loader.load(new URLRequest("../../assets/wood.jpg"));
 			addChild(new Stats);
 		}
 		

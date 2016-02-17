@@ -1,6 +1,6 @@
 package
 {
-	import flash.geom.Matrix3D_ARRAY;
+	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 	
 	/**
@@ -74,7 +74,7 @@ package
 			
 			
 			//draw
-			var matr:Matrix3D_ARRAY = new Matrix3D_ARRAY();
+			var matr:Matrix3D = new Matrix3D();
 			setInterval(function():void { 
 				var mvpLoction:WebGLUniformLocation = gl.getUniformLocation(program, "mvp");
 				

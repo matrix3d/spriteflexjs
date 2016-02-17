@@ -101,7 +101,7 @@ package com.hsharma.hungryHero
 				loadComp();
 			}else {
 				loading = urls.shift();
-				var req:URLRequest = new URLRequest("../../media/" + loading[1])
+				var req:URLRequest = new URLRequest("../../assets/media/" + loading[1])
 				loadingTf.text="loading "+loading[1]
 				if (loading[0]=="image") {
 					var imageloader:Loader = new Loader;

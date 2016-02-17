@@ -57,11 +57,11 @@ package flash.display
 			if (delta > interval) {
 				lastUpdateTime = now - (delta % interval);
 				if (needSendMouseMove) {
-					dispatchEvent(new MouseEvent(MouseEvent.MOUSE_MOVE, true, false, _mouseX, _mouseY);
+					dispatchEvent(new MouseEvent(MouseEvent.MOUSE_MOVE, true, false, _mouseX, _mouseY));
 					needSendMouseMove = false;
 				}
 				if (needSendTouchMove) {
-					dispatchEvent(new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, 0, true, _mouseX, _mouseY);
+					dispatchEvent(new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, 0, true, _mouseX, _mouseY));
 					needSendTouchMove = false;
 				}
 				dispatchEvent(new Event(Event.ENTER_FRAME));

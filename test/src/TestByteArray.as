@@ -18,7 +18,7 @@ package
 			loader = new URLLoader();
 			loader.dataFormat = URLLoaderDataFormat.BINARY;
 			loader.addEventListener(Event.COMPLETE, loader_complete);
-			loader.load(new URLRequest("../../wood.jpg"));
+			loader.load(new URLRequest("../../assets/wood.jpg"));
 		}
 		
 		private function loader_complete(e:Event):void 

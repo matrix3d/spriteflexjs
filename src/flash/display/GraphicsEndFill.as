@@ -5,7 +5,7 @@ package flash.display
 	
 	public final class GraphicsEndFill extends Object implements IGraphicsFill, IGraphicsData
 	{
-		public var fill:IGraphicsFill
+		public var fill:IGraphicsFill;
 		public function GraphicsEndFill()
 		{
 			super();

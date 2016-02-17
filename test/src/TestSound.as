@@ -14,7 +14,7 @@ package
 		
 		public function TestSound() 
 		{
-			var sound:Sound = new Sound(new URLRequest("../../media/sounds/bgGame.mp3"));
+			var sound:Sound = new Sound(new URLRequest("../../assets/media/sounds/bgGame.mp3"));
 			sound.play();
 			
 			stage.addEventListener(MouseEvent.CLICK, stage_click);

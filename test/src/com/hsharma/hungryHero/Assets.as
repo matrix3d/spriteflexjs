@@ -90,7 +90,7 @@ package com.hsharma.hungryHero
 		}
 		
 		public static function getSound(name:String):Sound {
-			return new Sound(new URLRequest("../../media/sounds/"+name+".mp3"));
+			return new Sound(new URLRequest("../../assets/media/sounds/"+name+".mp3"));
 		}
 	}
 }

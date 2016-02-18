@@ -36,6 +36,9 @@ package
 		private var astar:AStar;
 		private var tw:Number;
 		private var th:Number;
+		private var roleasseturls:Array = ["idle.json","idle.png","walk.json","walk.png"];
+		public static var roleassets:Object = { };
+		private var roleasseturl:String;
 		public function TestTMX() 
 		{
 			tmxloader = new URLLoader(new URLRequest("../../assets/tmx/sewers.json"));
@@ -60,8 +63,38 @@ package
 				url = url.slice(url.lastIndexOf("\/")+1);
 				loader.load(new URLRequest("../../assets/tmx/"+url));
 			}else {
-				init();
+				loadNextRole();
 			}
+		}
+		
+		private function loadNextRole():void 
+		{
+			if (roleasseturls.length==0) {
+				init();
+			}else {
+				roleasseturl = roleasseturls.shift() as String;
+				if (roleasseturl.indexOf(".json")!=-1) {
+					var jsonloader:URLLoader = new URLLoader;
+					jsonloader.addEventListener(Event.COMPLETE, jsonloader_complete);
+					jsonloader.load(new URLRequest("../../assets/mir/role/1/"+roleasseturl));
+				}else {
+					var pngloader:Loader = new Loader;
+					pngloader.contentLoaderInfo.addEventListener(Event.COMPLETE, pngloader_complete);
+					pngloader.load(new URLRequest("../../assets/mir/role/1/"+roleasseturl));
+				}
+			}
+		}
+		
+		private function pngloader_complete(e:Event):void 
+		{
+			roleassets[roleasseturl] = ((e.currentTarget as LoaderInfo).content as Bitmap).bitmapData;
+			loadNextRole();
+		}
+		
+		private function jsonloader_complete(e:Event):void 
+		{
+			roleassets[roleasseturl] = JSON.parse(((e.currentTarget as URLLoader).data + ""));
+			loadNextRole();
 		}
 		
 		private function loader_complete(e:Event):void 
@@ -137,6 +170,8 @@ package
 				for each(var node:Node in astar.floydPath) {
 					path.push([(node.x + .5) * tw, (node.y + .5) * th]);
 				}
+				path.shift();
+				if(path.length)
 				myPlayer.moveTo(path);
 			}
 			
@@ -147,29 +182,56 @@ package
 			for each(var player:Player in players) {
 				player.update();
 			}
-			camera.x = myPlayer.x;
-			camera.y = myPlayer.y;
-			worldLayer.x = -camera.x + int(stage.stageWidth / 2);
-			worldLayer.y = -camera.y + int(stage.stageHeight / 2);
+			var elas:Number = .1;
+			camera.x += (myPlayer.x-camera.x)*elas;
+			camera.y += (myPlayer.y-camera.y)*elas;
+			worldLayer.x = -int(camera.x) + int(stage.stageWidth / 2);
+			worldLayer.y = -int(camera.y) + int(stage.stageHeight / 2);
 		}
 	}
 }
+import flash.display.Bitmap;
+import flash.display.BitmapData;
 import flash.display.Sprite;
+import flash.geom.Point;
+import flash.geom.Rectangle;
+import flash.text.TextField;
 
 class Player extends Sprite {
 	private var path:Array = [];
 	private var pathPtr:int;
 	private var moving:Boolean = false;
+	private var animName:String;
+	private var animDir:int
+	private var animFrame:Number = 0;
+	private var playing:Boolean = false;
+	private var dirDirty:Boolean = true;
+	private var speed:Number = 2;
+	private var image:Bitmap = new Bitmap;
 	public function Player() 
 	{
-		graphics.beginFill(0xff0000);
-		graphics.drawCircle(0, 0, 20);
+		/*graphics.beginFill(0xff0000);
+		graphics.moveTo(20, 0);
+		graphics.lineTo( -20, 10);
+		graphics.lineTo( -20, -10);
+		graphics.lineTo( 20, 0);*/
+		addChild(image);
+		play("idle",0)
 	}
 	
 	public function moveTo(path:Array):void {
 		this.path = path;
 		pathPtr = 0;
 		moving = true;
+		dirDirty = true;
+		play("walk", animDir);
+	}
+	
+	public function play(name:String,dir:int):void {
+		animName = name;
+		animDir = dir;
+		animFrame = 0;
+		playing = true;
 	}
 	
 	public function update():void {
@@ -178,17 +240,65 @@ class Player extends Sprite {
 			var dx:Number = p[0]-x;
 			var dy:Number = p[1]-y;
 			var len:Number = Math.sqrt(dx*dx+dy*dy);
-			var speed:Number = 5;
+			if (dirDirty) {
+				var dir:int = Math.round(Math.atan2(dy, dx) / (Math.PI / 4));
+				//rotation = dir * 180 / 4;
+				dir += 18;
+				dir = dir % 8;
+				play(animName, dir);
+				dirDirty = false;
+			}
 			if (len<=speed) {
 				x = p[0];
 				y = p[1];
 				pathPtr++;
+				dirDirty = true;
 				if (pathPtr>=path.length) {
 					moving = false;
+					play("idle", animDir)
+				}else {
+					play("walk", animDir);
 				}
 			}else {
 				x += int(speed * dx / len);
 				y += int(speed * dy / len);
+			}
+		}
+		if (playing) {
+			var obj:Array = TestTMX.roleassets[animName+".json"];
+			var bmd:BitmapData = TestTMX.roleassets[animName+".png"];
+			if (obj && bmd) {
+				var objs:Array = TestTMX.roleassets[animName+".json" + animDir];
+				if (objs==null) {
+					objs = TestTMX.roleassets[animName+".json" + animDir] = [];
+					for (var i:int = 0; i < obj.length;i++ ) {
+						var sobj:Object = obj[i];
+						sobj.i = i;
+						if (sobj.name.indexOf(animDir+"")==0) {
+							objs.push(sobj);
+						}
+					}
+				}
+				
+				var bmds:Array= TestTMX.roleassets[animName+".pngs"];
+				if (bmds==null) {
+					TestTMX.roleassets[animName+".pngs"] = bmds = [];
+				}
+				animFrame+= .1;
+				if (animFrame>=objs.length) {
+					animFrame = 0;
+				}
+				var id:int = int(animFrame);
+				var data:Object = objs[id];
+				var sbmd:BitmapData = bmds[data.i];
+				if (sbmd==null) {
+					sbmd = new BitmapData(data.w, data.h, bmd.transparent, 0);
+					sbmd.copyPixels(bmd, new Rectangle(data.x, data.y,data.w,data.h), new Point);
+					bmds[data.i] = sbmd;
+				}
+				image.bitmapData = sbmd;
+				image.x = data.fx-192/2;
+				image.y = data.fy-192/2;
 			}
 		}
 	}

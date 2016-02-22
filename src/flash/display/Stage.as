@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.__native.GLCanvasRenderingContext2D;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
@@ -278,11 +279,18 @@ package flash.display
 				}
 			}
 		}
+		/**
+		 * @flexjsignorecoercion CanvasRenderingContext2D
+		 */
 		public function get ctx():CanvasRenderingContext2D
 		{
 			if (!_ctx)
 			{
-				_ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+				if (SpriteFlexjs.wmode=="gpu") {
+					_ctx = new GLCanvasRenderingContext2D(this) as CanvasRenderingContext2D;
+				}else{
+					_ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+				}
 			}
 			return _ctx;
 		}

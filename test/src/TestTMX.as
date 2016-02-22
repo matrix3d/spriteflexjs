@@ -15,9 +15,11 @@ package
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.text.TextField;
+	import flash.utils.getTimer;
 	import pathfind.AStar;
 	import pathfind.Node;
 	import spriteflexjs.Stats;
+	import parser.tmx.TMX;
 	/**
 	 * ...
 	 * @author lizhi
@@ -39,6 +41,7 @@ package
 		private var roleasseturls:Array = ["idle.json","idle.png","walk.json","walk.png"];
 		public static var roleassets:Object = { };
 		private var roleasseturl:String;
+		private var lastTime:Number = 0;
 		public function TestTMX() 
 		{
 			tmxloader = new URLLoader(new URLRequest("../../assets/tmx/sewers.json"));
@@ -105,6 +108,7 @@ package
 		
 		private function init():void 
 		{
+			lastTime = getTimer();
 			addChild(worldLayer);
 			addChild(new Stats);
 			worldLayer.addChild(mapLayer);
@@ -179,14 +183,16 @@ package
 		
 		private function enterFrame(e:Event):void 
 		{
+			var now:Number = getTimer();
 			for each(var player:Player in players) {
-				player.update();
+				player.update(now - lastTime);
 			}
 			var elas:Number = .1;
 			camera.x += (myPlayer.x-camera.x)*elas;
 			camera.y += (myPlayer.y-camera.y)*elas;
 			worldLayer.x = -int(camera.x) + int(stage.stageWidth / 2);
 			worldLayer.y = -int(camera.y) + int(stage.stageHeight / 2);
+			lastTime = now;
 		}
 	}
 }
@@ -234,12 +240,13 @@ class Player extends Sprite {
 		playing = true;
 	}
 	
-	public function update():void {
+	public function update(delta:Number):void {
 		if (moving) {
 			var p:Array = path[pathPtr];
 			var dx:Number = p[0]-x;
 			var dy:Number = p[1]-y;
-			var len:Number = Math.sqrt(dx*dx+dy*dy);
+			var len:Number = Math.sqrt(dx * dx + dy * dy);
+			var deltaSpeed:Number = delta * speed / (1000 / 60);
 			if (dirDirty) {
 				var dir:int = Math.round(Math.atan2(dy, dx) / (Math.PI / 4));
 				//rotation = dir * 180 / 4;
@@ -248,7 +255,7 @@ class Player extends Sprite {
 				play(animName, dir);
 				dirDirty = false;
 			}
-			if (len<=speed) {
+			if (len<=deltaSpeed) {
 				x = p[0];
 				y = p[1];
 				pathPtr++;
@@ -260,8 +267,8 @@ class Player extends Sprite {
 					play("walk", animDir);
 				}
 			}else {
-				x += int(speed * dx / len);
-				y += int(speed * dy / len);
+				x += int(deltaSpeed * dx / len);
+				y += int(deltaSpeed * dy / len);
 			}
 		}
 		if (playing) {
@@ -284,7 +291,7 @@ class Player extends Sprite {
 				if (bmds==null) {
 					TestTMX.roleassets[animName+".pngs"] = bmds = [];
 				}
-				animFrame+= .1;
+				animFrame+= 0.12 * delta / (1000 / 60);
 				if (animFrame>=objs.length) {
 					animFrame = 0;
 				}

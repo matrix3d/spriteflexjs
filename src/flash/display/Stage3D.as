@@ -18,6 +18,14 @@ package flash.display
 		public function requestContext3D(param1:String = "auto", param2:String = "baseline"):void
 		{
 			_context3D = new Context3D;
+			var canvas:HTMLCanvasElement = document.createElement("canvas") as HTMLCanvasElement;
+			_context3D.canvas = canvas;
+			canvas.style.position = "absolute";
+			canvas.style.left = 0;
+			canvas.style.top = 0;
+			canvas.style.zIndex = 0;
+			document.body.appendChild(canvas);
+			_context3D.gl = (canvas.getContext("webgl") || canvas.getContext("experimental-webgl")) as WebGLRenderingContext;
 			dispatchEvent(new Event(Event.CONTEXT3D_CREATE));
 		}
 		

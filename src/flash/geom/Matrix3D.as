@@ -7,12 +7,15 @@ package  flash.geom{
 			else this.rawData = Vector.<Number>([1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]);
 		}
 		
-		public function get determinant() : Number { return get_determinant(); }
-		public function set determinant( __v : Number ) : void { $determinant = __v; }
-		protected var $determinant : Number;
-		public function get position() : flash.geom.Vector3D { return get_position(); }
-		public function set position( __v : flash.geom.Vector3D ) : void { set_position(__v); }
-		protected var $position : flash.geom.Vector3D;
+		public function get determinant() : Number { 
+			return (this.rawData[0] * this.rawData[5] - this.rawData[4] * this.rawData[1]) * (this.rawData[10] * this.rawData[15] - this.rawData[14] * this.rawData[11]) - (this.rawData[0] * this.rawData[9] - this.rawData[8] * this.rawData[1]) * (this.rawData[6] * this.rawData[15] - this.rawData[14] * this.rawData[7]) + (this.rawData[0] * this.rawData[13] - this.rawData[12] * this.rawData[1]) * (this.rawData[6] * this.rawData[11] - this.rawData[10] * this.rawData[7]) + (this.rawData[4] * this.rawData[9] - this.rawData[8] * this.rawData[5]) * (this.rawData[2] * this.rawData[15] - this.rawData[14] * this.rawData[3]) - (this.rawData[4] * this.rawData[13] - this.rawData[12] * this.rawData[5]) * (this.rawData[2] * this.rawData[11] - this.rawData[10] * this.rawData[3]) + (this.rawData[8] * this.rawData[13] - this.rawData[12] * this.rawData[9]) * (this.rawData[2] * this.rawData[7] - this.rawData[6] * this.rawData[3]); 
+		}
+		public function get position() : flash.geom.Vector3D {return new flash.geom.Vector3D(this.rawData[12],this.rawData[13],this.rawData[14])}
+		public function set position( val : flash.geom.Vector3D ) : void {	
+			this.rawData[12] = val.x;
+			this.rawData[13] = val.y;
+			this.rawData[14] = val.z;
+		}
 		public var rawData : Vector.<Number>;
 		public function append(lhs : Matrix3D) : void {
 			var m111 : Number = this.rawData[0];
@@ -385,7 +388,7 @@ package  flash.geom{
 		}
 		
 		public function invert() : Boolean {
-			var d : Number = this.get_determinant();
+			var d : Number = this.determinant;
 			var invertable : Boolean = Math.abs(d) > 0.00000000001;
 			if(invertable) {
 				d = 1 / d;
@@ -525,7 +528,7 @@ package  flash.geom{
 		
 		public function prependTranslation(x : Number,y : Number,z : Number) : void {
 			var m : Matrix3D = new Matrix3D();
-			m.set_position(new flash.geom.Vector3D(x,y,z));
+			m.position=(new flash.geom.Vector3D(x,y,z));
 			this.prepend(m);
 		}
 		
@@ -635,21 +638,6 @@ package  flash.geom{
 			this.rawData[12] = oRawData[3];
 			this.rawData[13] = oRawData[7];
 			this.rawData[14] = oRawData[11];
-		}
-		
-		private function get_determinant() : Number {
-			return (this.rawData[0] * this.rawData[5] - this.rawData[4] * this.rawData[1]) * (this.rawData[10] * this.rawData[15] - this.rawData[14] * this.rawData[11]) - (this.rawData[0] * this.rawData[9] - this.rawData[8] * this.rawData[1]) * (this.rawData[6] * this.rawData[15] - this.rawData[14] * this.rawData[7]) + (this.rawData[0] * this.rawData[13] - this.rawData[12] * this.rawData[1]) * (this.rawData[6] * this.rawData[11] - this.rawData[10] * this.rawData[7]) + (this.rawData[4] * this.rawData[9] - this.rawData[8] * this.rawData[5]) * (this.rawData[2] * this.rawData[15] - this.rawData[14] * this.rawData[3]) - (this.rawData[4] * this.rawData[13] - this.rawData[12] * this.rawData[5]) * (this.rawData[2] * this.rawData[11] - this.rawData[10] * this.rawData[3]) + (this.rawData[8] * this.rawData[13] - this.rawData[12] * this.rawData[9]) * (this.rawData[2] * this.rawData[7] - this.rawData[6] * this.rawData[3]);
-		}
-		
-		private function get_position() : flash.geom.Vector3D {
-			return new flash.geom.Vector3D(this.rawData[12],this.rawData[13],this.rawData[14]);
-		}
-		
-		private function set_position(val : flash.geom.Vector3D) : flash.geom.Vector3D {
-			this.rawData[12] = val.x;
-			this.rawData[13] = val.y;
-			this.rawData[14] = val.z;
-			return val;
 		}
 		
 		static public function interpolate(thisMat : Matrix3D,toMat : Matrix3D,percent : Number) : Matrix3D {

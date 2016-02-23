@@ -7,6 +7,8 @@ package
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
 	import flash.display.Stage;
+	import flash.display.StageAlign;
+	import flash.display.StageScaleMode;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DTextureFormat;
@@ -31,74 +33,74 @@ package
 	public class TestStage3DGLSL extends Sprite
 	{
 		private var ctx:Context3D;
-		private var ibuffer:IndexBuffer3D;
-		private var mmatr:Matrix3D = new Matrix3D;
 		private var vmatr:Matrix3D = new Matrix3D;
 		private var pmatr:Matrix3D = new Matrix3D;
 		private var bmd:BitmapData;
 		private var vcode:String;
 		private var fcode:String;
-		private var texture:Texture;
-		private var program:Program3D;
-		private var normBuffer:VertexBuffer3D;
-		private var uvBuffer:VertexBuffer3D;
-		private var posBuffer:VertexBuffer3D;
+		private var meshs:Array = [];
+		private var lightPos:Vector.<Number>=Vector.<Number>([0,20,-10,0])
+		private var lightColor:Vector.<Number>=Vector.<Number>([1,1,1,1])
 		public function TestStage3DGLSL() 
 		{
 			var loader:Loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, jpg_loader_complete);
 			loader.load(new URLRequest("../../assets/wood.jpg"));
 			addChild(new Stats);
+			
+			stage.align = StageAlign.TOP_LEFT;
+			stage.scaleMode = StageScaleMode.NO_SCALE;
 		}
 		
 		private function enterFrame(e:Event):void 
 		{
 			pmatr.copyRawDataFrom(perspectiveFieldOfViewLH(Math.PI/4, stage.stageWidth/ stage.stageHeight, .1,100000));
-			//draw
-			mmatr.identity();
-			var time:Number = (new Date()).getTime();
-			mmatr.appendRotation(time/30, Vector3D.X_AXIS);
-			mmatr.appendRotation(time/40, Vector3D.Y_AXIS);
 			vmatr.identity();
-			vmatr.appendTranslation(0, 0, -10);
+			vmatr.appendTranslation(0, 0, -30);
+			vmatr.appendRotation(getTimer()/100, Vector3D.Y_AXIS);
 			vmatr.invert();
+			
 			ctx.clear();
-			CONFIG::as_only {
-				ctx.setTextureAt(0, texture);
-				ctx.setVertexBufferAt(0, posBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
-				ctx.setVertexBufferAt(1, normBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
-				ctx.setVertexBufferAt(2, uvBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
-				ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, mmatr,true);
-				ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, vmatr,true);
-				ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 8, pmatr,true);
-				ctx.setProgramConstantsFromVector(Context3DProgramType.VERTEX,12,Vector.<Number>([0,20,-10,0]));//light pos
-				ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT,0,Vector.<Number>([10,0,0,0]));//specular
-				ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT,1,Vector.<Number>([.7,.4,.2,1]));//light color
-				ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 2, Vector.<Number>([.5, .5, .5, 1]));//ambient
-				ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 3, Vector.<Number>([0.7,2,0,0]));
+			//draw
+			for each(var mesh:Mesh in meshs) {
+				ctx.setProgram(mesh.program);
+				var mmatr:Matrix3D = mesh.mmatr;
+				CONFIG::as_only {
+					ctx.setTextureAt(0, mesh.texture);
+					ctx.setVertexBufferAt(0, mesh.posBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
+					ctx.setVertexBufferAt(1, mesh.normBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
+					ctx.setVertexBufferAt(2, mesh.uvBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
+					ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, mmatr,true);
+					ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, vmatr,true);
+					ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 8, pmatr,true);
+					ctx.setProgramConstantsFromVector(Context3DProgramType.VERTEX,12,lightPos);//light pos
+					ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT,0,mesh.specular);//specular
+					ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT,1,lightColor);//light color
+					ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 2, mesh.ambient);//ambient
+					ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 3, Vector.<Number>([0.7,2,0,0]));
+				}
+				CONFIG::js_only {
+					ctx.setTextureAtGL("uSampler", 0, mesh.texture);
+					ctx.setVertexBufferAtGL("aVertexPosition", mesh.posBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
+					ctx.setVertexBufferAtGL("aVertexNormal", mesh.normBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
+					ctx.setVertexBufferAtGL("aTextureCoord", mesh.uvBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
+					
+					ctx.setProgramConstantsFromMatrixGL("uMMatrix", mmatr,false);
+					ctx.setProgramConstantsFromMatrixGL("uVMatrix", vmatr,false);
+					ctx.setProgramConstantsFromMatrixGL("uPMatrix", pmatr, false);
+					var gl:WebGLRenderingContext = mesh.program.gl;
+					//draw
+					gl.uniform1f(mesh.program.getUniformLocation("uMaterialShininess"), mesh.specular[0]);
+					gl.uniform1i(mesh.program.getUniformLocation("uShowSpecularHighlights"), 1);
+					gl.uniform1i(mesh.program.getUniformLocation("uUseTextures"), 1);
+					gl.uniform1i(mesh.program.getUniformLocation("uUseLighting"), 1);
+					gl.uniform3f(mesh.program.getUniformLocation("uAmbientColor"), mesh.ambient[0], mesh.ambient[1], mesh.ambient[2]);
+					gl.uniform3f(mesh.program.getUniformLocation("uPointLightingLocation"), lightPos[0], lightPos[1], lightPos[2]);
+					gl.uniform3f(mesh.program.getUniformLocation("uPointLightingSpecularColor"), 1, 1, 1);
+					gl.uniform3f(mesh.program.getUniformLocation("uPointLightingDiffuseColor"), lightColor[0], lightColor[1], lightColor[2]);
+				}
+				ctx.drawTriangles(mesh.ibuffer);
 			}
-			CONFIG::js_only {
-				ctx.setTextureAtGL("uSampler", 0, texture);
-				ctx.setVertexBufferAtGL("aVertexPosition", posBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
-				ctx.setVertexBufferAtGL("aVertexNormal", normBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
-				ctx.setVertexBufferAtGL("aTextureCoord", uvBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
-				
-				ctx.setProgramConstantsFromMatrixGL("uMMatrix", mmatr,false);
-				ctx.setProgramConstantsFromMatrixGL("uVMatrix", vmatr,false);
-				ctx.setProgramConstantsFromMatrixGL("uPMatrix", pmatr, false);
-				var gl:WebGLRenderingContext = program.gl;
-				//draw
-				gl.uniform1f(program.getUniformLocation("uMaterialShininess"), 32);
-				gl.uniform1i(program.getUniformLocation("uShowSpecularHighlights"), 1);
-				gl.uniform1i(program.getUniformLocation("uUseTextures"), 1);
-				gl.uniform1i(program.getUniformLocation("uUseLighting"), 1);
-				gl.uniform3f(program.getUniformLocation("uAmbientColor"), .5, .5, .5);
-				gl.uniform3f(program.getUniformLocation("uPointLightingLocation"), 0, 20, -10);
-				gl.uniform3f(program.getUniformLocation("uPointLightingSpecularColor"), .8, .8, .8);
-				gl.uniform3f(program.getUniformLocation("uPointLightingDiffuseColor"), .8, .8, .8);
-				
-			}
-			ctx.drawTriangles(ibuffer);
 			ctx.present();
 		}
 		
@@ -137,7 +139,7 @@ package
 			ctx.configureBackBuffer(stage.stageWidth, stage.stageHeight, 2);
 			
 			//init texture
-			texture = ctx.createTexture(bmd.width, bmd.height, Context3DTextureFormat.BGRA, false);
+			var texture:Texture = ctx.createTexture(bmd.width, bmd.height, Context3DTextureFormat.BGRA, false);
 			texture.uploadFromBitmapData(bmd);
 			
 			//init shader
@@ -197,9 +199,8 @@ package
 				var fb:ByteArray=assembler.assemble(Context3DProgramType.FRAGMENT, fcode);
 			}
 			
-			program = ctx.createProgram();
+			var program:Program3D = ctx.createProgram();
 			program.upload(vb, fb);
-			ctx.setProgram(program);
 			
 			//init buffer
 			var posData:Array = // Front face
@@ -232,7 +233,7 @@ package
             -1.0, -1.0,  1.0,
             -1.0,  1.0,  1.0,
             -1.0,  1.0, -1.0];
-			posBuffer = ctx.createVertexBuffer(posData.length/3,3);
+			var posBuffer:VertexBuffer3D = ctx.createVertexBuffer(posData.length/3,3);
 			posBuffer.uploadFromVector(Vector.<Number>(posData), 0, posData.length / 3);
 			
 			var normData:Array = 
@@ -271,7 +272,7 @@ package
             -1.0,  0.0,  0.0,
             -1.0,  0.0,  0.0,
             -1.0,  0.0,  0.0];
-			normBuffer = ctx.createVertexBuffer(normData.length/3,3);
+			var normBuffer:VertexBuffer3D = ctx.createVertexBuffer(normData.length/3,3);
 			normBuffer.uploadFromVector(Vector.<Number>(normData), 0, normData.length / 3);
 			
 			var uvData:Array = [ // Front face
@@ -304,7 +305,7 @@ package
             1.0, 0.0,
             1.0, 1.0,
             0.0, 1.0];
-			uvBuffer = ctx.createVertexBuffer(uvData.length/2,2);
+			var uvBuffer:VertexBuffer3D = ctx.createVertexBuffer(uvData.length/2,2);
 			uvBuffer.uploadFromVector(Vector.<Number>(uvData),0,uvData.length/2);
 			var iData:Array = [0, 1, 2,      0, 2, 3,    // Front face
             4, 5, 6,      4, 6, 7,    // Back face
@@ -312,9 +313,24 @@ package
             12, 13, 14,   12, 14, 15, // Bottom face
             16, 17, 18,   16, 18, 19, // Right face
             20, 21, 22,   20, 22, 23]  // Left face;
-			ibuffer = ctx.createIndexBuffer(iData.length);
+			var ibuffer:IndexBuffer3D = ctx.createIndexBuffer(iData.length);
 			ibuffer.uploadFromVector(Vector.<uint>(iData),0,iData.length);
 			addEventListener(Event.ENTER_FRAME, enterFrame);
+			for (var i:int = 0; i < 100;i++ ) {
+				var mesh:Mesh = new Mesh;
+				mesh.ibuffer = ibuffer;
+				mesh.mmatr = new Matrix3D;
+				mesh.normBuffer = normBuffer;
+				mesh.posBuffer = posBuffer;
+				mesh.program = program;
+				mesh.texture = texture;
+				mesh.uvBuffer = uvBuffer;
+				mesh.mmatr.appendRotation(360 * Math.random(), Vector3D.X_AXIS);
+				mesh.mmatr.appendRotation(360 * Math.random(), Vector3D.Y_AXIS);
+				mesh.mmatr.appendRotation(360 * Math.random(), Vector3D.Z_AXIS);
+				mesh.mmatr.prependTranslation((Math.random() - .5)*20, (Math.random() - .5)*20, (Math.random() - .5)*20 );
+				meshs.push(mesh);
+			}
 		}
 		
 		private function stage_resize(e:Event):void 
@@ -338,4 +354,25 @@ package
 		
 	}
 
+}
+import flash.display3D.IndexBuffer3D;
+import flash.display3D.Program3D;
+import flash.display3D.textures.Texture;
+import flash.display3D.VertexBuffer3D;
+import flash.geom.Matrix3D;
+import flash.geom.Vector3D;
+
+class Mesh {
+	public var ibuffer:IndexBuffer3D;
+	public var mmatr:Matrix3D = new Matrix3D;
+	public var texture:Texture;
+	public var program:Program3D;
+	public var normBuffer:VertexBuffer3D;
+	public var uvBuffer:VertexBuffer3D;
+	public var posBuffer:VertexBuffer3D;
+	public var specular:Vector.<Number> = Vector.<Number>([30,0,0,0]);
+	public var ambient:Vector.<Number> = Vector.<Number>([.5, .5, .5, 1]);
+	public function Mesh() 
+	{
+	}
 }

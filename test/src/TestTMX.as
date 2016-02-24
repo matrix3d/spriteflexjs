@@ -58,11 +58,11 @@ package
 		
 		private function loadNextTile():void 
 		{
-			if (pngs.length<tmxobj.tilesets.length) {
+			if (pngs.length<tmxobj["tilesets"].length) {
 				var loader:Loader = new Loader;
 				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loader_complete);
-				var tset:Object = tmxobj.tilesets[pngs.length];
-				var url:String = tset.image;
+				var tset:Object = tmxobj["tilesets"][pngs.length];
+				var url:String = tset["image"];
 				url = url.slice(url.lastIndexOf("\/")+1);
 				loader.load(new URLRequest("../../assets/tmx/"+url));
 			}else {
@@ -116,24 +116,24 @@ package
 			playerLayer.addChild(myPlayer);
 			
 			var tsetpngs:Array = [];
-			for (var i:int = 0; i < tmxobj.tilesets.length;i++ ) {
-				var tset:Object = tmxobj.tilesets[i];
-				tw = tset.tilewidth;
-				th = tset.tileheight;
+			for (var i:int = 0; i < tmxobj["tilesets"].length;i++ ) {
+				var tset:Object = tmxobj["tilesets"][i];
+				tw = tset["tilewidth"];
+				th = tset["tileheight"];
 				var png:BitmapData = pngs[i] as BitmapData;
-				for (var j:int = 0; j < tset.tilecount;j++ ) {
+				for (var j:int = 0; j < tset["tilecount"];j++ ) {
 					var tx:int = int(j % numCols);
 					var ty:int = int(j / numCols);
-					var ttw:int = tset.tilewidth;
-					var tth:int = tset.tileheight;
-					var numCols:int = tset.imagewidth/ttw;
+					var ttw:int = tset["tilewidth"];
+					var tth:int = tset["tileheight"];
+					var numCols:int = tset["imagewidth"]/ttw;
 					var dst:BitmapData = new BitmapData(tw, th, png.transparent, 0);
 					dst.copyPixels(png, new Rectangle(tx * tw, ty * th, tw, th), new Point);
-					tsetpngs[j + tset.firstgid] = dst;
+					tsetpngs[j + tset["firstgid"]] = dst;
 				}
 			}
-			tw = tmxobj.tilewidth;
-			th = tmxobj.tileheight;
+			tw = tmxobj["tilewidth"];
+			th = tmxobj["tileheight"];
 			
 			myPlayer.x = int(120/tw)*tw;
 			myPlayer.y = int(480/th)*th;
@@ -141,12 +141,12 @@ package
 			camera.x = myPlayer.x;
 			camera.y = myPlayer.y;
 			astar = new AStar;
-			for each(var layer:Object in tmxobj.layers) {
-				for (i = 0; i < layer.data.length; i++ ) {
-					var id:int = layer.data[i];
+			for each(var layer:Object in tmxobj["layers"]) {
+				for (i = 0; i < layer["data"].length; i++ ) {
+					var id:int = layer["data"][i];
 					if(id>0){
-						var x:int = int(i % layer.width);
-						var y:int = int(i / layer.width);
+						var x:int = int(i % layer["width"]);
+						var y:int = int(i / layer["width"]);
 						var image:Bitmap = new Bitmap(tsetpngs[id]);
 						image.x = x * tw;
 						image.y = y * th;
@@ -299,13 +299,13 @@ class Player extends Sprite {
 				var data:Object = objs[id];
 				var sbmd:BitmapData = bmds[data.i];
 				if (sbmd==null) {
-					sbmd = new BitmapData(data.w, data.h, bmd.transparent, 0);
-					sbmd.copyPixels(bmd, new Rectangle(data.x, data.y,data.w,data.h), new Point);
+					sbmd = new BitmapData(data["w"], data["h"], bmd.transparent, 0);
+					sbmd.copyPixels(bmd, new Rectangle(data["x"], data["y"],data["w"],data["h"]), new Point);
 					bmds[data.i] = sbmd;
 				}
 				image.bitmapData = sbmd;
-				image.x = data.fx-192/2;
-				image.y = data.fy-192/2;
+				image.x = data["fx"]-192/2;
+				image.y = data["fy"]-192/2;
 			}
 		}
 	}

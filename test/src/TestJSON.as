@@ -1,19 +1,22 @@
 package 
 {
-	import flash.display.Sprite;
 	/**
 	 * ...
 	 * @author lizhi
 	 */
-	public class TestJSON extends Sprite
+	public class TestJSON
 	{
 		
 		public function TestJSON() 
 		{
-			var json:Object = JSON.parse("{'a':1}");
-			trace(json.a);
 		}
 		
+		public function start():void {
+			
+			var json:Object = JSON.parse("{\"abcdefg\":1212121}");
+			alert(json.abcdefg);
+			alert(json["abcdefg"]);
+		}
 	}
 
 }

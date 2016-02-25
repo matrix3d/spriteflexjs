@@ -33,6 +33,7 @@ package
 		private var worldLayer:Sprite = new Sprite;
 		private var mapLayer:Sprite = new Sprite;
 		private var playerLayer:Sprite = new Sprite;
+		private var debugLayer:Sprite = new Sprite;
 		private var myPlayer:Player = new Player;
 		private var players:Array = [];
 		private var astar:AStar;
@@ -112,6 +113,7 @@ package
 			addChild(worldLayer);
 			addChild(new Stats);
 			worldLayer.addChild(mapLayer);
+			worldLayer.addChild(debugLayer);
 			worldLayer.addChild(playerLayer);
 			playerLayer.addChild(myPlayer);
 			
@@ -171,14 +173,26 @@ package
 			if (astar.findPath(sx, sy, ex, ey)) {
 				astar.floyd();
 				var path:Array = [];
+				debugLayer.graphics.clear();
+				debugLayer.graphics.lineStyle(0);
+				var flag:Boolean = false;
 				for each(var node:Node in astar.floydPath) {
-					path.push([(node.x + .5) * tw, (node.y + .5) * th]);
+					var x:Number = (node.x + .5) * tw;
+					var y:Number = (node.y + .5) * th;
+					path.push([x, y]);
+					if (flag) {
+						debugLayer.graphics.lineTo(x, y);
+					}else {
+						debugLayer.graphics.moveTo(x, y);
+					}
+					flag = true;
+					debugLayer.graphics.drawCircle(x, y, 5);
+					debugLayer.graphics.moveTo(x, y);
 				}
-				path.shift();
-				if(path.length)
-				myPlayer.moveTo(path);
+				if(path.length>1){
+					myPlayer.moveTo(path);
+				}
 			}
-			
 		}
 		
 		private function enterFrame(e:Event):void 
@@ -207,6 +221,7 @@ class Player extends Sprite {
 	private var path:Array = [];
 	private var pathPtr:int;
 	private var moving:Boolean = false;
+	private var movingTime:Number = 0;
 	private var animName:String;
 	private var animDir:int
 	private var animFrame:Number = 0;
@@ -216,19 +231,19 @@ class Player extends Sprite {
 	private var image:Bitmap = new Bitmap;
 	public function Player() 
 	{
-		/*graphics.beginFill(0xff0000);
-		graphics.moveTo(20, 0);
-		graphics.lineTo( -20, 10);
-		graphics.lineTo( -20, -10);
-		graphics.lineTo( 20, 0);*/
+		graphics.beginFill(0xff0000);
+		graphics.drawCircle(0, 0, 5);
 		addChild(image);
 		play("idle",0)
 	}
 	
 	public function moveTo(path:Array):void {
 		this.path = path;
+		path[0][0] = x;
+		path[0][1] = y;
 		pathPtr = 0;
 		moving = true;
+		movingTime = 0;
 		dirDirty = true;
 		play("walk", animDir);
 	}
@@ -242,11 +257,12 @@ class Player extends Sprite {
 	
 	public function update(delta:Number):void {
 		if (moving) {
-			var p:Array = path[pathPtr];
-			var dx:Number = p[0]-x;
-			var dy:Number = p[1]-y;
+			var p0:Array = path[pathPtr];
+			var p1:Array = path[pathPtr+1];
+			var dx:Number = p1[0]-p0[0];
+			var dy:Number = p1[1]-p0[1];
 			var len:Number = Math.sqrt(dx * dx + dy * dy);
-			var deltaSpeed:Number = delta * speed / (1000 / 60);
+			var deltaSpeed:Number = movingTime * speed / (1000 / 60);
 			if (dirDirty) {
 				var dir:int = Math.round(Math.atan2(dy, dx) / (Math.PI / 4));
 				//rotation = dir * 180 / 4;
@@ -256,20 +272,22 @@ class Player extends Sprite {
 				dirDirty = false;
 			}
 			if (len<=deltaSpeed) {
-				x = p[0];
-				y = p[1];
+				x = p1[0];
+				y = p1[1];
 				pathPtr++;
+				movingTime = 0;
 				dirDirty = true;
-				if (pathPtr>=path.length) {
+				if (pathPtr>=(path.length-1)) {
 					moving = false;
 					play("idle", animDir)
 				}else {
 					play("walk", animDir);
 				}
 			}else {
-				x += int(deltaSpeed * dx / len);
-				y += int(deltaSpeed * dy / len);
+				x =p0[0]+ int(deltaSpeed * dx / len);
+				y =p0[1]+ int(deltaSpeed * dy / len);
 			}
+			movingTime+= delta;
 		}
 		if (playing) {
 			var obj:Array = TestTMX.roleassets[animName+".json"];

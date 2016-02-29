@@ -53,13 +53,29 @@ package flash.display
 			if (stage && _bitmapData&&_bitmapData.image&&visible)
 			{
 				var m:Matrix = worldMatrix;
-				var ctx:CanvasRenderingContext2D = stage.ctx;
-				var ga:Number = ctx.globalAlpha;
-				ctx.globalAlpha *= alpha;
-				ctx.globalCompositeOperation = BlendMode.getCompVal(blendMode);
-				ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-				ctx.drawImage(_bitmapData.image, 0, 0);
-				ctx.globalAlpha = ga;
+				
+				var w:Number = _bitmapData.width;
+				var h:Number = _bitmapData.height;
+				var a:Number = m.a * w;
+				var b:Number = m.c * h;
+				var c:Number = m.d * h;
+				var d:Number = m.b * w;
+				var minX:Number = Math.min(0, a, b, a + b)+m.tx;
+				var maxX:Number = Math.max(0, a, b, a + b)+m.tx;
+				var minY:Number = Math.min(0, c, d, c + d)+m.ty;
+				var maxY:Number = Math.max(0, c, d, c + d)+m.ty;
+				var sw:Number = stage.stageWidth;
+				var sh:Number = stage.stageHeight;
+				
+				if(maxX>0&&maxY>0&&minX<sw&&minY<sh){
+					var ctx:CanvasRenderingContext2D = stage.ctx;
+					var ga:Number = ctx.globalAlpha;
+					ctx.globalAlpha *= alpha;
+					ctx.globalCompositeOperation = BlendMode.getCompVal(blendMode);
+					ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+					ctx.drawImage(_bitmapData.image, 0, 0);
+					ctx.globalAlpha = ga;
+				}
 			}
 		}
 		

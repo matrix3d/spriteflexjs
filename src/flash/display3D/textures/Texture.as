@@ -15,9 +15,14 @@ package flash.display3D.textures
 		
 		public function uploadFromBitmapData(bitmapData:BitmapData, maplevel:uint = 0):void
 		{
+			uploadFromImg(bitmapData.image);
+		}
+		
+		public function uploadFromImg(img:Object, maplevel:uint = 0):void
+		{
 			gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture);
 			gl.pixelStorei(WebGLRenderingContext.UNPACK_FLIP_Y_WEBGL, 1);
-			gl.texImage2D(WebGLRenderingContext.TEXTURE_2D, 0, WebGLRenderingContext.RGBA, WebGLRenderingContext.RGBA, WebGLRenderingContext.UNSIGNED_BYTE, bitmapData.image);
+			gl.texImage2D(WebGLRenderingContext.TEXTURE_2D, 0, WebGLRenderingContext.RGBA, WebGLRenderingContext.RGBA, WebGLRenderingContext.UNSIGNED_BYTE, img);
 			gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_MAG_FILTER, WebGLRenderingContext.LINEAR);
 			gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_MIN_FILTER, WebGLRenderingContext.LINEAR_MIPMAP_NEAREST);
 			gl.generateMipmap(WebGLRenderingContext.TEXTURE_2D);

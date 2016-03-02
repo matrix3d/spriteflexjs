@@ -1,7 +1,18 @@
 package flash.__native 
 {
+	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.display3D.Context3D;
+	import flash.display3D.Context3DProgramType;
+	import flash.display3D.Context3DTextureFormat;
+	import flash.display3D.Context3DVertexBufferFormat;
+	import flash.display3D.IndexBuffer3D;
+	import flash.display3D.Program3D;
+	import flash.display3D.VertexBuffer3D;
+	import flash.display3D.textures.Texture;
+	import flash.display3D.textures.TextureBase;
+	import flash.geom.Matrix3D;
+	import flash.utils.ByteArray;
 	/**
 	 * ...
 	 * @author lizhi
@@ -30,15 +41,51 @@ package flash.__native
 		public var strokeStyle : String;
 		public var textAlign : String;
 		public var textBaseline : String;
-		
 		public var context3D:Context3D;
+		
+		private var bmd2texture:ObjectMap = new ObjectMap;
+		private var bitmapPosBuf:VertexBuffer3D;
+		private var bitmapUVBuf:VertexBuffer3D;
+		private var bitmapIBuf:IndexBuffer3D;
+		private var bitmapProg:Program3D;
 		public function GLCanvasRenderingContext2D(stage:Stage) 
 		{
 			this.canvas = stage.canvas;
 			context3D = new Context3D;
 			context3D.canvas = canvas;
 			context3D.gl = (canvas.getContext("webgl") || canvas.getContext("experimental-webgl")) as WebGLRenderingContext;
-			context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight,0);
+			context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight, 0, false);
+			
+			var posData:Array = [0, .7, 0, -.7, -.7, 0, .7, -.7, 0];
+			bitmapPosBuf = context3D.createVertexBuffer(posData.length/3,3);
+			bitmapPosBuf.uploadFromVector(Vector.<Number>(posData), 0, posData.length / 3);
+			var uvData:Array = [1, 0, 0, 1, 0, 0];
+			bitmapUVBuf = context3D.createVertexBuffer(uvData.length/2,2);
+			bitmapUVBuf.uploadFromVector(Vector.<Number>(uvData),0,uvData.length/2);
+			var iData:Array = [0,1,2];
+			bitmapIBuf = context3D.createIndexBuffer(iData.length);
+			bitmapIBuf.uploadFromVector(Vector.<uint>(iData), 0, iData.length);
+			
+			var vcode:String = "attribute vec3 va0;" +
+				"attribute vec3 va1;" +
+				"varying vec3 vColor;"+
+				"uniform mat4 vc0;"+
+				"void main(void) {" +
+					"vColor=va1;"+
+					"gl_Position =vc0*vec4(va0, 1.0);"+
+				"}";
+			var fcode:String = "precision mediump float;" +
+				"varying vec3 vColor;"+
+				"uniform sampler2D fs0;"+
+			   "void main(void) {" +
+					"gl_FragColor = /*vec4(vColor,1)*/texture2D(fs0,vColor.xy);"+
+				"}";
+			bitmapProg = context3D.createProgram();
+			var vb:ByteArray = new ByteArray;
+			vb.writeUTFBytes( vcode);
+			var fb:ByteArray = new ByteArray;
+			fb.writeUTFBytes( fcode);
+			bitmapProg.upload(vb, fb);
 		}
 		public function arc (x:Number, y:Number, radius:Number, startAngle:Number, endAngle:Number, opt_anticlockwise:Boolean=false) : Object{
 			return null;
@@ -57,6 +104,7 @@ package flash.__native
 		}
 
 		public function clearRect (x:Number, y:Number, w:Number, h:Number) : Object {
+			context3D.clear();
 			return null;
 		}
 
@@ -85,6 +133,13 @@ package flash.__native
 		}
 
 		public function drawImage (image:Object, dx:Number, dy:Number, opt_dw:Number = 0, opt_dh:Number = 0, opt_sx:Number = 0, opt_sy:Number = 0, opt_sw:Number = 0, opt_sh:Number = 0) : Object {
+			var texture:TextureBase = getTexture(image);
+			context3D.setProgram(bitmapProg);
+			context3D.setTextureAt(0, texture);
+			context3D.setVertexBufferAt(0, bitmapPosBuf,0, Context3DVertexBufferFormat.FLOAT_3);
+			context3D.setVertexBufferAt(1, bitmapUVBuf,0, Context3DVertexBufferFormat.FLOAT_2);
+			context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, new Matrix3D);
+			context3D.drawTriangles(bitmapIBuf);
 			return null;
 		}
 
@@ -170,6 +225,17 @@ package flash.__native
 
 		public function translate (x:Number, y:Number) : Object {
 			return null;
+		}
+		
+		private function getTexture(img:Object):TextureBase {
+			var texture:TextureBase = bmd2texture.get(img) as TextureBase;
+			if (texture==null) {
+				texture = context3D.createTexture(128, 128, Context3DTextureFormat.BGRA, false);
+				var bmd2:BitmapData = new BitmapData(128, 128, false, 0xffffff * Math.random());
+				(texture as Texture).uploadFromBitmapData(bmd2);
+				bmd2texture.set(img, texture);
+			}
+			return texture;
 		}
 	}
 

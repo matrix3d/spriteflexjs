@@ -62,42 +62,49 @@ package
 			
 			ctx.clear();
 			//draw
+			var first:Boolean = true;
 			for each(var mesh:Mesh in meshs) {
 				ctx.setProgram(mesh.program);
 				var mmatr:Matrix3D = mesh.mmatr;
 				CONFIG::as_only {
-					ctx.setTextureAt(0, mesh.texture);
-					ctx.setVertexBufferAt(0, mesh.posBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
-					ctx.setVertexBufferAt(1, mesh.normBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
-					ctx.setVertexBufferAt(2, mesh.uvBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
+					if (first) {
+						first = false;
+						ctx.setTextureAt(0, mesh.texture);
+						ctx.setVertexBufferAt(0, mesh.posBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
+						ctx.setVertexBufferAt(1, mesh.normBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
+						ctx.setVertexBufferAt(2, mesh.uvBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
+						ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, vmatr,true);
+						ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 8, pmatr,true);
+						ctx.setProgramConstantsFromVector(Context3DProgramType.VERTEX,12,lightPos);//light pos
+						ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT,0,mesh.specular);//specular
+						ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT,1,lightColor);//light color
+						ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 2, mesh.ambient);//ambient
+						ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 3, Vector.<Number>([0.7, 2, 0, 0]));
+					}
 					ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, mmatr,true);
-					ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, vmatr,true);
-					ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 8, pmatr,true);
-					ctx.setProgramConstantsFromVector(Context3DProgramType.VERTEX,12,lightPos);//light pos
-					ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT,0,mesh.specular);//specular
-					ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT,1,lightColor);//light color
-					ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 2, mesh.ambient);//ambient
-					ctx.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 3, Vector.<Number>([0.7,2,0,0]));
 				}
 				CONFIG::js_only {
-					ctx.setTextureAtGL("uSampler", 0, mesh.texture);
-					ctx.setVertexBufferAtGL("aVertexPosition", mesh.posBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
-					ctx.setVertexBufferAtGL("aVertexNormal", mesh.normBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
-					ctx.setVertexBufferAtGL("aTextureCoord", mesh.uvBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
-					
+					if (first) {
+						first = false;
+						ctx.setTextureAtGL("uSampler", 0, mesh.texture);
+						ctx.setVertexBufferAtGL("aVertexPosition", mesh.posBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
+						ctx.setVertexBufferAtGL("aVertexNormal", mesh.normBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
+						ctx.setVertexBufferAtGL("aTextureCoord", mesh.uvBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
+						
+						ctx.setProgramConstantsFromMatrixGL("uVMatrix", vmatr,false);
+						ctx.setProgramConstantsFromMatrixGL("uPMatrix", pmatr, false);
+						var gl:WebGLRenderingContext = mesh.program.gl;
+						//draw
+						gl.uniform1f(mesh.program.getUniformLocation("uMaterialShininess"), mesh.specular[0]);
+						gl.uniform1i(mesh.program.getUniformLocation("uShowSpecularHighlights"), 1);
+						gl.uniform1i(mesh.program.getUniformLocation("uUseTextures"), 1);
+						gl.uniform1i(mesh.program.getUniformLocation("uUseLighting"), 1);
+						gl.uniform3f(mesh.program.getUniformLocation("uAmbientColor"), mesh.ambient[0], mesh.ambient[1], mesh.ambient[2]);
+						gl.uniform3f(mesh.program.getUniformLocation("uPointLightingLocation"), lightPos[0], lightPos[1], lightPos[2]);
+						gl.uniform3f(mesh.program.getUniformLocation("uPointLightingSpecularColor"), 1, 1, 1);
+						gl.uniform3f(mesh.program.getUniformLocation("uPointLightingDiffuseColor"), lightColor[0], lightColor[1], lightColor[2]);
+					}
 					ctx.setProgramConstantsFromMatrixGL("uMMatrix", mmatr,false);
-					ctx.setProgramConstantsFromMatrixGL("uVMatrix", vmatr,false);
-					ctx.setProgramConstantsFromMatrixGL("uPMatrix", pmatr, false);
-					var gl:WebGLRenderingContext = mesh.program.gl;
-					//draw
-					gl.uniform1f(mesh.program.getUniformLocation("uMaterialShininess"), mesh.specular[0]);
-					gl.uniform1i(mesh.program.getUniformLocation("uShowSpecularHighlights"), 1);
-					gl.uniform1i(mesh.program.getUniformLocation("uUseTextures"), 1);
-					gl.uniform1i(mesh.program.getUniformLocation("uUseLighting"), 1);
-					gl.uniform3f(mesh.program.getUniformLocation("uAmbientColor"), mesh.ambient[0], mesh.ambient[1], mesh.ambient[2]);
-					gl.uniform3f(mesh.program.getUniformLocation("uPointLightingLocation"), lightPos[0], lightPos[1], lightPos[2]);
-					gl.uniform3f(mesh.program.getUniformLocation("uPointLightingSpecularColor"), 1, 1, 1);
-					gl.uniform3f(mesh.program.getUniformLocation("uPointLightingDiffuseColor"), lightColor[0], lightColor[1], lightColor[2]);
 				}
 				ctx.drawTriangles(mesh.ibuffer);
 			}

@@ -21,7 +21,7 @@ package
 				s.graphics.beginFill(0xffffff * Math.random());
 				var w:Number = 50 + 50 * Math.random();
 				var h:Number = 50 + 50 * Math.random();
-				s.graphics.drawRect(-w/2, -h/2, w, h);
+				s.graphics.drawRect( -w / 2, -h / 2, w, h);
 				s.rotation = Math.random() * 360;
 				s.x = 400 * Math.random();
 				s.y = 400 * Math.random();

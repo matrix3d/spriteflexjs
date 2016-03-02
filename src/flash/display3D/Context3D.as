@@ -12,7 +12,8 @@ package flash.display3D
 		public var canvas:HTMLCanvasElement;
 		public var gl:WebGLRenderingContext;
 		private var currentProgram:Program3D;
-		
+		private var currentTextures:Object = { };
+		private var currentVBufs:Object = { };
 		public function Context3D()
 		{
 			super();
@@ -69,8 +70,10 @@ package flash.display3D
 		
 		public function setProgram(program:Program3D):void
 		{
-			currentProgram = program;
-			gl.useProgram(program.program);
+			if(currentProgram!=program){
+				currentProgram = program;
+				gl.useProgram(program.program);
+			}
 		}
 		
 		public function setProgramConstantsFromVector(programType:String, firstRegister:int, data:Vector.<Number>, numRegisters:int = -1):void
@@ -126,25 +129,28 @@ package flash.display3D
 		}
 		
 		public function setVertexBufferAtGL(name:String, buffer:VertexBuffer3D, bufferOffset:int = 0, format:String = "float4"):void {
-			var loc:Number= currentProgram.getAttribLocation(name);
-			gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, buffer.buff);
-			var size:int = 0;
-			switch (format)
-			{
-			case Context3DVertexBufferFormat.FLOAT_1: 
-				size = 1;
-				break;
-			case Context3DVertexBufferFormat.FLOAT_2: 
-				size = 2;
-				break;
-			case Context3DVertexBufferFormat.FLOAT_3: 
-				size = 3;
-				break;
-			case Context3DVertexBufferFormat.FLOAT_4: 
-				size = 4;
-				break;
+			if (currentVBufs[name] != buffer) {
+				currentVBufs[name] = buffer;
+				var loc:Number= currentProgram.getAttribLocation(name);
+				gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, buffer.buff);
+				var size:int = 0;
+				switch (format)
+				{
+				case Context3DVertexBufferFormat.FLOAT_1: 
+					size = 1;
+					break;
+				case Context3DVertexBufferFormat.FLOAT_2: 
+					size = 2;
+					break;
+				case Context3DVertexBufferFormat.FLOAT_3: 
+					size = 3;
+					break;
+				case Context3DVertexBufferFormat.FLOAT_4: 
+					size = 4;
+					break;
+				}
+				gl.vertexAttribPointer(loc, size, WebGLRenderingContext.FLOAT, false, 0, bufferOffset);
 			}
-			gl.vertexAttribPointer(loc, size, WebGLRenderingContext.FLOAT, false, 0, bufferOffset);
 		}
 		
 		public function setBlendFactors(sourceFactor:String, destinationFactor:String):void
@@ -306,11 +312,14 @@ package flash.display3D
 		}
 		
 		public function setTextureAtGL(name:String, sampler:int, texture:Texture):void {
-			if (texture)
-			{
-				gl.activeTexture(WebGLRenderingContext["TEXTURE"+sampler]);
-				gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture.texture);
-				gl.uniform1i(currentProgram.getUniformLocation(name), sampler);
+			if (currentTextures[name] != texture) {
+				currentTextures[name] = texture;
+				if (texture)
+				{
+					gl.activeTexture(WebGLRenderingContext["TEXTURE"+sampler]);
+					gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture.texture);
+					gl.uniform1i(currentProgram.getUniformLocation(name), sampler);
+				}
 			}
 		}
 		

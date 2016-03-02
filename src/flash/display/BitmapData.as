@@ -33,7 +33,7 @@ package flash.display
 			fillRect(rect, fillColor);
 		}
 		
-		public function fromImage(img:Image):void {
+		public function fromImage(img:Object):void {
 			ctx.drawImage(img, 0, 0);
 			imageData = ctx.getImageData(0, 0, width, height);
 			this.data = this.imageData.data;

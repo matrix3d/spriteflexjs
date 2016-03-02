@@ -49,7 +49,6 @@ package
 			tmxloader.addEventListener(Event.COMPLETE, tmxloader_complete);
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
-			//SpriteFlexjs.wmode = "gpu";
 		}
 		
 		private function tmxloader_complete(e:Event):void 

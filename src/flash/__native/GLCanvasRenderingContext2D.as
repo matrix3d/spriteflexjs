@@ -3,6 +3,7 @@ package flash.__native
 	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.display3D.Context3D;
+	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.Context3DVertexBufferFormat;
@@ -61,6 +62,7 @@ package flash.__native
 			context3D.canvas = canvas;
 			context3D.gl = (canvas.getContext("webgl") || canvas.getContext("experimental-webgl")) as WebGLRenderingContext;
 			stage_resize(null);
+			context3D.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			
 			var posData:Array = [0, 0, 0, 1, 0, 0, 0, -1, 0, 1, -1, 0];
 			bitmapPosBuf = context3D.createVertexBuffer(posData.length/3,3);
@@ -73,18 +75,19 @@ package flash.__native
 			bitmapIBuf.uploadFromVector(Vector.<uint>(iData), 0, iData.length);
 			
 			var vcode:String = "attribute vec3 va0;" +
-				"attribute vec3 va1;" +
-				"varying vec3 vColor;"+
+				"attribute vec2 va1;" +
+				"varying vec2 vUV;" +
 				"uniform mat4 vc0;"+
+				"uniform vec4 vc4;"+
 				"void main(void) {" +
-					"vColor=va1;"+
+					"vUV=va1*vc4.xy;"+
 					"gl_Position =vc0*vec4(va0, 1.0);"+
 				"}";
 			var fcode:String = "precision mediump float;" +
-				"varying vec3 vColor;"+
+				"varying vec2 vUV;"+
 				"uniform sampler2D fs0;"+
 			   "void main(void) {" +
-					"gl_FragColor = /*vec4(vColor,1)*/texture2D(fs0,vColor.xy);"+
+					"gl_FragColor = texture2D(fs0,vUV);"+
 				"}";
 			bitmapProg = context3D.createProgram();
 			var vb:ByteArray = new ByteArray;
@@ -152,9 +155,10 @@ package flash.__native
 			context3D.setVertexBufferAt(0, bitmapPosBuf,0, Context3DVertexBufferFormat.FLOAT_3);
 			context3D.setVertexBufferAt(1, bitmapUVBuf, 0, Context3DVertexBufferFormat.FLOAT_2);
 			matr3d.identity();
-			matr3d.appendScale(2 * texture.width / stage.stageWidth, 2 * texture.height / stage.stageHeight, 1);
+			matr3d.appendScale(2 * texture.img.width / stage.stageWidth, 2 * texture.img.height / stage.stageHeight, 1);
 			matr3d.appendTranslation(matr.tx*2/stage.stageWidth-1, 1-matr.ty*2/stage.stageHeight, 0);
 			context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, matr3d);
+			context3D.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, Vector.<Number>([texture.img.width/texture.width, texture.img.height/texture.height, 0, 0]));
 			context3D.drawTriangles(bitmapIBuf);
 			return null;
 		}
@@ -254,6 +258,7 @@ package flash.__native
 				var texture:Texture = context3D.createTexture(w, h, Context3DTextureFormat.BGRA, false);
 				texture.uploadFromBitmapData(bmd);
 				btexture = new BitmapTexture;
+				btexture.img = img;
 				btexture.texture = texture;
 				btexture.width = w;
 				btexture.height = h;

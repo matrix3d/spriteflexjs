@@ -2,6 +2,7 @@ package  flash.geom{
 	import flash.geom.Orientation3D;
 	import flash.geom.Vector3D;
 	public class Matrix3D {
+		private static var TEMP:Matrix3D = new Matrix3D;
 		public function Matrix3D(v : Vector.<Number> = null) : void { 
 			if(v != null && v.length == 16) this.rawData = v;
 			else this.rawData = Vector.<Number>([1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]);
@@ -77,8 +78,11 @@ package  flash.geom{
 			this.append(m);
 		}
 		
-		public function appendScale(xScale : Number,yScale : Number,zScale : Number) : void {
-			this.append(new Matrix3D(Vector.<Number>([xScale,0.0,0.0,0.0,0.0,yScale,0.0,0.0,0.0,0.0,zScale,0.0,0.0,0.0,0.0,1.0])));
+		public function appendScale(xScale : Number, yScale : Number, zScale : Number) : void {
+			this.rawData[0] *= xScale; this.rawData[1] *= xScale; this.rawData[2] *= xScale; this.rawData[3] *= xScale;
+            this.rawData[4] *= yScale; this.rawData[5] *= yScale; this.rawData[6] *= yScale; this.rawData[7] *= yScale;
+            this.rawData[8] *= zScale; this.rawData[9] *= zScale; this.rawData[10] *= zScale; this.rawData[11] *= zScale;
+			//this.append(new Matrix3D(Vector.<Number>([xScale,0.0,0.0,0.0,0.0,yScale,0.0,0.0,0.0,0.0,zScale,0.0,0.0,0.0,0.0,1.0])));
 		}
 		
 		public function appendTranslation(x : Number,y : Number,z : Number) : void {
@@ -523,11 +527,16 @@ package  flash.geom{
 		}
 		
 		public function prependScale(xScale : Number,yScale : Number,zScale : Number) : void {
-			this.prepend(new Matrix3D(Vector.<Number>([xScale,0.0,0.0,0.0,0.0,yScale,0.0,0.0,0.0,0.0,zScale,0.0,0.0,0.0,0.0,1.0])));
+			//this.prepend(new Matrix3D(Vector.<Number>([xScale,0.0,0.0,0.0,0.0,yScale,0.0,0.0,0.0,0.0,zScale,0.0,0.0,0.0,0.0,1.0])));
+			this.rawData[0] *= xScale; this.rawData[1] *= yScale; this.rawData[2] *= zScale;
+            this.rawData[4] *= xScale; this.rawData[5] *= yScale; this.rawData[6] *= zScale;
+            this.rawData[8] *= xScale; this.rawData[9] *= yScale; this.rawData[10] *= zScale;
+            this.rawData[12] *= xScale; this.rawData[13] *= yScale; this.rawData[14] *= zScale;
 		}
 		
 		public function prependTranslation(x : Number,y : Number,z : Number) : void {
-			var m : Matrix3D = new Matrix3D();
+			var m : Matrix3D = TEMP;
+			m.identity();
 			m.position=(new flash.geom.Vector3D(x,y,z));
 			this.prepend(m);
 		}
@@ -652,8 +661,8 @@ package  flash.geom{
 			return m;
 		}
 		
-		static protected function getAxisRotation(x : Number,y : Number,z : Number,degrees : Number) : Matrix3D {
-			var m : Matrix3D = new Matrix3D();
+		static protected function getAxisRotation(x : Number,y : Number,z : Number,degrees : Number,target:Matrix3D=null) : Matrix3D {
+			var m : Matrix3D =target|| new Matrix3D();
 			var a1 : flash.geom.Vector3D = new flash.geom.Vector3D(x,y,z);
 			var rad : Number = -degrees * (Math.PI / 180);
 			var c : Number = Math.cos(rad);

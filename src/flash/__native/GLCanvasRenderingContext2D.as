@@ -53,6 +53,7 @@ package flash.__native
 		private var bitmapProg:Program3D;
 		private var matr3d:Matrix3D = new Matrix3D;
 		private var matr:Matrix = new Matrix;
+		private var bitmapUVScale:Vector.<Number> = Vector.<Number>([1,1,0,0]);
 		private var stage:Stage;
 		public function GLCanvasRenderingContext2D(stage:Stage) 
 		{
@@ -64,13 +65,13 @@ package flash.__native
 			stage_resize(null);
 			context3D.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			
-			var posData:Array = [0, 0, 0, 1, 0, 0, 0, -1, 0, 1, -1, 0];
+			var posData:Array = [0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0];
 			bitmapPosBuf = context3D.createVertexBuffer(posData.length/3,3);
 			bitmapPosBuf.uploadFromVector(Vector.<Number>(posData), 0, posData.length / 3);
 			var uvData:Array = [0, 0, 1, 0, 0, 1, 1, 1];
 			bitmapUVBuf = context3D.createVertexBuffer(uvData.length/2,2);
 			bitmapUVBuf.uploadFromVector(Vector.<Number>(uvData),0,uvData.length/2);
-			var iData:Array = [0, 1, 2, 2, 3, 1];
+			var iData:Array = [0, 2, 1, 2, 1, 3];
 			bitmapIBuf = context3D.createIndexBuffer(iData.length);
 			bitmapIBuf.uploadFromVector(Vector.<uint>(iData), 0, iData.length);
 			
@@ -154,11 +155,33 @@ package flash.__native
 			context3D.setTextureAt(0, texture.texture);
 			context3D.setVertexBufferAt(0, bitmapPosBuf,0, Context3DVertexBufferFormat.FLOAT_3);
 			context3D.setVertexBufferAt(1, bitmapUVBuf, 0, Context3DVertexBufferFormat.FLOAT_2);
-			matr3d.identity();
+			
+			/*matr3d.identity();
 			matr3d.appendScale(2 * texture.img.width / stage.stageWidth, 2 * texture.img.height / stage.stageHeight, 1);
-			matr3d.appendTranslation(matr.tx*2/stage.stageWidth-1, 1-matr.ty*2/stage.stageHeight, 0);
+			matr3d.appendTranslation(matr.tx * 2 / stage.stageWidth - 1, 1 - matr.ty * 2 / stage.stageHeight, 0);*/
+			
+			//a + ", " + b + ", " + "0, 0, " + c + ", " + d + ", " + "0, 0, 0, 0, 1, 0, " + tx + ", " + ty + ", 0, 1)";
+			matr3d.rawData[0] = matr.a*2 * texture.img.width / stage.stageWidth;
+			matr3d.rawData[1] = -matr.b*2 * texture.img.height / stage.stageHeight;
+			//matr3d.rawData[2] = 0;
+			//matr3d.rawData[3] = 0;
+			matr3d.rawData[4] = matr.c*2 * texture.img.width / stage.stageWidth;
+			matr3d.rawData[5] = -matr.d*2 * texture.img.height / stage.stageHeight;
+			//matr3d.rawData[6] = 0;
+			//matr3d.rawData[7] = 0;
+			//matr3d.rawData[8] = 0;
+			//matr3d.rawData[9] = 0;
+			//matr3d.rawData[10] = 1;
+			//matr3d.rawData[11] = 0;
+			matr3d.rawData[12] = matr.tx * 2 / stage.stageWidth-1;
+			matr3d.rawData[13] = 1-matr.ty * 2 / stage.stageHeight;
+			//matr3d.rawData[14] = 0;
+			//matr3d.rawData[15] = 1;
+			
 			context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, matr3d);
-			context3D.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, Vector.<Number>([texture.img.width/texture.width, texture.img.height/texture.height, 0, 0]));
+			bitmapUVScale[0] = texture.img.width / texture.width;
+			bitmapUVScale[1] = texture.img.height / texture.height;
+			context3D.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, bitmapUVScale);
 			context3D.drawTriangles(bitmapIBuf);
 			return null;
 		}

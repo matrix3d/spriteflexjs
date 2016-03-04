@@ -152,6 +152,8 @@ package
 						var image:Bitmap = new Bitmap(tsetpngs[id]);
 						image.x = x * tw;
 						image.y = y * th;
+						//image.rotation = 15;
+						//image.scaleY = 2;
 						mapLayer.addChild(image);
 						if (id == 28) {
 							astar.add(new Node(x, y));

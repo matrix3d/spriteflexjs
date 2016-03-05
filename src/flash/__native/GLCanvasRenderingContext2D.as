@@ -47,6 +47,7 @@ package flash.__native
 		public var context3D:Context3D;
 		
 		private var bmd2texture:ObjectMap = new ObjectMap;
+		private var text2img:Object = { };
 		private var bitmapPosBuf:VertexBuffer3D;
 		private var bitmapUVBuf:VertexBuffer3D;
 		private var bitmapIBuf:IndexBuffer3D;
@@ -55,8 +56,10 @@ package flash.__native
 		private var matr:Matrix = new Matrix;
 		private var bitmapUVScale:Vector.<Number> = Vector.<Number>([1,1,0,0]);
 		private var stage:Stage;
-		public function GLCanvasRenderingContext2D(stage:Stage) 
+		private var isBatch:Boolean;
+		public function GLCanvasRenderingContext2D(stage:Stage,isBatch:Boolean=false) 
 		{
+			this.isBatch = isBatch;
 			this.stage = stage;
 			this.canvas = stage.canvas;
 			context3D = new Context3D;
@@ -195,7 +198,17 @@ package flash.__native
 		}
 
 		public function fillText (text:String, x:Number, y:Number, opt_maxWidth:Number = 0) : Object {
-			return null;
+			var image:HTMLCanvasElement = text2img[text];
+			if (image==null) {
+				image = text2img[text]=document.createElement("canvas") as HTMLCanvasElement;
+				var ctx:CanvasRenderingContext2D = image.getContext("2d") as CanvasRenderingContext2D;
+				var measure:TextMetrics = ctx.measureText(text);
+				image.width = measure.width;
+				image.height = 20;
+				ctx.fillStyle = "#ff0000";
+				ctx.fillText(text, 0, 20);
+			}
+			return drawImage(image,0,0);
 		}
 
 		public function getImageData (sx:Number, sy:Number, sw:Number, sh:Number) : ImageData {

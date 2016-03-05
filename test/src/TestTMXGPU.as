@@ -4,7 +4,7 @@ package
 	 * ...
 	 * @author lizhi
 	 */
-	public class TestTMXGPU extends TestTMX
+	public class TestTMXGPU extends TestGraphics
 	{
 		
 		public function TestTMXGPU() 

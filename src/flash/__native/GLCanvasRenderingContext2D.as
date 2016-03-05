@@ -24,7 +24,7 @@ package flash.__native
 	{
 		public var canvas : HTMLCanvasElement;
 		public var fillColor : String;
-		public var fillStyle : String;
+		public var fillStyle : Object;
 		public var font : String;
 		public var getLineDash : Object;
 		public var globalAlpha : Number;
@@ -54,6 +54,7 @@ package flash.__native
 		private var bitmapProg:Program3D;
 		private var matr3d:Matrix3D = new Matrix3D;
 		private var matr:Matrix = new Matrix;
+		private var matrhelp:Matrix = new Matrix;
 		private var bitmapUVScale:Vector.<Number> = Vector.<Number>([1,1,0,0]);
 		private var stage:Stage;
 		private var isBatch:Boolean;
@@ -144,8 +145,11 @@ package flash.__native
 			return null;
 		}
 
+		/**
+		 * @flexjsignorecoercion CanvasPattern
+		 */
 		public function createPattern (image:Object, repetition:String) : CanvasPattern {
-			return null;
+			return new GLCanvasPattern(image,repetition) as CanvasPattern;
 		}
 
 		public function createRadialGradient (x0:Number, y0:Number, r0:Number, x1:Number, y1:Number, r1:Number) : CanvasGradient {
@@ -190,6 +194,10 @@ package flash.__native
 		}
 
 		public function fill (opt_fillRule:String = "") : Object {
+			if (fillStyle is GLCanvasPattern) {
+				var glcp:GLCanvasPattern = fillStyle as GLCanvasPattern;
+				drawImage(glcp.image, 0, 0);
+			}
 			return null;
 		}
 
@@ -216,7 +224,7 @@ package flash.__native
 		}
 
 		public function isPointInPath (x:Number, y:Number, opt_fillRule:String = "") : Boolean {
-			return null;
+			return false;
 		}
 
 		public function lineTo (x:Number, y:Number) : Object {
@@ -248,6 +256,7 @@ package flash.__native
 		}
 
 		public function rotate (angle:Number) : Object {
+			matr.rotate(angle);
 			return null;
 		}
 
@@ -256,6 +265,7 @@ package flash.__native
 		}
 
 		public function scale (x:Number, y:Number) : Object {
+			matr.scale(x, y);
 			return null;
 		}
 
@@ -277,10 +287,13 @@ package flash.__native
 		}
 
 		public function transform (m11:Number, m12:Number, m21:Number, m22:Number, dx:Number, dy:Number) : Object {
+			matrhelp.setTo(m11, m12, m21, m22, dx, dy);
+			matr.concat(matrhelp);
 			return null;
 		}
 
 		public function translate (x:Number, y:Number) : Object {
+			matr.translate(x, y);
 			return null;
 		}
 		

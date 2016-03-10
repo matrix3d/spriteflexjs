@@ -45,6 +45,7 @@ package flash.__native
 		public var textAlign : String;
 		public var textBaseline : String;
 		public var context3D:Context3D;
+		public var currentPath:GLPath2D;
 		
 		private var bmd2texture:ObjectMap = new ObjectMap;
 		private var text2img:Object = { };
@@ -109,19 +110,20 @@ package flash.__native
 			context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight, 0, false);
 		}
 		public function arc (x:Number, y:Number, radius:Number, startAngle:Number, endAngle:Number, opt_anticlockwise:Boolean=false) : Object{
-			return null;
+			return currentPath.arc(x,y,radius,startAngle,endAngle,opt_anticlockwise);
 		}
 
 		public function arcTo (x1:Number, y1:Number, x2:Number, y2:Number, radius:Number) : Object {
-			return null;
+			return currentPath.arcTo(x1, y1, x2, y2, radius);
 		}
 
 		public function beginPath () : Object {
+			currentPath = new GLPath2D;
 			return null;
 		}
 
 		public function bezierCurveTo (cp1x:Number, cp1y:Number, cp2x:Number, cp2y:Number, x:Number, y:Number) : Object {
-			return null;
+			return currentPath.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,x,y);
 		}
 
 		public function clearRect (x:Number, y:Number, w:Number, h:Number) : Object {
@@ -228,7 +230,7 @@ package flash.__native
 		}
 
 		public function lineTo (x:Number, y:Number) : Object {
-			return null;
+			return currentPath.lineTo(x,y);
 		}
 
 		public function measureText (text:String) : TextMetrics {
@@ -236,7 +238,7 @@ package flash.__native
 		}
 
 		public function moveTo (x:Number, y:Number) : Object {
-			return null;
+			return currentPath.moveTo(x,y);
 		}
 
 		public function putImageData (imagedata:ImageData, dx:Number, dy:Number, opt_dirtyX:Number = 0, opt_dirtyY:Number = 0, opt_dirtyWidth:Number = 0, opt_dirtyHeight:Number = 0) : Object {
@@ -244,11 +246,12 @@ package flash.__native
 		}
 
 		public function quadraticCurveTo (cpx:Number, cpy:Number, x:Number, y:Number) : Object {
+			currentPath.quadraticCurveTo(cpx, cpy, x, y);
 			return null;
 		}
 
 		public function rect (x:Number, y:Number, w:Number, h:Number) : Object {
-			return null;
+			return currentPath.rect(x,y,w,h);
 		}
 
 		public function restore () : Object {

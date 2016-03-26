@@ -163,10 +163,27 @@ package
 			}
 			
 			addEventListener(Event.ENTER_FRAME, enterFrame);
-			stage.addEventListener(MouseEvent.CLICK, stage_click);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, stage_mouseDown);
+			stage.addEventListener(MouseEvent.MOUSE_UP, stage_mouseUp);
 		}
 		
-		private function stage_click(e:MouseEvent):void 
+		private function stage_mouseUp(e:MouseEvent):void 
+		{
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, stage_mouseMove);
+		}
+		
+		private function stage_mouseDown(e:MouseEvent):void 
+		{
+			startMove();
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, stage_mouseMove);
+		}
+		
+		private function stage_mouseMove(e:MouseEvent):void 
+		{
+			startMove();
+		}
+		
+		private function startMove():void 
 		{
 			var sx:int = int(myPlayer.x / tw);
 			var sy:int = int(myPlayer.y / th);
@@ -250,10 +267,12 @@ class Player extends Sprite {
 		play("walk", animDir);
 	}
 	
-	public function play(name:String,dir:int):void {
+	public function play(name:String,dir:int,frame:int=-1):void {
 		animName = name;
 		animDir = dir;
-		animFrame = 0;
+		if(frame>=0){
+			animFrame = frame;
+		}
 		playing = true;
 	}
 	
@@ -264,7 +283,7 @@ class Player extends Sprite {
 			var dx:Number = p1[0]-p0[0];
 			var dy:Number = p1[1]-p0[1];
 			var len:Number = Math.sqrt(dx * dx + dy * dy);
-			var deltaSpeed:Number = movingTime * speed / (1000 / 60);
+			var deltaSpeed:Number = (movingTime+delta) * speed / (1000 / 60);
 			if (dirDirty) {
 				var dir:int = Math.round(Math.atan2(dy, dx) / (Math.PI / 4));
 				//rotation = dir * 180 / 4;
@@ -281,6 +300,7 @@ class Player extends Sprite {
 				dirDirty = true;
 				if (pathPtr>=(path.length-1)) {
 					moving = false;
+					if(animName!="idle")
 					play("idle", animDir)
 				}else {
 					play("walk", animDir);

@@ -16,9 +16,9 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
-    <class path="E:\sdk\flexjs6\js\libs" />
-    <class path="E:\sdk\flexjs6\frameworks\libs" />
+    <class path="D:\sdk\flexjs\js\libs" />
     <class path="..\src" />
+    <class path="D:\sdk\flexjs\frameworks\libs" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -56,6 +56,8 @@
   <!-- SWC Libraries -->
   <libraryPaths>
     <element path="E:\sdk\flexjs6\js\libs\js.swc" />
+    <element path="D:\sdk\flexjs\js\libs\js.swc" />
+    <element path="D:\sdk\flexjs\frameworks\libs\Core.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

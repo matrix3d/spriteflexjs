@@ -1,5 +1,6 @@
 package 
 {
+	import org.apache.flex.utils.Proxy;
 	/**
 	 * ...
 	 * @author lizhi
@@ -16,6 +17,7 @@ package
 			var json:Object = JSON.parse("{\"abcdefg\":1212121}");
 			alert(json.abcdefg);
 			alert(json["abcdefg"]);
+			
 		}
 	}
 

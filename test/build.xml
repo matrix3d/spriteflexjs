@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="spriteflexjs" default="main" basedir=".">
     <property name="FLEXJS_HOME" location="d:/sdk/flexjs"/>
-    <property name="main" value="TestXML" />
+    <property name="main" value="TestTMX" />
         
     <available file="${FLEXJS_HOME}/js/lib/google/closure-library/closure/goog/base.js"
         type="file"

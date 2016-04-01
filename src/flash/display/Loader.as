@@ -110,7 +110,7 @@ package flash.display
 		
 		}
 		
-		public function get content():Bitmap  { return null }
+		public function get content():Bitmap  { return _loaderInfo.content; }
 		
 		public function get contentLoaderInfo():LoaderInfo  { return _loaderInfo; }
 	

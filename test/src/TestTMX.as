@@ -18,6 +18,7 @@ package
 	import flash.utils.getTimer;
 	import pathfind.AStar;
 	import pathfind.Node;
+	import rpg.Player;
 	import spriteflexjs.Stats;
 	import parser.tmx.TMX;
 	/**
@@ -40,6 +41,8 @@ package
 		private var tw:Number;
 		private var th:Number;
 		private var lastTime:Number = 0;
+		private var isMouseDown:Boolean = false;
+		private var isMouseUp:Boolean = false;
 		public function TestTMX() 
 		{
 			tmxloader = new URLLoader(new URLRequest("../../assets/tmx/sewers.json"));
@@ -52,8 +55,8 @@ package
 				var player:Player = new Player("../../assets/mir/role/"+names[int(names.length*Math.random())]+"/");
 				players.push(player);
 				playerLayer.addChild(player);
-				player.x =800+ 400 * (Math.random()-.5);
-				player.y = 500 +400 * (Math.random() - .5);	
+				player.x =800+ int(400 * (Math.random()-.5));
+				player.y = 500 +int(400 * (Math.random() - .5));	
 				player.play("idle", int(Math.random() * 8));
 			}
 			myPlayer = player;
@@ -141,18 +144,13 @@ package
 		
 		private function stage_mouseUp(e:MouseEvent):void 
 		{
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE, stage_mouseMove);
+			isMouseDown = false;
+			isMouseUp = true;
 		}
 		
 		private function stage_mouseDown(e:MouseEvent):void 
 		{
-			startMove();
-			stage.addEventListener(MouseEvent.MOUSE_MOVE, stage_mouseMove);
-		}
-		
-		private function stage_mouseMove(e:MouseEvent):void 
-		{
-			startMove();
+			isMouseDown = true;
 		}
 		
 		private function startMove():void 
@@ -188,12 +186,28 @@ package
 		
 		private function enterFrame(e:Event):void 
 		{
+			if (isMouseDown){
+				startMove();
+			}
+			if (isMouseUp){
+				//click
+				for each(var player:Player in players) {
+					if (player.playerHittest(worldLayer.mouseX, worldLayer.mouseY)){
+						if (player!=myPlayer){
+							myPlayer.attack(player);
+						}
+					}
+				}
+				isMouseUp = false;
+			}
 			var now:Number = getTimer();
-			for each(var player:Player in players) {
+			for each(player in players) {
 				player.update(now - lastTime);
 			}
 			playerLayer.removeChildren();
-			players.sortOn("y", Array.NUMERIC);
+			CONFIG::as_only {
+				players.sortOn("y", Array.NUMERIC);
+			}
 			for each(player in players){
 				playerLayer.addChild(player);
 			}
@@ -203,166 +217,6 @@ package
 			worldLayer.x = -int(camera.x) + int(stage.stageWidth / 2);
 			worldLayer.y = -int(camera.y) + int(stage.stageHeight / 2);
 			lastTime = now;
-		}
-	}
-}
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.geom.Point;
-import flash.geom.Rectangle;
-import flash.text.TextField;
-import net.IO;
-import net.LoaderEx;
-import net.UrlLoaderEx;
-
-class Player extends Sprite {
-	private var path:Array = [];
-	private var pathPtr:int;
-	private var moving:Boolean = false;
-	private var movingTime:Number = 0;
-	private var animName:String;
-	private var animDir:int
-	private var animObjLoader:UrlLoaderEx;
-	private var animBmdLoader:LoaderEx;
-	private var loadOverJSON:Boolean = false;
-	private var loadOverBMD:Boolean = false;
-	private var animFrame:Number = 0;
-	private var playing:Boolean = false;
-	private var dirDirty:Boolean = true;
-	private var speed:Number =  2;
-	private var image:Bitmap = new Bitmap;
-	private var baseurl:String;
-	public function Player(baseurl:String) 
-	{
-		this.baseurl = baseurl;
-		graphics.beginFill(0xff0000);
-		graphics.drawCircle(0, 0, 5);
-		addChild(image);
-		play("idle",0)
-	}
-	
-	public function moveTo(path:Array):void {
-		this.path = path;
-		path[0][0] = x;
-		path[0][1] = y;
-		pathPtr = 0;
-		moving = true;
-		movingTime = 0;
-		dirDirty = true;
-		play("run", animDir);
-	}
-	
-	public function play(name:String,dir:int,frame:int=-1):void {
-		animName = name;
-		animDir = dir;
-		if(frame>=0){
-			animFrame = frame;
-		}
-		playing = true;
-		if (animObjLoader){
-			animObjLoader.removeEventListener(Event.COMPLETE, animObjLoader_complete);
-		}
-		if (animBmdLoader){
-			animBmdLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, animBmdLoader_complete);
-		}
-		animObjLoader = IO.getBinLoader(baseurl + name+".json");
-		animBmdLoader = IO.getImageLoader(baseurl + name+".png");
-		if (animObjLoader.data){
-			loadOverJSON = true;
-		}else{
-			loadOverJSON = false;
-			animObjLoader.addEventListener(Event.COMPLETE, animObjLoader_complete);
-		}
-		if (animBmdLoader.content){
-			loadOverBMD = true;
-		}else{
-			loadOverBMD = false;
-			animBmdLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, animBmdLoader_complete);
-		}
-	}
-	
-	private function animBmdLoader_complete(e:Event):void 
-	{
-		animBmdLoader.userData["bmd"] = (animBmdLoader.content as Bitmap).bitmapData;
-		loadOverBMD = true;
-	}
-	
-	private function animObjLoader_complete(e:Event):void 
-	{
-		animObjLoader.userData["obj"] = JSON.parse(animObjLoader.data as String);
-		loadOverJSON = true;
-	}
-	
-	public function update(delta:Number):void {
-		if (moving) {
-			var p0:Array = path[pathPtr];
-			var p1:Array = path[pathPtr+1];
-			var dx:Number = p1[0]-p0[0];
-			var dy:Number = p1[1]-p0[1];
-			var len:Number = Math.sqrt(dx * dx + dy * dy);
-			var deltaSpeed:Number = (movingTime+delta) * speed / (1000 / 60);
-			if (dirDirty) {
-				var dir:int = Math.round(Math.atan2(dy, dx) / (Math.PI / 4));
-				//rotation = dir * 180 / 4;
-				dir += 18;
-				dir = dir % 8;
-				play(animName, dir);
-				dirDirty = false;
-			}
-			if (len<=deltaSpeed) {
-				x = p1[0];
-				y = p1[1];
-				pathPtr++;
-				movingTime = 0;
-				dirDirty = true;
-				if (pathPtr>=(path.length-1)) {
-					moving = false;
-					play("idle", animDir)
-				}else {
-					play("run", animDir);
-				}
-			}else {
-				x =p0[0]+ int(deltaSpeed * dx / len);
-				y =p0[1]+ int(deltaSpeed * dy / len);
-			}
-			movingTime+= delta;
-		}
-		if (playing&&loadOverBMD&&loadOverJSON) {
-			var obj:Object = animObjLoader.userData["obj"]["ts"];
-			var info:Object = animObjLoader.userData["obj"]["info"];
-			var bmd:BitmapData = animBmdLoader.userData["bmd"] as BitmapData;
-			var objs:Array = animObjLoader.userData[animDir];
-			if (objs==null) {
-				objs = animObjLoader.userData[animDir] = [];
-				for (var i:int = 0; i < obj.length / 8; i++ ) {
-					var j:int = animDir * obj.length / 8+i;
-					var sobj:Object = obj[j];
-					sobj.i = j;
-					objs.push(sobj);
-				}
-			}
-			
-			var bmds:Array = animBmdLoader.userData["pngs"];
-			if (bmds==null) {
-				bmds = animBmdLoader.userData["pngs"] = [];
-			}
-			animFrame+= 0.15 * delta / (1000 / 60);
-			if (animFrame>=objs.length) {
-				animFrame = 0;
-			}
-			var id:int = int(animFrame);
-			var data:Object = objs[id];
-			var sbmd:BitmapData = bmds[data.i];
-			if (sbmd==null) {
-				sbmd = new BitmapData(data["w"], data["h"], bmd.transparent, 0);
-				sbmd.copyPixels(bmd, new Rectangle(data["x"], data["y"],data["w"],data["h"]), new Point);
-				bmds[data.i] = sbmd;
-			}
-			image.bitmapData = sbmd;
-			image.x = data["fx"]-info["w"]/2;
-			image.y = data["fy"]-info["h"]/2;
 		}
 	}
 }

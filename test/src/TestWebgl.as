@@ -19,9 +19,9 @@ package
 			canvas.height = 400;
 			var gl:WebGLRenderingContext = (canvas.getContext("webgl")||canvas.getContext("experimental-webgl")) as WebGLRenderingContext;
 			gl.clearColor(0, 0, 0, 1);
-			gl.enable(WebGLRenderingContext.DEPTH_TEST);
-			gl.depthFunc(WebGLRenderingContext.LEQUAL);
-			gl.clear(WebGLRenderingContext.COLOR_BUFFER_BIT|WebGLRenderingContext.DEPTH_BUFFER_BIT);
+			gl.enable(gl.DEPTH_TEST);
+			gl.depthFunc(gl.LEQUAL);
+			gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
 			
 			//init shader
 			var vcode:String = "attribute vec3 pos;" +
@@ -37,8 +37,8 @@ package
 			   "void main(void) {" +
 					"gl_FragColor = vec4(vColor,1);"+
 				"}";
-			var fshader:WebGLShader = gl.createShader(WebGLRenderingContext.FRAGMENT_SHADER);
-			var vshader:WebGLShader = gl.createShader(WebGLRenderingContext.VERTEX_SHADER);
+			var fshader:WebGLShader = gl.createShader(gl.FRAGMENT_SHADER);
+			var vshader:WebGLShader = gl.createShader(gl.VERTEX_SHADER);
 			gl.shaderSource(fshader,fcode);
 			gl.compileShader(fshader);
 			gl.shaderSource(vshader,vcode);
@@ -54,23 +54,23 @@ package
 			
 			//init buffer
 			var buffer:WebGLBuffer = gl.createBuffer();
-			gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, buffer);
-			gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, new Float32Array(/*drawable.pos.data/**/[0, .7, 0, -.7, -.7, 0, .7, -.7, 0]), WebGLRenderingContext.STATIC_DRAW);
-			gl.vertexAttribPointer(0, 3, WebGLRenderingContext.FLOAT, false, 0, 0);
+			gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(/*drawable.pos.data/**/[0, .7, 0, -.7, -.7, 0, .7, -.7, 0]), gl.STATIC_DRAW);
+			gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
 			
 			buffer = gl.createBuffer();
-			gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, buffer);
-			gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, new Float32Array([1,0,0,0,1,0,0,0,1]), WebGLRenderingContext.STATIC_DRAW);
-			gl.vertexAttribPointer(1, 3, WebGLRenderingContext.FLOAT, false, 0, 0);
+			gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([1,0,0,0,1,0,0,0,1]), gl.STATIC_DRAW);
+			gl.vertexAttribPointer(1, 3, gl.FLOAT, false, 0, 0);
 			
 			var ibuffer:WebGLBuffer = gl.createBuffer();
-			gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, ibuffer);
-			gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, new Uint16Array([0,1,2]), WebGLRenderingContext.STATIC_DRAW);
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuffer);
+			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0,1,2]), gl.STATIC_DRAW);
 			
 			gl.clearColor(0, 0, 0, 1);
-			gl.clear(WebGLRenderingContext.COLOR_BUFFER_BIT);
-			//gl.drawArrays(WebGLRenderingContext.TRIANGLE_STRIP, 0, drawable.pos.data.length/3);
-			gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, ibuffer);
+			gl.clear(gl.COLOR_BUFFER_BIT);
+			//gl.drawArrays(gl.TRIANGLE_STRIP, 0, drawable.pos.data.length/3);
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuffer);
 			
 			
 			//draw
@@ -81,7 +81,7 @@ package
 				matr.appendRotation(1, Vector3D.Z_AXIS);
 				gl.uniformMatrix4fv(mvpLoction, false,matr.rawData);
 				
-				gl.drawElements(WebGLRenderingContext.TRIANGLES, 3, WebGLRenderingContext.UNSIGNED_SHORT, 0);
+				gl.drawElements(gl.TRIANGLES, 3, gl.UNSIGNED_SHORT, 0);
 				
 			}, 1000/60);
 			/*var xhr:XMLHttpRequest = new XMLHttpRequest;

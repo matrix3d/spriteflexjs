@@ -408,8 +408,7 @@ package flash.display
 			if (graphicsData.length)
 			{
 				ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-				var ga:Number = ctx.globalAlpha;
-				ctx.globalAlpha *= alpha;
+				ctx.globalAlpha = alpha;
 				ctx.globalCompositeOperation = BlendMode.getCompVal(blendMode);
 				for each (var igd:IGraphicsData in graphicsData)
 				{
@@ -433,7 +432,6 @@ package flash.display
 					ctx.stroke();
 				}
 				ctx.strokeStyle = null;
-				ctx.globalAlpha = ga;
 			}
 		}
 	}

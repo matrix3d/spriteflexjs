@@ -21,24 +21,26 @@ package rpg
 		private var attackTarget:Player;
 		private var animName:String;
 		private var animDir:int
-		private var animObjLoader:UrlLoaderEx;
-		private var animBmdLoader:LoaderEx;
-		private var loadOverJSON:Boolean = false;
-		private var loadOverBMD:Boolean = false;
 		private var animFrame:Number = 0;
 		private var playing:Boolean = false;
 		private var dirDirty:Boolean = true;
-		private var speed:Number =  2;
-		private var image:Bitmap = new Bitmap;
-		private var baseurl:String;
+		public var speed:Number =  2;
+		public var animSpeed:Number = 0.15;
 		private var playerRect:Rectangle = new Rectangle( -20, -80, 40, 80);
-		public function Player(baseurl:String) 
+		private var sheets:Array = [];
+		public function Player() 
 		{
-			this.baseurl = baseurl;
 			graphics.beginFill(0xff0000);
 			graphics.drawCircle(0, 0, 5);
-			addChild(image);
 			play("idle",0)
+		}
+		
+		public function addSheet(sheet:Sheet):void{
+			sheets.push(sheet);
+			addChild(sheet.image);
+			if (playing){
+				sheet.play(animName);
+			}
 		}
 		
 		public function attack(target:Player):void{
@@ -66,36 +68,9 @@ package rpg
 				animFrame = frame;
 			}
 			playing = true;
-			if (animObjLoader){
-				animObjLoader.removeEventListener(Event.COMPLETE, animObjLoader_complete);
+			for each(var sheet:Sheet in sheets){
+				sheet.play(name);
 			}
-			if (animBmdLoader){
-				animBmdLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, animBmdLoader_complete);
-			}
-			animObjLoader = IO.getBinLoader(baseurl + name+".json");
-			animBmdLoader = IO.getImageLoader(baseurl + name+".png");
-			if (animObjLoader.data){
-				loadOverJSON = true;
-			}else{
-				loadOverJSON = false;
-				animObjLoader.addEventListener(Event.COMPLETE, animObjLoader_complete);
-			}
-			if (animBmdLoader.content){
-				loadOverBMD = true;
-			}else{
-				loadOverBMD = false;
-				animBmdLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, animBmdLoader_complete);
-			}
-		}
-		
-		private function animBmdLoader_complete(e:Event):void 
-		{
-			loadOverBMD = true;
-		}
-		
-		private function animObjLoader_complete(e:Event):void 
-		{
-			loadOverJSON = true;
 		}
 		
 		public function playerHittest(x:Number, y:Number):Boolean{
@@ -115,8 +90,8 @@ package rpg
 					animDir = getDir(attackTarget.x - x, attackTarget.y - y);
 					dirDirty = false;
 				}
-				if (animName!="attack_A"){
-					play("attack_A", animDir, 0);
+				if (animName!="attack"){
+					play("attack", animDir, 0);
 				}
 			}else if (moving) {
 				if (animName!="run"){
@@ -155,49 +130,18 @@ package rpg
 					play("idle", animDir,0);
 				}
 			}
-			if (playing && loadOverBMD && loadOverJSON) {
-				if (animObjLoader.userData["bmd"]==null){
-					animBmdLoader.userData["bmd"] = (animBmdLoader.content as Bitmap).bitmapData;
-				}
-				if(animObjLoader.userData["obj"]==null){
-					animObjLoader.userData["obj"] = JSON.parse(animObjLoader.data as String);
-				}
-				var obj:Object = animObjLoader.userData["obj"]["ts"];
-				var info:Object = animObjLoader.userData["obj"]["info"];
-				var bmd:BitmapData = animBmdLoader.userData["bmd"] as BitmapData;
-				var objs:Array = animObjLoader.userData[animDir];
-				if (objs==null) {
-					objs = animObjLoader.userData[animDir] = [];
-					for (var i:int = 0; i < obj.length / 8; i++ ) {
-						var j:int = animDir * obj.length / 8+i;
-						var sobj:Object = obj[j];
-						sobj.i = j;
-						objs.push(sobj);
+			if (playing) {
+				animFrame+=animSpeed * delta / (1000 / 60);
+				for each(var sheet:Sheet in sheets){
+					sheet.update(animFrame, animDir);
+					if (sheet.appLoop){
+						if(attacking){
+							attacking = false;
+						}
+						animFrame = 0;
 					}
 				}
 				
-				var bmds:Array = animBmdLoader.userData["pngs"];
-				if (bmds==null) {
-					bmds = animBmdLoader.userData["pngs"] = [];
-				}
-				animFrame+= 0.15 * delta / (1000 / 60);
-				if (animFrame>=objs.length) {
-					animFrame = 0;
-					if (attacking){
-						attacking = false;
-					}
-				}
-				var id:int = int(animFrame);
-				var data:Object = objs[id];
-				var sbmd:BitmapData = bmds[data.i];
-				if (sbmd==null) {
-					sbmd = new BitmapData(data["w"], data["h"], bmd.transparent, 0);
-					sbmd.copyPixels(bmd, new Rectangle(data["x"], data["y"],data["w"],data["h"]), new Point);
-					bmds[data.i] = sbmd;
-				}
-				image.bitmapData = sbmd;
-				image.x = data["fx"]-info["w"]/2;
-				image.y = data["fy"]-info["h"]/2;
 			}
 		}
 	}

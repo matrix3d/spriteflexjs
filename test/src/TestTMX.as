@@ -19,6 +19,7 @@ package
 	import pathfind.AStar;
 	import pathfind.Node;
 	import rpg.Player;
+	import rpg.Sheet;
 	import spriteflexjs.Stats;
 	import parser.tmx.TMX;
 	/**
@@ -52,7 +53,8 @@ package
 			
 			var names:Array = ["u1", "u2", "nanzhanLv1"];
 			for (var i:int = 0; i < 10;i++ ){
-				var player:Player = new Player("../../assets/mir/role/"+names[int(names.length*Math.random())]+"/");
+				var player:Player = new Player();
+				player.addSheet(new Sheet("../../assets/mir/role/"+names[int(names.length*Math.random())]+"/"));
 				players.push(player);
 				playerLayer.addChild(player);
 				player.x =800+ int(400 * (Math.random()-.5));

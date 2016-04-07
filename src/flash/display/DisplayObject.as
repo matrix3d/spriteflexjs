@@ -201,6 +201,13 @@ package flash.display
 		
 		public function get alpha():Number  { return _alpha; }
 		
+		public function get worldAlpha():Number{
+			if (parent){
+				return parent.worldAlpha * alpha;
+			}
+			return alpha;
+		}
+		
 		public function set alpha(v:Number):void  { _alpha = v; }
 		
 		public function get width():Number  { 

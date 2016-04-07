@@ -12,8 +12,8 @@ package flash.display3D
       }
       
      public function uploadFromVector(data:Vector.<Number>, startVertex:int, numVertices:int) : void{
-		 gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, buff);
-		gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, new Float32Array(data), WebGLRenderingContext.STATIC_DRAW);
+		 gl.bindBuffer(gl.ARRAY_BUFFER, buff);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
 			
 	 }
       

@@ -13,8 +13,8 @@ package flash.display3D
       }
       
      public function uploadFromVector(data:Vector.<uint>, startOffset:int, count:int) : void{
-		gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, buff);
-		gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, new Uint16Array(data), WebGLRenderingContext.STATIC_DRAW);	
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buff);
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(data), gl.STATIC_DRAW);	
 	 }
       
      public function uploadFromByteArray(data:ByteArray, byteArrayOffset:int, startOffset:int, count:int) : void{}

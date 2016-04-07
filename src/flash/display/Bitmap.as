@@ -69,12 +69,10 @@ package flash.display
 				
 				if(maxX>0&&maxY>0&&minX<sw&&minY<sh){
 					var ctx:CanvasRenderingContext2D = stage.ctx;
-					var ga:Number = ctx.globalAlpha;
-					ctx.globalAlpha *= alpha;
+					ctx.globalAlpha = worldAlpha;
 					ctx.globalCompositeOperation = BlendMode.getCompVal(blendMode);
 					ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 					ctx.drawImage(_bitmapData.image, 0, 0);
-					ctx.globalAlpha = ga;
 				}
 			}
 		}

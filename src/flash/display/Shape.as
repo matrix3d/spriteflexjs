@@ -23,7 +23,7 @@ package flash.display
 		{
 			super.__update();
 			if (stage&&visible)
-				graphics.draw(stage.ctx, worldMatrix,alpha,blendMode,transform._colorTransform);
+				graphics.draw(stage.ctx, worldMatrix,worldAlpha,blendMode,transform._colorTransform);
 		}
 		
 		override public function hitTestPoint(x:Number, y:Number, shapeFlag:Boolean = false):Boolean 

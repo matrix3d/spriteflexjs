@@ -359,15 +359,13 @@ package flash.text
 			{
 				var m:Matrix = worldMatrix;
 				var ctx:CanvasRenderingContext2D = stage.ctx;
-				var ga:Number = ctx.globalAlpha;
-				ctx.globalAlpha *= alpha;
+				ctx.globalAlpha = worldAlpha;
 				ctx.globalCompositeOperation = BlendMode.getCompVal(blendMode);
 				ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 				ctx.font = defaultTextFormat.css;
 				ctx.fillStyle = defaultTextFormat.csscolor;
 				ctx.textBaseline = "top";
 				ctx.fillText(_text, 0, 0);
-				ctx.globalAlpha = ga;
 			}
 		}
 	}

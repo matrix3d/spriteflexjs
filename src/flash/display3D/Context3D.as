@@ -40,13 +40,13 @@ package flash.display3D
 			gl.viewport(0, 0, width, height);
 			if (enableDepthAndStencil)
 			{
-				gl.enable(WebGLRenderingContext.DEPTH_TEST);
-				gl.enable(WebGLRenderingContext.STENCIL_TEST);
+				gl.enable(gl.DEPTH_TEST);
+				gl.enable(gl.STENCIL_TEST);
 			}
 			else
 			{
-				gl.disable(WebGLRenderingContext.DEPTH_TEST);
-				gl.disable(WebGLRenderingContext.STENCIL_TEST);
+				gl.disable(gl.DEPTH_TEST);
+				gl.disable(gl.STENCIL_TEST);
 			}
 		}
 		
@@ -55,13 +55,13 @@ package flash.display3D
 			gl.clearColor(red, green, blue, alpha);
 			gl.clearDepth(depth);
 			gl.clearStencil(stencil);
-			gl.clear(WebGLRenderingContext.COLOR_BUFFER_BIT | WebGLRenderingContext.DEPTH_BUFFER_BIT);
+			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 		}
 		
 		public function drawTriangles(indexBuffer:IndexBuffer3D, firstIndex:int = 0, numTriangles:int = -1):void
 		{
-			gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indexBuffer.buff);
-			gl.drawElements(WebGLRenderingContext.TRIANGLES, numTriangles < 0 ? indexBuffer.count : numTriangles * 3, WebGLRenderingContext.UNSIGNED_SHORT, firstIndex * 2);
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer.buff);
+			gl.drawElements(gl.TRIANGLES, numTriangles < 0 ? indexBuffer.count : numTriangles * 3, gl.UNSIGNED_SHORT, firstIndex * 2);
 		}
 		
 		public function present():void
@@ -78,7 +78,7 @@ package flash.display3D
 		
 		public function setProgramConstantsFromVector(programType:String, firstRegister:int, data:Vector.<Number>, numRegisters:int = -1):void
 		{
-			//var num:int =gl.getProgramParameter(currentProgram.program, WebGLRenderingContext.ACTIVE_UNIFORMS);
+			//var num:int =gl.getProgramParameter(currentProgram.program, gl.ACTIVE_UNIFORMS);
 			//var count:int = 0;
 			//for (var i:int = 0; i < num;i++ ) {
 			//	var au:WebGLActiveInfo = gl(currentProgram.program, i);
@@ -132,7 +132,7 @@ package flash.display3D
 			if (currentVBufs[name] != buffer) {
 				currentVBufs[name] = buffer;
 				var loc:Number= currentProgram.getAttribLocation(name);
-				gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, buffer.buff);
+				gl.bindBuffer(gl.ARRAY_BUFFER, buffer.buff);
 				var size:int = 0;
 				switch (format)
 				{
@@ -149,15 +149,15 @@ package flash.display3D
 					size = 4;
 					break;
 				}
-				gl.vertexAttribPointer(loc, size, WebGLRenderingContext.FLOAT, false, 0, bufferOffset);
+				gl.vertexAttribPointer(loc, size, gl.FLOAT, false, 0, bufferOffset);
 			}
 		}
 		
 		public function setBlendFactors(sourceFactor:String, destinationFactor:String):void
 		{
-			gl.enable(WebGLRenderingContext.BLEND);
-			gl.blendEquation(WebGLRenderingContext.FUNC_ADD);
-			gl.blendFunc(Context3DBlendFactor.getGLVal(sourceFactor), Context3DBlendFactor.getGLVal(destinationFactor));
+			gl.enable(gl.BLEND);
+			gl.blendEquation(gl.FUNC_ADD);
+			gl.blendFunc(Context3DBlendFactor.getGLVal(gl,sourceFactor), Context3DBlendFactor.getGLVal(gl,destinationFactor));
 		}
 		
 		public function setColorMask(red:Boolean, green:Boolean, blue:Boolean, alpha:Boolean):void
@@ -167,7 +167,7 @@ package flash.display3D
 		
 		public function setDepthTest(depthMask:Boolean, passCompareMode:String):void
 		{
-			gl.depthFunc(Context3DCompareMode.getGLVal(passCompareMode));
+			gl.depthFunc(Context3DCompareMode.getGLVal(gl,passCompareMode));
 			gl.depthMask(depthMask);
 		}
 		
@@ -229,12 +229,12 @@ package flash.display3D
 		{
 			if (triangleFaceToCull == Context3DTriangleFace.NONE)
 			{
-				gl.disable(WebGLRenderingContext.CULL_FACE);
+				gl.disable(gl.CULL_FACE);
 			}
 			else
 			{
-				gl.enable(WebGLRenderingContext.CULL_FACE);
-				gl.cullFace(Context3DTriangleFace.getGLVal(triangleFaceToCull));
+				gl.enable(gl.CULL_FACE);
+				gl.cullFace(Context3DTriangleFace.getGLVal(gl,triangleFaceToCull));
 			}
 		}
 		
@@ -250,11 +250,11 @@ package flash.display3D
 		{
 			if (rectangle == null)
 			{
-				gl.disable(WebGLRenderingContext.SCISSOR_TEST);
+				gl.disable(gl.SCISSOR_TEST);
 			}
 			else
 			{
-				gl.enable(WebGLRenderingContext.SCISSOR_TEST);
+				gl.enable(gl.SCISSOR_TEST);
 				gl.scissor(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 			}
 		}
@@ -317,7 +317,7 @@ package flash.display3D
 				if (texture)
 				{
 					gl.activeTexture(WebGLRenderingContext["TEXTURE"+sampler]);
-					gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture.texture);
+					gl.bindTexture(gl.TEXTURE_2D, texture.texture);
 					gl.uniform1i(currentProgram.getUniformLocation(name), sampler);
 				}
 			}

@@ -1,6 +1,7 @@
 package net 
 {
 	import flash.display.Loader;
+	import flash.events.Event;
 	/**
 	 * ...
 	 * @author lizhi
@@ -10,7 +11,12 @@ package net
 		public var userData:Object = {};
 		public function LoaderEx() 
 		{
-			
+			contentLoaderInfo.addEventListener(Event.COMPLETE, complete);
+		}
+		
+		private function complete(e:Event):void 
+		{
+			dispatchEvent(e);
 		}
 		
 	}

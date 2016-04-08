@@ -1,6 +1,7 @@
 package flash.display
 {
 	import flash.net.URLRequest;
+	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
 	import flash.errors.*;
 	import flash.events.*;
@@ -28,10 +29,14 @@ package flash.display
 		   lc.parameters = rtn;
 		   }*/
 		
-		public function load(request:URLRequest/*, context:LoaderContext = null*/):void
+		public function load(request:URLRequest, context:LoaderContext = null):void
 		{
+			if (image){
+				image.removeEventListener("load", onImageLoad,false);
+			}
 			image = new Image;
-			image.onload = onImageLoad;
+			image.addEventListener("load", onImageLoad,false);
+			//image.onload = onImageLoad;
 			image.src = request.url;
 		
 		/*var _context:LoaderContext = this._buildLoaderContext(context);
@@ -48,7 +53,7 @@ package flash.display
 			   // this._load(request,_context.checkPolicyFile,_context.applicationDomain,_context.securityDomain,_context.requestedContentParent,_context.parameters,deblockingFilter,_context.allowCodeImport,_context.imageDecodingPolicy);
 		}
 		
-		private function onImageLoad():void
+		private function onImageLoad(e:Object):void
 		{
 			var bmd:BitmapData = new BitmapData(image.width, image.height, true, 0);
 			bmd.fromImage(image);

@@ -66,7 +66,7 @@ package flash.__native
 			this.canvas = stage.canvas;
 			context3D = new Context3D;
 			context3D.canvas = canvas;
-			context3D.gl = (canvas.getContext("webgl") || canvas.getContext("experimental-webgl")) as WebGLRenderingContext;
+			context3D.gl = (canvas.getContext("webgl",{alpha:false}) || canvas.getContext("experimental-webgl",{alpha:false})) as WebGLRenderingContext;
 			stage_resize(null);
 			context3D.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			
@@ -171,10 +171,10 @@ package flash.__native
 			
 			//a + ", " + b + ", " + "0, 0, " + c + ", " + d + ", " + "0, 0, 0, 0, 1, 0, " + tx + ", " + ty + ", 0, 1)";
 			matr3d.rawData[0] = matr.a*2 * texture.img.width / stage.stageWidth;
-			matr3d.rawData[1] = -matr.b*2 * texture.img.height / stage.stageHeight;
+			matr3d.rawData[1] = -matr.b*2 * texture.img.width / stage.stageHeight;
 			//matr3d.rawData[2] = 0;
 			//matr3d.rawData[3] = 0;
-			matr3d.rawData[4] = matr.c*2 * texture.img.width / stage.stageWidth;
+			matr3d.rawData[4] = matr.c*2 * texture.img.height / stage.stageWidth;
 			matr3d.rawData[5] = -matr.d*2 * texture.img.height / stage.stageHeight;
 			//matr3d.rawData[6] = 0;
 			//matr3d.rawData[7] = 0;
@@ -308,7 +308,7 @@ package flash.__native
 				var bmd:BitmapData = new BitmapData(w, h, true, 0);
 				bmd.fromImage(img);
 				var texture:Texture = context3D.createTexture(w, h, Context3DTextureFormat.BGRA, false);
-				texture.uploadFromBitmapData(bmd);
+				texture.uploadFromBitmapData(bmd,1);
 				btexture = new BitmapTexture;
 				btexture.img = img;
 				btexture.texture = texture;

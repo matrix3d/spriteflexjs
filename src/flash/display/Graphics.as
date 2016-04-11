@@ -432,6 +432,7 @@ package flash.display
 					ctx.stroke();
 				}
 				ctx.strokeStyle = null;
+				SpriteFlexjs.drawCounter++;
 			}
 		}
 	}

@@ -366,6 +366,7 @@ package flash.text
 				ctx.fillStyle = defaultTextFormat.csscolor;
 				ctx.textBaseline = "top";
 				ctx.fillText(_text, 0, 0);
+				SpriteFlexjs.drawCounter++;
 			}
 		}
 	}

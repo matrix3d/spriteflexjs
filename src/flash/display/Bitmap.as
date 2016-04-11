@@ -73,6 +73,7 @@ package flash.display
 					ctx.globalCompositeOperation = BlendMode.getCompVal(blendMode);
 					ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 					ctx.drawImage(_bitmapData.image, 0, 0);
+					SpriteFlexjs.drawCounter++;
 				}
 			}
 		}

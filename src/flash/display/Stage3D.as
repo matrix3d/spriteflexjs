@@ -25,7 +25,7 @@ package flash.display
 			canvas.style.top = 0;
 			canvas.style.zIndex = 0;
 			document.body.appendChild(canvas);
-			_context3D.gl = (canvas.getContext("webgl") || canvas.getContext("experimental-webgl")) as WebGLRenderingContext;
+			_context3D.gl = (canvas.getContext("webgl",{alpha:false}) || canvas.getContext("experimental-webgl",{alpha:false})) as WebGLRenderingContext;
 			dispatchEvent(new Event(Event.CONTEXT3D_CREATE));
 		}
 		

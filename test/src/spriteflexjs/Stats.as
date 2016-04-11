@@ -43,6 +43,9 @@ package spriteflexjs
 			if (stage!=null) {
 				text +=  stage.frameRate;
 			}
+			CONFIG::js_only{
+				text += " dc:" + SpriteFlexjs.drawCounter;
+			}
 			tf.text = text;
 			
 			graphics.clear();

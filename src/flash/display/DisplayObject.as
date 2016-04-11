@@ -364,6 +364,7 @@ package flash.display
 			ctx.globalAlpha = 1;
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.clearRect(0, 0, stage.stageWidth, stage.stageHeight);
+			SpriteFlexjs.drawCounter = 0;
 			__update();
 			//if (SpriteFlexjs.debug) {
 				//trace("__update",getTimer() - time);

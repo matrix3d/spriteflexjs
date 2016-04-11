@@ -15,7 +15,7 @@ package flash.display3D.textures
 		
 		public function uploadFromBitmapData(bitmapData:BitmapData, maplevel:uint = 0):void
 		{
-			uploadFromImg(bitmapData.image);
+			uploadFromImg(bitmapData.image,maplevel);
 		}
 		
 		public function uploadFromImg(img:Object, maplevel:uint = 0):void

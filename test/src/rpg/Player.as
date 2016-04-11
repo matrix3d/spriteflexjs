@@ -7,11 +7,13 @@ package rpg
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
+	import flash.text.TextFormat;
 	import net.IO;
 	import net.LoaderEx;
 	import net.UrlLoaderEx;
 
 	public class Player extends Sprite {
+		private var pathScale:Array;
 		private var path:Array = [];
 		private var pathPtr:int;
 		private var moving:Boolean = false;
@@ -24,7 +26,7 @@ package rpg
 		private var animFrame:Number = 0;
 		private var playing:Boolean = false;
 		private var dirDirty:Boolean = true;
-		public var speed:Number =  2;
+		public var speed:Number =  2/60;
 		public var animSpeed:Number = 0.15;
 		private var playerRect:Rectangle = new Rectangle( -20, -80, 40, 80);
 		private var sheets:Array = [];
@@ -51,10 +53,11 @@ package rpg
 			dirDirty = true;
 		}
 		
-		public function moveTo(path:Array):void {
+		public function moveTo(path:Array, pathScale:Array):void {
+			this.pathScale = pathScale;
 			this.path = path;
-			path[0][0] = x;
-			path[0][1] = y;
+			path[0][0] = (x/pathScale[0])-.5;
+			path[0][1] = (y/pathScale[1])-.5;
 			pathPtr = 0;
 			moving = true;
 			movingTime = 0;
@@ -78,9 +81,12 @@ package rpg
 		}
 		
 		private function getDir(dx:Number, dy:Number):int{
-			var dir:int = Math.round(Math.atan2(dy, dx) / (Math.PI / 4));
-			dir += 18;
-			dir = dir % 8;
+			var b:int = Math.round(Math.atan2(dy, dx) / (Math.PI / 4));
+			var c:int = (b + 18);
+			if (b ==-2 && c == 17){// ios 9 ,bug
+				trace(b+" "+c);
+			}
+			var dir:int=(c%8);
 			return dir;
 		}
 		
@@ -109,8 +115,8 @@ package rpg
 					dirDirty = false;
 				}
 				if (len<=deltaSpeed) {
-					x = p1[0];
-					y = p1[1];
+					x = (p1[0]+.5)*pathScale[0];
+					y = (p1[1]+.5)*pathScale[1];
 					pathPtr++;
 					movingTime = 0;
 					dirDirty = true;
@@ -121,8 +127,8 @@ package rpg
 						play("run", animDir);
 					}
 				}else {
-					x =p0[0]+ int(deltaSpeed * dx / len);
-					y =p0[1]+ int(deltaSpeed * dy / len);
+					x =(p0[0]+ (deltaSpeed * dx / len)+.5)*pathScale[0];
+					y =(p0[1]+ (deltaSpeed * dy / len)+.5)*pathScale[1];
 				}
 				movingTime+= delta;
 			}else{

@@ -23,6 +23,10 @@ package
 		private var tf:TextField;
 		public function TestGraphics() 
 		{
+			CONFIG::js_only{
+				SpriteFlexjs.wmode = "gpu";
+			}
+			
 			var s:Sprite = new Sprite;
 			addChild(s);
 			
@@ -65,7 +69,7 @@ package
 			for (var i:int = 0; i < numChildren;i++ ) {
 				var c:DisplayObject = getChildAt(i);
 				if (c.hitTestPoint(e.localX,e.localY)) {
-					tf.text+="hittest,"
+					tf.appendText("hittest,")
 				}
 			}
 		}
@@ -77,13 +81,15 @@ package
 			var bmd:BitmapData = bmp.bitmapData;
 			
 			var s3:Sprite = new Sprite;
-			s3.blendMode = BlendMode.ADD;
-			s3.graphics.beginBitmapFill(bmd,matr);
-			s3.graphics.drawRect(0, 0, 100, 100);
+			//s3.blendMode = BlendMode.ADD;
+			s3.graphics.beginBitmapFill(bmd,matr,true);
+			s3.graphics.drawRect(20, 20, 100, 100);
 			addChild(s3);
-			s3.graphics.beginFill(0xff0000);
+			//s3.graphics.beginFill(0xff0000);
 			s3.graphics.drawRect(50, 50, 100, 100);
 			
+			s3.graphics.moveTo(100, 0);
+			s3.graphics.curveTo(200, 0, 200, 100);
 			addChild(bmp);
 			bmp.y = 300;
 		}

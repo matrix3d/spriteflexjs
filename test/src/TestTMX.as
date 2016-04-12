@@ -170,7 +170,7 @@ package
 				for each(var node:Node in astar.floydPath) {
 					var x:Number = (node.x + .5) * tw;
 					var y:Number = (node.y + .5) * th;
-					path.push([x, y]);
+					path.push([node.x, node.y]);
 					if (flag) {
 						debugLayer.graphics.lineTo(x, y);
 					}else {
@@ -181,7 +181,7 @@ package
 					debugLayer.graphics.moveTo(x, y);
 				}
 				if(path.length>1){
-					myPlayer.moveTo(path);
+					myPlayer.moveTo(path,[tw,th]);
 				}
 			}
 		}

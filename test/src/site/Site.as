@@ -81,8 +81,10 @@ package site
 				player.addSheet(new Sheet("../../assets/site/__out/" + sheet + "/"));
 			}
 			players.push(player);
-			player.speed = 2.5;
+			player.speed = 3.5 / 60;
 			player.animSpeed = 0.25;
+			player.name2animSpeed = {};
+			player.name2animSpeed["idle"] = 0.1;
 			playerLayer.addChild(player);	
 			player.play("idle", int(Math.random() * 8));
 			return player;
@@ -98,8 +100,20 @@ package site
 			var names:Array = ["diaoxiang", "huangquanjiaozhu", "molongjiaozhu","nanzhanlv3","niumowang","nvfalv4","wumajiaozhu","wuqinanzhanlv1","wuqinvfalv3"];
 			//myPlayer = addPlayer(["nanzhanlv3","wuqinanzhanlv1"]);
 			myPlayer = addPlayer(["nvfalv4", "wuqinvfalv3"]);
-			myPlayer.x = 1100;
-			myPlayer.y = 1100;
+			myPlayer.x = 2000;
+			myPlayer.y = 1600;
+			
+			var player:Player = addPlayer(["diaoxiang"]);
+			player.x = 1650;
+			player.y = 1130;
+			
+			player = addPlayer(["diaoxiang"]);
+			player.x = 2255;
+			player.y = 1550;
+			
+			player = addPlayer(["huangquanjiaozhu"]);
+			player.x = 1855;
+			player.y = 1550;
 			
 			//loader = new Loader;
 			//loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loader_complete);
@@ -147,7 +161,7 @@ package site
 				for each(var node:Node in astar.path) {
 					var x:Number = (node.x + .5) * tw;
 					var y:Number = (node.y + .5) * th;
-					path.push([x, y]);
+					path.push([node.x, node.y]);
 					if (flag) {
 						debugLayer.graphics.lineTo(x, y);
 					}else {
@@ -158,7 +172,7 @@ package site
 					debugLayer.graphics.moveTo(x, y);
 				}
 				if(path.length>1){
-					myPlayer.moveTo(path);
+					myPlayer.moveTo(path,[tw,th]);
 				}
 			}
 		}

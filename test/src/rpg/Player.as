@@ -28,6 +28,7 @@ package rpg
 		private var dirDirty:Boolean = true;
 		public var speed:Number =  2/60;
 		public var animSpeed:Number = 0.15;
+		public var name2animSpeed:Object = {};
 		private var playerRect:Rectangle = new Rectangle( -20, -80, 40, 80);
 		private var sheets:Array = [];
 		public function Player() 
@@ -137,7 +138,7 @@ package rpg
 				}
 			}
 			if (playing) {
-				animFrame+=animSpeed * delta / (1000 / 60);
+				animFrame+=(name2animSpeed[animName]||animSpeed) * delta / (1000 / 60);
 				for each(var sheet:Sheet in sheets){
 					sheet.update(animFrame, animDir);
 					if (sheet.appLoop){

@@ -75,7 +75,7 @@ package rpg
 				if (objs==null) {
 					objs = animObjLoader.userData[animDir] = [];
 					for (var i:int = 0; i < obj.length / 8; i++ ) {
-						var j:int = animDir * obj.length / 8+i;
+						var j:int = animDir * int(obj.length / 8)+i;
 						var sobj:Object = obj[j];
 						sobj.i = j;
 						objs.push(sobj);

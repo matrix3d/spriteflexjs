@@ -16,6 +16,7 @@ package com.hsharma.hungryHero.gameElements
 	import com.hsharma.hungryHero.Assets;
 	import com.hsharma.hungryHero.GameConstants;
 	import flash.display.Bitmap;
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	
@@ -31,10 +32,10 @@ package com.hsharma.hungryHero.gameElements
 		private var _layer:int;
 		
 		/** Primary image. */
-		private var image1:Bitmap;
+		private var image1:DisplayObject;
 		
 		/** Secondary image. */
-		private var image2:Bitmap;
+		private var image2:DisplayObject;
 		
 		/** Parallax depth - used to decide speed of the animation. */
 		private var _parallaxDepth:Number;
@@ -65,8 +66,10 @@ package com.hsharma.hungryHero.gameElements
 			}
 			else
 			{
-				image1 = new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("bgLayer" + _layer));
-				image2 = new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("bgLayer" + _layer));
+				image1 = new Sprite;//new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("bgLayer" + _layer));
+				image2 = new Sprite;//new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("bgLayer" + _layer));
+				Assets.getAtlas().getTexture((image1 as Sprite).graphics,"bgLayer" + _layer)
+				Assets.getAtlas().getTexture((image2 as Sprite).graphics,"bgLayer" + _layer)
 			}
 			
 			image1.x = 0;

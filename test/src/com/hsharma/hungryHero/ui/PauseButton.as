@@ -28,13 +28,14 @@ package com.hsharma.hungryHero.ui
 	public class PauseButton extends Button
 	{
 		/** Pause button image. */
-		private var pauseImage:Bitmap;
+		//private var pauseImage:Bitmap;
 		
 		public function PauseButton()
 		{
-			super(new BitmapData(com.hsharma.hungryHero.Assets.getAtlas().getTexture("pauseButton").width, com.hsharma.hungryHero.Assets.getAtlas().getTexture("pauseButton").height, true, 0));
-			
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			//super(new BitmapData(com.hsharma.hungryHero.Assets.getAtlas().getTexture("pauseButton").width, com.hsharma.hungryHero.Assets.getAtlas().getTexture("pauseButton").height, true, 0));
+			//super(Assets.getAtlas().bmd, Assets.getAtlas().getTexture(graphics,"pauseButton"));
+			//this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			Assets.getAtlas().getTexture(graphics, "pauseButton");
 		}
 		
 		/**
@@ -42,13 +43,13 @@ package com.hsharma.hungryHero.ui
 		 * @param event
 		 * 
 		 */
-		private function onAddedToStage(event:Event):void
+		/*private function onAddedToStage(event:Event):void
 		{
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
 			// Pause Image
 			pauseImage = new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("pauseButton"));
 			this.addChild(pauseImage);
-		}
+		}*/
 	}
 }

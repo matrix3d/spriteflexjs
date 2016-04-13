@@ -43,7 +43,7 @@ package com.hsharma.hungryHero.screens
 		private var bg:Bitmap;
 		
 		/** Game title. */
-		private var title:Bitmap;
+		private var title:Sprite;
 		
 		/** Play button. */
 		private var playBtn:Button;
@@ -52,7 +52,7 @@ package com.hsharma.hungryHero.screens
 		private var aboutBtn:Button;
 		
 		/** Hero artwork. */
-		private var hero:Bitmap;
+		private var hero:Sprite;
 
 		/** About text field. */
 		private var aboutText:StarlingTextField;
@@ -106,28 +106,33 @@ package com.hsharma.hungryHero.screens
 			// GENERAL ELEMENTS
 			
 			bg = new Bitmap(com.hsharma.hungryHero.Assets.getTexture("BgWelcome"));
+			//Assets.getTexture(bg.graphics,"BgWelcome")
 			//bg.blendMode = BlendMode.NONE;
 			this.addChild(bg);
 			
-			title = new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture(("welcome_title")));
+			title =new Sprite//new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture(("welcome_title")));
 			title.x = 600;
 			title.y = 65;
+			Assets.getAtlas().getTexture(title.graphics,"welcome_title")
 			this.addChild(title);
 			
 			// WELCOME ELEMENTS
 			
-			hero = new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("welcome_hero"));
+			hero = new Sprite;//Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("welcome_hero"));
+			Assets.getAtlas().getTexture(hero.graphics,"welcome_hero")
 			hero.x = -hero.width;
 			hero.y = 130;
 			this.addChild(hero);
 			
-			playBtn = new Button(com.hsharma.hungryHero.Assets.getAtlas().getTexture("welcome_playButton"));
+			playBtn = new Button//(com.hsharma.hungryHero.Assets.getAtlas().getTexture("welcome_playButton"));
+			Assets.getAtlas().getTexture(playBtn.graphics,"welcome_playButton")
 			playBtn.x = 640;
 			playBtn.y = 340;
 			playBtn.addEventListener(MouseEvent.CLICK, onPlayClick);
 			this.addChild(playBtn);
 			
-			aboutBtn = new Button(com.hsharma.hungryHero.Assets.getAtlas().getTexture("welcome_aboutButton"));
+			aboutBtn = new Button//(com.hsharma.hungryHero.Assets.getAtlas().getTexture("welcome_aboutButton"));
+			Assets.getAtlas().getTexture(aboutBtn.graphics,"welcome_aboutButton")
 			aboutBtn.x = 460;
 			aboutBtn.y = 460;
 			aboutBtn.addEventListener(MouseEvent.CLICK, onAboutClick);
@@ -149,19 +154,22 @@ package com.hsharma.hungryHero.screens
 			aboutText.height = aboutText.textHeight + 30;
 			this.addChild(aboutText);
 			
-			hsharmaBtn = new Button(com.hsharma.hungryHero.Assets.getAtlas().getTexture("about_hsharmaLogo"));
+			hsharmaBtn = new Button//(com.hsharma.hungryHero.Assets.getAtlas().getTexture("about_hsharmaLogo"));
+			Assets.getAtlas().getTexture(hsharmaBtn.graphics,"about_hsharmaLogo")
 			hsharmaBtn.x = aboutText.x;
 			hsharmaBtn.y = aboutText.y+aboutText.height;//.bounds.bottom;
 			hsharmaBtn.addEventListener(MouseEvent.CLICK, onHsharmaBtnClick);
 			this.addChild(hsharmaBtn);
 			
-			starlingBtn = new Button(com.hsharma.hungryHero.Assets.getAtlas().getTexture("about_starlingLogo"));
+			starlingBtn = new Button//(com.hsharma.hungryHero.Assets.getAtlas().getTexture("about_starlingLogo"));
+			Assets.getAtlas().getTexture(starlingBtn.graphics,"about_starlingLogo")
 			starlingBtn.x = aboutText.x + aboutText.width - starlingBtn.width;//= aboutText.bounds.right - starlingBtn.width;
 			starlingBtn.y = aboutText.y + aboutText.height;//= aboutText.bounds.bottom;
 			starlingBtn.addEventListener(MouseEvent.CLICK, onStarlingBtnClick);
 			//this.addChild(starlingBtn);
 			
-			backBtn = new Button(com.hsharma.hungryHero.Assets.getAtlas().getTexture("about_backButton"));
+			backBtn = new Button//(com.hsharma.hungryHero.Assets.getAtlas().getTexture("about_backButton"));
+			Assets.getAtlas().getTexture(backBtn.graphics,"about_backButton")
 			backBtn.x = 660;
 			backBtn.y = 350;
 			backBtn.addEventListener(MouseEvent.CLICK, onAboutBackClick);

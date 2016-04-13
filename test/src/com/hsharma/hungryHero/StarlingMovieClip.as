@@ -13,7 +13,8 @@ package com.hsharma.hungryHero
 		public function StarlingMovieClip(bmds:Array,num:int) 
 		{
 			if (bmds[0]) {
-				addChild(new Bitmap(bmds[0][0]));
+				Assets.getAtlas().getTexture(graphics,bmds[0]);
+				//addChild(new Bitmap(bmds[0][0]));
 			}
 		}
 	}

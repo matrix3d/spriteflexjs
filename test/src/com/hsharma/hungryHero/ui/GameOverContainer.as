@@ -124,17 +124,20 @@ package com.hsharma.hungryHero.ui
 			scoreContainer.addChild(scoreText);
 			
 			// Navigation buttons.
-			mainBtn = new Button(com.hsharma.hungryHero.Assets.getAtlas().getTexture("gameOver_mainButton"));
+			mainBtn = new Button//(com.hsharma.hungryHero.Assets.getAtlas().getTexture("gameOver_mainButton"));
+			Assets.getAtlas().getTexture(mainBtn.graphics,"gameOver_mainButton")
 			mainBtn.y = (GameConstants.stageHeight * 70)/100;
 			mainBtn.addEventListener(MouseEvent.CLICK, onMainClick);
 			this.addChild(mainBtn);
 			
-			playAgainBtn = new Button(com.hsharma.hungryHero.Assets.getAtlas().getTexture("gameOver_playAgainButton"));
+			playAgainBtn = new Button//(com.hsharma.hungryHero.Assets.getAtlas().getTexture("gameOver_playAgainButton"));
+			Assets.getAtlas().getTexture(playAgainBtn.graphics,"gameOver_playAgainButton")
 			playAgainBtn.y = mainBtn.y + mainBtn.height * 0.5 - playAgainBtn.height * 0.5;
 			playAgainBtn.addEventListener(MouseEvent.CLICK, onPlayAgainClick);
 			this.addChild(playAgainBtn);
 			
-			aboutBtn = new Button(com.hsharma.hungryHero.Assets.getAtlas().getTexture("gameOver_aboutButton"));
+			aboutBtn = new Button//(com.hsharma.hungryHero.Assets.getAtlas().getTexture("gameOver_aboutButton"));
+			Assets.getAtlas().getTexture(aboutBtn.graphics, "gameOver_aboutButton");
 			aboutBtn.y = playAgainBtn.y + playAgainBtn.height * 0.5 - aboutBtn.height * 0.5;
 			aboutBtn.addEventListener(MouseEvent.CLICK, onAboutClick);
 			this.addChild(aboutBtn);

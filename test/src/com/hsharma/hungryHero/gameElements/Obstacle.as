@@ -49,13 +49,13 @@ package com.hsharma.hungryHero.gameElements
 		private var _hitArea:Bitmap;
 		
 		/** Visual art of the obstacle (static). */
-		private var obstacleImage:Bitmap;
+		private var obstacleImage:Sprite;
 		
 		/** Visual art of the obstacle (animated). */
 		private var obstacleAnimation:StarlingMovieClip;
 		
 		/** Visual art of the crashed obstacle. */
-		private var obstacleCrashImage:Bitmap;
+		private var obstacleCrashImage:Sprite;
 		
 		/** Look out sign animation. */
 		private var lookOutAnimation:StarlingMovieClip;
@@ -105,15 +105,18 @@ package com.hsharma.hungryHero.gameElements
 				// If this is the first time the object is being used.
 				if (obstacleImage == null)
 				{
-					obstacleImage = new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("obstacle" + _type));
+					obstacleImage = new Sprite;
+					
 					this.addChild(obstacleImage);
 				}
-				else
-				{
+				obstacleImage.graphics.clear();
+				Assets.getAtlas().getTexture(obstacleImage.graphics,"obstacle" + _type);
+				//else
+				//{
 					// If this object is being reused.
-					obstacleImage.bitmapData = com.hsharma.hungryHero.Assets.getAtlas().getTexture("obstacle" + _type);
+					//obstacleImage.bitmapData = com.hsharma.hungryHero.Assets.getAtlas().getTexture("obstacle" + _type);
 					obstacleImage.visible = true;
-				}
+				//}
 				
 				//obstacleImage.readjustSize();
 				obstacleImage.x = 0;
@@ -130,15 +133,15 @@ package com.hsharma.hungryHero.gameElements
 			if (obstacleCrashImage == null)
 			{
 				// If this is the first time the object is being used.
-				obstacleCrashImage = new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture(("obstacle" + _type + "_crash")));
+				obstacleCrashImage = new Sprite//new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture(("obstacle" + _type + "_crash")));
 				this.addChild(obstacleCrashImage);
 			}
-			else
-			{
+			//else
+			//{
 				// If this object is being reused.
-				obstacleCrashImage.bitmapData = com.hsharma.hungryHero.Assets.getAtlas().getTexture("obstacle" + _type + "_crash");
-			}
-			
+				//obstacleCrashImage.bitmapData = com.hsharma.hungryHero.Assets.getAtlas().getTexture("obstacle" + _type + "_crash");
+			//}
+			Assets.getAtlas().getTexture(obstacleCrashImage.graphics,"obstacle" + _type + "_crash")
 			// Hide the crash image by default.
 			obstacleCrashImage.visible = false;
 		}

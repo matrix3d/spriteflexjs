@@ -3,6 +3,7 @@ package com.hsharma.hungryHero
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
+	import flash.geom.Rectangle;
 	/**
 	 * ...
 	 * @author lizhi
@@ -10,9 +11,9 @@ package com.hsharma.hungryHero
 	public class Button extends Sprite
 	{
 		public var fontColor:int;
-		public function Button(bmd:BitmapData) 
+		public function Button(/*bmd:BitmapData,rect:Rectangle*/) 
 		{
-			addChild(new Bitmap(bmd));
+			//addChild(new Bitmap(bmd));
 			buttonMode = true;
 		}
 		

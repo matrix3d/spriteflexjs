@@ -40,7 +40,7 @@ package com.hsharma.hungryHero.gameElements
 		private var _spin:Number;
 		
 		/** Texture of the particle. */
-		private var particleImage:Bitmap;
+		private var particleImage:Sprite=new Sprite;
 		
 		public function Particle(_type:int)
 		{
@@ -51,10 +51,11 @@ package com.hsharma.hungryHero.gameElements
 			switch(_type)
 			{
 				case com.hsharma.hungryHero.GameConstants.PARTICLE_TYPE_1:
-					particleImage = new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("particleEat"));
+					Assets.getAtlas().getTexture(particleImage.graphics, "particleEat");//new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("particleEat"));
 					break;
 				case com.hsharma.hungryHero.GameConstants.PARTICLE_TYPE_2:
-					particleImage = new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("particleWindForce"));
+					//particleImage = //new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("particleWindForce"));
+					Assets.getAtlas().getTexture(particleImage.graphics, "particleWindForce");
 					break;
 			}
 			

@@ -71,7 +71,7 @@ package flash.__native
 			ctx.canvas = canvas;
 			ctx.gl = (canvas.getContext("webgl",{alpha:false}) || canvas.getContext("experimental-webgl",{alpha:false})) as WebGLRenderingContext;
 			stage_resize(null);
-			ctx.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+			//ctx.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			ctx.setCulling(Context3DTriangleFace.NONE);
 			
 			var posData:Array = [0, 0, 1, 0, 0, 1, 1, 1];
@@ -181,12 +181,15 @@ package flash.__native
 			
 			ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, matr3d);
 			if (uvmatr){
-				matr3d.rawData[0] = uvmatr.a / texture.width;
-				matr3d.rawData[1] = -uvmatr.b / texture.width;
-				matr3d.rawData[4] = -uvmatr.c / texture.height;
-				matr3d.rawData[5] = uvmatr.d / texture.height;
-				matr3d.rawData[12] = 0;
-				matr3d.rawData[13] = 0;
+				var uvmatr2:Matrix = posmatr.clone();
+				uvmatr2.concat(uvmatr);
+				
+				matr3d.rawData[0] = uvmatr2.a / texture.width;
+				matr3d.rawData[1] = -uvmatr2.b / texture.width;
+				matr3d.rawData[4] = -uvmatr2.c / texture.height;
+				matr3d.rawData[5] = uvmatr2.d / texture.height;
+				matr3d.rawData[12] = uvmatr2.tx/texture.width;
+				matr3d.rawData[13] = uvmatr2.ty/texture.height;
 				if (scaleWithImage){
 					matr3d.rawData[0] *= image.width;
 					matr3d.rawData[1] *= image.width;

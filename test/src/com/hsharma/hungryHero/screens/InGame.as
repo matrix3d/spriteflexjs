@@ -304,7 +304,8 @@ package com.hsharma.hungryHero.screens
 			this.addChild(pauseButton);
 			
 			// Start button.
-			startButton = new Button(com.hsharma.hungryHero.Assets.getAtlas().getTexture("startButton"));
+			startButton = new Button//(com.hsharma.hungryHero.Assets.getAtlas().getTexture("startButton"));
+			Assets.getAtlas().getTexture(startButton.graphics,"startButton")
 			startButton.fontColor = 0xffffff;
 			startButton.x = GameConstants.stageWidth/2 - startButton.width/2;
 			startButton.y = GameConstants.stageHeight/2 - startButton.height/2;

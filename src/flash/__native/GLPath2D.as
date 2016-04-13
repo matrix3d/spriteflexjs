@@ -24,12 +24,10 @@ package flash.__native
 			return null;
 		}
 		public function bezierCurveTo (cp1x:Number, cp1y:Number, cp2x:Number, cp2y:Number, x:Number, y:Number) : Object {
-			dirty = true;
 			poly.push(cp1x, cp1y, cp2x, cp2y, x, y);
 			return null;
 		}
 		public function quadraticCurveTo (cpx:Number, cpy:Number, x:Number, y:Number) : Object {
-			dirty = true;
 			poly.push(cpx, cpy, x, y);
 			return null;
 		}
@@ -37,12 +35,10 @@ package flash.__native
 			return null;
 		}
 		public function lineTo (x:Number, y:Number) : Object {
-			dirty = true;
 			poly.push(x, y);
 			return null;
 		}
 		public function moveTo (x:Number, y:Number) : Object {
-			dirty = true;
 			polys.push(makePoly());
 			poly.push(x, y);
 			return null;

@@ -34,8 +34,8 @@ package flash.display
 			fillRect(rect, fillColor);
 		}
 		
-		public function fromImage(img:Object):void {
-			ctx.drawImage(img, 0, 0);
+		public function fromImage(img:Object,dx:Number=0,dy:Number=0,opt_dw:Number=0,opt_dy:Number=0):void {
+			ctx.drawImage(img,dx,dy);
 			imageData = ctx.getImageData(0, 0, width, height);
 			this.data = this.imageData.data;
 		}
@@ -164,7 +164,7 @@ package flash.display
 			lock();
 			for (var y:int = 0; y < width; ++y) {
 				for (var x:int = 0; x < height; ++x) {
-					setPixel32(x, y, transparent? (0xffffffff * Math.random()):(0xff000000|0xffffff*Math.random()));
+					setPixel32(x, y, 0xff000000|0xffffff*Math.random());
 				}
 			}
 			unlock();

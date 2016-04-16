@@ -57,7 +57,6 @@ package flash.__native
 		private var matr3d:Matrix3D = new Matrix3D;
 		private var matr:Matrix = new Matrix;
 		private var matrhelp:Matrix = new Matrix;
-		//private var bitmapUVScale:Vector.<Number> = Vector.<Number>([1,1,0,0]);
 		private var stage:Stage;
 		private var isBatch:Boolean;
 		private var states:Array = [];
@@ -204,8 +203,8 @@ package flash.__native
 				matr3d.rawData[12] = 0;
 				matr3d.rawData[13] = 0;
 				if (scaleWithImage){
-					matr3d.rawData[0] *= texture.img.width;
-					matr3d.rawData[5] *= texture.img.height;
+					matr3d.rawData[0] *= image.width;
+					matr3d.rawData[5] *= image.height;
 				}
 			}
 			ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, matr3d);

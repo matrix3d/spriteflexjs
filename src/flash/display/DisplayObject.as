@@ -14,7 +14,7 @@ package flash.display
 	 * ...
 	 * @author lizhi
 	 */
-	public class DisplayObject extends EventDispatcher
+	public class DisplayObject extends EventDispatcher implements IBitmapDrawable
 	{
 		private static var ID:int = 0;
 		public var innerID:int;

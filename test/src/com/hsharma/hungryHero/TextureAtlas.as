@@ -29,10 +29,6 @@ package com.hsharma.hungryHero
 		}
 		
 		public function getTexture(target:Graphics,name:String):void {
-			//var arr:Array = bmds[name];
-			//if (arr) return arr[0];
-			//return null;
-			trace(1);
 			var rect:Rectangle = bmds[name][0];
 			target.beginBitmapFill(bmd, new Matrix(1,0,0,1,-rect.x,-rect.y), true, true);
 			target.drawRect(0, 0, rect.width, rect.height);

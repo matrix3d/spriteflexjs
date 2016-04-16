@@ -1,6 +1,7 @@
 package flash.display
 {
 	import flash.geom.*;
+	import flash.text.TextField;
 	import flash.utils.ByteArray;
 	
 	public class BitmapData
@@ -10,7 +11,7 @@ package flash.display
 		private var imageData:ImageData;
 		public var image:HTMLCanvasElement;
 		private var _lock:Boolean = false;
-		private var ctx:CanvasRenderingContext2D;
+		public var ctx:CanvasRenderingContext2D;
 		private var _transparent:Boolean;
 		private var _width:int;
 		private var _height:int;
@@ -113,9 +114,25 @@ package flash.display
 		
 		public function dispose():void  {/**/ }
 		
-		public function draw(param1:BitmapData, param2:Matrix = null, param3:Object/*ColorTransform*/ = null, param4:String = null, param5:Rectangle = null, param6:Boolean = false):void  {/**/ }
+		public function draw(param1:IBitmapDrawable, param2:Matrix = null, param3:ColorTransform = null, param4:String = null, param5:Rectangle = null, param6:Boolean = false):void  {
+			drawWithQuality(param1, param2, param3, param4, param5, param6);
+		}
 		
-		public function drawWithQuality(param1:BitmapData, param2:Matrix = null, param3:Object/*ColorTransform*/ = null, param4:String = null, param5:Rectangle = null, param6:Boolean = false, param7:String = null):void  {/**/ }
+		public function drawWithQuality(param1:IBitmapDrawable, param2:Matrix = null, param3:ColorTransform = null, param4:String = null, param5:Rectangle = null, param6:Boolean = false, param7:String = null):void  {
+			/*if (param1 is BitmapData){
+				var bmd:BitmapData = param1 as BitmapData;
+				fromImage(bmd.ctx);
+			}else if(param1 is TextField){
+				var tf:TextField = param1 as TextField;
+				tf.__draw(ctx);
+			}else if (param1 is Sprite){
+				var sp:Sprite = param1 as Sprite;
+				sp.graphics.draw(ctx, sp.worldMatrix, 1, sp.blendMode, sp.transform.colorTransform);
+			}else if (param1 is Shape){
+				var sha:Shape = param1 as Shape;
+				sha.graphics.draw(ctx, sha.worldMatrix, 1, sha.blendMode, sha.transform.colorTransform);
+			}*/
+		}
 		
 		public function fillRect(rect:Rectangle, fillColor:uint):void  {
 			lock();

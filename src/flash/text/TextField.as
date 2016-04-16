@@ -357,17 +357,24 @@ package flash.text
 			super.__update();
 			if (stage && _text != null&&visible)
 			{
-				var m:Matrix = worldMatrix;
 				var ctx:CanvasRenderingContext2D = stage.ctx;
-				ctx.globalAlpha = worldAlpha;
-				ctx.globalCompositeOperation = BlendMode.getCompVal(blendMode);
-				ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-				ctx.font = defaultTextFormat.css;
-				ctx.fillStyle = defaultTextFormat.csscolor;
-				ctx.textBaseline = "top";
-				ctx.fillText(_text, 0, 0);
+				__draw(ctx,worldMatrix);
 				SpriteFlexjs.drawCounter++;
 			}
+		}
+		
+		public function __draw(ctx:CanvasRenderingContext2D,m:Matrix):void{
+			ctx.globalAlpha = worldAlpha;
+			ctx.globalCompositeOperation = BlendMode.getCompVal(blendMode);
+			if(m){
+				ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+			}else{
+				ctx.setTransform(1, 0, 0, 1, 0, 0);
+			}
+			ctx.font = defaultTextFormat.css;
+			ctx.fillStyle = defaultTextFormat.csscolor;
+			ctx.textBaseline = "top";
+			ctx.fillText(_text, 0, 0);
 		}
 	}
 }

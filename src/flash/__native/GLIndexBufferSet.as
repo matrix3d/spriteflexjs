@@ -11,7 +11,7 @@ package flash.__native
 		private static var pool:Object = {};
 		//private var buff:IndexBuffer3D
 		//private var dirty:Boolean = true;
-		private var data:Array;
+		public var data:Array;
 		public function GLIndexBufferSet(data:Array) 
 		{
 			this.data = data;

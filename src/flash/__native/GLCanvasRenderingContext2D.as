@@ -19,7 +19,7 @@ package flash.__native
 	import flash.utils.ByteArray;
 	/**
 	 * ...
-	 * @author lizhi
+	 * @author lizhi http://matrix3d.github.io/
 	 */
 	public class GLCanvasRenderingContext2D
 	{
@@ -55,10 +55,12 @@ package flash.__native
 		
 		private var bitmapProg:Program3D;
 		private var matr3d:Matrix3D = new Matrix3D;
+		private var uvmatr3d:Matrix3D = new Matrix3D;
 		private var matr:Matrix = new Matrix;
 		private var matrhelp:Matrix = new Matrix;
 		private var stage:Stage;
 		private var isBatch:Boolean;
+		private var batchs:Array = [];
 		private var states:Array = [];
 		private var statesPos:int = -1;
 		public function GLCanvasRenderingContext2D(stage:Stage,isBatch:Boolean=false) 
@@ -75,14 +77,16 @@ package flash.__native
 			
 			var posData:Array = [0, 0, 1, 0, 0, 1, 1, 1];
 			var iData:Array = [0, 2, 1, 2, 1, 3];
-			bitmapDrawable = new GLDrawable(posData, iData);
+			bitmapDrawable = new GLDrawable(posData, posData,iData);
 			
-			var vcode:String = "attribute vec2 va0;" +
+			var vcode:String = 
+				"attribute vec2 va0;" +
+				"attribute vec2 va1;" +
 				"varying vec2 vUV;" +
 				"uniform mat4 vc0;"+
 				"uniform mat4 vc4;"+
 				"void main(void) {" +
-					"vUV=(vc4*vec4(va0,1.0,1.0)).xy;"+
+					"vUV=(vc4*vec4(va1,1.0,1.0)).xy;"+
 					"gl_Position =vc0*vec4(va0, 1.0,1.0);"+
 				"}";
 			var fcode:String = "precision mediump float;" +
@@ -99,6 +103,9 @@ package flash.__native
 			bitmapProg.upload(vb, fb);
 			
 			stage.addEventListener(Event.RESIZE, stage_resize);
+			if (isBatch){
+				stage.addEventListener(Event.ENTER_FRAME, stage_enterFrame);
+			}
 		}
 		
 		private function stage_resize(e:Event):void 
@@ -125,6 +132,7 @@ package flash.__native
 
 		public function clearRect (x:Number, y:Number, w:Number, h:Number) : Object {
 			ctx.clear();
+			batchs = [];
 			return null;
 		}
 
@@ -160,11 +168,20 @@ package flash.__native
 			return null;
 		}
 		
-		public function drawImageInternal(image:Object,drawable:GLDrawable, posmatr:Matrix,uvmatr:Matrix,scaleWithImage:Boolean):void{
+		public function drawImageInternal(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean):void{
+			if(!isBatch){
+				renderImage(image, drawable, posmatr, uvmatr, scaleWithImage);
+			}else{
+				batchs.push([image,drawable,posmatr?posmatr.clone():null,uvmatr?uvmatr.clone():null,scaleWithImage]);
+			}
+		}
+		
+		private function renderImage(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean):void{
 			var texture:BitmapTexture = getTexture(image);
 			ctx.setProgram(bitmapProg);
 			ctx.setTextureAt(0, texture.texture);
 			ctx.setVertexBufferAt(0, drawable.pos.getBuff(ctx),0, Context3DVertexBufferFormat.FLOAT_2);
+			ctx.setVertexBufferAt(1, drawable.uv.getBuff(ctx),0, Context3DVertexBufferFormat.FLOAT_2);
 			matr3d.rawData[0] = posmatr.a*2  / stage.stageWidth;
 			matr3d.rawData[1] = -posmatr.b*2 / stage.stageHeight;
 			matr3d.rawData[4] = posmatr.c*2 / stage.stageWidth;
@@ -183,32 +200,90 @@ package flash.__native
 				matrhelp.copyFrom(posmatr);
 				matrhelp.invert();
 				matrhelp.concat(uvmatr);
-				matr3d.rawData[0] = matrhelp.a / texture.width;
-				matr3d.rawData[1] = -matrhelp.b / texture.width;
-				matr3d.rawData[4] = -matrhelp.c / texture.height;
-				matr3d.rawData[5] = matrhelp.d / texture.height;
-				matr3d.rawData[12] = -matrhelp.tx/texture.width;
-				matr3d.rawData[13] = -matrhelp.ty/texture.height;
+				uvmatr3d.rawData[0] = matrhelp.a / texture.width;
+				uvmatr3d.rawData[1] = -matrhelp.b / texture.width;
+				uvmatr3d.rawData[4] = -matrhelp.c / texture.height;
+				uvmatr3d.rawData[5] = matrhelp.d / texture.height;
+				uvmatr3d.rawData[12] = -matrhelp.tx/texture.width;
+				uvmatr3d.rawData[13] = -matrhelp.ty/texture.height;
 				if (scaleWithImage){
-					matr3d.rawData[0] *= image.width;
-					matr3d.rawData[1] *= image.width;
-					matr3d.rawData[4] *= image.height;
-					matr3d.rawData[5] *= image.height;
+					uvmatr3d.rawData[0] *= image.width;
+					uvmatr3d.rawData[1] *= image.width;
+					uvmatr3d.rawData[4] *= image.height;
+					uvmatr3d.rawData[5] *= image.height;
 				}
 			}else{
-				matr3d.rawData[0] = 1 / texture.width;
-				matr3d.rawData[1] = 0;
-				matr3d.rawData[4] = 0;
-				matr3d.rawData[5] = 1/ texture.height;
-				matr3d.rawData[12] = 0;
-				matr3d.rawData[13] = 0;
+				uvmatr3d.rawData[0] = 1 / texture.width;
+				uvmatr3d.rawData[1] = 0;
+				uvmatr3d.rawData[4] = 0;
+				uvmatr3d.rawData[5] = 1/ texture.height;
+				uvmatr3d.rawData[12] = 0;
+				uvmatr3d.rawData[13] = 0;
 				if (scaleWithImage){
-					matr3d.rawData[0] *= image.width;
-					matr3d.rawData[5] *= image.height;
+					uvmatr3d.rawData[0] *= image.width;
+					uvmatr3d.rawData[5] *= image.height;
 				}
 			}
-			ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, matr3d);
+			ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, uvmatr3d);
 			ctx.drawTriangles(drawable.index.getBuff(ctx));
+		}
+		
+		private function stage_enterFrame(e:Event):void 
+		{
+			//render batch
+			var lastImage:Object;
+			var lastDrawable:GLDrawable;
+			for (var i:int = 0; i <= batchs.length;i++ ){
+				var batch:Array = batchs[i] || [];
+				var image:Object = batch[0];
+				var drawable:GLDrawable = batch[1]; 
+				var posmatr:Matrix = batch[2];
+				var uvmatr:Matrix = batch[3];
+				var scaleWithImage:Boolean = batch[4];
+				if (lastImage != image){//如果图像和上次图像不一样，设置新的，并渲染
+					if (lastDrawable){//render
+						trace(lastDrawable.index.data.length / 6);
+						renderImage(lastImage, lastDrawable, new Matrix, new Matrix, false);
+					}
+					lastImage = image;
+					lastDrawable = new GLDrawable([],[],[]);
+				}
+				if (drawable){
+					var si:int = lastDrawable.pos.data.length / lastDrawable.pos.data32PerVertex;
+					for (var j:int = 0; j < drawable.pos.data.length / lastDrawable.pos.data32PerVertex; j++ ){
+						var x:Number = drawable.pos.data[2 * j];
+						var y:Number = drawable.pos.data[2 * j + 1];
+						if (scaleWithImage){
+							x *= image.width;
+							y *=image.height;
+						}
+						var x2:Number = posmatr.a * x + posmatr.c * y + posmatr.tx;
+						var y2:Number = posmatr.d * y + posmatr.b * x + posmatr.ty;
+						lastDrawable.pos.data.push(x2, y2);
+						
+						x = drawable.uv.data[2 * j];
+						y = drawable.uv.data[2 * j + 1];
+						if (scaleWithImage){
+							x *=image.width;
+							y *= image.height;
+						}
+						if(uvmatr){
+							matrhelp.copyFrom(posmatr);
+							matrhelp.invert();
+							matrhelp.concat(uvmatr);
+							x2 = matrhelp.a * x + matrhelp.c * y + matrhelp.tx;
+							y2 = matrhelp.d * y + matrhelp.b * x + matrhelp.ty;
+							lastDrawable.uv.data.push(x2,y2);
+						}else{
+							lastDrawable.uv.data.push(x,y);
+						}
+						
+					}
+					for each(var vi:int in drawable.index.data){
+						lastDrawable.index.data.push(vi+si);
+					}
+				}
+			}
 		}
 
 		public function fill (opt_fillRule:String = "") : Object {

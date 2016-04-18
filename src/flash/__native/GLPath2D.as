@@ -3,7 +3,7 @@ package flash.__native
 	import flash.geom.Matrix;
 	/**
 	 * ...
-	 * @author lizhi
+	 * @author lizhi http://matrix3d.github.io/
 	 */
 	public class GLPath2D 
 	{
@@ -48,7 +48,6 @@ package flash.__native
 			lineTo(x + w, y);
 			lineTo(x + w, y + h);
 			lineTo(x, y + h);
-			lineTo(x, y);
 			return null;
 		}
 		
@@ -78,7 +77,7 @@ package flash.__native
 					}
 					offset += i;
 				}
-				_drawable = new GLDrawable(pos,index);
+				_drawable = new GLDrawable(pos,pos,index);
 				dirty = false;
 			}
 			return _drawable;

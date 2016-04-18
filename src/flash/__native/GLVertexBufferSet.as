@@ -9,19 +9,21 @@ package flash.__native
 	public class GLVertexBufferSet 
 	{
 		private static var pool:Object = {};
-		private var data:Array;
-		private var data32PerVertex:int;
+		private var name:String;
+		public var data:Array;
+		public var data32PerVertex:int;
 		//private var buff:VertexBuffer3D;
 		//public var dirty:Boolean = true;
-		public function GLVertexBufferSet(data:Array,data32PerVertex:int) 
+		public function GLVertexBufferSet(data:Array,data32PerVertex:int,name:String) 
 		{
+			this.name = name;
 			this.data32PerVertex = data32PerVertex;
 			this.data = data;
 		}
 		
 		public function getBuff(ctx:Context3D):VertexBuffer3D{
 			//if (dirty){
-			var key:String = data.length + "," + data32PerVertex;
+			var key:String = data.length + "," + data32PerVertex+name;
 			var buff:VertexBuffer3D = pool[key];
 			if (buff==null){
 				buff = pool[key]= ctx.createVertexBuffer(data.length / data32PerVertex, data32PerVertex);

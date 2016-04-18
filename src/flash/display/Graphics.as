@@ -3,7 +3,10 @@ package flash.display
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-	
+	/**
+	 * ...
+	 * @author lizhi http://matrix3d.github.io/
+	 */
 	public final class Graphics extends Object
 	{
 		private var graphicsData:Vector.<IGraphicsData> = new Vector.<IGraphicsData>;
@@ -97,7 +100,7 @@ package flash.display
 			lineTo(x + width, y);
 			lineTo(x + width, y + height);
 			lineTo(x, y + height);
-			lineTo(x, y);
+			//lineTo(x, y);
 			lockBound = false;
 			inflateBound(x, y);
 			inflateBound(x + width, y + height);

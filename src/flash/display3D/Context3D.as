@@ -6,7 +6,10 @@ package flash.display3D
 	import flash.display3D.textures.*;
 	import flash.geom.Rectangle;
 	import flash.display.BitmapData;
-	
+	/**
+	 * ...
+	 * @author lizhi http://matrix3d.github.io/
+	 */
 	public final class Context3D extends EventDispatcher
 	{
 		public var canvas:HTMLCanvasElement;

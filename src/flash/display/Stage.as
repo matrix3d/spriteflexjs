@@ -288,6 +288,8 @@ package flash.display
 			{
 				if (SpriteFlexjs.wmode=="gpu") {
 					_ctx = new GLCanvasRenderingContext2D(this) as CanvasRenderingContext2D;
+				}else if (SpriteFlexjs.wmode=="gpu batch"){
+					_ctx = new GLCanvasRenderingContext2D(this,true) as CanvasRenderingContext2D;
 				}else{
 					_ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 				}

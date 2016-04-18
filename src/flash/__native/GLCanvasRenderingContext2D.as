@@ -271,6 +271,10 @@ package flash.__native
 							matrhelp.copyFrom(posmatr);
 							matrhelp.invert();
 							matrhelp.concat(uvmatr);
+							matrhelp.b *=-1;
+							matrhelp.c *=-1;
+							matrhelp.tx *=-1;
+							matrhelp.ty *=-1;
 							x2 = matrhelp.a * x + matrhelp.c * y + matrhelp.tx;
 							y2 = matrhelp.d * y + matrhelp.b * x + matrhelp.ty;
 							lastDrawable.uv.data.push(x2,y2);

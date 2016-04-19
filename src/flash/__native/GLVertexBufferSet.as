@@ -10,11 +10,11 @@ package flash.__native
 	{
 		private static var pool:Object = {};
 		private var name:String;
-		public var data:Array;
+		public var data:Float32Array;
 		public var data32PerVertex:int;
 		//private var buff:VertexBuffer3D;
 		//public var dirty:Boolean = true;
-		public function GLVertexBufferSet(data:Array,data32PerVertex:int,name:String) 
+		public function GLVertexBufferSet(data:Float32Array,data32PerVertex:int,name:String) 
 		{
 			this.name = name;
 			this.data32PerVertex = data32PerVertex;
@@ -28,8 +28,10 @@ package flash.__native
 			if (buff==null){
 				buff = pool[key]= ctx.createVertexBuffer(data.length / data32PerVertex, data32PerVertex);
 				//dirty = false;
-			}	
-			buff.uploadFromVector(Vector.<Number>(data), 0, data.length / data32PerVertex);
+			}
+			buff.gl.bindBuffer(buff.gl.ARRAY_BUFFER, buff.buff);
+			buff.gl.bufferData(buff.gl.ARRAY_BUFFER, data, buff.gl.STATIC_DRAW);
+			//buff.uploadFromVector(Vector.<Number>(data), 0, data.length / data32PerVertex);
 			//}
 			return buff;
 		}

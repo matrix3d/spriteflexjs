@@ -412,7 +412,7 @@ package flash.display
 			{
 				ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 				ctx.globalAlpha = alpha;
-				ctx.globalCompositeOperation = BlendMode.getCompVal(blendMode);
+				ctx.globalCompositeOperation = blendMode;//BlendMode.getCompVal(blendMode);
 				for each (var igd:IGraphicsData in graphicsData)
 				{
 					igd.draw(ctx,colorTransform);

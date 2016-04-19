@@ -3,7 +3,10 @@ package flash.display
 	import flash.geom.*;
 	import flash.text.TextField;
 	import flash.utils.ByteArray;
-	
+	/**
+	 * ...
+	 * @author lizhi http://matrix3d.github.io/
+	 */
 	public class BitmapData
 	{
 		private var data:Uint8ClampedArray;

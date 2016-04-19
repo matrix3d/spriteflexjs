@@ -340,7 +340,9 @@ package flash.text
 		
 		public function replaceSelectedText(param1:String):void  {/**/ }
 		
-		public function replaceText(param1:int, param2:int, param3:String):void  {/**/ }
+		public function replaceText(beginIndex:int, endIndex:int, newText:String):void  {
+			_text = _text.substr(0, beginIndex) + newText + _text.substr(endIndex);
+		}
 		
 		public function setSelection(param1:int, param2:int):void  {/**/ }
 		
@@ -365,7 +367,7 @@ package flash.text
 		
 		public function __draw(ctx:CanvasRenderingContext2D,m:Matrix):void{
 			ctx.globalAlpha = worldAlpha;
-			ctx.globalCompositeOperation = BlendMode.getCompVal(blendMode);
+			ctx.globalCompositeOperation = blendMode;//BlendMode.getCompVal(blendMode);
 			if(m){
 				ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 			}else{

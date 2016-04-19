@@ -45,6 +45,9 @@ package spriteflexjs
 			}
 			CONFIG::js_only{
 				text += " dc:" + SpriteFlexjs.drawCounter;
+				if (SpriteFlexjs.batDrawCounter>0){
+					text += " bdc:" + SpriteFlexjs.batDrawCounter;
+				}
 			}
 			tf.text = text;
 			

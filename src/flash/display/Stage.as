@@ -22,9 +22,13 @@ package flash.display
 		private var needSendTouchMove:Boolean = false;
 		private var lastUpdateTime:int = -1000;
 		private var requestAnimationFrameHander:Number;
+		private var _stageWidth:Number;
+		private var _stageHeight:Number;
 		public function Stage()
 		{
 			super();
+			_stageWidth = window.innerWidth;
+			_stageHeight = window.innerHeight;
 			if (SpriteFlexjs.startTime==0) {
 				SpriteFlexjs.startTime = (new Date()).getTime();
 			}
@@ -35,6 +39,8 @@ package flash.display
 		
 		private function window_resize(e:Object):void
 		{
+			_stageWidth = window.innerWidth;
+			_stageHeight = window.innerHeight;
 			dispatchEvent(new Event(Event.RESIZE));
 		}
 		
@@ -79,11 +85,11 @@ package flash.display
 		
 		public function set align(param1:String):void  {/**/ }
 		
-		public function get stageWidth():int  { return window.innerWidth }
+		public function get stageWidth():int  { return _stageWidth; }
 		
 		public function set stageWidth(param1:int):void  {/**/ }
 		
-		public function get stageHeight():int  { return window.innerHeight }
+		public function get stageHeight():int  { return _stageHeight; }
 		
 		public function set stageHeight(param1:int):void  {/**/ }
 		

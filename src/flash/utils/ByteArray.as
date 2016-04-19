@@ -1,5 +1,10 @@
 package flash.utils
 {
+	
+	/**
+	 * ...
+	 * @author lizhi http://matrix3d.github.io/
+	 */
 	//http://www.ruanyifeng.com/blog/2012/09/xmlhttprequest_level_2.html
 	public class ByteArray
 	{

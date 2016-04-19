@@ -58,21 +58,27 @@ package flash.__native
 		
 		public function get drawable():GLDrawable{
 			if (dirty){
-				var index:Array = [];
-				//var uv:Array = [];
-				var pos:Array = [];
-				var offset:int = 0;
+				var nump:int = 0;
+				var numi:int = 0;
 				for each(var poly:Array in polys){
+					nump += poly.length;
+					numi += (poly.length / 2 - 2) * 3;
+				}
+				var pos:Float32Array = new Float32Array(nump);
+				var index:Uint16Array = new Uint16Array(numi);
+				var offset:int = 0;
+				var pi:int = 0;
+				var ii:int = 0;
+				for each(poly in polys){
 					for (var i:int = 0; i < poly.length / 2; i++ ){
 						var x:Number = poly[2 * i];
 						var y:Number = poly[2 * i + 1];
-						pos.push(x);
-						pos.push(y);
-						//pos.push(0);
-						//uv.push(x);
-						//uv.push(y);
+						pos[pi++] = x;
+						pos[pi++] = y;
 						if (i>=2){
-							index.push(offset, offset+i - 1, offset+i);
+							index[ii++] = offset;
+							index[ii++] = offset+i-1;
+							index[ii++] = offset+i;
 						}
 					}
 					offset += i;
@@ -81,6 +87,11 @@ package flash.__native
 				dirty = false;
 			}
 			return _drawable;
+		}
+		
+		public function clear():void{
+			dirty = true;
+			polys.length = 0;
 		}
 	}
 

@@ -63,6 +63,8 @@ package flash.__native
 		private var batchs:Array = [];
 		private var states:Array = [];
 		private var statesPos:int = -1;
+		private var pathPool:Array = [];
+		private var pathPoolPos:int = 0;
 		public function GLCanvasRenderingContext2D(stage:Stage,isBatch:Boolean=false) 
 		{
 			this.isBatch = isBatch;
@@ -75,8 +77,8 @@ package flash.__native
 			ctx.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			ctx.setCulling(Context3DTriangleFace.NONE);
 			
-			var posData:Array = [0, 0, 1, 0, 0, 1, 1, 1];
-			var iData:Array = [0, 2, 1, 2, 1, 3];
+			var posData:Float32Array = new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]);
+			var iData:Uint16Array = new Uint16Array([0, 2, 1, 2, 1, 3]);
 			bitmapDrawable = new GLDrawable(posData, posData,iData);
 			
 			var vcode:String = 
@@ -121,7 +123,13 @@ package flash.__native
 		}
 
 		public function beginPath () : Object {
-			currentPath = new GLPath2D;
+			currentPath = pathPool[pathPoolPos];
+			if (currentPath==null){
+				currentPath = pathPool[pathPoolPos] = new GLPath2D;
+			}else{
+				currentPath.clear();
+			}
+			pathPoolPos++;
 			currentPath.matr.copyFrom(matr);
 			return null;
 		}
@@ -131,8 +139,9 @@ package flash.__native
 		}
 
 		public function clearRect (x:Number, y:Number, w:Number, h:Number) : Object {
+			pathPoolPos = 0;
 			ctx.clear();
-			batchs = [];
+			batchs.length = 0;
 			return null;
 		}
 
@@ -228,12 +237,17 @@ package flash.__native
 			ctx.drawTriangles(drawable.index.getBuff(ctx));
 		}
 		
+		private var newdata:Float32Array = new Float32Array(20000);
+		private var newuvdata:Float32Array = new Float32Array(20000);
+		private var newidata:Uint16Array = new Uint16Array(30000);
 		private function stage_enterFrame(e:Event):void 
 		{
 			//render batch
 			var lastImage:Object;
 			var lastDrawable:GLDrawable;
-			for (var i:int = 0; i <= batchs.length;i++ ){
+			SpriteFlexjs.batDrawCounter = 0;
+			var len:int = batchs.length;
+			for (var i:int = 0; i <= len;i++ ){
 				var batch:Array = batchs[i] || [];
 				var image:Object = batch[0];
 				var drawable:GLDrawable = batch[1]; 
@@ -242,49 +256,60 @@ package flash.__native
 				var scaleWithImage:Boolean = batch[4];
 				if (lastImage != image){//如果图像和上次图像不一样，设置新的，并渲染
 					if (lastDrawable){//render
-						trace(lastDrawable.index.data.length / 6);
+						SpriteFlexjs.batDrawCounter++;
 						renderImage(lastImage, lastDrawable, new Matrix, new Matrix, false);
 					}
 					lastImage = image;
-					lastDrawable = new GLDrawable([],[],[]);
+					lastDrawable = new GLDrawable(newdata,newuvdata,newidata);
 				}
 				if (drawable){
-					var si:int = lastDrawable.pos.data.length / lastDrawable.pos.data32PerVertex;
-					for (var j:int = 0; j < drawable.pos.data.length / lastDrawable.pos.data32PerVertex; j++ ){
-						var x:Number = drawable.pos.data[2 * j];
-						var y:Number = drawable.pos.data[2 * j + 1];
+					if(uvmatr){
+						matrhelp.copyFrom(posmatr);
+						matrhelp.invert();
+						matrhelp.concat(uvmatr);
+						matrhelp.b *=-1;
+						matrhelp.c *=-1;
+						matrhelp.tx *=-1;
+						matrhelp.ty *=-1;
+					}
+					var data:Float32Array = drawable.pos.data;
+					var uvdata:Float32Array = drawable.uv.data;
+					var si:int = newdata.length / 2;
+					var len2:int = data.length / 2;
+					for (var j:int = 0; j < len2; j++ ){
+						var x:Number = data[2 * j];
+						var y:Number = data[2 * j + 1];
 						if (scaleWithImage){
 							x *= image.width;
 							y *=image.height;
 						}
 						var x2:Number = posmatr.a * x + posmatr.c * y + posmatr.tx;
 						var y2:Number = posmatr.d * y + posmatr.b * x + posmatr.ty;
-						lastDrawable.pos.data.push(x2, y2);
+						newdata[si + j * 2] = x2;
+						newdata[si + j * 2 + 1] = y2;
 						
-						x = drawable.uv.data[2 * j];
-						y = drawable.uv.data[2 * j + 1];
+						x = uvdata[2 * j];
+						y = uvdata[2 * j + 1];
 						if (scaleWithImage){
 							x *=image.width;
 							y *= image.height;
 						}
 						if(uvmatr){
-							matrhelp.copyFrom(posmatr);
-							matrhelp.invert();
-							matrhelp.concat(uvmatr);
-							matrhelp.b *=-1;
-							matrhelp.c *=-1;
-							matrhelp.tx *=-1;
-							matrhelp.ty *=-1;
 							x2 = matrhelp.a * x + matrhelp.c * y + matrhelp.tx;
 							y2 = matrhelp.d * y + matrhelp.b * x + matrhelp.ty;
-							lastDrawable.uv.data.push(x2,y2);
+							newuvdata[si + j * 2] = x2;
+							newuvdata[si + j * 2 + 1] = y2;
 						}else{
-							lastDrawable.uv.data.push(x,y);
+							newuvdata[si + j * 2] = x;
+							newuvdata[si + j * 2 + 1] = y;
 						}
-						
 					}
-					for each(var vi:int in drawable.index.data){
-						lastDrawable.index.data.push(vi+si);
+					var il:int = newidata.length;
+					var did:Uint16Array = drawable.index.data;
+					var didl:int = did.length;
+					for (j = 0; j < didl;j++){
+						var vi:int = didl[j];
+						newidata[il + j] = vi + si;
 					}
 				}
 			}

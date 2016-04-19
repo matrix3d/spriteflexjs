@@ -4,7 +4,7 @@ package flash.display
 	public final class BlendMode extends Object
 	{
 		
-		public static const NORMAL:String = "normal";
+		public static const NORMAL:String //= "normal";
 		
 		public static const LAYER:String = "layer";
 		
@@ -26,7 +26,7 @@ package flash.display
 		
 		public static const OVERLAY:String = "overlay";
 		
-		public static const HARDLIGHT:String = "hardlight";
+		public static const HARDLIGHT:String = "hard-light";// "hardlight";
 		
 		public static const ALPHA:String = "alpha";
 		
@@ -38,7 +38,7 @@ package flash.display
 		{
 			super();
 		}
-		public static function getCompVal(str:String):String {
+		/*public static function getCompVal(str:String):String {
 			switch (str)
 			{
 				case LAYER:return null;
@@ -58,6 +58,6 @@ package flash.display
 			}
 			
 			return null;
-		}
+		}*/
 	}
 }

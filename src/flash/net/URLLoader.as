@@ -58,8 +58,10 @@ package flash.net
 		
 		private function onComplete(event:Event):void
 		{
+			var buff:ArrayBuffer = stream.xhr.response as ArrayBuffer;
 			var bytes:ByteArray = new ByteArray();
-			bytes.dataView = new DataView(stream.xhr.response as ArrayBuffer);
+			bytes.length = buff.byteLength;
+			bytes.dataView = new DataView(buff);
 			switch (this.dataFormat)
 			{
 			case URLLoaderDataFormat.TEXT: 

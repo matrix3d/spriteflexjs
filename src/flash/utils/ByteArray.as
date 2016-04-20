@@ -13,6 +13,7 @@ package flash.utils
 		private var _endian:String = Endian.BIG_ENDIAN;
 		private var isLittleEndian:Boolean = false;
 		private var _position:int = 0;
+		private var _length:int = 0;
 		public function ByteArray()
 		{
 			dataView = new DataView(new ArrayBuffer(0));
@@ -183,9 +184,12 @@ package flash.utils
 			return readMultiByte(length, "utf-8");
 		}
 		
-		public function get length():uint  { return dataView.byteLength; }
+		public function get length():uint  { 
+			return _length;//dataView.byteLength;
+		}
 		
 		public function set length(v:uint):void  {
+			_length = v;
 			var u8:Uint8Array = new Uint8Array(v);
 			u8.set(new Uint8Array(dataView.buffer.byteLength > v?dataView.buffer.slice(0, v):dataView.buffer));
 			dataView = new DataView(u8.buffer);

@@ -237,9 +237,9 @@ package flash.__native
 			ctx.drawTriangles(drawable.index.getBuff(ctx));
 		}
 		
-		private var newdata:Float32Array = new Float32Array(20000);
-		private var newuvdata:Float32Array = new Float32Array(20000);
-		private var newidata:Uint16Array = new Uint16Array(30000);
+		private var newdata:Float32Array = new Float32Array(200000);
+		private var newuvdata:Float32Array = new Float32Array(200000);
+		private var newidata:Uint16Array = new Uint16Array(300000);
 		private function stage_enterFrame(e:Event):void 
 		{
 			//render batch
@@ -247,6 +247,8 @@ package flash.__native
 			var lastDrawable:GLDrawable;
 			SpriteFlexjs.batDrawCounter = 0;
 			var len:int = batchs.length;
+			var si:int = 0;
+			var il:int = 0;
 			for (var i:int = 0; i <= len;i++ ){
 				var batch:Array = batchs[i] || [];
 				var image:Object = batch[0];
@@ -257,10 +259,15 @@ package flash.__native
 				if (lastImage != image){//如果图像和上次图像不一样，设置新的，并渲染
 					if (lastDrawable){//render
 						SpriteFlexjs.batDrawCounter++;
+						lastDrawable.index.data = newidata.subarray(0, il);
+						lastDrawable.pos.data = newdata.subarray(0, si);
+						lastDrawable.uv.data = newuvdata.subarray(0, si);
 						renderImage(lastImage, lastDrawable, new Matrix, new Matrix, false);
 					}
 					lastImage = image;
-					lastDrawable = new GLDrawable(newdata,newuvdata,newidata);
+					lastDrawable = new GLDrawable(newdata, newuvdata, newidata);
+					si = 0;
+					il = 0;
 				}
 				if (drawable){
 					if(uvmatr){
@@ -274,7 +281,7 @@ package flash.__native
 					}
 					var data:Float32Array = drawable.pos.data;
 					var uvdata:Float32Array = drawable.uv.data;
-					var si:int = newdata.length / 2;
+					
 					var len2:int = data.length / 2;
 					for (var j:int = 0; j < len2; j++ ){
 						var x:Number = data[2 * j];
@@ -304,13 +311,14 @@ package flash.__native
 							newuvdata[si + j * 2 + 1] = y;
 						}
 					}
-					var il:int = newidata.length;
 					var did:Uint16Array = drawable.index.data;
 					var didl:int = did.length;
 					for (j = 0; j < didl;j++){
-						var vi:int = didl[j];
-						newidata[il + j] = vi + si;
+						var vi:int = did[j];
+						newidata[il + j] = vi + si/2;
 					}
+					si += len2 * 2;
+					il += didl;
 				}
 			}
 		}

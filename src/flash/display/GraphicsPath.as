@@ -102,8 +102,9 @@ package flash.display
 			if (commands.length) {
 				ctx.beginPath();
 				var p:int = 0;
-				for each (var cmd:int in commands)
-				{
+				var len:int=commands.length
+				for (var i:int = 0; i < len;i++ ){
+					var cmd:int = commands[i];
 					switch (cmd)
 					{
 					case GraphicsPathCommand.MOVE_TO: 

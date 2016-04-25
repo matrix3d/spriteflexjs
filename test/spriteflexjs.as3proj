@@ -85,7 +85,7 @@
     <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>$(CompilerPath)/js/bin/mxmlc.bat -debug=true -external-library-path="$(CompilerPath)\js\libs\js.swc" -compiler.source-path=../src src/Main.as -define=CONFIG::as_only,false -define=CONFIG::js_only,true</preBuildCommand>
+  <preBuildCommand>$(CompilerPath)/js/bin/mxmlc.bat -debug=true -external-library-path="$(CompilerPath)\js\libs\js.swc" -compiler.source-path=../src src/SuperTest.as -define=CONFIG::as_only,false -define=CONFIG::js_only,true</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->

@@ -42,7 +42,7 @@ package
 			bmp.y = 70;
 			addChild(sp);
 			
-			//addChild(new Stats);
+			addChild(new Stats);
 			addEventListener(Event.ENTER_FRAME, enterFrame);
 		}
 		

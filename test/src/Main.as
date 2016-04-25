@@ -1,5 +1,6 @@
 package
 {
+	import flash.__native.WebGLRenderer;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -15,7 +16,8 @@ package
 		
 		public function Main() 
 		{
-			SpriteFlexjs.wmode = "gpu";
+			SpriteFlexjs.wmode = "gpu batch";
+			SpriteFlexjs.renderer = new WebGLRenderer;
 			
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
@@ -25,9 +27,14 @@ package
 		private function init(e:Event = null):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			var bmd:BitmapData=new BitmapData(100, 100,false,0xffffff*Math.random())
-			for (var i:int = 0; i < 1000;i++ ){
+			var bmd:BitmapData=new BitmapData(10, 10,false,0xffffff*Math.random())
+			for (var i:int = 0; i < 5000;i++ ){
 				var b:Bitmap = new Bitmap(bmd);
+				
+				/*var b:Sprite = new Sprite;
+				b.graphics.beginBitmapFill(bmd);
+				b.graphics.drawRect(0, 0, 10, 10);*/
+				
 				addChild(b);
 				b.x = 400 * Math.random();
 				b.y = 400 * Math.random();

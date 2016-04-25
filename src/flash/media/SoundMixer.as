@@ -12,7 +12,9 @@ package flash.media
 		
 		public static function stopAll():void
 		{
-			for each(var sound:Sound in Sound.sounds) {
+			var len:int = Sound.sounds.length;
+			for (var i:int = 0; i < len;i++ ) {
+				var sound:Sound = Sound.sounds[i];
 				sound.playing = false;
 				try{
 					sound.source.stop(0);

@@ -63,8 +63,9 @@ package flash.__native
 		private var batchs:Array = [];
 		private var states:Array = [];
 		private var statesPos:int = -1;
-		private var pathPool:Array = [];
-		private var pathPoolPos:int = 0;
+		private var posPool:Object = {};
+		private var uvPool:Object = {};
+		private var indexPool:Object = {};
 		public function GLCanvasRenderingContext2D(stage:Stage,isBatch:Boolean=false) 
 		{
 			this.isBatch = isBatch;
@@ -123,13 +124,7 @@ package flash.__native
 		}
 
 		public function beginPath () : Object {
-			currentPath = pathPool[pathPoolPos];
-			if (currentPath==null){
-				currentPath = pathPool[pathPoolPos] = new GLPath2D;
-			}else{
-				currentPath.clear();
-			}
-			pathPoolPos++;
+			currentPath = new GLPath2D;
 			currentPath.matr.copyFrom(matr);
 			return null;
 		}
@@ -139,7 +134,6 @@ package flash.__native
 		}
 
 		public function clearRect (x:Number, y:Number, w:Number, h:Number) : Object {
-			pathPoolPos = 0;
 			ctx.clear();
 			batchs.length = 0;
 			return null;
@@ -259,6 +253,18 @@ package flash.__native
 				if (lastImage != image){//如果图像和上次图像不一样，设置新的，并渲染
 					if (lastDrawable){//render
 						SpriteFlexjs.batDrawCounter++;
+						lastDrawable.index = indexPool[il];
+						if (lastDrawable.index==null){
+							lastDrawable.index = indexPool[il] = new GLIndexBufferSet(null);
+						}
+						lastDrawable.pos = posPool[si];
+						if (lastDrawable.pos==null){
+							lastDrawable.pos = posPool[si] = new GLVertexBufferSet(null,0,null);
+						}
+						lastDrawable.uv = uvPool[si];
+						if (lastDrawable.uv==null){
+							lastDrawable.uv = uvPool[si] = new GLVertexBufferSet(null,0,null);
+						}
 						lastDrawable.index.data = newidata.subarray(0, il);
 						lastDrawable.pos.data = newdata.subarray(0, si);
 						lastDrawable.uv.data = newuvdata.subarray(0, si);

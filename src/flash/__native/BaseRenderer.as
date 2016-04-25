@@ -14,7 +14,7 @@ package flash.__native
 	public class BaseRenderer extends IRenderer
 	{
 		
-		private var endFillInstance:GraphicsEndFill = new GraphicsEndFill;
+		protected var endFillInstance:GraphicsEndFill = new GraphicsEndFill;
 		public function BaseRenderer() 
 		{
 			
@@ -24,8 +24,10 @@ package flash.__native
 			ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 			ctx.globalAlpha = alpha;
 			ctx.globalCompositeOperation = blendMode;//BlendMode.getCompVal(blendMode);
-			for each (var igd:IGraphicsData in g.graphicsData)
+			var len:int = g.graphicsData.length;
+			for (var i:int = 0; i < len;i++ )
 			{
+				var igd:IGraphicsData = g.graphicsData[i];
 				igd.draw(ctx,colorTransform);
 			}
 			if (g.lastFill)

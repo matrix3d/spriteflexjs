@@ -99,8 +99,9 @@ package flash.events
 			var funcs:Array = listeners[event.type];
 			if (funcs)
 			{
-				for each (var func:Function in funcs)
-				{
+				var len:int = funcs.length
+				for (var i:int = 0; i < len;i++ ){
+					var func:Function = funcs[i];
 					func(event);
 				}
 			}

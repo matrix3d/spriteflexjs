@@ -56,8 +56,10 @@ package flash.display
 			return children[index]; 
 		}
 		
-		public function getChildByName(name:String):DisplayObject  { 
-			for each(var c:DisplayObject in children) {
+		public function getChildByName(name:String):DisplayObject  {
+			var len:int = children.length;
+			for (var i:int = 0; i < len;i++ ) {
+				var c:DisplayObject = children[i];
 				if (c.name==name) {
 					return c;
 				}
@@ -69,7 +71,9 @@ package flash.display
 		override public function set stage(value:Stage):void 
 		{
 			super.stage = value;
-			for each(var c:DisplayObject in children) {
+			var len:int = children.length
+			for (var i:int = 0; i < len;i++ ) {
+				var c:DisplayObject = children[i];
 				c.stage = value;
 			}
 		}
@@ -116,9 +120,10 @@ package flash.display
 		override public function __update():void
 		{
 			super.__update();
-			if(stage&&visible){
-				for each (var c:DisplayObject in children)
-				{
+			if (stage && visible){
+				var len:int = children.length
+				for (var i:int = 0; i < len;i++ ){
+					var c:DisplayObject = children[i];
 					c.__update();
 				}
 			}
@@ -127,8 +132,9 @@ package flash.display
 		override public function updateTransforms():void
 		{
 			super.updateTransforms();
-			for each (var c:DisplayObject in children)
-			{
+			var len:int = children.length
+			for (var i:int = 0; i < len;i++ ){
+				var c:DisplayObject = children[i];
 				c.updateTransforms();
 			}
 		}
@@ -149,7 +155,9 @@ package flash.display
 		override public function getRect(v:DisplayObject):Rectangle 
 		{
 			var rect:Rectangle = super.getRect(v);
-			for each(var c:DisplayObject in children) {
+			var len:int = children.length
+			for (var i:int = 0; i < len;i++ ){
+				var c:DisplayObject = children[i];
 				var rect1:Rectangle = c.getRect(v);
 				if (rect == null) {
 					rect = rect1;

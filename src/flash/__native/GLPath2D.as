@@ -10,7 +10,6 @@ package flash.__native
 		private var polys:Array = [];
 		private var poly:Array;
 		public var matr:Matrix = new Matrix;
-		private var dirty:Boolean = true;
 		private var _drawable:GLDrawable;
 		public function GLPath2D() 
 		{
@@ -57,10 +56,12 @@ package flash.__native
 		}
 		
 		public function get drawable():GLDrawable{
-			if (dirty){
+			if(_drawable==null){
 				var nump:int = 0;
 				var numi:int = 0;
-				for each(var poly:Array in polys){
+				var len:int = polys.length;
+				for (var i:int = 0; i < len;i++ ){
+					var poly:Array = polys[i];
 					nump += poly.length;
 					numi += (poly.length / 2 - 2) * 3;
 				}
@@ -69,29 +70,24 @@ package flash.__native
 				var offset:int = 0;
 				var pi:int = 0;
 				var ii:int = 0;
-				for each(poly in polys){
-					for (var i:int = 0; i < poly.length / 2; i++ ){
-						var x:Number = poly[2 * i];
-						var y:Number = poly[2 * i + 1];
+				for (i = 0; i < len; i++ ){
+					poly = polys[i];
+					for (var j:int = 0; j < poly.length / 2; j++ ){
+						var x:Number = poly[2 * j];
+						var y:Number = poly[2 * j + 1];
 						pos[pi++] = x;
 						pos[pi++] = y;
-						if (i>=2){
+						if (j>=2){
 							index[ii++] = offset;
-							index[ii++] = offset+i-1;
-							index[ii++] = offset+i;
+							index[ii++] = offset+j-1;
+							index[ii++] = offset+j;
 						}
 					}
-					offset += i;
+					offset += j;
 				}
-				_drawable = new GLDrawable(pos,pos,index);
-				dirty = false;
+				_drawable = new GLDrawable(pos, pos, index);
 			}
 			return _drawable;
-		}
-		
-		public function clear():void{
-			dirty = true;
-			polys.length = 0;
 		}
 	}
 

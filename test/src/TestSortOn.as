@@ -7,38 +7,65 @@ package
 	 */
 	public class TestSortOn extends Sprite
 	{
-		private var opt:int;
 		private var sortNames:Array;
+		private var sortNamesOne:Array = [];
+		private var muler:Number;
+		private var zeroStr:String = String.fromCharCode(0);
 		public function TestSortOn() 
 		{
 			var arr:Array = [
-				{a:1},
+				{a:1,b:2},
 				{a:2},
 				{a:3},
-				{a:1},
+				{a:1,b:4},
 				{a:13}
 			];
-			//arr.sortOn("a");
-			sortOn(arr, "a", 0);
+			sortOn(arr, ["a","b"],Array.NUMERIC|Array.DESCENDING);
+			trace(JSON.stringify(arr, null, 4));
+			arr.sortOn(["a","b"],Array.NUMERIC|Array.DESCENDING);
 			trace(JSON.stringify(arr, null, 4));
 		}
 		
-		private function sortOn(arr:Array,names:Object,opt:int):void{
-			this.opt = opt;
+		private function sortOn(arr:Array,names:Object,opt:int=0):void{
 			if (names is Array){
 				sortNames = names as Array;
 			}else{
-				sortNames = [names];
+				sortNamesOne[0] = names;
+				sortNames = sortNamesOne;
 			}
-			arr.sort(compare);
+			muler = (Array.DESCENDING & opt) > 0?-1: 1;
+			if(opt&Array.NUMERIC){
+				arr.sort(compareNumber);
+			}else if (opt&Array.CASEINSENSITIVE){
+				arr.sort(compareStringCaseinsensitive);
+			}else{
+				arr.sort(compareString);
+			}
+		}
+		private function compareStringCaseinsensitive(a:Object, b:Object):int{
+			for each(var n:String in sortNames){
+				var v:int = (a[n]||zeroStr).toString().toLowerCase().localeCompare((b[n]||zeroStr).toString().toLowerCase());
+				if (v != 0){
+					return v*muler;
+				}
+			}
+			return 0;
+		}
+		private function compareString(a:Object, b:Object):int{
+			for each(var n:String in sortNames){
+				var v:int = (a[n]||zeroStr).toString().localeCompare((b[n]||zeroStr).toString());
+				if (v != 0){
+					return v*muler;
+				}
+			}
+			return 0;
 		}
 		
-		private function compare(a:Object, b:Object):int{
+		private function compareNumber(a:Object, b:Object):int{
 			for each(var n:String in sortNames){
-				if (a[n]>b[n]){
-					return 1;
-				}else {
-					return -1;
+				var v:int = a[n] - b[n];
+				if (v!=0){
+					return v*muler;
 				}
 			}
 			return 0;

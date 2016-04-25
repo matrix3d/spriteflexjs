@@ -9,11 +9,10 @@ package flash.display
 	 */
 	public final class Graphics extends Object
 	{
-		private var graphicsData:Vector.<IGraphicsData> = new Vector.<IGraphicsData>;
-		private var lastStroke:GraphicsStroke;
-		private var lastFill:IGraphicsFill;
+		public var graphicsData:Vector.<IGraphicsData> = new Vector.<IGraphicsData>;
+		public var lastStroke:GraphicsStroke;
+		public var lastFill:IGraphicsFill;
 		private var lastPath:GraphicsPath;
-		private static var endFillInstance:GraphicsEndFill = new GraphicsEndFill;
 		public var bound:Rectangle;// = new Rectangle(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
 		private var lockBound:Boolean = false;
 		public static var debug:Boolean = false;
@@ -410,31 +409,7 @@ package flash.display
 		{
 			if (graphicsData.length)
 			{
-				ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-				ctx.globalAlpha = alpha;
-				ctx.globalCompositeOperation = blendMode;//BlendMode.getCompVal(blendMode);
-				for each (var igd:IGraphicsData in graphicsData)
-				{
-					igd.draw(ctx,colorTransform);
-				}
-				if (lastFill)
-				{
-					endFillInstance.fill = lastFill;
-					endFillInstance.draw(ctx,colorTransform);
-				}
-				
-				if (lastStroke)
-				{
-					ctx.stroke();
-				}
-				ctx.fillStyle = null;
-				if (debug) {
-					ctx.beginPath();
-					ctx.strokeColor = "#ff00ff";
-					ctx.strokeRect(bound.left, bound.top, bound.width, bound.height);
-					ctx.stroke();
-				}
-				ctx.strokeStyle = null;
+				SpriteFlexjs.renderer.renderGraphics(ctx, this, m, alpha, blendMode, colorTransform);
 				SpriteFlexjs.drawCounter++;
 			}
 		}

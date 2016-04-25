@@ -12,6 +12,7 @@
     <movie minorVersion="0" />
     <movie platform="Custom" />
     <movie background="#FFFFFF" />
+    <movie preferredSDK="D:\sdk\flexjs7" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
@@ -77,14 +78,14 @@
   </library>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <compile path="src\TestWebgl2D.as" />
+    <compile path="src\Main.as" />
   </compileTargets>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
     <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand />
+  <preBuildCommand>$(CompilerPath)/js/bin/mxmlc.bat -debug=true -external-library-path="$(CompilerPath)\js\libs\js.swc" -compiler.source-path=../src src/Main.as -define=CONFIG::as_only,false -define=CONFIG::js_only,true</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->

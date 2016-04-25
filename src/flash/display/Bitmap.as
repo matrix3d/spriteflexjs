@@ -67,12 +67,8 @@ package flash.display
 				var sw:Number = stage.stageWidth;
 				var sh:Number = stage.stageHeight;
 				
-				if(maxX>0&&maxY>0&&minX<sw&&minY<sh){
-					var ctx:CanvasRenderingContext2D = stage.ctx;
-					ctx.globalAlpha = worldAlpha;
-					ctx.globalCompositeOperation = blendMode;// BlendMode.getCompVal(blendMode);
-					ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-					ctx.drawImage(_bitmapData.image, 0, 0);
+				if (maxX > 0 && maxY > 0 && minX < sw && minY < sh){
+					SpriteFlexjs.renderer.renderImage(stage.ctx, _bitmapData, m, worldAlpha, blendMode, transform.colorTransform);
 					SpriteFlexjs.drawCounter++;
 				}
 			}

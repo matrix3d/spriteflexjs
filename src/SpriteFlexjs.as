@@ -1,5 +1,7 @@
 package 
 {
+	import flash.__native.BaseRenderer;
+	import flash.__native.IRenderer;
 	/**
 	 * ...
 	 * @author lizhi
@@ -11,6 +13,7 @@ package
 		public static var batDrawCounter:int;
 		public static var debug:Boolean = false;
 		public static var wmode:String = "direct";//direct,gpu
+		public static var renderer:IRenderer = new BaseRenderer;
 		public function SpriteFlexjs() 
 		{
 			

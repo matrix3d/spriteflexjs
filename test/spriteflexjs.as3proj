@@ -78,14 +78,14 @@
   </library>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <compile path="src\Main.as" />
+    <compile path="src\TestStage3DGLSL.as" />
   </compileTargets>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
     <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>$(CompilerPath)/js/bin/mxmlc.bat -debug=true -external-library-path="$(CompilerPath)\js\libs\js.swc" -compiler.source-path=../src src/SuperTest.as -define=CONFIG::as_only,false -define=CONFIG::js_only,true</preBuildCommand>
+  <preBuildCommand>build_fd.bat $(CompilerPath) $(ProjectName) $(BuildConfig)</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->

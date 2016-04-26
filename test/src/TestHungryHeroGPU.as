@@ -1,5 +1,6 @@
 package 
 {
+	import flash.__native.WebGLRenderer;
 	/**
 	 * ...
 	 * @author lizhi
@@ -10,6 +11,7 @@ package
 		public function TestHungryHeroGPU() 
 		{
 			CONFIG::js_only{
+				SpriteFlexjs.renderer = new WebGLRenderer;
 				SpriteFlexjs.wmode = "gpu batch";
 			}
 			

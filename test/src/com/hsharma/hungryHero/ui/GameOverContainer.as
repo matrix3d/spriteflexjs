@@ -23,6 +23,7 @@ package com.hsharma.hungryHero.ui
 	import com.hsharma.hungryHero.Sounds;
 	import com.hsharma.hungryHero.StarlingTextField;
 	import flash.display.Bitmap;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;

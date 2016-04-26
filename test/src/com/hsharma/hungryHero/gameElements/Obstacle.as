@@ -17,6 +17,7 @@ package com.hsharma.hungryHero.gameElements
 	import com.hsharma.hungryHero.GameConstants;
 	import com.hsharma.hungryHero.StarlingMovieClip;
 	import flash.display.Bitmap;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	
 	/**
@@ -49,13 +50,13 @@ package com.hsharma.hungryHero.gameElements
 		private var _hitArea:Bitmap;
 		
 		/** Visual art of the obstacle (static). */
-		private var obstacleImage:Sprite;
+		private var obstacleImage:Shape;
 		
 		/** Visual art of the obstacle (animated). */
 		private var obstacleAnimation:StarlingMovieClip;
 		
 		/** Visual art of the crashed obstacle. */
-		private var obstacleCrashImage:Sprite;
+		private var obstacleCrashImage:Shape;
 		
 		/** Look out sign animation. */
 		private var lookOutAnimation:StarlingMovieClip;
@@ -105,7 +106,7 @@ package com.hsharma.hungryHero.gameElements
 				// If this is the first time the object is being used.
 				if (obstacleImage == null)
 				{
-					obstacleImage = new Sprite;
+					obstacleImage = new Shape;
 					
 					this.addChild(obstacleImage);
 				}
@@ -133,7 +134,7 @@ package com.hsharma.hungryHero.gameElements
 			if (obstacleCrashImage == null)
 			{
 				// If this is the first time the object is being used.
-				obstacleCrashImage = new Sprite//new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture(("obstacle" + _type + "_crash")));
+				obstacleCrashImage = new Shape//new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture(("obstacle" + _type + "_crash")));
 				this.addChild(obstacleCrashImage);
 			}
 			//else

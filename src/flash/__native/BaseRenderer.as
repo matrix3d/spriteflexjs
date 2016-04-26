@@ -51,14 +51,14 @@ package flash.__native
 			ctx.drawImage(img.image, 0, 0);
 		}
 		
-		override public function renderText(ctx:CanvasRenderingContext2D,txt:String,textFormat:TextFormat, m:Matrix, alpha:Number, blendMode:String, colorTransform:ColorTransform):void{
+		override public function renderText(ctx:CanvasRenderingContext2D,txt:String,textFormat:TextFormat, m:Matrix, alpha:Number, blendMode:String, colorTransform:ColorTransform,x:Number,y:Number):void{
 			ctx.globalAlpha = alpha;
 			ctx.globalCompositeOperation = blendMode;//BlendMode.getCompVal(blendMode);
 			ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 			ctx.font = textFormat.css;
 			ctx.fillStyle = textFormat.csscolor;
 			ctx.textBaseline = "top";
-			ctx.fillText(txt, 0, 0);
+			ctx.fillText(txt, x, y);
 		}
 	}
 

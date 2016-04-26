@@ -7,10 +7,13 @@ package flash.__native
 	 */
 	public class GLPath2D 
 	{
-		private var polys:Array = [];
-		private var poly:Array;
+		public var polys:Array = [];
+		public var poly:Array;
 		public var matr:Matrix = new Matrix;
-		private var _drawable:GLDrawable;
+		public var _drawable:GLDrawable;
+		public var version:int = 0;
+		private var pos:Float32Array;
+		private var index:Uint16Array;
 		public function GLPath2D() 
 		{
 			
@@ -65,8 +68,12 @@ package flash.__native
 					nump += poly.length;
 					numi += (poly.length / 2 - 2) * 3;
 				}
-				var pos:Float32Array = new Float32Array(nump);
-				var index:Uint16Array = new Uint16Array(numi);
+				if(pos==null||pos.length!=nump){
+					pos = new Float32Array(nump);
+				}
+				if(index==null||index.length!=numi){
+					index = new Uint16Array(numi);
+				}
 				var offset:int = 0;
 				var pi:int = 0;
 				var ii:int = 0;

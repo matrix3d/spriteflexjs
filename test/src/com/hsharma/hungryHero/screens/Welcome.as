@@ -22,6 +22,7 @@ package com.hsharma.hungryHero.screens
 	import com.hsharma.hungryHero.StarlingTextField;
 	import flash.display.Bitmap;
 	import flash.display.BlendMode;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -43,7 +44,7 @@ package com.hsharma.hungryHero.screens
 		private var bg:Bitmap;
 		
 		/** Game title. */
-		private var title:Sprite;
+		private var title:Shape;
 		
 		/** Play button. */
 		private var playBtn:Button;
@@ -52,7 +53,7 @@ package com.hsharma.hungryHero.screens
 		private var aboutBtn:Button;
 		
 		/** Hero artwork. */
-		private var hero:Sprite;
+		private var hero:Shape;
 
 		/** About text field. */
 		private var aboutText:StarlingTextField;
@@ -110,7 +111,7 @@ package com.hsharma.hungryHero.screens
 			//bg.blendMode = BlendMode.NONE;
 			this.addChild(bg);
 			
-			title =new Sprite//new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture(("welcome_title")));
+			title =new Shape//new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture(("welcome_title")));
 			title.x = 600;
 			title.y = 65;
 			Assets.getAtlas().getTexture(title.graphics,"welcome_title")
@@ -118,7 +119,7 @@ package com.hsharma.hungryHero.screens
 			
 			// WELCOME ELEMENTS
 			
-			hero = new Sprite;//Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("welcome_hero"));
+			hero = new Shape;//Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("welcome_hero"));
 			Assets.getAtlas().getTexture(hero.graphics,"welcome_hero")
 			hero.x = -hero.width;
 			hero.y = 130;

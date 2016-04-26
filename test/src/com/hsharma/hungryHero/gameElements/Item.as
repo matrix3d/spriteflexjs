@@ -15,6 +15,9 @@ package com.hsharma.hungryHero.gameElements
 {
 	import com.hsharma.hungryHero.Assets;
 	import flash.display.Bitmap;
+	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	
 	/**
@@ -29,7 +32,7 @@ package com.hsharma.hungryHero.gameElements
 		private var _foodItemType:int;
 		
 		/** Food item visuals. */
-		private var itemImage:Sprite = new Sprite;
+		private var itemImage:Shape = new Shape;
 		
 		public function Item(_foodItemType:int)
 		{

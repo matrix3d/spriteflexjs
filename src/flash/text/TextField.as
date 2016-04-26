@@ -11,6 +11,7 @@ package flash.text
 		
 		private static var richTextFields:Array = ["font", "size", "color", "bold", "italic", "underline", "url", "target", "align", "leftMargin", "rightMargin", "indent", "leading", "blockIndent", "kerning", "letterSpacing", "display"];
 		private var _text:String;
+		private var lines:Array;
 		private var _textFormat:TextFormat=new TextFormat;
 		private var _width:Number = 100;
 		private var _height:Number = 100;
@@ -135,7 +136,10 @@ package flash.text
 		
 		public function get text():String  { return _text; }
 		
-		public function set text(param1:String):void  { _text = param1; }
+		public function set text(txt:String):void  {
+			_text = txt; 
+			lines = txt.split("\n");
+		}
 		
 		public function get textColor():uint  { return int(_textFormat.color); }
 		
@@ -144,9 +148,26 @@ package flash.text
 			_textFormat.color = color;
 		}
 		
-		public function get textHeight():Number  { return 100; }
+		public function get textHeight():Number  { 
+			return lines?int(defaultTextFormat.size) * lines.length : 0; 
+		}
 		
-		public function get textWidth():Number  { return 100; }
+		public function get textWidth():Number  { 
+			if (stage && lines)
+			{
+				var ctx:CanvasRenderingContext2D = stage.ctx2d;
+				ctx.font = defaultTextFormat.css;
+				var w:int = 0;
+				for (var i:int = 0; i < lines.length;i++ ){
+					var w2:int = ctx.measureText(lines[i]).width;
+					if (w2>w){
+						w = w2;
+					}
+				}
+				return w;
+			}
+			return 0; 
+		}
 		
 		public function get thickness():Number  { return 0; }
 		
@@ -341,7 +362,7 @@ package flash.text
 		public function replaceSelectedText(param1:String):void  {/**/ }
 		
 		public function replaceText(beginIndex:int, endIndex:int, newText:String):void  {
-			_text = _text.substr(0, beginIndex) + newText + _text.substr(endIndex);
+			text = _text.substr(0, beginIndex) + newText + _text.substr(endIndex);
 		}
 		
 		public function setSelection(param1:int, param2:int):void  {/**/ }
@@ -366,7 +387,9 @@ package flash.text
 		}
 		
 		public function __draw(ctx:CanvasRenderingContext2D, m:Matrix):void{
-			SpriteFlexjs.renderer.renderText(ctx, _text, defaultTextFormat, m, worldAlpha, blendMode, transform.colorTransform);
+			for (var i:int = 0; i < lines.length;i++ ){
+				SpriteFlexjs.renderer.renderText(ctx, lines[i], defaultTextFormat, m, worldAlpha, blendMode, transform.colorTransform, 0, i * int(defaultTextFormat.size));
+			}
 		}
 	}
 }

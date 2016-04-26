@@ -3,7 +3,7 @@ for /F tokens^=2^,3^,5delims^=^<^"^= %%a in (%2.as3proj) do (
    if "%%a" equ "compile path" set main=%%b
 )
 set ARGS=-remove-circulars
-if %3=="debug" do(
+if %3==debug (
 	set ARGS=%ARGS% -debug=true 
 )
 set FLEX_HOME=%1

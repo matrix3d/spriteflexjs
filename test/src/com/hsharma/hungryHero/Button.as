@@ -2,6 +2,7 @@ package com.hsharma.hungryHero
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.geom.Rectangle;
 	/**
@@ -14,7 +15,7 @@ package com.hsharma.hungryHero
 		public function Button(/*bmd:BitmapData,rect:Rectangle*/) 
 		{
 			//addChild(new Bitmap(bmd));
-			buttonMode = true;
+			
 		}
 		
 	}

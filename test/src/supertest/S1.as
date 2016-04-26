@@ -6,7 +6,6 @@ package supertest
 	 */
 	public class S1 
 	{
-		
 		private var _test:Object;
 		public function S1() 
 		{
@@ -24,6 +23,9 @@ package supertest
 			_test = value;
 		}
 		
+		public function testfun():void{
+			
+		}
 	}
 
 }

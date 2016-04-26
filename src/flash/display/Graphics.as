@@ -12,6 +12,8 @@ package flash.display
 		public var graphicsData:Vector.<IGraphicsData> = new Vector.<IGraphicsData>;
 		public var lastStroke:GraphicsStroke;
 		public var lastFill:IGraphicsFill;
+		private var pathPool:Array = [];
+		private var pathPoolPos:int = 0;
 		private var lastPath:GraphicsPath;
 		public var bound:Rectangle;// = new Rectangle(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
 		private var lockBound:Boolean = false;
@@ -25,6 +27,7 @@ package flash.display
 		{
 			lastStroke = null;
 			lastPath = null;
+			pathPoolPos = 0;
 			graphicsData = new Vector.<IGraphicsData>;
 			bound = null;
 			//bound.setTo(Number.MAX_VALUE,Number.MAX_VALUE,-Number.MAX_VALUE,-Number.MAX_VALUE);
@@ -226,7 +229,14 @@ package flash.display
 		{
 			if (lastPath == null)
 			{
-				lastPath = new GraphicsPath;
+				lastPath = pathPool[pathPoolPos];
+				if (lastPath==null){
+					lastPath = pathPool[pathPoolPos] = new GraphicsPath;
+				}
+				pathPoolPos++;
+				lastPath.commands = null;
+				lastPath.data = null;
+				lastPath.version++;
 				graphicsData.push(lastPath);
 			}
 		}

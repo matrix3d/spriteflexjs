@@ -15,6 +15,7 @@ package flash.display
 		private static const kInvalidParamError:uint = 2004;
 		private var _canvas:HTMLCanvasElement;
 		private var _ctx:CanvasRenderingContext2D
+		private var _ctx2d:CanvasRenderingContext2D
 		private var _mouseX:Number = 0;
 		private var _mouseY:Number = 0;
 		//private var intervalID:Number;
@@ -301,6 +302,15 @@ package flash.display
 				}
 			}
 			return _ctx;
+		}
+		
+		public function get ctx2d():CanvasRenderingContext2D{
+			if (!_ctx2d)
+			{
+				var can:HTMLCanvasElement = document.createElement("canvas") as HTMLCanvasElement;
+				_ctx2d = can.getContext("2d") as CanvasRenderingContext2D;
+			}
+			return _ctx2d;
 		}
 		
 		public function get displayContextInfo():String  { return null }

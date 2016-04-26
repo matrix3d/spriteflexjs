@@ -4,7 +4,7 @@ package flash.display
 	
 	public final class GraphicsPath extends Object implements IGraphicsPath, IGraphicsData
 	{
-		
+		public var version:int = 0;
 		public var commands:Vector.<int>;
 		
 		public var data:Vector.<Number>;
@@ -132,7 +132,7 @@ package flash.display
 						break;
 					}
 				}
-				//ctx.closePath();
+				ctx.closePath();
 			}
 		}
 	}

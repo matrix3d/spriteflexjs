@@ -13,7 +13,7 @@ package flash.__native
 	 */
 	public class WebGLRenderer extends BaseRenderer
 	{
-		private var path2glpath:ObjectMap = new ObjectMap;
+		//private var path2glpath:ObjectMap = new ObjectMap;
 		public function WebGLRenderer() 
 		{
 			
@@ -33,11 +33,23 @@ package flash.__native
 			{
 				var igd:IGraphicsData = g.graphicsData[i];
 				if (igd is GraphicsPath){
-					var glpath:GLPath2D = path2glpath.get(igd) as GLPath2D;
+					var glpath:GLPath2D = igd["gpath"];//path2glpath.get(igd) as GLPath2D;
+					var gversion:int = (igd as GraphicsPath).version;
 					if (glpath == null){
 						igd.draw(ctx, colorTransform);
-						path2glpath.set(igd, glctx.currentPath);
+						igd["gpath"] = glctx.currentPath;
+						glctx.currentPath.version = gversion;
+						//path2glpath.set(igd, glctx.currentPath);
 					}else{
+						if (glpath.version != gversion){
+							glpath.poly = null;
+							glpath.polys = [];
+							glpath._drawable = null;
+							
+							glpath.version = gversion;
+						}
+						glctx.lastBeginPath = glpath;
+						igd.draw(ctx, colorTransform);
 						glctx.currentPath = glpath;
 					}
 				}else{

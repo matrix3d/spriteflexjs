@@ -14,9 +14,13 @@ package supertest
 		
 		override public function set test(value:Object):void 
 		{
-			super.test = value;
+			//super.test = value;
 		}
 		
+		override public function testfun():void 
+		{
+			//super.testfun();
+		}
 	}
 
 }

@@ -16,6 +16,7 @@ package com.hsharma.hungryHero.gameElements
 	import com.hsharma.hungryHero.Assets;
 	import com.hsharma.hungryHero.GameConstants;
 	import flash.display.Bitmap;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	
 	/**
@@ -40,7 +41,7 @@ package com.hsharma.hungryHero.gameElements
 		private var _spin:Number;
 		
 		/** Texture of the particle. */
-		private var particleImage:Sprite=new Sprite;
+		private var particleImage:Shape=new Shape;
 		
 		public function Particle(_type:int)
 		{

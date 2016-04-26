@@ -25,7 +25,7 @@ package flash.__native
 	{
 		public var canvas : HTMLCanvasElement;
 		public var fillColor : String;
-		public var fillStyle : Object;
+		public var fillStyle : String;
 		public var font : String;
 		public var getLineDash : Object;
 		public var globalAlpha : Number;
@@ -66,6 +66,8 @@ package flash.__native
 		private var posPool:Object = {};
 		private var uvPool:Object = {};
 		private var indexPool:Object = {};
+		
+		public var lastBeginPath:GLPath2D;
 		public function GLCanvasRenderingContext2D(stage:Stage,isBatch:Boolean=false) 
 		{
 			this.isBatch = isBatch;
@@ -124,7 +126,8 @@ package flash.__native
 		}
 
 		public function beginPath () : Object {
-			currentPath = new GLPath2D;
+			currentPath = lastBeginPath || new GLPath2D;
+			lastBeginPath = null;
 			currentPath.matr.copyFrom(matr);
 			return null;
 		}
@@ -134,7 +137,7 @@ package flash.__native
 		}
 
 		public function clearRect (x:Number, y:Number, w:Number, h:Number) : Object {
-			ctx.clear();
+			ctx.clear(1,1,1);
 			batchs.length = 0;
 			return null;
 		}
@@ -346,13 +349,18 @@ package flash.__native
 			if (image==null) {
 				image = text2img[text]=document.createElement("canvas") as HTMLCanvasElement;
 				var ctx:CanvasRenderingContext2D = image.getContext("2d") as CanvasRenderingContext2D;
+				ctx.font = font;
 				var measure:TextMetrics = ctx.measureText(text);
 				image.width = measure.width;
-				image.height = 20;
-				ctx.fillStyle = "#ff0000";
-				ctx.fillText(text, 0, 20);
+				image.height = int(font.substr(0, font.indexOf("px")));
+				ctx.font = font;
+				ctx.textBaseline = "top";
+				ctx.fillStyle = fillStyle;
+				ctx.fillText(text, 0, 0);
 			}
-			drawImageInternal(image, bitmapDrawable,matr,null,true);
+			matrhelp.copyFrom(matr);
+			matrhelp.translate(x, y);
+			drawImageInternal(image, bitmapDrawable,matrhelp,null,true);
 			return null;
 		}
 

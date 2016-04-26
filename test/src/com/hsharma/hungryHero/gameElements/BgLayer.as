@@ -17,6 +17,7 @@ package com.hsharma.hungryHero.gameElements
 	import com.hsharma.hungryHero.GameConstants;
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	
@@ -66,10 +67,10 @@ package com.hsharma.hungryHero.gameElements
 			}
 			else
 			{
-				image1 = new Sprite;//new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("bgLayer" + _layer));
-				image2 = new Sprite;//new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("bgLayer" + _layer));
-				Assets.getAtlas().getTexture((image1 as Sprite).graphics,"bgLayer" + _layer)
-				Assets.getAtlas().getTexture((image2 as Sprite).graphics,"bgLayer" + _layer)
+				image1 = new Shape;//new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("bgLayer" + _layer));
+				image2 = new Shape;//new Bitmap(com.hsharma.hungryHero.Assets.getAtlas().getTexture("bgLayer" + _layer));
+				Assets.getAtlas().getTexture((image1 as Shape).graphics,"bgLayer" + _layer)
+				Assets.getAtlas().getTexture((image2 as Shape).graphics,"bgLayer" + _layer)
 			}
 			
 			image1.x = 0;

@@ -19,6 +19,7 @@ package com.hsharma.hungryHero.ui
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.MovieClip;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	
@@ -34,7 +35,7 @@ package com.hsharma.hungryHero.ui
 		private var mcUnmuteState:StarlingMovieClip;
 		
 		/** Image shown when the sound is muted. */
-		private var imageMuteState:Sprite;
+		private var imageMuteState:Shape;
 		
 		public function SoundButton()
 		{
@@ -67,7 +68,7 @@ package com.hsharma.hungryHero.ui
 			this.addChild(mcUnmuteState);
 			
 			// Selected state - animation
-			imageMuteState =new Sprite 
+			imageMuteState =new Shape 
 			Assets.getAtlas().getTexture(imageMuteState.graphics,"soundOff");
 			this.addChild(imageMuteState);
 		}

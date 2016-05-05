@@ -3,6 +3,7 @@ package
 	import flash.__native.WebGLRenderer;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import spriteflexjs.Stats;
@@ -29,11 +30,11 @@ package
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			var bmd:BitmapData=new BitmapData(10, 10,false,0xffffff*Math.random())
 			for (var i:int = 0; i < 5000;i++ ){
-//				var b:Bitmap = new Bitmap(bmd);
+				//var b:Bitmap = new Bitmap(bmd);
 				
-				var b:Sprite = new Sprite;
+				var b:Shape = new Shape;
 				b.graphics.beginBitmapFill(bmd);
-				b.graphics.drawRect(0, 0, 10, 10);
+				b.graphics.drawRect(0, 0, bmd.width, bmd.height);
 				
 				addChild(b);
 				b.x = 400 * Math.random();

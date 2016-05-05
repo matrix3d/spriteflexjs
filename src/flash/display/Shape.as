@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.events.Event;
 	import flash.geom.Rectangle;
 	
 	public class Shape extends DisplayObject
@@ -21,8 +22,9 @@ package flash.display
 		
 		override public function __update():void
 		{
-			super.__update();
-			if (stage&&visible)
+			if (hasEventListener(Event.ENTER_FRAME))
+				dispatchEvent(new Event(Event.ENTER_FRAME));
+			if (stage&&visible&&graphics.graphicsData.length)
 				graphics.draw(stage.ctx, worldMatrix,worldAlpha,blendMode,transform._colorTransform);
 		}
 		

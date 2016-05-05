@@ -16,6 +16,11 @@ package supertest
 		{
 			//super.test = value;
 		}
+		override public function get test():Object 
+		{
+			//return super.test;
+			return null;
+		}
 		
 		override public function testfun():void 
 		{

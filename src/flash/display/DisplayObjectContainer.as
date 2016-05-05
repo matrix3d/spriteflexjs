@@ -3,6 +3,7 @@ package flash.display
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.events.Event;
 	
 	public class DisplayObjectContainer extends InteractiveObject
 	{
@@ -68,7 +69,32 @@ package flash.display
 		}
 		
 		public function get numChildren():int  { return children.length; }
-		override public function set stage(value:Stage):void 
+		
+		override public function get stage():Stage 
+		{
+			return _stage;
+		}
+		
+		override public function set stage(v:Stage):void 
+		{
+			if (_stage != v) {
+				_stage = v;
+				if (_stage) {
+					dispatchEvent(new Event(Event.ADDED_TO_STAGE));
+				}else {
+					dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
+				}
+			}
+			var len:int = children.length
+			for (var i:int = 0; i < len;i++ ) {
+				var c:DisplayObject = children[i];
+				c.stage = v;
+			}
+		}
+		
+		
+		//flexjs 编译变慢bug，等sdk改正后再改回来
+		/*override public function set stage(value:Stage):void 
 		{
 			super.stage = value;
 			var len:int = children.length
@@ -76,7 +102,7 @@ package flash.display
 				var c:DisplayObject = children[i];
 				c.stage = value;
 			}
-		}
+		}*/
 		
 		// public function get textSnapshot() : TextSnapshot;
 		
@@ -119,7 +145,6 @@ package flash.display
 		
 		override public function __update():void
 		{
-			super.__update();
 			if (stage && visible){
 				var len:int = children.length
 				for (var i:int = 0; i < len;i++ ){

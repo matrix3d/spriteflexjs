@@ -56,8 +56,10 @@ package flash.display
 		
 		override public function __update():void
 		{
-			if (stage&&visible)
-				graphics.draw(stage.ctx, worldMatrix,worldAlpha,blendMode,transform._colorTransform);
+			if (stage&&visible&&graphics.graphicsData.length)
+				graphics.draw(stage.ctx, worldMatrix, worldAlpha, blendMode, transform._colorTransform);
+			if (hasEventListener(Event.ENTER_FRAME))
+				dispatchEvent(new Event(Event.ENTER_FRAME));
 			super.__update();
 		}
 		

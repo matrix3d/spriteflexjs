@@ -10,8 +10,8 @@ package
 		
 		public function TestXML() 
 		{
-			var xml:XML = <a>xml</a>;
-			trace(xml.toXMLString());
+			var xml:XML = <a><b c="d"></b></a>;
+			trace((xml.b.@c).toString());
 		}
 		
 	}

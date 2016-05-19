@@ -8,19 +8,10 @@ package flash.display
 	
 	public class Sprite extends DisplayObjectContainer
 	{
-		private var _graphics:Graphics;
+		public var graphics:Graphics = new Graphics;
 		private var tempPos:Point
 		public function Sprite()
 		{
-		}
-		
-		public function get graphics():Graphics
-		{
-			if (_graphics == null)
-			{
-				_graphics = new Graphics;
-			}
-			return _graphics;
 		}
 		
 		public function get buttonMode():Boolean  { return false }

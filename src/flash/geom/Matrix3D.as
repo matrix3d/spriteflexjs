@@ -380,7 +380,10 @@ package  flash.geom{
 		}
 		
 		public function identity() : void {
-			this.rawData = Vector.<Number>([1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]);
+			rawData[0] = 1;rawData[1] = 0;rawData[2] = 0;rawData[3] = 0;
+			rawData[4] = 0;rawData[5] = 1;rawData[6] = 0;rawData[7] = 0;
+			rawData[8] = 0;rawData[9] = 0;rawData[10] = 1;rawData[11] = 0;
+			rawData[12] = 0;rawData[13] = 0;rawData[14] = 0;rawData[15] = 1;
 		}
 		
 		public function interpolateTo(toMat : Matrix3D,percent : Number) : void {

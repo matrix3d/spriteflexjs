@@ -58,7 +58,8 @@ package
 				players.push(player);
 				playerLayer.addChild(player);
 				player.x =800+ int(400 * (Math.random()-.5));
-				player.y = 500 +int(400 * (Math.random() - .5));	
+				player.y = 500 +int(400 * (Math.random() - .5));
+				player.speed = 10 / 60;
 				player.play("idle", int(Math.random() * 8));
 			}
 			myPlayer = player;
@@ -138,6 +139,7 @@ package
 					}
 				}
 			}
+			mapLayer.cacheAsBitmap = true;
 			
 			addEventListener(Event.ENTER_FRAME, enterFrame);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, stage_mouseDown);
@@ -207,9 +209,9 @@ package
 				player.update(now - lastTime);
 			}
 			playerLayer.removeChildren();
-			CONFIG::as_only {
+			//CONFIG::as_only {
 				players.sortOn("y", Array.NUMERIC);
-			}
+			//}
 			for each(player in players){
 				playerLayer.addChild(player);
 			}

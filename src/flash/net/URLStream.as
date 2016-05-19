@@ -3,6 +3,8 @@ package flash.net
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.utils.*;
+	import flash.events.IOErrorEvent;
+	import flash.events.ProgressEvent;
 	
 	public class URLStream extends EventDispatcher
 	{
@@ -18,8 +20,14 @@ package flash.net
 			xhr = new XMLHttpRequest;
 			xhr.open("get", v.url);
 			xhr.responseType = "arraybuffer";
-			xhr.onreadystatechange = xhr_onreadystatechange;
+			xhr.addEventListener("readystatechange", xhr_onreadystatechange,false);
+			xhr.addEventListener("progress", xhr_progress,false);
 			xhr.send();
+		}
+		
+		private function xhr_progress(e:Object):void 
+		{
+			dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, e.e.loaded, e.total));
 		}
 		
 		private function xhr_onreadystatechange(e:*):void
@@ -27,6 +35,8 @@ package flash.net
 			if (xhr.readyState == 4 && xhr.status == 200)
 			{
 				dispatchEvent(new Event(Event.COMPLETE));
+			}else if (xhr.readyState==4&&xhr.status==404){
+				dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
 			}
 		}
 		

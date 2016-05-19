@@ -48,7 +48,7 @@ package flash.__native
 		public var ctx:Context3D;
 		public var currentPath:GLPath2D;
 		
-		private var bmd2texture:ObjectMap = new ObjectMap;
+		//private var bmd2texture:ObjectMap = new ObjectMap;
 		private var text2img:Object = { };
 		
 		private var bitmapDrawable:GLDrawable;
@@ -451,7 +451,7 @@ package flash.__native
 		}
 		
 		private function getTexture(img:Object):BitmapTexture {
-			var btexture:BitmapTexture = bmd2texture.get(img) as BitmapTexture;
+			var btexture:BitmapTexture = img._texture;
 			if (btexture == null) {
 				var w:int = getNextPow2(img.width);
 				var h:int = getNextPow2(img.height);
@@ -464,7 +464,8 @@ package flash.__native
 				btexture.texture = texture;
 				btexture.width = w;
 				btexture.height = h;
-				bmd2texture.set(img, btexture);
+				img._texture = btexture;
+				//bmd2texture.set(img, btexture);
 			}
 			return btexture;
 		}

@@ -206,9 +206,9 @@ package site
 				}
 			}
 			playerLayer.removeChildren();
-			CONFIG::as_only {
+			//CONFIG::as_only {
 				players.sortOn("y", Array.NUMERIC);
-			}
+			//}
 			for each(player in players){
 				playerLayer.addChild(player);
 			}

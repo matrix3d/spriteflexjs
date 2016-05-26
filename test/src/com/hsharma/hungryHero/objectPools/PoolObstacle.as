@@ -132,8 +132,9 @@ package com.hsharma.hungryHero.objectPools
 					return null;
 				}
 			}
-			
-			return list[--length];
+			var obs:Obstacle = list[--length];
+			obs.visible = true;
+			return obs;
 		}
 		
 		/**

@@ -132,8 +132,9 @@ package com.hsharma.hungryHero.objectPools
 					return null;
 				}
 			}
-			
-			return list[--length];
+			var par:Particle = list[--length];
+			par.visible = true;
+			return par;
 		}
 		
 		/**

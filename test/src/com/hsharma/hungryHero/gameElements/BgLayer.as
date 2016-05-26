@@ -44,7 +44,6 @@ package com.hsharma.hungryHero.gameElements
 		public function BgLayer(_layer:int)
 		{
 			super();
-			
 			this._layer = _layer;
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}

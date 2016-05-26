@@ -29,7 +29,7 @@ package
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			var bmd:BitmapData=new BitmapData(10, 10,false,0xffffff*Math.random())
-			for (var i:int = 0; i < 5000;i++ ){
+			for (var i:int = 0; i < 500;i++ ){
 				//var b:Bitmap = new Bitmap(bmd);
 				
 				var b:Shape = new Shape;

@@ -9,6 +9,7 @@ package flash.__native
 		public var pos:GLVertexBufferSet;
 		public var uv:GLVertexBufferSet;
 		public var index:GLIndexBufferSet;
+		public var numTriangles:int = -1
 		public function GLDrawable(posData:Float32Array,uvData:Float32Array,iData:Uint16Array) 
 		{
 			pos = new GLVertexBufferSet(posData, 2,"pos");

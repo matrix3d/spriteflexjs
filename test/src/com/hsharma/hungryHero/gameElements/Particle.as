@@ -46,7 +46,7 @@ package com.hsharma.hungryHero.gameElements
 		public function Particle(_type:int)
 		{
 			super();
-			
+			mouseChildren = mouseEnabled = false;
 			this._type = _type;
 			
 			switch(_type)

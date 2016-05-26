@@ -37,7 +37,7 @@ package com.hsharma.hungryHero.gameElements
 		public function Hero()
 		{
 			super();
-			
+			mouseChildren = mouseEnabled = false;
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		

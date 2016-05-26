@@ -21,10 +21,10 @@ package spriteflexjs
 			addEventListener(Event.ENTER_FRAME, enterFrame);
 			tf = new TextField();
 			tf.mouseEnabled = tf.selectable = false;
-			tf.defaultTextFormat = new TextFormat("Courier New",12);
+			tf.defaultTextFormat = new TextFormat("Courier New",24);
 			addChild(tf);
 			tf.autoSize = TextFieldAutoSize.LEFT;
-			tf.height = 15;
+			tf.height = 25;
 		}
 
 		private function enterFrame(e:Event):void 

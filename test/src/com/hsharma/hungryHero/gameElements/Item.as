@@ -37,7 +37,7 @@ package com.hsharma.hungryHero.gameElements
 		public function Item(_foodItemType:int)
 		{
 			super();
-			
+			mouseEnabled = mouseChildren = false;
 			this.foodItemType = _foodItemType;
 			addChild(itemImage);
 		}

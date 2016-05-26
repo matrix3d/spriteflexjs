@@ -64,7 +64,7 @@ package com.hsharma.hungryHero.gameElements
 		public function Obstacle(_type:int, _distance:int, _lookOut:Boolean = true, _speed:int = 0)
 		{
 			super();
-			
+			mouseChildren = mouseEnabled = false;
 			this.type = _type;
 			this._distance = _distance;
 			this._showLookOut = _lookOut;

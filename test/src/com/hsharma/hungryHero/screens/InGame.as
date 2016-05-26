@@ -415,7 +415,6 @@ package com.hsharma.hungryHero.screens
 			var foodItem:Item = new Item(Math.ceil(Math.random() * 5));
 			foodItem.x = GameConstants.stageWidth + foodItem.width * 2;
 			this.addChild(foodItem);
-			
 			return foodItem;
 		}
 		
@@ -427,6 +426,7 @@ package com.hsharma.hungryHero.screens
 		private function foodItemClean(item:Item):void
 		{
 			item.x = GameConstants.stageWidth + 100;
+			item.visible = false;
 		}
 		
 		/**
@@ -449,7 +449,6 @@ package com.hsharma.hungryHero.screens
 			var obstacle:Obstacle = new Obstacle(Math.ceil(Math.random() * 4), Math.random() * 1000 + 1000);
 			obstacle.x = GameConstants.stageWidth + obstacle.width * 2;
 			this.addChild(obstacle);
-			
 			return obstacle;
 		}
 		
@@ -461,6 +460,7 @@ package com.hsharma.hungryHero.screens
 		private function obstacleClean(obstacle:Obstacle):void
 		{
 			obstacle.x = GameConstants.stageWidth + obstacle.width * 2;
+			obstacle.visible = false;
 		}
 		
 		/**
@@ -483,7 +483,6 @@ package com.hsharma.hungryHero.screens
 			var eatParticle:Particle = new Particle(com.hsharma.hungryHero.GameConstants.PARTICLE_TYPE_1);
 			eatParticle.x = GameConstants.stageWidth + eatParticle.width * 2;
 			this.addChild(eatParticle);
-			
 			return eatParticle;
 		}
 		
@@ -495,6 +494,7 @@ package com.hsharma.hungryHero.screens
 		private function eatParticleClean(eatParticle:Particle):void
 		{
 			eatParticle.x = GameConstants.stageWidth + eatParticle.width * 2;
+			eatParticle.visible = false;
 		}
 		
 		/**
@@ -517,7 +517,6 @@ package com.hsharma.hungryHero.screens
 			var windParticle:Particle = new Particle(com.hsharma.hungryHero.GameConstants.PARTICLE_TYPE_2);
 			windParticle.x = GameConstants.stageWidth + windParticle.width * 2;
 			this.addChild(windParticle);
-			
 			return windParticle;
 		}
 		
@@ -529,6 +528,7 @@ package com.hsharma.hungryHero.screens
 		private function windParticleClean(windParticle:Particle):void
 		{
 			windParticle.x = GameConstants.stageWidth + windParticle.width * 2;
+			windParticle.visible = false;
 		}
 		
 		/**

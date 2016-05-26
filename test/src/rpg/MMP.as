@@ -47,6 +47,7 @@ package rpg
 					map = maps[url];
 					if (map==null){
 						map = new Bitmap;
+						//map.alpha = .5;
 						map.x = x * size;
 						map.y = y * size;
 						addChild(map);

@@ -62,7 +62,7 @@ package
 				bmd.draw(tf,matr);
 			}
 			CONFIG::js_only{
-				tf.__draw(bmd.ctx,matr);
+				tf.__draw(bmd.ctx,new Matrix);
 			}
 		}
 	}

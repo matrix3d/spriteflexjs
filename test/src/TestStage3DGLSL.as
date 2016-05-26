@@ -106,7 +106,7 @@ package
 					}
 					ctx.setProgramConstantsFromMatrixGL("uMMatrix", mmatr,false);
 				}
-				ctx.drawTriangles(mesh.ibuffer);
+				ctx.drawTriangles(mesh.ibuffer,0,2);
 			}
 			ctx.present();
 		}

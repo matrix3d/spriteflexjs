@@ -117,22 +117,22 @@ package flash.display
 		
 		public function dispose():void  {/**/ }
 		
-		public function draw(param1:IBitmapDrawable, param2:Matrix = null, param3:ColorTransform = null, param4:String = null, param5:Rectangle = null, param6:Boolean = false):void  {
-			drawWithQuality(param1, param2, param3, param4, param5, param6);
+		public function draw(source:IBitmapDrawable, matrix:Matrix = null, colorTransform:ColorTransform = null, blendMode:String = null, clipRect:Rectangle = null, smoothing:Boolean = false):void  {
+			drawWithQuality(source, matrix, colorTransform, blendMode, clipRect, smoothing);
 		}
 		
-		public function drawWithQuality(param1:IBitmapDrawable, param2:Matrix = null, param3:ColorTransform = null, param4:String = null, param5:Rectangle = null, param6:Boolean = false, param7:String = null):void  {
-			/*if (param1 is BitmapData){
-				var bmd:BitmapData = param1 as BitmapData;
+		public function drawWithQuality(source:IBitmapDrawable, matrix:Matrix=null, colorTransform:ColorTransform=null, blendMode:String=null, clipRect:Rectangle=null, smoothing:Boolean=false, quality:String=null):void  {
+			if (source is BitmapData){
+				var bmd:BitmapData = source as BitmapData;
 				fromImage(bmd.ctx);
-			}else if(param1 is TextField){
-				var tf:TextField = param1 as TextField;
-				tf.__draw(ctx);
-			}else if (param1 is Sprite){
-				var sp:Sprite = param1 as Sprite;
+			}/*else if(source is TextField){
+				var tf:TextField = source as TextField;
+				tf.__draw(ctx,matrix);
+			}else if (source is Sprite){
+				var sp:Sprite = source as Sprite;
 				sp.graphics.draw(ctx, sp.worldMatrix, 1, sp.blendMode, sp.transform.colorTransform);
-			}else if (param1 is Shape){
-				var sha:Shape = param1 as Shape;
+			}else if (source is Shape){
+				var sha:Shape = source as Shape;
 				sha.graphics.draw(ctx, sha.worldMatrix, 1, sha.blendMode, sha.transform.colorTransform);
 			}*/
 		}

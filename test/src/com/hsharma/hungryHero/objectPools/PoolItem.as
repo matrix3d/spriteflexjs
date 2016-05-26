@@ -131,8 +131,9 @@ package com.hsharma.hungryHero.objectPools {
 					return null;
 				}
 			}
-
-			return list[--length];
+			var item:Item = list[--length];
+			item.visible = true;
+			return item;
 		}
 		
 		/**

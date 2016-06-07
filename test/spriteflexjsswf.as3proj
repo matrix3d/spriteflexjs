@@ -90,7 +90,7 @@
   </options>
   <!-- Plugin storage -->
   <storage>
-    <entry key="at_enabled"><![CDATA[0]]></entry>
+    <entry key="at_enabled"><![CDATA[1]]></entry>
     <entry key="at_password"><![CDATA[]]></entry>
   </storage>
 </project>

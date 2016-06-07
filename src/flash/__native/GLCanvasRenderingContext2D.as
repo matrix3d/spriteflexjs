@@ -345,6 +345,9 @@ package flash.__native
 					si += len2;
 					il += didl;
 				}
+				newDrawable.index.dirty = true;
+				newDrawable.pos.dirty = true;
+				newDrawable.uv.dirty = true;
 				renderImage(image, newDrawable, new Matrix, new Matrix, false);
 			}
 		}
@@ -362,6 +365,7 @@ package flash.__native
 		}
 
 		public function fillText (text:String, x:Number, y:Number, opt_maxWidth:Number = 0) : Object {
+			return null;
 			var image:HTMLCanvasElement = text2img[text];
 			if (image==null) {
 				image = text2img[text]=document.createElement("canvas") as HTMLCanvasElement;

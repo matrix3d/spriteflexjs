@@ -27,7 +27,7 @@ package flash.net
 		
 		private function xhr_progress(e:Object):void 
 		{
-			dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, e.e.loaded, e.total));
+			dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, e.loaded, e.total));
 		}
 		
 		private function xhr_onreadystatechange(e:*):void

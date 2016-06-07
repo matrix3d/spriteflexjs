@@ -102,6 +102,7 @@ package flash.display
 			lineTo(x + width, y);
 			lineTo(x + width, y + height);
 			lineTo(x, y + height);
+			lastPath.closePath();
 			//lineTo(x, y);
 			lockBound = false;
 			inflateBound(x, y);

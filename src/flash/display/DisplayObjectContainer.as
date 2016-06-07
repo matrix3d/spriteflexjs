@@ -20,6 +20,10 @@ package flash.display
 		}
 		
 		public function addChildAt(child:DisplayObject, index:int):DisplayObject  {
+			var i:int = children.indexOf(child);
+			if (i!=-1){
+				children.splice(i, 1);
+			}
 			children.splice(index,0,child);
 			child.stage = stage;
 			child._parent = this;

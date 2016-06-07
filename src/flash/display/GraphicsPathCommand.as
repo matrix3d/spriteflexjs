@@ -18,6 +18,8 @@ package flash.display
       public static const CUBIC_CURVE_TO:int = 6;
 	  
       public static const ARC:int = 7;
+	  
+	  public static const CLOSE_PATH:int = 8;
        
       public function GraphicsPathCommand()
       {

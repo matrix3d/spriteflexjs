@@ -666,24 +666,23 @@ package  flash.geom{
 		
 		static protected function getAxisRotation(x : Number,y : Number,z : Number,degrees : Number,target:Matrix3D=null) : Matrix3D {
 			var m : Matrix3D =target|| new Matrix3D();
-			var a1 : flash.geom.Vector3D = new flash.geom.Vector3D(x,y,z);
 			var rad : Number = -degrees * (Math.PI / 180);
 			var c : Number = Math.cos(rad);
 			var s : Number = Math.sin(rad);
 			var t : Number = 1.0 - c;
-			m.rawData[0] = c + a1.x * a1.x * t;
-			m.rawData[5] = c + a1.y * a1.y * t;
-			m.rawData[10] = c + a1.z * a1.z * t;
-			var tmp1 : Number = a1.x * a1.y * t;
-			var tmp2 : Number = a1.z * s;
+			m.rawData[0] = c + x * x * t;
+			m.rawData[5] = c + y * y * t;
+			m.rawData[10] = c + z * z * t;
+			var tmp1 : Number = x * y * t;
+			var tmp2 : Number = z * s;
 			m.rawData[4] = tmp1 + tmp2;
 			m.rawData[1] = tmp1 - tmp2;
-			tmp1 = a1.x * a1.z * t;
-			tmp2 = a1.y * s;
+			tmp1 = x * z * t;
+			tmp2 = y * s;
 			m.rawData[8] = tmp1 - tmp2;
 			m.rawData[2] = tmp1 + tmp2;
-			tmp1 = a1.y * a1.z * t;
-			tmp2 = a1.x * s;
+			tmp1 = y * z * t;
+			tmp2 = x * s;
 			m.rawData[9] = tmp1 + tmp2;
 			m.rawData[6] = tmp1 - tmp2;
 			return m;

@@ -9,7 +9,7 @@ package flash.__native
 	public class GLIndexBufferSet 
 	{
 		private var buff:IndexBuffer3D
-		//private var dirty:Boolean = true;
+		public var dirty:Boolean = true;
 		public var data:Uint16Array;
 		public function GLIndexBufferSet(data:Uint16Array) 
 		{
@@ -24,8 +24,11 @@ package flash.__native
 				buff = ctx.createIndexBuffer(data.length);
 				//dirty = false;
 			}
-			buff.gl.bindBuffer(buff.gl.ELEMENT_ARRAY_BUFFER, buff.buff);
-			buff.gl.bufferData(buff.gl.ELEMENT_ARRAY_BUFFER, data, buff.gl.STATIC_DRAW);
+			if(dirty){
+				buff.gl.bindBuffer(buff.gl.ELEMENT_ARRAY_BUFFER, buff.buff);
+				buff.gl.bufferData(buff.gl.ELEMENT_ARRAY_BUFFER, data, buff.gl.STATIC_DRAW);
+				dirty = false;
+			}
 			//buff.uploadFromVector(Vector.<uint>(data), 0, data.length);
 			
 			return buff;

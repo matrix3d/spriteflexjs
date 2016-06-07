@@ -28,7 +28,7 @@ package flash.display
 		private var _worldMatrix:Matrix;
 		private var invDirty:Boolean = true;
 		private var _invMatrix:Matrix;
-		public var _parent:DisplayObject;
+		public var _parent:DisplayObjectContainer;
 		private var _alpha:Number = 1;
 		private var _visible:Boolean = true;
 		private var lastMouseOverObj:DisplayObject;
@@ -74,7 +74,7 @@ package flash.display
 			_name = v;
 		}
 		
-		public function get parent():DisplayObject/*DisplayObjectContainer*/  { return _parent; }
+		public function get parent():DisplayObjectContainer  { return _parent; }
 		
 		public function get mask():DisplayObject  { return null }
 		

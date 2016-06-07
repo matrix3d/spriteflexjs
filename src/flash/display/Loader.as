@@ -6,7 +6,7 @@ package flash.display
 	import flash.errors.*;
 	import flash.events.*;
 	
-	public class Loader extends DisplayObject
+	public class Loader extends DisplayObjectContainer
 	{
 		private var _loaderInfo:LoaderInfo;
 		private var image:Image;
@@ -57,7 +57,11 @@ package flash.display
 		{
 			var bmd:BitmapData = new BitmapData(image.width, image.height, true, 0);
 			bmd.fromImage(image);
+			if (_loaderInfo.content&&_loaderInfo.content.parent){
+				_loaderInfo.content.parent.removeChild(_loaderInfo.content);
+			}
 			_loaderInfo.content = new Bitmap(bmd);
+			addChild(_loaderInfo.content);
 			_loaderInfo.dispatchEvent(new Event(Event.COMPLETE));
 		}
 		

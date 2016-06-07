@@ -12,6 +12,7 @@ package flash.__native
 		public var data:Float32Array;
 		public var data32PerVertex:int;
 		private var buff:VertexBuffer3D;
+		public var dirty:Boolean = true;
 		//public var dirty:Boolean = true;
 		public function GLVertexBufferSet(data:Float32Array,data32PerVertex:int,name:String) 
 		{
@@ -28,8 +29,11 @@ package flash.__native
 				buff/* = pool[key]*/= ctx.createVertexBuffer(data.length / data32PerVertex, data32PerVertex);
 				//dirty = false;
 			}
-			buff.gl.bindBuffer(buff.gl.ARRAY_BUFFER, buff.buff);
-			buff.gl.bufferData(buff.gl.ARRAY_BUFFER, data, buff.gl.STATIC_DRAW);
+			if(dirty){
+				buff.gl.bindBuffer(buff.gl.ARRAY_BUFFER, buff.buff);
+				buff.gl.bufferData(buff.gl.ARRAY_BUFFER, data, buff.gl.STATIC_DRAW);
+				dirty = false;
+			}
 			//buff.uploadFromVector(Vector.<Number>(data), 0, data.length / data32PerVertex);
 			//}
 			return buff;

@@ -130,10 +130,19 @@ package flash.display
 					case GraphicsPathCommand.ARC: 
 						ctx.arc(data[p++], data[p++], data[p++], data[p++], data[p++]);
 						break;
+					case GraphicsPathCommand.CLOSE_PATH: 
+						ctx.closePath();
+						break;
 					}
 				}
-				ctx.closePath();
+				//ctx.closePath();
 			}
+		}
+		
+		public function closePath():void 
+		{
+			initData();
+			this.commands.push(GraphicsPathCommand.CLOSE_PATH);
 		}
 	}
 }

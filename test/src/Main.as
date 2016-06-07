@@ -6,6 +6,7 @@ package
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.geom.Matrix;
 	import spriteflexjs.Stats;
 	
 	/**
@@ -33,7 +34,7 @@ package
 				//var b:Bitmap = new Bitmap(bmd);
 				
 				var b:Shape = new Shape;
-				b.graphics.beginBitmapFill(bmd);
+				b.graphics.beginBitmapFill(bmd,new Matrix);
 				b.graphics.drawRect(0, 0, bmd.width, bmd.height);
 				
 				addChild(b);

@@ -135,8 +135,16 @@ package flash.__native
 					}
 					offset += j;
 				}
-				// todo : 优化
-				_drawable = new GLDrawable(pos, pos, index);
+				if(_drawable==null){
+					_drawable = new GLDrawable(pos, pos, index);
+				}else{
+					_drawable.pos.data = pos;
+					_drawable.uv.data = pos;
+					_drawable.index.data = index;
+					_drawable.pos.dirty = true;
+					_drawable.uv.dirty = true;
+					_drawable.index.dirty = true;
+				}
 			}
 			return _drawable;
 		}

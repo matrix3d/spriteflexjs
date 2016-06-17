@@ -303,12 +303,14 @@ package flash.__native
 				var newi:GLIndexBufferSet = indexPool[indexKey];
 				if (newpos==null){
 					newpos = posPool[posKey] = new GLVertexBufferSet(new Float32Array(posKey * 2), 2, "pos");
+					trace("bat new pos",posKey);
 				}
 				if (newuv==null){
 					newuv = uvPool[posKey] = new GLVertexBufferSet(new Float32Array(posKey * 2), 2, "uv");
 				}
 				if (newi==null){
 					newi = indexPool[indexKey] = new GLIndexBufferSet(new Uint16Array(indexKey * 3));
+					trace("bat new index",indexKey);
 				}
 				var newposdata:Float32Array = newpos.data;
 				var newuvdata:Float32Array = newuv.data;

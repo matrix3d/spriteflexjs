@@ -1,13 +1,13 @@
 package flash.display
 {
+	import flash.__native.GLPath2D;
 	import flash.geom.ColorTransform;
 	
 	public final class GraphicsPath extends Object implements IGraphicsPath, IGraphicsData
 	{
-		public var version:int = 0;
-		public var commands:Vector.<int>;
+		public var commands:Vector.<int>=new Vector.<int>;
 		
-		public var data:Vector.<Number>;
+		public var data:Vector.<Number>=new Vector.<Number>;
 		
 		private var _winding:String;
 		
@@ -16,6 +16,12 @@ package flash.display
 			super();
 			this.commands = commands;
 			this.data = data;
+			if (this.commands == null){
+				this.commands = new Vector.<int>;
+			}
+			if (this.data==null){
+				this.data = new Vector.<Number>;
+			}
 			/*if(winding != GraphicsPathWinding.EVEN_ODD && winding != GraphicsPathWinding.NON_ZERO)
 			   {
 			   Error.throwError(null,2008,"winding");
@@ -39,54 +45,54 @@ package flash.display
 		
 		public function moveTo(x:Number, y:Number):void
 		{
-			initData();
+			//initData();
 			this.commands.push(GraphicsPathCommand.MOVE_TO);
 			this.data.push(x, y);
 		}
 		
 		public function lineTo(x:Number, y:Number):void
 		{
-			initData();
+			//initData();
 			this.commands.push(GraphicsPathCommand.LINE_TO);
 			this.data.push(x, y);
 		}
 		
 		public function curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void
 		{
-			initData();
+			//initData();
 			this.commands.push(GraphicsPathCommand.CURVE_TO);
 			this.data.push(controlX, controlY, anchorX, anchorY);
 		}
 		
 		public function cubicCurveTo(controlX1:Number, controlY1:Number, controlX2:Number, controlY2:Number, anchorX:Number, anchorY:Number):void
 		{
-			initData();
+			//initData();
 			this.commands.push(GraphicsPathCommand.CUBIC_CURVE_TO);
 			this.data.push(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
 		}
 		
 		public function wideLineTo(x:Number, y:Number):void
 		{
-			initData();
+			//initData();
 			this.commands.push(GraphicsPathCommand.WIDE_LINE_TO);
 			this.data.push(0.0, 0.0, x, y);
 		}
 		
 		public function wideMoveTo(x:Number, y:Number):void
 		{
-			initData();
+			//initData();
 			this.commands.push(GraphicsPathCommand.WIDE_MOVE_TO);
 			this.data.push(0.0, 0.0, x, y);
 		}
 		
 		public function arc(x:Number, y:Number,r:Number,a0:Number,a1:Number):void
 		{
-			initData();
+			//initData();
 			this.commands.push(GraphicsPathCommand.ARC);
 			this.data.push(x,y,r,a0,a1);
 		}
 		
-		private function initData():void {
+		/*private function initData():void {
 			if (this.commands == null)
 			{
 				this.commands = new Vector.<int>();
@@ -95,7 +101,7 @@ package flash.display
 			{
 				this.data = new Vector.<Number>();
 			}
-		}
+		}*/
 		
 		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{
@@ -141,7 +147,7 @@ package flash.display
 		
 		public function closePath():void 
 		{
-			initData();
+			//initData();
 			this.commands.push(GraphicsPathCommand.CLOSE_PATH);
 		}
 	}

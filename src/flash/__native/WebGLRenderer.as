@@ -19,8 +19,8 @@ package flash.__native
 			
 		}
 		/**
-		 * @flexjsignorecoercion GLPath2D
-		 * @flexjsignorecoercion GLCanvasRenderingContext2D
+		 * @flexjsignorecoercion flash.display.GraphicsPath
+		 * @flexjsignorecoercion flash.__native.GLCanvasRenderingContext2D
 		 */
 		override public function renderGraphics(ctx:CanvasRenderingContext2D, g:Graphics, m:Matrix, alpha:Number, blendMode:String, colorTransform:ColorTransform):void{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
@@ -33,25 +33,8 @@ package flash.__native
 			{
 				var igd:IGraphicsData = g.graphicsData[i];
 				if (igd is GraphicsPath){
-					var glpath:GLPath2D = igd["gpath"];//path2glpath.get(igd) as GLPath2D;
-					var gversion:int = (igd as GraphicsPath).version;
-					if (glpath == null){
-						igd.draw(ctx, colorTransform);
-						igd["gpath"] = glctx.currentPath;
-						glctx.currentPath.version = gversion;
-						//path2glpath.set(igd, glctx.currentPath);
-					}else{
-						if (glpath.version != gversion){
-							glpath.poly = null;
-							glpath.polys = [];
-							glpath._drawable = null;
-							
-							glpath.version = gversion;
-						}
-						glctx.lastBeginPath = glpath;
-						igd.draw(ctx, colorTransform);
-						glctx.currentPath = glpath;
-					}
+					var path:GraphicsPath = igd as GraphicsPath;
+					glctx.drawPath(path, colorTransform);
 				}else{
 					igd.draw(ctx, colorTransform);
 				}

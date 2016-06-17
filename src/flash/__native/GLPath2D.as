@@ -1,5 +1,7 @@
 package flash.__native 
 {
+	import flash.display.GraphicsPath;
+	import flash.display.GraphicsPathCommand;
 	import flash.geom.Matrix;
 	/**
 	 * ...
@@ -11,9 +13,9 @@ package flash.__native
 		public var poly:Array;
 		public var matr:Matrix = new Matrix;
 		public var _drawable:GLDrawable;
-		public var version:int = 0;
 		private var pos:Float32Array;
 		private var index:Uint16Array;
+		public var path:GraphicsPath;
 		public function GLPath2D() 
 		{
 			
@@ -59,11 +61,50 @@ package flash.__native
 		}
 		
 		public function get drawable():GLDrawable{
-			if(_drawable==null){
+			//if (_drawable == null){
+				var commands:Vector.<int> = path.commands;
+				var data:Vector.<Number> = path.data;
+				if (commands.length) {
+					var p:int = 0;
+					var len:int=commands.length
+					for (var i:int = 0; i < len;i++ ){
+						var cmd:int = commands[i];
+						switch (cmd)
+						{
+						case GraphicsPathCommand.MOVE_TO: 
+							moveTo(data[p++], data[p++]);
+							break;
+						case GraphicsPathCommand.LINE_TO: 
+							lineTo(data[p++], data[p++]);
+							break;
+						case GraphicsPathCommand.CURVE_TO: 
+							quadraticCurveTo(data[p++], data[p++], data[p++], data[p++]);
+							break;
+						case GraphicsPathCommand.CUBIC_CURVE_TO: 
+							bezierCurveTo(data[p++], data[p++], data[p++], data[p++], data[p++], data[p++]);
+							break;
+						case GraphicsPathCommand.WIDE_MOVE_TO:
+							p += 2;
+							moveTo(data[p++], data[p++]);
+							break;
+						case GraphicsPathCommand.WIDE_LINE_TO: 
+							p += 2;
+							lineTo(data[p++], data[p++]);
+							break;
+						case GraphicsPathCommand.ARC: 
+							arc(data[p++], data[p++], data[p++], data[p++], data[p++]);
+							break;
+						case GraphicsPathCommand.CLOSE_PATH: 
+							//closePath();
+							break;
+						}
+					}
+				}
+				
 				var nump:int = 0;
 				var numi:int = 0;
-				var len:int = polys.length;
-				for (var i:int = 0; i < len;i++ ){
+				len = polys.length;
+				for (i = 0; i < len;i++ ){
 					var poly:Array = polys[i];
 					nump += poly.length;
 					numi += (poly.length / 2 - 2) * 3;
@@ -93,7 +134,7 @@ package flash.__native
 					offset += j;
 				}
 				_drawable = new GLDrawable(pos, pos, index);
-			}
+			//}
 			return _drawable;
 		}
 	}

@@ -1,6 +1,7 @@
 package flash.__native 
 {
 	import flash.display.BitmapData;
+	import flash.display.GraphicsPath;
 	import flash.display.Stage;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
@@ -14,6 +15,7 @@ package flash.__native
 	import flash.display3D.textures.Texture;
 	import flash.display3D.textures.TextureBase;
 	import flash.events.Event;
+	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Matrix3D;
 	import flash.utils.ByteArray;
@@ -63,8 +65,7 @@ package flash.__native
 		private var uvPool:Object = {};
 		private var indexPool:Object = {};
 		private var newDrawable:GLDrawable = new GLDrawable(null, null, null);
-		
-		public var lastBeginPath:GLPath2D;
+		//public var lastBeginPath:GLPath2D;
 		public function GLCanvasRenderingContext2D(stage:Stage,isBatch:Boolean=false) 
 		{
 			this.isBatch = isBatch;
@@ -114,23 +115,27 @@ package flash.__native
 		{
 			ctx.configureBackBuffer(stage.stageWidth, stage.stageHeight, 0, false);
 		}
+		
 		public function arc (x:Number, y:Number, radius:Number, startAngle:Number, endAngle:Number, opt_anticlockwise:Boolean=false) : Object{
-			return currentPath.arc(x,y,radius,startAngle,endAngle,opt_anticlockwise);
+			currentPath.path.arc(x, y, radius, startAngle, endAngle);
+			return null;
 		}
 
 		public function arcTo (x1:Number, y1:Number, x2:Number, y2:Number, radius:Number) : Object {
-			return currentPath.arcTo(x1, y1, x2, y2, radius);
+			//currentPath.path.arc(x1, y1, x2, y2, radius);
+			return null;
 		}
 
 		public function beginPath () : Object {
-			currentPath = lastBeginPath || new GLPath2D;
-			lastBeginPath = null;
+			currentPath = new GLPath2D;
+			currentPath.path = new GraphicsPath;
 			currentPath.matr.copyFrom(matr);
 			return null;
 		}
 
 		public function bezierCurveTo (cp1x:Number, cp1y:Number, cp2x:Number, cp2y:Number, x:Number, y:Number) : Object {
-			return currentPath.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,x,y);
+			currentPath.path.cubicCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+			return null;
 		}
 
 		public function clearRect (x:Number, y:Number, w:Number, h:Number) : Object {
@@ -171,6 +176,18 @@ package flash.__native
 			return null;
 		}
 		
+		/**
+		 * @flexjsignorecoercion CanvasRenderingContext2D
+		 */
+		public function drawPath (path:GraphicsPath,colorTransform:ColorTransform) : Object {
+			currentPath = new GLPath2D;
+			currentPath.path = path;
+			currentPath.matr.copyFrom(matr);
+			// todo : 优化
+			//path.draw(this as CanvasRenderingContext2D, colorTransform);
+			return null;
+		}
+		
 		public function drawImageInternal(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean):void{
 			if(!isBatch){
 				renderImage(image, drawable, posmatr, uvmatr, scaleWithImage);
@@ -185,13 +202,22 @@ package flash.__native
 			ctx.setProgram(bitmapProg);
 			ctx.setTextureAt(0, texture.texture);
 			ctx.setVertexBufferAt(0, drawable.pos.getBuff(ctx),0, Context3DVertexBufferFormat.FLOAT_2);
-			ctx.setVertexBufferAt(1, drawable.uv.getBuff(ctx),0, Context3DVertexBufferFormat.FLOAT_2);
-			matr3d.rawData[0] = posmatr.a*2  / stage.stageWidth;
-			matr3d.rawData[1] = -posmatr.b*2 / stage.stageHeight;
-			matr3d.rawData[4] = posmatr.c*2 / stage.stageWidth;
-			matr3d.rawData[5] = -posmatr.d*2 / stage.stageHeight;
-			matr3d.rawData[12] = posmatr.tx * 2 / stage.stageWidth-1;
-			matr3d.rawData[13] = 1 - posmatr.ty * 2 / stage.stageHeight;
+			ctx.setVertexBufferAt(1, drawable.uv.getBuff(ctx), 0, Context3DVertexBufferFormat.FLOAT_2);
+			if(posmatr){
+				matr3d.rawData[0] = posmatr.a*2  / stage.stageWidth;
+				matr3d.rawData[1] = -posmatr.b*2 / stage.stageHeight;
+				matr3d.rawData[4] = posmatr.c*2 / stage.stageWidth;
+				matr3d.rawData[5] = -posmatr.d*2 / stage.stageHeight;
+				matr3d.rawData[12] = posmatr.tx * 2 / stage.stageWidth-1;
+				matr3d.rawData[13] = 1 - posmatr.ty * 2 / stage.stageHeight;
+			}else{
+				matr3d.rawData[0] = 2  / stage.stageWidth;
+				matr3d.rawData[1] = 0;
+				matr3d.rawData[4] = 0;
+				matr3d.rawData[5] = -2 / stage.stageHeight;
+				matr3d.rawData[12] = -1;
+				matr3d.rawData[13] = 1;
+			}
 			if (scaleWithImage){
 				matr3d.rawData[0] *= image.width;
 				matr3d.rawData[1] *= image.width;
@@ -201,9 +227,13 @@ package flash.__native
 			
 			ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, matr3d);
 			if (uvmatr){
-				matrhelp.copyFrom(posmatr);
-				matrhelp.invert();
-				matrhelp.concat(uvmatr);
+				if(posmatr){
+					matrhelp.copyFrom(posmatr);
+					matrhelp.invert();
+					matrhelp.concat(uvmatr);
+				}else{
+					matrhelp.copyFrom(uvmatr);
+				}
 				uvmatr3d.rawData[0] = matrhelp.a / texture.width;
 				uvmatr3d.rawData[1] = -matrhelp.b / texture.width;
 				uvmatr3d.rawData[4] = -matrhelp.c / texture.height;
@@ -348,7 +378,7 @@ package flash.__native
 				newDrawable.index.dirty = true;
 				newDrawable.pos.dirty = true;
 				newDrawable.uv.dirty = true;
-				renderImage(image, newDrawable, new Matrix, new Matrix, false);
+				renderImage(image, newDrawable, null, null, false);
 			}
 		}
 
@@ -394,7 +424,8 @@ package flash.__native
 		}
 
 		public function lineTo (x:Number, y:Number) : Object {
-			return currentPath.lineTo(x,y);
+			currentPath.path.lineTo(x, y);
+			return null;
 		}
 
 		public function measureText (text:String) : TextMetrics {
@@ -402,7 +433,8 @@ package flash.__native
 		}
 
 		public function moveTo (x:Number, y:Number) : Object {
-			return currentPath.moveTo(x,y);
+			currentPath.path.moveTo(x, y);
+			return null;
 		}
 
 		public function putImageData (imagedata:ImageData, dx:Number, dy:Number, opt_dirtyX:Number = 0, opt_dirtyY:Number = 0, opt_dirtyWidth:Number = 0, opt_dirtyHeight:Number = 0) : Object {
@@ -410,12 +442,17 @@ package flash.__native
 		}
 
 		public function quadraticCurveTo (cpx:Number, cpy:Number, x:Number, y:Number) : Object {
-			currentPath.quadraticCurveTo(cpx, cpy, x, y);
+			currentPath.path.curveTo(cpx, cpy, x, y);
 			return null;
 		}
 
 		public function rect (x:Number, y:Number, w:Number, h:Number) : Object {
-			return currentPath.rect(x,y,w,h);
+			currentPath.path.moveTo(x, y);
+			currentPath.path.lineTo(x + w, y);
+			currentPath.path.lineTo(x + w, y + h);
+			currentPath.path.lineTo(x, y + h);
+			currentPath.path.closePath();
+			return null;
 		}
 
 		public function restore () : Object {

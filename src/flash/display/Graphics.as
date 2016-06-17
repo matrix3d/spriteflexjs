@@ -234,10 +234,11 @@ package flash.display
 				if (lastPath==null){
 					lastPath = pathPool[pathPoolPos] = new GraphicsPath;
 				}
+				//lastPath.commands = null;
+				//lastPath.data = null;
+				lastPath.commands.length = 0;
+				lastPath.data.length = 0;
 				pathPoolPos++;
-				lastPath.commands = null;
-				lastPath.data = null;
-				lastPath.version++;
 				graphicsData.push(lastPath);
 			}
 		}

@@ -179,12 +179,13 @@ package flash.__native
 		/**
 		 * @flexjsignorecoercion CanvasRenderingContext2D
 		 */
-		public function drawPath (path:GraphicsPath,colorTransform:ColorTransform) : Object {
-			currentPath = new GLPath2D;
+		public function drawPath (path:GraphicsPath, colorTransform:ColorTransform) : Object {
+			currentPath = path["glpath2d"];
+			if (path["glpath2d"]==null){
+				currentPath = path["glpath2d"] = new GLPath2D;
+			}
 			currentPath.path = path;
 			currentPath.matr.copyFrom(matr);
-			// todo : 优化
-			//path.draw(this as CanvasRenderingContext2D, colorTransform);
 			return null;
 		}
 		

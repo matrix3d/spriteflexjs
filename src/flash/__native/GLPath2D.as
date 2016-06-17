@@ -61,7 +61,9 @@ package flash.__native
 		}
 		
 		public function get drawable():GLDrawable{
-			//if (_drawable == null){
+			if (path.gpuPath2DDirty){
+				path.gpuPath2DDirty = false;
+				polys.length = 0;
 				var commands:Vector.<int> = path.commands;
 				var data:Vector.<Number> = path.data;
 				if (commands.length) {
@@ -133,8 +135,9 @@ package flash.__native
 					}
 					offset += j;
 				}
+				// todo : 优化
 				_drawable = new GLDrawable(pos, pos, index);
-			//}
+			}
 			return _drawable;
 		}
 	}

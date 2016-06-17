@@ -238,6 +238,7 @@ package flash.display
 				//lastPath.data = null;
 				lastPath.commands.length = 0;
 				lastPath.data.length = 0;
+				lastPath.gpuPath2DDirty = true;
 				pathPoolPos++;
 				graphicsData.push(lastPath);
 			}

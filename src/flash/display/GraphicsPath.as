@@ -5,6 +5,8 @@ package flash.display
 	
 	public final class GraphicsPath extends Object implements IGraphicsPath, IGraphicsData
 	{
+		public var gpuPath2DDirty:Boolean = true;
+		
 		public var commands:Vector.<int>=new Vector.<int>;
 		
 		public var data:Vector.<Number>=new Vector.<Number>;

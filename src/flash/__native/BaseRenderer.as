@@ -3,6 +3,7 @@ package flash.__native
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.display.GraphicsEndFill;
+	import flash.display.GraphicsPath;
 	import flash.display.IGraphicsData;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
@@ -18,6 +19,11 @@ package flash.__native
 		public function BaseRenderer() 
 		{
 			
+		}
+		
+		override public function createPath():GraphicsPath 
+		{
+			return new GraphicsPath;
 		}
 		
 		override public function renderGraphics(ctx:CanvasRenderingContext2D,g:Graphics,m:Matrix,alpha:Number,blendMode:String,colorTransform:ColorTransform):void{

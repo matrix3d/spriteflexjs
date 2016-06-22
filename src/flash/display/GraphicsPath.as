@@ -3,7 +3,7 @@ package flash.display
 	import flash.__native.GLPath2D;
 	import flash.geom.ColorTransform;
 	
-	public final class GraphicsPath extends Object implements IGraphicsPath, IGraphicsData
+	public class GraphicsPath extends Object implements IGraphicsPath, IGraphicsData
 	{
 		public var gpuPath2DDirty:Boolean = true;
 		
@@ -29,6 +29,11 @@ package flash.display
 			   Error.throwError(null,2008,"winding");
 			   }*/
 			this._winding = winding;
+		}
+		
+		public function clear():void{
+			commands.length = 0;
+			data.length = 0;
 		}
 		
 		public function get winding():String

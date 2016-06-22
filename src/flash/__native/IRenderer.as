@@ -2,6 +2,7 @@ package flash.__native
 {
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
+	import flash.display.GraphicsPath;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.text.TextFormat;
@@ -15,6 +16,10 @@ package flash.__native
 		public function IRenderer() 
 		{
 			
+		}
+		
+		public function createPath():GraphicsPath{
+			return null;
 		}
 		
 		public function renderGraphics(ctx:CanvasRenderingContext2D,g:Graphics,m:Matrix,alpha:Number,blendMode:String,colorTransform:ColorTransform):void{

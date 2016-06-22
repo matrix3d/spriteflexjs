@@ -128,7 +128,7 @@ package flash.__native
 
 		public function beginPath () : Object {
 			currentPath = new GLPath2D;
-			currentPath.path = new GraphicsPath;
+			currentPath.path = SpriteFlexjs.renderer.createPath() as GLGraphicsPath;
 			currentPath.matr.copyFrom(matr);
 			return null;
 		}
@@ -184,7 +184,7 @@ package flash.__native
 			if (path["glpath2d"]==null){
 				currentPath = path["glpath2d"] = new GLPath2D;
 			}
-			currentPath.path = path;
+			currentPath.path = path as GLGraphicsPath;
 			currentPath.matr.copyFrom(matr);
 			return null;
 		}

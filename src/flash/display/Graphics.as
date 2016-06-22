@@ -232,12 +232,11 @@ package flash.display
 			{
 				lastPath = pathPool[pathPoolPos];
 				if (lastPath==null){
-					lastPath = pathPool[pathPoolPos] = new GraphicsPath;
+					lastPath = pathPool[pathPoolPos] = SpriteFlexjs.renderer.createPath();
 				}
 				//lastPath.commands = null;
 				//lastPath.data = null;
-				lastPath.commands.length = 0;
-				lastPath.data.length = 0;
+				lastPath.clear();
 				lastPath.gpuPath2DDirty = true;
 				pathPoolPos++;
 				graphicsData.push(lastPath);

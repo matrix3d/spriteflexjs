@@ -16,13 +16,17 @@ package flash.media
 		private var loops:int;
 		private var sndTransform:SoundTransform;
 		private var startTime:Number;
+		private var stream:URLRequest;
+		private var context:SoundLoaderContext;
 		public var source:AudioBufferSourceNode;
 		public function Sound(stream:URLRequest = null, context:SoundLoaderContext = null)
 		{
 			super();
+			this.context = context;
+			this.stream = stream;
 			if(ctx){
 				sounds.push(this);
-				this.load(stream, context);
+				//this.load(stream, context);
 			}
 		}
 		
@@ -87,7 +91,10 @@ package flash.media
 		
 		public function play(startTime:Number=0, loops:int=0, sndTransform:SoundTransform=null):SoundChannel
 		{
-			if(ctx){
+			if (ctx){
+				if (xhr==null){
+					load(stream, context);
+				}
 				this.startTime = startTime;
 				this.sndTransform = sndTransform;
 				this.loops = loops;

@@ -18,6 +18,12 @@ package flash.__native
 		{
 			
 		}
+		
+		override public function createPath():GraphicsPath 
+		{
+			return new GLGraphicsPath;
+		}
+		
 		/**
 		 * @flexjsignorecoercion flash.display.GraphicsPath
 		 * @flexjsignorecoercion flash.__native.GLCanvasRenderingContext2D

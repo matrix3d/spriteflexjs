@@ -142,6 +142,7 @@ package com.hsharma.hungryHero.gameElements
 				// If this object is being reused.
 				//obstacleCrashImage.bitmapData = com.hsharma.hungryHero.Assets.getAtlas().getTexture("obstacle" + _type + "_crash");
 			//}
+			obstacleCrashImage.graphics.clear();
 			Assets.getAtlas().getTexture(obstacleCrashImage.graphics,"obstacle" + _type + "_crash")
 			// Hide the crash image by default.
 			obstacleCrashImage.visible = false;

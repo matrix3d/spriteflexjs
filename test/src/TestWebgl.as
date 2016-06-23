@@ -17,7 +17,9 @@ package
 			document.body.appendChild(canvas);
 			canvas.width = 400;
 			canvas.height = 400;
-			var gl:WebGLRenderingContext = (canvas.getContext("webgl")||canvas.getContext("experimental-webgl")) as WebGLRenderingContext;
+			var gl:WebGLRenderingContext = (canvas.getContext("webgl") || canvas.getContext("experimental-webgl")) as WebGLRenderingContext;
+			var t1:Object = canvas.getContext("webgl");
+			var t2:Object = canvas.getContext("experimental-webgl");
 			gl.clearColor(0, 0, 0, 1);
 			gl.enable(gl.DEPTH_TEST);
 			gl.depthFunc(gl.LEQUAL);
@@ -75,15 +77,16 @@ package
 			
 			//draw
 			var matr:Matrix3D = new Matrix3D();
-			setInterval(function():void { 
+			update();
+			function update():void { 
+				requestAnimationFrame(update);
 				var mvpLoction:WebGLUniformLocation = gl.getUniformLocation(program, "mvp");
 				
 				matr.appendRotation(1, Vector3D.Z_AXIS);
 				gl.uniformMatrix4fv(mvpLoction, false,matr.rawData);
-				
 				gl.drawElements(gl.TRIANGLES, 3, gl.UNSIGNED_SHORT, 0);
 				
-			}, 1000/60);
+			}
 			/*var xhr:XMLHttpRequest = new XMLHttpRequest;
 			xhr.open("get", "1.txt");
 			xhr.onreadystatechange=function():void{

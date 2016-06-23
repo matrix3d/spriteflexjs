@@ -14,6 +14,16 @@ package
 		public static var debug:Boolean = false;
 		public static var wmode:String = "direct";//direct,gpu
 		public static var renderer:IRenderer = new BaseRenderer;
+		public static var requestAnimationFrame:Function =
+			window["requestAnimationFrame"]       ||
+			window["webkitRequestAnimationFrame"] ||
+			window["mozRequestAnimationFrame"]    ||
+			window["oRequestAnimationFrame"] ||
+			window["msRequestAnimationFrame"] ||
+			function(callback):void {
+				setTimeout(callback, 1000 / 60);
+			};
+
 		public function SpriteFlexjs() 
 		{
 			

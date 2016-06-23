@@ -22,7 +22,7 @@ package flash.display
 		private var needSendMouseMove:Boolean = false;
 		private var needSendTouchMove:Boolean = false;
 		private var lastUpdateTime:int = -1000;
-		private var requestAnimationFrameHander:Number;
+		//private var requestAnimationFrameHander:Number;
 		private var _stageWidth:Number;
 		private var _stageHeight:Number;
 		public function Stage()
@@ -50,15 +50,15 @@ package flash.display
 		public function set frameRate(v:Number):void
 		{
 			_frameRate = v;
-			try{
+			/*try{
 				cancelRequestAnimationFrame(requestAnimationFrameHander);
-			}catch(e:Object){}
+			}catch(e:Object){}*/
 			__update();
 		}
 		
 		private function __update():void {
 			//http://codetheory.in/controlling-the-frame-rate-with-requestanimationframe/	
-			requestAnimationFrameHander = requestAnimationFrame(__update);
+			/*requestAnimationFrameHander = */SpriteFlexjs.requestAnimationFrame.call(window,__update);
 			var now:Number = getTimer();
 			var interval:Number = 1000/frameRate;
 			var delta:Number = now - lastUpdateTime;

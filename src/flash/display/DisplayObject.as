@@ -353,7 +353,6 @@ package flash.display
 		
 		private function __enterFrame(e:Event):void
 		{
-			var time:Number = getTimer();
 			if (stage.canvas.width != stage.stageWidth) {
 				stage.canvas.width = stage.stageWidth;
 			}

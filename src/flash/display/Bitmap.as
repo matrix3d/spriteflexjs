@@ -49,7 +49,7 @@ package flash.display
 		
 		override public function __update():void
 		{
-			super.__update();
+			//super.__update();
 			if (stage && _bitmapData&&_bitmapData.image&&visible)
 			{
 				var m:Matrix = worldMatrix;

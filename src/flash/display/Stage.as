@@ -31,9 +31,10 @@ package flash.display
 			_stageWidth = window.innerWidth;
 			_stageHeight = window.innerHeight;
 			if (SpriteFlexjs.startTime==0) {
-				SpriteFlexjs.startTime = (new Date()).getTime();
+				SpriteFlexjs.startTime = Date.now();
 			}
 			frameRate = 60;
+			__update();
 			_stage3Ds = Vector.<Stage3D>([new Stage3D, new Stage3D, new Stage3D, new Stage3D]);
 			window.addEventListener("resize", window_resize, false);
 		}
@@ -53,17 +54,17 @@ package flash.display
 			/*try{
 				cancelRequestAnimationFrame(requestAnimationFrameHander);
 			}catch(e:Object){}*/
-			__update();
+			//__update();
 		}
 		
 		private function __update():void {
 			//http://codetheory.in/controlling-the-frame-rate-with-requestanimationframe/	
 			/*requestAnimationFrameHander = */SpriteFlexjs.requestAnimationFrame.call(window,__update);
-			var now:Number = getTimer();
-			var interval:Number = 1000/frameRate;
-			var delta:Number = now - lastUpdateTime;
-			if (delta > interval) {
-				lastUpdateTime = now - (delta % interval);
+			//var now:Number = getTimer();
+			//var interval:Number = Math.ceil(1000/frameRate);
+			//var delta:Number = now - lastUpdateTime;
+			//if (delta >= interval) {
+			//	lastUpdateTime = now - (delta % interval);
 				if (needSendMouseMove) {
 					dispatchEvent(new MouseEvent(MouseEvent.MOUSE_MOVE, true, false, _mouseX, _mouseY));
 					needSendMouseMove = false;
@@ -73,7 +74,7 @@ package flash.display
 					needSendTouchMove = false;
 				}
 				dispatchEvent(new Event(Event.ENTER_FRAME));
-			}
+			//}
 		}
 		
 		public function invalidate():void  {/**/ }

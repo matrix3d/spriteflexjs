@@ -26,9 +26,8 @@ package flash.__native
 			return new GraphicsPath;
 		}
 		
-		override public function renderGraphics(ctx:CanvasRenderingContext2D,g:Graphics,m:Matrix,alpha:Number,blendMode:String,colorTransform:ColorTransform):void{
+		override public function renderGraphics(ctx:CanvasRenderingContext2D,g:Graphics,m:Matrix,blendMode:String,colorTransform:ColorTransform):void{
 			ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-			ctx.globalAlpha = alpha;
 			ctx.globalCompositeOperation = blendMode;//BlendMode.getCompVal(blendMode);
 			var len:int = g.graphicsData.length;
 			for (var i:int = 0; i < len;i++ )
@@ -50,15 +49,15 @@ package flash.__native
 			ctx.strokeStyle = null;
 		}
 		
-		override public function renderImage(ctx:CanvasRenderingContext2D,img:BitmapData,m:Matrix,alpha:Number,blendMode:String,colorTransform:ColorTransform):void{
-			ctx.globalAlpha = alpha;
+		override public function renderImage(ctx:CanvasRenderingContext2D,img:BitmapData,m:Matrix,blendMode:String,colorTransform:ColorTransform):void{
+			ctx.globalAlpha = colorTransform.alphaMultiplier;
 			ctx.globalCompositeOperation = blendMode;
 			ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 			ctx.drawImage(img.image, 0, 0);
 		}
 		
-		override public function renderText(ctx:CanvasRenderingContext2D,txt:String,textFormat:TextFormat, m:Matrix, alpha:Number, blendMode:String, colorTransform:ColorTransform,x:Number,y:Number):void{
-			ctx.globalAlpha = alpha;
+		override public function renderText(ctx:CanvasRenderingContext2D,txt:String,textFormat:TextFormat, m:Matrix, blendMode:String, colorTransform:ColorTransform,x:Number,y:Number):void{
+			ctx.globalAlpha = colorTransform.alphaMultiplier;
 			ctx.globalCompositeOperation = blendMode;//BlendMode.getCompVal(blendMode);
 			ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 			ctx.font = textFormat.css;

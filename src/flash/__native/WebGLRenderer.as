@@ -28,10 +28,9 @@ package flash.__native
 		 * @flexjsignorecoercion flash.display.GraphicsPath
 		 * @flexjsignorecoercion flash.__native.GLCanvasRenderingContext2D
 		 */
-		override public function renderGraphics(ctx:CanvasRenderingContext2D, g:Graphics, m:Matrix, alpha:Number, blendMode:String, colorTransform:ColorTransform):void{
+		override public function renderGraphics(ctx:CanvasRenderingContext2D, g:Graphics, m:Matrix, blendMode:String, colorTransform:ColorTransform):void{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
 			ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-			ctx.globalAlpha = alpha;
 			ctx.globalCompositeOperation = blendMode;
 			
 			var len:int = g.graphicsData.length;

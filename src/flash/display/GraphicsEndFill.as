@@ -19,6 +19,9 @@ package flash.display
 					if (bfill.matrix) {
 						var m:Matrix = bfill.matrix;
 					}
+					ctx.globalAlpha = colorTransform.alphaMultiplier;
+				}else{
+					ctx.globalAlpha = 1;
 				}
 				if(m){
 					ctx.save();

@@ -16,7 +16,7 @@ package flash.display
 			if (hasEventListener(Event.ENTER_FRAME))
 				dispatchEvent(new Event(Event.ENTER_FRAME));
 			if (stage&&visible&&graphics.graphicsData.length)
-				graphics.draw(stage.ctx, worldMatrix,worldAlpha,blendMode,transform._colorTransform);
+				graphics.draw(stage.ctx, transform.concatenatedMatrix,blendMode,transform.concatenatedColorTransform);
 		}
 		
 		override public function hitTestPoint(x:Number, y:Number, shapeFlag:Boolean = false):Boolean 

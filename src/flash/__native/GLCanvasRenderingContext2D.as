@@ -91,8 +91,8 @@ package flash.__native
 				"uniform mat4 vc0;"+
 				"uniform mat4 vc4;"+
 				"void main(void) {" +
-					"vUV=(vc4*vec4(va1,1.0,1.0)).xy;"+
-					"gl_Position =vc0*vec4(va0, 1.0,1.0);"+
+					"vUV=(vc4*vec4(va1,0.0,1.0)).xy;"+
+					"gl_Position =vc0*vec4(va0, 0.0,1.0);"+
 				"}";
 			var fcode:String = "precision mediump float;" +
 				"varying vec2 vUV;"+
@@ -114,7 +114,7 @@ package flash.__native
 				"uniform mat4 vc0;"+
 				"void main(void) {" +
 					"vColor=va1;"+
-					"gl_Position =vc0*vec4(va0, 1.0,1.0);"+
+					"gl_Position =vc0*vec4(va0, 0.0,1.0);"+
 				"}";
 			fcode = "precision mediump float;" +
 				"varying vec4 vColor;"+

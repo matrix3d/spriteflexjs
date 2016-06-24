@@ -4,7 +4,8 @@ for /F tokens^=2^,3^,5delims^=^<^"^= %%a in (%2.as3proj) do (
 )
 set ARGS=-remove-circulars
 if %3==debug (
-	set ARGS=%ARGS% -debug=true 
+	set ARGS=%ARGS% -debug=true
 )
 set FLEX_HOME=%1
+echo on
 %FLEX_HOME%/js/bin/mxmlc %ARGS% -external-library-path="%FLEX_HOME%\js\libs\js.swc" -compiler.source-path=../src %main% -define=CONFIG::as_only,false -define=CONFIG::js_only,true

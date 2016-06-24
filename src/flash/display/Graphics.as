@@ -417,11 +417,11 @@ package flash.display
 			return graphicsData.slice();
 		}
 		
-		public function draw(ctx:CanvasRenderingContext2D, m:Matrix,alpha:Number,blendMode:String,colorTransform:ColorTransform):void
+		public function draw(ctx:CanvasRenderingContext2D, m:Matrix,blendMode:String,colorTransform:ColorTransform):void
 		{
 			if (graphicsData.length)
 			{
-				SpriteFlexjs.renderer.renderGraphics(ctx, this, m, alpha, blendMode, colorTransform);
+				SpriteFlexjs.renderer.renderGraphics(ctx, this, m, blendMode, colorTransform);
 				SpriteFlexjs.drawCounter++;
 			}
 		}

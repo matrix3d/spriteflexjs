@@ -381,14 +381,14 @@ package flash.text
 			if (stage && _text != null&&visible)
 			{
 				var ctx:CanvasRenderingContext2D = stage.ctx;
-				__draw(ctx,worldMatrix);
+				__draw(ctx,transform.concatenatedMatrix);
 				SpriteFlexjs.drawCounter++;
 			}
 		}
 		
 		public function __draw(ctx:CanvasRenderingContext2D, m:Matrix):void{
 			for (var i:int = 0; i < lines.length;i++ ){
-				SpriteFlexjs.renderer.renderText(ctx, lines[i], defaultTextFormat, m, worldAlpha, blendMode, transform.colorTransform, 0, i * int(defaultTextFormat.size));
+				SpriteFlexjs.renderer.renderText(ctx, lines[i], defaultTextFormat, m, blendMode, transform.concatenatedColorTransform, 0, i * int(defaultTextFormat.size));
 			}
 		}
 	}

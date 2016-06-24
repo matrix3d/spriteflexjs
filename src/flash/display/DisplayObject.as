@@ -23,21 +23,14 @@ package flash.display
 		private var _rotation:Number = 0;
 		private var rsin:Number = 0;
 		private var rcos:Number = 1;
-		private var _transform:Transform;
-		private var dirty:Boolean = true;
-		private var _worldMatrix:Matrix;
-		private var invDirty:Boolean = true;
-		private var _invMatrix:Matrix;
+		public var transform:Transform;
 		public var _parent:DisplayObjectContainer;
-		private var _alpha:Number = 1;
 		private var _visible:Boolean = true;
 		private var lastMouseOverObj:DisplayObject;
 		private var _blendMode:String;
 		public function DisplayObject()
 		{
-			_transform = new Transform(this);
-			_worldMatrix = new Matrix;
-			_invMatrix = new Matrix;
+			transform = new Transform(this);
 			innerID = ID++;
 			name = "instance" + innerID;
 			if (innerID == 0)
@@ -159,13 +152,13 @@ package flash.display
 		
 		public function get mouseX():Number  {
 			if(stage)
-			return invMatrix.transformPoint(new Point(stage.mouseX, stage.mouseY)).x;
+			return transform.invMatrix.transformPoint(new Point(stage.mouseX, stage.mouseY)).x;
 			return 0;
 		}
 		
 		public function get mouseY():Number  { 
 			if(stage)
-			return invMatrix.transformPoint(new Point(stage.mouseX, stage.mouseY)).y;
+			return transform.invMatrix.transformPoint(new Point(stage.mouseX, stage.mouseY)).y;
 			return 0;
 		}
 		
@@ -199,16 +192,19 @@ package flash.display
 		
 		public function set rotationZ(v:Number):void  {/**/ }
 		
-		public function get alpha():Number  { return _alpha; }
-		
-		public function get worldAlpha():Number{
-			if (parent){
-				return parent.worldAlpha * alpha;
-			}
-			return alpha;
+		public function updateTransforms():void
+		{
+			transform.updateTransforms();
 		}
 		
-		public function set alpha(v:Number):void  { _alpha = v; }
+		public function get alpha():Number  {
+			return transform.colorTransform.alphaMultiplier;
+		}
+		
+		public function set alpha(v:Number):void  { 
+			transform.colorTransform.alphaMultiplier = v;
+			transform.updateColorTransforms();
+		}
 		
 		public function get width():Number  { 
 			var rect:Rectangle = getRect(parent);
@@ -246,55 +242,24 @@ package flash.display
 		
 		public function set blendMode(v:String):void  { _blendMode = v; }
 		
-		public function get transform():Transform  { return _transform }
+		/*public function get transform():Transform  { return _transform }
 		
 		public function set transform(v:Transform):void
 		{
 			_transform = v;
 			updateTransforms();
-		}
-		
-		public function get worldMatrix():Matrix
-		{
-			if (dirty)
-			{
-				_worldMatrix.copyFrom(transform.matrix);
-				if (parent)
-				{
-					_worldMatrix.concat(parent.worldMatrix);
-				}
-				dirty = false;
-			}
-			return _worldMatrix;
-		}
-		
-		public function get invMatrix():Matrix
-		{
-			if (invDirty)
-			{
-				_invMatrix.copyFrom(worldMatrix);
-				_invMatrix.invert();
-				invDirty = false;
-			}
-			return _invMatrix;
-		}
-		
-		public function updateTransforms():void
-		{
-			dirty = true;
-			invDirty = true;
-		}
+		}*/
 		
 		public function get scale9Grid():Rectangle  { return null }
 		
 		public function set scale9Grid(v:Rectangle):void  {/**/ }
 		
 		public function globalToLocal(v:Point):Point  { 
-			return invMatrix.transformPoint(v);
+			return transform.invMatrix.transformPoint(v);
 		}
 		
 		public function localToGlobal(v:Point):Point  { 
-			return worldMatrix.transformPoint(v);
+			return transform.concatenatedMatrix.transformPoint(v);
 		}
 		
 		public function getBounds(v:DisplayObject):Rectangle  { 

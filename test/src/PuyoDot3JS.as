@@ -49,6 +49,7 @@ package
     軽量化して、そのくらいは動くようになりたい。
     */
     
+	import flash.__native.WebGLRenderer;
     import flash.display.Bitmap;
     import flash.display.BitmapData;
     import flash.display.GradientType;
@@ -103,6 +104,8 @@ package
         }
         private function init():void
         {
+			//SpriteFlexjs.wmode = "gpu batch";
+			//SpriteFlexjs.renderer = new WebGLRenderer;
             // SWF設定
             stage.frameRate = 60;
 ////v0.2

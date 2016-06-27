@@ -25,6 +25,26 @@ package flash.__native
 		}
 		
 		/**
+		 * @flexjsignorecoercion String
+		 */
+		override public function getCssColor(color:uint, alpha:Number, ct:ColorTransform):String 
+		{
+			return [ ((color >> 16 & 0xff)*ct.redMultiplier+ct.redOffset)/0xff , ((color >> 8 & 0xff)*ct.greenMultiplier+ct.greenOffset)/0xff, ((color & 0xff)*ct.greenMultiplier+ct.greenOffset)/0xff , (alpha*ct.alphaMultiplier+ct.alphaOffset)] as String;
+		}
+		
+		/**
+		 * @flexjsignorecoercion flash.__native.GLCanvasRenderingContext2D
+		 */
+		override public function renderImage(ctx:CanvasRenderingContext2D, img:BitmapData, m:Matrix, blendMode:String, colorTransform:ColorTransform):void 
+		{
+			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
+			glctx.globalRed = colorTransform.redMultiplier;
+			glctx.globalGreen = colorTransform.greenMultiplier;
+			glctx.globalBlue = colorTransform.blueMultiplier;
+			super.renderImage(ctx, img, m, blendMode, colorTransform);
+		}
+		
+		/**
 		 * @flexjsignorecoercion flash.display.GraphicsPath
 		 * @flexjsignorecoercion flash.__native.GLCanvasRenderingContext2D
 		 */
@@ -32,7 +52,10 @@ package flash.__native
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
 			ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 			ctx.globalCompositeOperation = blendMode;
-			
+			ctx.globalAlpha = colorTransform.alphaMultiplier;
+			glctx.globalRed = colorTransform.redMultiplier;
+			glctx.globalGreen = colorTransform.greenMultiplier;
+			glctx.globalBlue = colorTransform.blueMultiplier;
 			var len:int = g.graphicsData.length;
 			for (var i:int = 0; i < len;i++ )
 			{

@@ -98,7 +98,7 @@ package flash.display
 				if (fill is GraphicsSolidFill)
 				{
 					var sf:GraphicsSolidFill = fill as GraphicsSolidFill;
-					ctx.strokeStyle = sf.getCssColor(colorTransform);
+					ctx.strokeStyle = SpriteFlexjs.renderer.getCssColor(sf.color, sf.alpha,colorTransform);//sf.getCssColor(colorTransform);
 				}
 			}
 		}

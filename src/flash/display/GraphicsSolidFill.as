@@ -22,15 +22,12 @@ package flash.display
 		 */
 		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{
-			ctx.fillStyle = getCssColor(colorTransform);
+			ctx.fillStyle = SpriteFlexjs.renderer.getCssColor(color,alpha, colorTransform);//getCssColor(colorTransform);
 		}
 		
-		public function getCssColor(ct:ColorTransform):String 
+		/*public function getCssColor(ct:ColorTransform):String 
 		{
-			if (ct==null) {
-				return cssColor;
-			}
 			return "rgba(" + ((color >> 16 & 0xff)*ct.redMultiplier+ct.redOffset) + "," + ((color >> 8 & 0xff)*ct.greenMultiplier+ct.greenOffset) + "," + ((color & 0xff)*ct.greenMultiplier+ct.greenOffset) + "," + (this.alpha*ct.alphaMultiplier+ct.alphaOffset) + ")";
-		}
+		}*/
 	}
 }

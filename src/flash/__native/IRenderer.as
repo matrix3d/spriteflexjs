@@ -22,6 +22,10 @@ package flash.__native
 			return null;
 		}
 		
+		public function getCssColor(color:uint,alpha:Number,ct:ColorTransform):String{
+			return null;
+		}
+		
 		public function renderGraphics(ctx:CanvasRenderingContext2D,g:Graphics,m:Matrix,blendMode:String,colorTransform:ColorTransform):void{
 			
 		}

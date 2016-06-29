@@ -175,7 +175,114 @@ package flash.display
 		
 		public function paletteMap(param1:BitmapData, param2:Rectangle, param3:Point, param4:Array = null, param5:Array = null, param6:Array = null, param7:Array = null):void  {/**/ }
 		
-		public function perlinNoise(param1:Number, param2:Number, param3:uint, param4:int, param5:Boolean, param6:Boolean, param7:uint = 7, param8:Boolean = false, param9:Array = null):void  {/**/ }
+		//https://chengkehan.github.io/PerlinNoise.html
+		public function perlinNoise(baseX:Number, baseY:Number, numOctaves:uint, randomSeed:int, stitch:Boolean, fractalNoise:Boolean, channelOptions:uint=7, grayScale:Boolean=false, offsets:Array=null):void  {
+			lock();
+			
+			var width:int = this.width;
+			var height:int = this.height;
+			
+			var smoothNoises:Array = [];
+
+			// 不同采样级别的 Noise 的叠加系数
+			var persistance:Number = 0.8;
+
+			// 生成不同采样级别的 Noise
+			for (var k:int = 0; k < numOctaves; k++)
+			{
+				var whiteNoise:Array = [];
+				for (var i:int = 0; i < width;i++ ){
+					whiteNoise[i] = [];
+					for (var j:int = 0; j < height; j++ ){
+						whiteNoise[i][j] = Math.random();// int(Math.random() * 0xffffffff);
+					}
+				}
+
+				var smoothNoise:Array = [];
+				smoothNoises[k] = smoothNoise;
+				// 采样步长
+				var samplePeriod:int = Math.pow(2, k);
+				// 采样频率
+				var sampleFrequency:Number = 1 / samplePeriod;
+
+				for (i = 0; i < width; i++)
+				{
+					smoothNoise[i] = [];
+					// 最左点位置
+					var sampler_l:int =  int(i / samplePeriod) * samplePeriod;
+					// 最右点位置
+					var sampler_r:int = (sampler_l + samplePeriod) % width;
+					// 根据实际点与最左最右的距离，计算水平混合系数
+					var horizontal_blend:Number = (i - sampler_l) * sampleFrequency;
+
+					for (j = 0; j < height; j++)
+					{
+						// 最上点位置
+						var sampler_t:int = int(j / samplePeriod) * samplePeriod;
+						// 最下点位置
+						var sampler_d:int = (sampler_t + samplePeriod) % height;
+						// 根据实际点与最上最下的距离，计算垂直混合系数
+						var vertical_blend:Number = (j - sampler_t) * sampleFrequency;
+
+						// 左上和右上根据水平混合系数进行插值
+						var top:Number = interpolate(whiteNoise[sampler_l][ sampler_t], whiteNoise[sampler_r][sampler_t], horizontal_blend);
+						// 左下和右下根据水平混合系数进行插值
+						var bottom:Number = interpolate(whiteNoise[sampler_l][ sampler_d], whiteNoise[sampler_r][sampler_d], horizontal_blend);
+						// 最总数值为 top down 根据垂直混合系数进行插值
+						smoothNoise[i][j] = interpolate(top, bottom, vertical_blend);
+						//var c:int = 0xff * (interpolate(top, bottom, vertical_blend));
+						//setPixel32(i,j, 0xff000000|(c<<16)|(c<<8)|c);                    
+					}
+				}
+			}
+			
+			// 最终生成的 Perlin Noise
+			var perlinNoise:Array = [];
+
+			// 不同采样级别的 Noise 的叠加比重
+			var amplitude:Number = 1;
+			// 所有采样级别的 Noise 的叠加总比重
+			var totalAmplitude:Number = 0;
+
+			// 开始混合所有采样级别的 Noise
+			for (var octave:int = numOctaves - 1; octave >= 0; octave--)
+			{
+				amplitude *= persistance;
+				totalAmplitude += amplitude;
+
+				for ( i = 0; i < width; i++)
+				{
+					if(octave==numOctaves-1){
+						perlinNoise[i] = [];
+					}
+					for (j = 0; j < height; j++)
+					{
+						if(octave==numOctaves-1){
+							perlinNoise[i][j] = smoothNoises[octave][i][j] * amplitude;
+						}else{
+							perlinNoise[i][j] += smoothNoises[octave][i][j] * amplitude;
+						}
+					}
+				}
+			}
+
+			// 归一化最终的 Perlin Noise
+			for ( i = 0; i < width; i++)
+			{
+				for (j = 0; j < height; j++)
+				{
+					var c:int=0xff*(perlinNoise[i][j] / totalAmplitude);
+					setPixel32(i, j, 0xff000000 | (c << 16) | (c << 8) | c);
+				}
+			}
+			unlock();
+		}
+
+		// 在两个数值间进行插值
+		private function interpolate(x0:Number,x1:Number,alpha:Number):Number
+		{
+			return x0 * (1 - alpha) + alpha * x1;
+		}
 		
 		public function pixelDissolve(param1:BitmapData, param2:Rectangle, param3:Point, param4:int = 0, param5:int = 0, param6:uint = 0):int  { return 0 }
 		

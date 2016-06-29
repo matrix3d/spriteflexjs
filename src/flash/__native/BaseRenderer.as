@@ -23,7 +23,7 @@ package flash.__native
 		
 		override public function getCssColor(color:uint,alpha:Number, ct:ColorTransform):String 
 		{
-			return "rgba(" + ((color >> 16 & 0xff)*ct.redMultiplier+ct.redOffset) + "," + ((color >> 8 & 0xff)*ct.greenMultiplier+ct.greenOffset) + "," + ((color & 0xff)*ct.greenMultiplier+ct.greenOffset) + "," + (alpha*ct.alphaMultiplier+ct.alphaOffset) + ")";
+			return "rgba(" + int((color >> 16 & 0xff)*ct.redMultiplier+ct.redOffset) + "," + int((color >> 8 & 0xff)*ct.greenMultiplier+ct.greenOffset) + "," + int((color & 0xff)*ct.greenMultiplier+ct.greenOffset) + "," + (alpha*ct.alphaMultiplier+ct.alphaOffset) + ")";
 		}
 		
 		override public function createPath():GraphicsPath 

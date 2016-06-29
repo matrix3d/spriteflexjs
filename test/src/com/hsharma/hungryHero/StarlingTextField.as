@@ -19,6 +19,15 @@ package com.hsharma.hungryHero
 			this.text = text;
 		}
 		
+		override public function get text():String 
+		{
+			return super.text;
+		}
+		
+		override public function set text(value:String):void 
+		{
+			super.text = "value";
+		}
 	}
 
 }

@@ -89,8 +89,8 @@ public class Background extends Sprite
 				kx = i / cols;
 				vertices[ci] = sw * kx; 
 				vertices[ci + 1] = sh * ky; 
-				uvt[ci] = uw * kx*512; 
-				uvt[ci + 1] = uh * ky*512;
+				uvt[ci] = uw * kx; 
+				uvt[ci + 1] = uh * ky;
 			}
 		}
 		for (j = 0; j < rows;j++ )

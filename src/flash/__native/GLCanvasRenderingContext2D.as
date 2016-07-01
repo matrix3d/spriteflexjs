@@ -202,7 +202,7 @@ package flash.__native
 		}
 
 		public function drawImage (image:Object, dx:Number, dy:Number, opt_dw:Number = 0, opt_dh:Number = 0, opt_sx:Number = 0, opt_sy:Number = 0, opt_sw:Number = 0, opt_sh:Number = 0) : Object {
-			drawImageInternal(image,bitmapDrawable, matr,null,true,[globalRed,globalGreen,globalBlue,globalAlpha]);
+			drawImageInternal(image,bitmapDrawable, matr,null,true,[globalRed,globalGreen,globalBlue,globalAlpha],true);
 			return null;
 		}
 		
@@ -219,7 +219,7 @@ package flash.__native
 			return null;
 		}
 		
-		public function drawImageInternal(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean,color:Array):void{
+		public function drawImageInternal(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean,color:Array,scaleWithImageUV:Boolean):void{
 			if (!isBatch){
 				var colorb:GLVertexBufferSet = drawable.color;
 				colorb.dirty = true;
@@ -231,13 +231,13 @@ package flash.__native
 					data[i + 2] = color[2];
 					data[i + 3] = color[3];
 				}
-				renderImage(image, drawable, posmatr, uvmatr, scaleWithImage);
+				renderImage(image, drawable, posmatr, uvmatr, scaleWithImage,scaleWithImageUV);
 			}else{
-				batchs.push([image,drawable,posmatr?posmatr.clone():null,uvmatr?uvmatr.clone():null,scaleWithImage,color]);
+				batchs.push([image,drawable,posmatr?posmatr.clone():null,uvmatr?uvmatr.clone():null,scaleWithImage,color,scaleWithImageUV]);
 			}
 		}
 		
-		private function renderImage(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean):void{
+		private function renderImage(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean,scaleWithImageUV:Boolean):void{
 			SpriteFlexjs.batDrawCounter++;
 			if (image is Array){
 				ctx.setProgram(colorProg);
@@ -287,7 +287,7 @@ package flash.__native
 					uvmatr3d.rawData[5] = matrhelp.d / texture.height;
 					uvmatr3d.rawData[12] = -matrhelp.tx/texture.width;
 					uvmatr3d.rawData[13] = -matrhelp.ty/texture.height;
-					if (scaleWithImage){
+					if (scaleWithImageUV){
 						uvmatr3d.rawData[0] *= image.width;
 						uvmatr3d.rawData[1] *= image.width;
 						uvmatr3d.rawData[4] *= image.height;
@@ -300,7 +300,7 @@ package flash.__native
 					uvmatr3d.rawData[5] = 1/ texture.height;
 					uvmatr3d.rawData[12] = 0;
 					uvmatr3d.rawData[13] = 0;
-					if (scaleWithImage){
+					if (scaleWithImageUV){
 						uvmatr3d.rawData[0] *= image.width;
 						uvmatr3d.rawData[5] *= image.height;
 					}
@@ -392,6 +392,7 @@ package flash.__native
 					drawable = batch[1]; 
 					var posmatr:Matrix = batch[2];
 					var scaleWithImage:Boolean = batch[4];
+					var scaleWithImageUV:Boolean = batch[6];
 					var color:Array = batch[5];
 					if(isImage){
 						var uvmatr:Matrix = batch[3];
@@ -427,7 +428,7 @@ package flash.__native
 						if(isImage){
 							x = uvdata[k*2];
 							y = uvdata[k*2 + 1];
-							if (scaleWithImage){
+							if (scaleWithImageUV){
 								x *=iw;
 								y *= ih;
 							}
@@ -465,7 +466,7 @@ package flash.__native
 				if(updateColor){
 					newDrawable.color.dirty = true;
 				}
-				renderImage(image, newDrawable, null, null, false);
+				renderImage(image, newDrawable, null, null, false,false);
 			}
 		}
 
@@ -485,7 +486,7 @@ package flash.__native
 					data[i + 3] = globalAlpha;
 				}*/
 				var glcp:GLCanvasPattern = fillStyle as GLCanvasPattern;
-				drawImageInternal(glcp.image, currentPath.drawable,currentPath.matr,matr,false,[globalRed,globalGreen,globalBlue,globalAlpha]);
+				drawImageInternal(glcp.image, currentPath.drawable,currentPath.matr,matr,false,[globalRed,globalGreen,globalBlue,globalAlpha],currentPath.path.tris.length>0);
 			}else{
 				var carrn:Array = fillStyle as Array;
 				/*for (i = 0; i < len;i+=4 ){
@@ -494,7 +495,7 @@ package flash.__native
 					data[i+2] = carrn[2];
 					data[i+3] = carrn[3];
 				}*/
-				drawImageInternal(fillStyle, currentPath.drawable,currentPath.matr,null,false,carrn);
+				drawImageInternal(fillStyle, currentPath.drawable,currentPath.matr,null,false,carrn,false);
 			}
 			return null;
 		}
@@ -519,7 +520,7 @@ package flash.__native
 			}
 			matrhelp.copyFrom(matr);
 			matrhelp.translate(x, y);
-			drawImageInternal(image, bitmapDrawable,matrhelp,null,true,[globalRed,globalGreen,globalBlue,globalAlpha]);
+			drawImageInternal(image, bitmapDrawable,matrhelp,null,true,[globalRed,globalGreen,globalBlue,globalAlpha],true);
 			return null;
 		}
 

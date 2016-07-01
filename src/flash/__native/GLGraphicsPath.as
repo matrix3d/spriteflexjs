@@ -33,6 +33,9 @@ package flash.__native
 		
 		override public function lineTo(x:Number, y:Number):void
 		{
+			if (poly==null){
+				makePoly();
+			}
 			//poly.push(x, y);
 			poly.push(x);
 			poly.push(y);
@@ -40,6 +43,9 @@ package flash.__native
 		
 		override public function curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void
 		{
+			if (poly==null){
+				makePoly();
+			}
 			poly.push(controlX);
 			poly.push(controlY);
 			poly.push(anchorX);
@@ -49,6 +55,9 @@ package flash.__native
 		
 		override public function cubicCurveTo(controlX1:Number, controlY1:Number, controlX2:Number, controlY2:Number, anchorX:Number, anchorY:Number):void
 		{
+			if (poly==null){
+				makePoly();
+			}
 			poly.push(controlX1);
 			poly.push(controlY1);
 			poly.push(controlX2);
@@ -70,7 +79,18 @@ package flash.__native
 		
 		override public function arc(x:Number, y:Number,r:Number,a0:Number,a1:Number):void
 		{
-			rect(x - r, y - r, r * 2, r * 2);
+			var da:Number = Math.PI / 4;
+			var x0:Number = r;
+			var y0:Number = 0;
+			var sin:Number = Math.sin(da);
+			var cos:Number = Math.cos(da);
+			moveTo(x0+x, y0+y);
+			for (var a:Number = a0; a < a1;a+=da ){
+				var x_:Number = x0;
+				x0 = x0 * cos - y0 * sin;
+				y0 = x_ * sin + y0 * cos;
+				lineTo(x0 + x, y0 + y);
+			}
 		}
 		
 		private function rect (x:Number, y:Number, w:Number, h:Number) : void {

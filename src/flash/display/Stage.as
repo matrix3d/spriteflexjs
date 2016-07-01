@@ -1,6 +1,7 @@
 package flash.display
 {
 	import flash.__native.GLCanvasRenderingContext2D;
+	import flash.__native.WebGLRenderer;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
@@ -296,8 +297,10 @@ package flash.display
 			{
 				if (SpriteFlexjs.wmode=="gpu") {
 					_ctx = new GLCanvasRenderingContext2D(this) as CanvasRenderingContext2D;
+					SpriteFlexjs.renderer = new WebGLRenderer;
 				}else if (SpriteFlexjs.wmode=="gpu batch"){
-					_ctx = new GLCanvasRenderingContext2D(this,true) as CanvasRenderingContext2D;
+					_ctx = new GLCanvasRenderingContext2D(this, true) as CanvasRenderingContext2D;
+					SpriteFlexjs.renderer = new WebGLRenderer;
 				}else{
 					_ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 				}

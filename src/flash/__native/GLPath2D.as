@@ -27,12 +27,13 @@ package flash.__native
 				
 				var nump:int = 0;
 				var numi:int = 0;
-				var len:int = path.polys.length;//polys.length;
+				var len:int = path.polys.length;
 				for (var i:int = 0; i < len;i++ ){
-					//var poly:Array = polys[i];
 					var plen:int = path.polys.array[i].length;
 					nump += plen;
-					numi += (plen / 2 - 2) * 3;
+					if(plen>=6){
+						numi += (plen / 2 - 2) * 3;
+					}
 				}
 				if(pos==null||pos.length!=nump){
 					pos = new Float32Array(nump);

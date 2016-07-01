@@ -193,8 +193,8 @@ public class b2DebugDraw
 	public  function DrawSolidPolygon(vertices:Array/*b2Vec2*/, vertexCount:int, color:b2Color) : void{
 		
 		m_sprite.graphics.lineStyle(m_lineThickness, color.color, m_alpha);
-		m_sprite.graphics.moveTo(vertices[0].x * m_drawScale, vertices[0].y * m_drawScale);
 		m_sprite.graphics.beginFill(color.color, m_fillAlpha);
+		m_sprite.graphics.moveTo(vertices[0].x * m_drawScale, vertices[0].y * m_drawScale);
 		for (var i:int = 1; i < vertexCount; i++){
 				m_sprite.graphics.lineTo(vertices[i].x * m_drawScale, vertices[i].y * m_drawScale);
 		}

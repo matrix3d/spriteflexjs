@@ -1052,7 +1052,7 @@ public class b2BroadPhase implements IBroadPhase
 
 	public var m_worldAABB:b2AABB;
 	public var m_quantizationFactor:b2Vec2 = new b2Vec2();
-	public var m_proxyCount:int;
+	public var m_proxyCount:int=0;
 	private var m_timeStamp:uint;
 
 	static public var s_validate:Boolean = false;

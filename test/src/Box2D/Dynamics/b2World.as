@@ -554,7 +554,6 @@ public class b2World
 			m_contactManager.FindNewContacts();
 			m_flags &= ~e_newFixture;
 		}
-		
 		m_flags |= e_locked;
 		
 		var step:b2TimeStep = s_timestep2;

@@ -2,6 +2,7 @@ package{
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	// Classes used in this example
 	import Box2D.Dynamics.*;
 	import Box2D.Collision.*;
@@ -33,6 +34,7 @@ package{
 			debugDraw.SetFillAlpha(0.3);
 			debugDraw.SetLineThickness(1.0);
 			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+			debugDraw.SetFlags(0xffffffff);
 			m_world.SetDebugDraw(debugDraw);
 			m_world.DrawDebugData();
 			
@@ -90,11 +92,9 @@ package{
 					body.CreateFixture(fixtureDef);
 				}
 			}
-			
 		}
 		
 		public function Update(e:Event):void{
-			
 			m_world.Step(m_timeStep, m_velocityIterations, m_positionIterations);
 			m_world.DrawDebugData();
 			

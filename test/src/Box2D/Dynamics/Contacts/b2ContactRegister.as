@@ -28,7 +28,7 @@ public class b2ContactRegister
 	public var destroyFcn:Function;// fcn pointer
 	public var primary:Boolean;
 	public var pool:b2Contact;
-	public var poolCount:int;
+	public var poolCount:int=0;
 };
 	
 	

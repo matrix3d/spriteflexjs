@@ -53,7 +53,7 @@ public class b2ContactConstraint
 	public var radius:Number;
 	public var friction:Number;
 	public var restitution:Number;
-	public var pointCount:int;
+	public var pointCount:int=0;
 	public var manifold:b2Manifold;
 };
 

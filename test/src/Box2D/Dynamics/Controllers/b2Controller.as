@@ -99,7 +99,7 @@ public class b2Controller
 	public var m_prev:b2Controller;
 	
 	protected var m_bodyList:b2ControllerEdge;
-	protected var m_bodyCount:int;
+	protected var m_bodyCount:int=0;
 	
 	public var m_world:b2World;
 }

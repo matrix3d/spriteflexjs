@@ -177,7 +177,8 @@ package flash.display
 		
 		//https://chengkehan.github.io/PerlinNoise.html
 		public function perlinNoise(baseX:Number, baseY:Number, numOctaves:uint, randomSeed:int, stitch:Boolean, fractalNoise:Boolean, channelOptions:uint=7, grayScale:Boolean=false, offsets:Array=null):void  {
-			lock();
+			noise(0);
+			/*lock();
 			
 			var width:int = this.width;
 			var height:int = this.height;
@@ -275,14 +276,14 @@ package flash.display
 					setPixel32(i, j, 0xff000000 | (c << 16) | (c << 8) | c);
 				}
 			}
-			unlock();
+			unlock();*/
 		}
 
 		// 在两个数值间进行插值
-		private function interpolate(x0:Number,x1:Number,alpha:Number):Number
+		/*private function interpolate(x0:Number,x1:Number,alpha:Number):Number
 		{
 			return x0 * (1 - alpha) + alpha * x1;
-		}
+		}*/
 		
 		public function pixelDissolve(param1:BitmapData, param2:Rectangle, param3:Point, param4:int = 0, param5:int = 0, param6:uint = 0):int  { return 0 }
 		

@@ -11,6 +11,8 @@ package flash.display
 		
 		public var data:Vector.<Number>=new Vector.<Number>;
 		
+		public var tris:Array = [];
+		
 		private var _winding:String;
 		
 		public function GraphicsPath(commands:Vector.<int> = null, data:Vector.<Number> = null, winding:String = "evenOdd")
@@ -34,6 +36,7 @@ package flash.display
 		public function clear():void{
 			commands.length = 0;
 			data.length = 0;
+			tris.length = 0;
 		}
 		
 		public function get winding():String
@@ -115,6 +118,7 @@ package flash.display
 			if (commands.length) {
 				ctx.beginPath();
 				var p:int = 0;
+				var trip:int = 0;
 				var len:int=commands.length
 				for (var i:int = 0; i < len;i++ ){
 					var cmd:int = commands[i];
@@ -143,6 +147,9 @@ package flash.display
 					case GraphicsPathCommand.ARC: 
 						ctx.arc(data[p++], data[p++], data[p++], data[p++], data[p++]);
 						break;
+					case GraphicsPathCommand.DRAW_TRIANGLES: 
+						doDrawTriangles( tris[trip++],ctx);
+						break;
 					case GraphicsPathCommand.CLOSE_PATH: 
 						ctx.closePath();
 						break;
@@ -156,6 +163,34 @@ package flash.display
 		{
 			//initData();
 			this.commands.push(GraphicsPathCommand.CLOSE_PATH);
+		}
+		
+		public function drawTriangles(vertices:Vector.<Number>, indices:Vector.<int>, uvtData:Vector.<Number>):void 
+		{
+			tris.push([vertices, indices, uvtData]);
+			commands.push(GraphicsPathCommand.DRAW_TRIANGLES);
+		}
+		
+		private function doDrawTriangles(tri:Array,ctx:CanvasRenderingContext2D):void {
+			var vertices:Vector.<Number> = tri[0]
+			var indices:Vector.<int> = tri[1];
+			//, uvtData
+			var len:int = indices.length;
+			for (var i:int = 0; i < len; ){
+				var i0:int = indices[i++];
+				var i1:int = indices[i++];
+				var i2:int = indices[i++];
+				var x0:Number = vertices[2*i0];
+				var y0:Number = vertices[2*i0+1];
+				var x1:Number = vertices[2*i1];
+				var y1:Number = vertices[2*i1+1];
+				var x2:Number = vertices[2*i2];
+				var y2:Number = vertices[2 * i2 + 1];
+				ctx.moveTo(x0, y0);
+				ctx.lineTo(x1, y1);
+				ctx.lineTo(x2, y2);
+				ctx.lineTo(x0, y0);
+			}
 		}
 	}
 }

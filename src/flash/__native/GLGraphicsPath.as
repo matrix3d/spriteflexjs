@@ -20,6 +20,7 @@ package flash.__native
 				polys.array[i].length = 0;
 			}
 			polys.length = 0;
+			tris.length = 0;
 		}
 		
 		override public function moveTo(x:Number, y:Number):void

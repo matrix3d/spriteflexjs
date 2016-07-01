@@ -273,7 +273,8 @@ package flash.display
 		
 		public function drawTriangles(vertices:Vector.<Number>, indices:Vector.<int>=null, uvtData:Vector.<Number>=null, culling:String="none"):void
 		{
-		
+			makePath();
+			lastPath.drawTriangles(vertices, indices, uvtData);
 		}
 		
 		private function drawPathObject(path:IGraphicsPath):void

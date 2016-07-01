@@ -20,6 +20,7 @@ package flash.display
       public static const ARC:int = 7;
 	  
 	  public static const CLOSE_PATH:int = 8;
+	  public static const DRAW_TRIANGLES:int = 9;
        
       public function GraphicsPathCommand()
       {

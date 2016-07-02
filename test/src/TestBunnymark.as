@@ -4,6 +4,7 @@ package
 	import flash.__native.WebGLRenderer;
 	}
 	import bunnymark.Background;
+	import bunnymark.TileTest;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	/**
@@ -26,10 +27,10 @@ package
 			bg.rows = 12;
 			bg.x =-50;
 			bg.y =-50;
-			bg.texture = new BitmapData(256, 256, true, 0xffff0000);
-			bg.texture.perlinNoise(50, 50, 3, 1, true, true);
 			bg.setSize(_width, _height);
 			addChild(bg);
+			
+			addChild(new TileTest());
 		}
 		
 	}

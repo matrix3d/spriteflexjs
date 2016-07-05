@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.__native.GLCanvasRenderingContext2D;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	
@@ -30,6 +31,16 @@ package flash.display
 		 */
 		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{
+			if (pattern==null&&bitmapData) {
+				pattern = ctx.createPattern(bitmapData.image, this.repeat ? "repeat" : "no-repeat");
+			}
+			ctx.fillStyle = pattern as String;
+		}
+		
+		/**
+		 * @flexjsignorecoercion String
+		 */
+		public function gldraw(ctx:GLCanvasRenderingContext2D, colorTransform:ColorTransform):void{
 			if (pattern==null&&bitmapData) {
 				pattern = ctx.createPattern(bitmapData.image, this.repeat ? "repeat" : "no-repeat");
 			}

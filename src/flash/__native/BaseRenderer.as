@@ -21,7 +21,7 @@ package flash.__native
 			
 		}
 		
-		override public function getCssColor(color:uint,alpha:Number, ct:ColorTransform):String 
+		override public function getCssColor(color:uint,alpha:Number, ct:ColorTransform,toarr:Array):String 
 		{
 			return "rgba(" + int((color >> 16 & 0xff)*ct.redMultiplier+ct.redOffset) + "," + int((color >> 8 & 0xff)*ct.greenMultiplier+ct.greenOffset) + "," + int((color & 0xff)*ct.greenMultiplier+ct.greenOffset) + "," + (alpha*ct.alphaMultiplier+ct.alphaOffset) + ")";
 		}

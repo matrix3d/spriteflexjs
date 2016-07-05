@@ -325,7 +325,7 @@ package flash.display
 				stage.canvas.height = stage.stageHeight;
 			}
 			var ctx:CanvasRenderingContext2D = stage.ctx;
-			ctx.globalAlpha = 1;
+			//ctx.globalAlpha = 1;
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.clearRect(0, 0, stage.stageWidth, stage.stageHeight);
 			SpriteFlexjs.drawCounter = 0;

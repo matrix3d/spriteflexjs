@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.__native.GLCanvasRenderingContext2D;
 	import flash.__native.GLPath2D;
 	import flash.geom.ColorTransform;
 	
@@ -155,8 +156,14 @@ package flash.display
 						break;
 					}
 				}
-				//ctx.closePath();
 			}
+		}
+		
+		/**
+		 * @flexjsignorecoercion flash.__native.GLCanvasRenderingContext2D
+		 */
+		public function gldraw(ctx:GLCanvasRenderingContext2D, colorTransform:ColorTransform):void{
+			ctx.drawPath(this, colorTransform);
 		}
 		
 		public function closePath():void 

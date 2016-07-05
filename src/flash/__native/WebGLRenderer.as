@@ -27,9 +27,13 @@ package flash.__native
 		/**
 		 * @flexjsignorecoercion String
 		 */
-		override public function getCssColor(color:uint, alpha:Number, ct:ColorTransform):String 
+		override public function getCssColor(color:uint, alpha:Number, ct:ColorTransform,toarr:Array):String 
 		{
-			return [ ((color >> 16 & 0xff)*ct.redMultiplier+ct.redOffset)/0xff , ((color >> 8 & 0xff)*ct.greenMultiplier+ct.greenOffset)/0xff, ((color & 0xff)*ct.greenMultiplier+ct.greenOffset)/0xff , (alpha*ct.alphaMultiplier+ct.alphaOffset)] as String;
+			toarr[0] = ((color >> 16 & 0xff)*ct.redMultiplier+ct.redOffset)/0xff;
+			toarr[1] = ((color >> 8 & 0xff)*ct.greenMultiplier+ct.greenOffset)/0xff;
+			toarr[2] = ((color & 0xff)*ct.greenMultiplier+ct.greenOffset)/0xff;
+			toarr[3] = (alpha * ct.alphaMultiplier + ct.alphaOffset);
+			return null;
 		}
 		
 		/**
@@ -38,10 +42,7 @@ package flash.__native
 		override public function renderImage(ctx:CanvasRenderingContext2D, img:BitmapData, m:Matrix, blendMode:String, colorTransform:ColorTransform):void 
 		{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
-			glctx.globalRed = colorTransform.redMultiplier;
-			glctx.globalGreen = colorTransform.greenMultiplier;
-			glctx.globalBlue = colorTransform.blueMultiplier;
-			super.renderImage(ctx, img, m, blendMode, colorTransform);
+			glctx.drawImageInternal(img.image,glctx.bitmapDrawable,m,null,true,[colorTransform.redMultiplier,colorTransform.greenMultiplier,colorTransform.blueMultiplier,colorTransform.alphaMultiplier],true);
 		}
 		
 		/**
@@ -50,7 +51,7 @@ package flash.__native
 		 */
 		override public function renderGraphics(ctx:CanvasRenderingContext2D, g:Graphics, m:Matrix, blendMode:String, colorTransform:ColorTransform):void{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
-			ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+			glctx.setTransform2(m);
 			ctx.globalCompositeOperation = blendMode;
 			ctx.globalAlpha = colorTransform.alphaMultiplier;
 			glctx.globalRed = colorTransform.redMultiplier;
@@ -60,17 +61,12 @@ package flash.__native
 			for (var i:int = 0; i < len;i++ )
 			{
 				var igd:IGraphicsData = g.graphicsData[i];
-				if (igd is GraphicsPath){
-					var path:GraphicsPath = igd as GraphicsPath;
-					glctx.drawPath(path, colorTransform);
-				}else{
-					igd.draw(ctx, colorTransform);
-				}
+				igd.gldraw(glctx, colorTransform);
 			}
 			if (g.lastFill)
 			{
 				endFillInstance.fill = g.lastFill;
-				endFillInstance.draw(ctx,colorTransform);
+				endFillInstance.gldraw(glctx,colorTransform);
 			}
 			
 			if (g.lastStroke)
@@ -79,6 +75,17 @@ package flash.__native
 			}
 			ctx.fillStyle = null;
 			ctx.strokeStyle = null;
+		}
+		
+		override public function renderText(ctx:CanvasRenderingContext2D, txt:String, textFormat:TextFormat, m:Matrix, blendMode:String, colorTransform:ColorTransform, x:Number, y:Number):void{
+			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
+			ctx.globalAlpha = colorTransform.alphaMultiplier;
+			ctx.globalCompositeOperation = blendMode;//BlendMode.getCompVal(blendMode);
+			glctx.setTransform2(m);
+			ctx.font = textFormat.css;
+			ctx.fillStyle = textFormat.csscolor;
+			ctx.textBaseline = "top";
+			ctx.fillText(txt, x, y);
 		}
 	}
 

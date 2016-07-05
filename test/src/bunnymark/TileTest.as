@@ -90,6 +90,7 @@ package bunnymark{
 		{
 			var i:int = 500;
 			numBunnies += i;
+			trace("numBunies",numBunnies);
 			while(i-->0){
 				var bunny:Bunny = new Bunny();
 				bunny.display = new Bitmap(bunnyAsset);

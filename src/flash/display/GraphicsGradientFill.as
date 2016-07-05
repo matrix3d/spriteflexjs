@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.__native.GLCanvasRenderingContext2D;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	
@@ -95,6 +96,16 @@ package flash.display
 		 */
 		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{
+			if (gradient == null) {
+				if (type==GradientType.LINEAR) {
+					gradient = ctx.createLinearGradient(0, 0, 1, 1);
+				}else {
+					gradient = ctx.createRadialGradient(0, 0, 1, 0, 0, 1);
+				}
+			}
+			ctx.fillStyle = gradient as String;
+		}
+		public function gldraw(ctx:GLCanvasRenderingContext2D, colorTransform:ColorTransform):void{
 			if (gradient == null) {
 				if (type==GradientType.LINEAR) {
 					gradient = ctx.createLinearGradient(0, 0, 1, 1);

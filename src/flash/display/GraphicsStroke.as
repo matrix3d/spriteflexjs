@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.__native.GLCanvasRenderingContext2D;
 	import flash.geom.ColorTransform;
 	
 	public final class GraphicsStroke extends Object implements IGraphicsStroke, IGraphicsData
@@ -87,7 +88,6 @@ package flash.display
 		
 		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{
-			
 			if (isNaN(thickness))
 			{
 				ctx.stroke();
@@ -98,7 +98,28 @@ package flash.display
 				if (fill is GraphicsSolidFill)
 				{
 					var sf:GraphicsSolidFill = fill as GraphicsSolidFill;
-					ctx.strokeStyle = SpriteFlexjs.renderer.getCssColor(sf.color, sf.alpha,colorTransform);//sf.getCssColor(colorTransform);
+					ctx.strokeStyle = SpriteFlexjs.renderer.getCssColor(sf.color, sf.alpha,colorTransform,null);//sf.getCssColor(colorTransform);
+				}
+			}
+		}
+		
+		/**
+		 * @flexjsignorecoercion String
+		 * @flexjsignorecoercion flash.display.GraphicsSolidFill
+		 */
+		public function gldraw(ctx:GLCanvasRenderingContext2D, colorTransform:ColorTransform):void{
+			if (isNaN(thickness))
+			{
+				ctx.stroke();
+			}
+			else
+			{
+				ctx.lineWidth = thickness;
+				if (fill is GraphicsSolidFill)
+				{
+					var sf:GraphicsSolidFill = fill as GraphicsSolidFill;
+					SpriteFlexjs.renderer.getCssColor(sf.color, sf.alpha,colorTransform,sf._glcolor);
+					ctx.strokeStyle = sf._glcolor as String; //sf.getCssColor(colorTransform);
 				}
 			}
 		}

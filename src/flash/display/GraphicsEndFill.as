@@ -1,11 +1,13 @@
 package flash.display
 {
+	import flash.__native.GLCanvasRenderingContext2D;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	
 	public final class GraphicsEndFill extends Object implements IGraphicsFill, IGraphicsData
 	{
 		public var fill:IGraphicsFill;
+		public var _worldMatrix:Matrix = new Matrix;
 		public function GraphicsEndFill()
 		{
 			super();
@@ -31,6 +33,31 @@ package flash.display
 				if (m) {
 					ctx.restore();
 				}
+			}
+		}
+		/**
+		 * @flexjsignorecoercion flash.display.GraphicsBitmapFill
+		 */
+		public function gldraw(ctx:GLCanvasRenderingContext2D, colorTransform:ColorTransform):void{
+			if (fill) {
+				if(fill is GraphicsBitmapFill){
+					var bfill:GraphicsBitmapFill = fill as GraphicsBitmapFill;
+					if (bfill.matrix) {
+						var m:Matrix = bfill.matrix;
+					}
+					ctx.globalAlpha = colorTransform.alphaMultiplier;
+				}else{
+					ctx.globalAlpha = 1;
+				}
+				if(m){
+					//ctx.save();
+					_worldMatrix.copyFrom(m);
+					ctx.transform2(_worldMatrix);
+				}
+				ctx.fill();
+				//if (m) {
+					//ctx.restore();
+				//}
 			}
 		}
 	}

@@ -54,7 +54,7 @@ package flash.display
 			{
 				var m:Matrix = transform.concatenatedMatrix;
 				
-				var w:Number = _bitmapData.width;
+				/*var w:Number = _bitmapData.width;
 				var h:Number = _bitmapData.height;
 				var a:Number = m.a * w;
 				var b:Number = m.c * h;
@@ -67,10 +67,10 @@ package flash.display
 				var sw:Number = stage.stageWidth;
 				var sh:Number = stage.stageHeight;
 				
-				if (maxX > 0 && maxY > 0 && minX < sw && minY < sh){
+				if (maxX > 0 && maxY > 0 && minX < sw && minY < sh){*/
 					SpriteFlexjs.renderer.renderImage(stage.ctx, _bitmapData, m, blendMode, transform.concatenatedColorTransform);
 					SpriteFlexjs.drawCounter++;
-				}
+				//}
 			}
 		}
 		

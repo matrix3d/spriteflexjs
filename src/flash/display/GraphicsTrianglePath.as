@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.__native.GLCanvasRenderingContext2D;
 	import flash.geom.ColorTransform;
 	
 	public final class GraphicsTrianglePath extends Object implements IGraphicsPath, IGraphicsData
@@ -43,6 +44,9 @@ package flash.display
 		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{
 			trace("tripath");
+		}
+		public function gldraw(ctx:GLCanvasRenderingContext2D, colorTransform:ColorTransform):void{
+			
 		}
 	}
 }

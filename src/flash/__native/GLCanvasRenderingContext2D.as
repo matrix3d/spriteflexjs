@@ -30,10 +30,10 @@ package flash.__native
 		public var fillStyle : String;
 		public var font : String;
 		public var getLineDash : Object;
-		public var globalAlpha : Number;
-		public var globalRed : Number;
-		public var globalGreen : Number;
-		public var globalBlue : Number;
+		public var globalAlpha : Number=1;
+		public var globalRed : Number=1;
+		public var globalGreen : Number=1;
+		public var globalBlue : Number=1;
 		public var globalCompositeOperation : String;
 		public var lineCap : String;
 		public var lineJoin : String;
@@ -53,7 +53,7 @@ package flash.__native
 		public var ctx:Context3D;
 		public var currentPath:GLPath2D;
 		private var text2img:Object = { };
-		private var bitmapDrawable:GLDrawable;
+		public var bitmapDrawable:GLDrawable;
 		private var bitmapProg:Program3D;
 		private var colorProg:Program3D;
 		private var matr3d:Matrix3D = new Matrix3D;
@@ -233,7 +233,7 @@ package flash.__native
 				}
 				renderImage(image, drawable, posmatr, uvmatr, scaleWithImage,scaleWithImageUV);
 			}else{
-				batchs.push([image,drawable,posmatr?posmatr.clone():null,uvmatr?uvmatr.clone():null,scaleWithImage,color,scaleWithImageUV]);
+				batchs.push([image,drawable,posmatr/*?posmatr.clone():null*/,uvmatr/*?uvmatr.clone():null*/,scaleWithImage,color,scaleWithImageUV]);
 			}
 		}
 		
@@ -387,7 +387,8 @@ package flash.__native
 					var iw:int = image.width;
 					var ih:int = image.height;
 				}
-				for (var j:int = renderbatch[0]; j <= renderbatch[1]; j++ ){
+				var len3:int = renderbatch[1];
+				for (var j:int = renderbatch[0]; j <= len3; j++ ){
 					batch = batchs[j];
 					drawable = batch[1]; 
 					var posmatr:Matrix = batch[2];
@@ -474,27 +475,11 @@ package flash.__native
 		 * @flexjsignorecoercion Array
 		 */
 		public function fill (opt_fillRule:String = "") : Object {
-			/*var color:GLVertexBufferSet = currentPath.drawable.color;
-			color.dirty = true;
-			var data:Float32Array = color.data;
-			var len:int = data.length;*/
 			if (fillStyle is GLCanvasPattern) {
-				/*for (var i:int = 0; i < len;i+=4 ){
-					data[i] = globalRed;
-					data[i+1] = globalGreen
-					data[i+2] = globalBlue
-					data[i + 3] = globalAlpha;
-				}*/
 				var glcp:GLCanvasPattern = fillStyle as GLCanvasPattern;
 				drawImageInternal(glcp.image, currentPath.drawable,currentPath.matr,matr,false,[globalRed,globalGreen,globalBlue,globalAlpha],currentPath.path.tris.length>0);
-			}else{
+			}else if(currentPath){
 				var carrn:Array = fillStyle as Array;
-				/*for (i = 0; i < len;i+=4 ){
-					data[i] = carrn[0];
-					data[i+1] = carrn[1];
-					data[i+2] = carrn[2];
-					data[i+3] = carrn[3];
-				}*/
 				drawImageInternal(fillStyle, currentPath.drawable,currentPath.matr,null,false,carrn,false);
 			}
 			return null;
@@ -590,10 +575,13 @@ package flash.__native
 		}
 
 		public function setTransform (m11:Number, m12:Number, m21:Number, m22:Number, dx:Number, dy:Number) : Object {
-			matr.setTo(m11, m12, m21, m22, dx, dy);
+			//matr.setTo(m11, m12, m21, m22, dx, dy);
 			return null;
 		}
-
+		public function setTransform2 (m:Matrix) : Object {
+			matr = m;// r.copyFrom(m);
+			return null;
+		}
 		public function stroke () : Object {
 			return null;
 		}
@@ -611,7 +599,31 @@ package flash.__native
 			matr.concat(matrhelp);
 			return null;
 		}
-
+		public function transform2 (m:Matrix) : Object {
+			var result_a:Number = matr.a * m.a;
+			var result_b:Number = 0.0;
+			var result_c:Number = 0.0;
+			var result_d:Number = matr.d * m.d;
+			var result_tx:Number = matr.tx * m.a + m.tx;
+			var result_ty:Number = matr.ty * m.d + m.ty;
+			if (matr.b != 0.0 || matr.c != 0.0 || m.b != 0.0 || m.c != 0.0)
+			{
+				result_a = result_a + matr.b * m.c;
+				result_d = result_d + matr.c * m.b;
+				result_b = result_b + (matr.a * m.b + matr.b * m.d);
+				result_c = result_c + (matr.c * m.a + matr.d * m.c);
+				result_tx = result_tx + matr.ty * m.c;
+				result_ty = result_ty + matr.tx * m.b;
+			}
+			m.a = result_a;
+			m.b = result_b;
+			m.c = result_c;
+			m.d = result_d;
+			m.tx = result_tx;
+			m.ty = result_ty;
+			matr = m;
+			return null;
+		}
 		public function translate (x:Number, y:Number) : Object {
 			matr.translate(x, y);
 			return null;

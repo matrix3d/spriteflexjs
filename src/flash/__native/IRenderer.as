@@ -22,7 +22,7 @@ package flash.__native
 			return null;
 		}
 		
-		public function getCssColor(color:uint,alpha:Number,ct:ColorTransform):String{
+		public function getCssColor(color:uint,alpha:Number,ct:ColorTransform,toarr:Array):String{
 			return null;
 		}
 		

@@ -31,9 +31,10 @@ package flash.__native
 		public var font : String;
 		public var getLineDash : Object;
 		public var globalAlpha : Number=1;
-		public var globalRed : Number=1;
-		public var globalGreen : Number=1;
-		public var globalBlue : Number=1;
+		//public var globalRed : Number=1;
+		//public var globalGreen : Number=1;
+		//public var globalBlue : Number=1;
+		public var colorTransform:ColorTransform;
 		public var globalCompositeOperation : String;
 		public var lineCap : String;
 		public var lineJoin : String;
@@ -202,7 +203,7 @@ package flash.__native
 		}
 
 		public function drawImage (image:Object, dx:Number, dy:Number, opt_dw:Number = 0, opt_dh:Number = 0, opt_sx:Number = 0, opt_sy:Number = 0, opt_sw:Number = 0, opt_sh:Number = 0) : Object {
-			drawImageInternal(image,bitmapDrawable, matr,null,true,[globalRed,globalGreen,globalBlue,globalAlpha],true);
+			drawImageInternal(image,bitmapDrawable, matr,null,true,colorTransform._glColorArr,true);
 			return null;
 		}
 		
@@ -477,7 +478,7 @@ package flash.__native
 		public function fill (opt_fillRule:String = "") : Object {
 			if (fillStyle is GLCanvasPattern) {
 				var glcp:GLCanvasPattern = fillStyle as GLCanvasPattern;
-				drawImageInternal(glcp.image, currentPath.drawable,currentPath.matr,matr,false,[globalRed,globalGreen,globalBlue,globalAlpha],currentPath.path.tris.length>0);
+				drawImageInternal(glcp.image, currentPath.drawable,currentPath.matr,matr,false,colorTransform._glColorArr,currentPath.path.tris.length>0);
 			}else if(currentPath){
 				var carrn:Array = fillStyle as Array;
 				drawImageInternal(fillStyle, currentPath.drawable,currentPath.matr,null,false,carrn,false);
@@ -505,7 +506,7 @@ package flash.__native
 			}
 			matrhelp.copyFrom(matr);
 			matrhelp.translate(x, y);
-			drawImageInternal(image, bitmapDrawable,matrhelp,null,true,[globalRed,globalGreen,globalBlue,globalAlpha],true);
+			drawImageInternal(image, bitmapDrawable,matrhelp,null,true,colorTransform._glColorArr,true);
 			return null;
 		}
 

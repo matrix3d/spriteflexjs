@@ -42,7 +42,7 @@ package flash.__native
 		override public function renderImage(ctx:CanvasRenderingContext2D, img:BitmapData, m:Matrix, blendMode:String, colorTransform:ColorTransform):void 
 		{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
-			glctx.drawImageInternal(img.image,glctx.bitmapDrawable,m,null,true,[colorTransform.redMultiplier,colorTransform.greenMultiplier,colorTransform.blueMultiplier,colorTransform.alphaMultiplier],true);
+			glctx.drawImageInternal(img.image,glctx.bitmapDrawable,m,null,true,colorTransform._glColorArr,true);
 		}
 		
 		/**
@@ -53,10 +53,11 @@ package flash.__native
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
 			glctx.setTransform2(m);
 			ctx.globalCompositeOperation = blendMode;
-			ctx.globalAlpha = colorTransform.alphaMultiplier;
-			glctx.globalRed = colorTransform.redMultiplier;
-			glctx.globalGreen = colorTransform.greenMultiplier;
-			glctx.globalBlue = colorTransform.blueMultiplier;
+			//ctx.globalAlpha = colorTransform.alphaMultiplier;
+			//glctx.globalRed = colorTransform.redMultiplier;
+			//glctx.globalGreen = colorTransform.greenMultiplier;
+			//glctx.globalBlue = colorTransform.blueMultiplier;
+			glctx.colorTransform = colorTransform;
 			var len:int = g.graphicsData.length;
 			for (var i:int = 0; i < len;i++ )
 			{
@@ -79,7 +80,7 @@ package flash.__native
 		
 		override public function renderText(ctx:CanvasRenderingContext2D, txt:String, textFormat:TextFormat, m:Matrix, blendMode:String, colorTransform:ColorTransform, x:Number, y:Number):void{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
-			ctx.globalAlpha = colorTransform.alphaMultiplier;
+			glctx.colorTransform = colorTransform;
 			ctx.globalCompositeOperation = blendMode;//BlendMode.getCompVal(blendMode);
 			glctx.setTransform2(m);
 			ctx.font = textFormat.css;

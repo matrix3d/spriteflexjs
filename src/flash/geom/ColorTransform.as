@@ -4,13 +4,13 @@ package flash.geom
 	public class ColorTransform extends Object
 	{
 		
-		public var redMultiplier:Number;
+		private var _redMultiplier:Number;
 		
-		public var greenMultiplier:Number;
+		private var _greenMultiplier:Number;
 		
-		public var blueMultiplier:Number;
+		private var _blueMultiplier:Number;
 		
-		public var alphaMultiplier:Number;
+		private var _alphaMultiplier:Number;
 		
 		public var redOffset:Number;
 		
@@ -20,6 +20,7 @@ package flash.geom
 		
 		public var alphaOffset:Number;
 		
+		public var _glColorArr:Array = [];
 		public function ColorTransform(redMultiplier:Number = 1.0, greenMultiplier:Number = 1.0, blueMultiplier:Number = 1.0, alphaMultiplier:Number = 1.0, redOffset:Number = 0, greenOffset:Number = 0, blueOffset:Number = 0, alphaOffset:Number = 0)
 		{
 			super();
@@ -44,6 +45,50 @@ package flash.geom
 			this.redOffset = newColor >> 16 & 255;
 			this.greenOffset = newColor >> 8 & 255;
 			this.blueOffset = newColor & 255;
+		}
+		
+		public function get redMultiplier():Number 
+		{
+			return _redMultiplier;
+		}
+		
+		public function set redMultiplier(value:Number):void 
+		{
+			_redMultiplier = value;
+			_glColorArr[0] = value;
+		}
+		
+		public function get greenMultiplier():Number 
+		{
+			return _greenMultiplier;
+		}
+		
+		public function set greenMultiplier(value:Number):void 
+		{
+			_greenMultiplier = value;
+			_glColorArr[1] = value;
+		}
+		
+		public function get blueMultiplier():Number 
+		{
+			return _blueMultiplier;
+		}
+		
+		public function set blueMultiplier(value:Number):void 
+		{
+			_blueMultiplier = value;
+			_glColorArr[2] = value;
+		}
+		
+		public function get alphaMultiplier():Number 
+		{
+			return _alphaMultiplier;
+		}
+		
+		public function set alphaMultiplier(value:Number):void 
+		{
+			_alphaMultiplier = value;
+			_glColorArr[3] = value;
 		}
 		
 		public function concat(second:ColorTransform):void

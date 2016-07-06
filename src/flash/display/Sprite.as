@@ -45,18 +45,18 @@ package flash.display
 			return graphics.bound;
 		}
 		
-		override public function __update():void
+		override public function __update(ctx:CanvasRenderingContext2D):void
 		{
-			if (stage&&visible&&graphics.graphicsData.length)
-				graphics.draw(stage.ctx, transform.concatenatedMatrix, blendMode, transform.concatenatedColorTransform);
+			if (/*stage&&*/visible&&graphics.graphicsData.length)
+				graphics.draw(ctx, transform.concatenatedMatrix, blendMode, transform.concatenatedColorTransform);
 			if (hasEventListener(Event.ENTER_FRAME))
 				dispatchEvent(new Event(Event.ENTER_FRAME));
-			super.__update();
+			super.__update(ctx);
 		}
 		
 		override protected function __doMouse(e:flash.events.MouseEvent):DisplayObject 
 		{
-			if (stage && mouseEnabled&&visible) {
+			if (/*stage &&*/ mouseEnabled&&visible) {
 				var obj:DisplayObject = super.__doMouse(e);
 				if (obj) {
 					return obj;

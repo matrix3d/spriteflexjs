@@ -18,6 +18,7 @@ package flash.display
 		public var bound:Rectangle;// = new Rectangle(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
 		private var lockBound:Boolean = false;
 		public static var debug:Boolean = false;
+		public var _worldMatrix:Matrix = new Matrix;
 		public function Graphics()
 		{
 			super();

@@ -37,6 +37,7 @@ package flash.display
 		public function gldraw(ctx:GLCanvasRenderingContext2D, colorTransform:ColorTransform):void{
 			SpriteFlexjs.renderer.getCssColor(color, alpha, colorTransform, _glcolor);
 			ctx.fillStyle = _glcolor as String; 
+			ctx.fillStyleIsImage = false;
 		}
 	}
 }

@@ -37,6 +37,13 @@ package flash.__native
 		public function renderText(ctx:CanvasRenderingContext2D,txt:String,textFormat:TextFormat, m:Matrix, blendMode:String, colorTransform:ColorTransform,x:Number,y:Number):void{
 			
 		}
+		
+		public function finish(ctx:CanvasRenderingContext2D):void{
+			
+		}
+		public function start(ctx:CanvasRenderingContext2D):void{
+			
+		}
 	}
 
 }

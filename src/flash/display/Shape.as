@@ -11,12 +11,12 @@ package flash.display
 			super();
 		}
 		
-		override public function __update():void
+		override public function __update(ctx:CanvasRenderingContext2D):void
 		{
-			if (hasEventListener(Event.ENTER_FRAME))
-				dispatchEvent(new Event(Event.ENTER_FRAME));
-			if (stage&&visible&&graphics.graphicsData.length)
-				graphics.draw(stage.ctx, transform.concatenatedMatrix,blendMode,transform.concatenatedColorTransform);
+			/*if (hasEventListener(Event.ENTER_FRAME))
+				dispatchEvent(new Event(Event.ENTER_FRAME));*/
+			if (/*stage&&*/visible&&graphics.graphicsData.length)
+				graphics.draw(ctx, transform.concatenatedMatrix,blendMode,transform.concatenatedColorTransform);
 		}
 		
 		override public function hitTestPoint(x:Number, y:Number, shapeFlag:Boolean = false):Boolean 

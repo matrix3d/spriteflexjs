@@ -147,13 +147,13 @@ package flash.display
 		
 		}
 		
-		override public function __update():void
+		override public function __update(ctx:CanvasRenderingContext2D):void
 		{
-			if (stage && visible){
+			if (/*stage && */visible){
 				var len:int = children.length
 				for (var i:int = 0; i < len;i++ ){
 					var c:DisplayObject = children[i];
-					c.__update();
+					c.__update(ctx);
 				}
 			}
 		}

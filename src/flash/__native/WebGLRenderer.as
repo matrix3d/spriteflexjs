@@ -42,7 +42,7 @@ package flash.__native
 		override public function renderImage(ctx:CanvasRenderingContext2D, img:BitmapData, m:Matrix, blendMode:String, colorTransform:ColorTransform):void 
 		{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
-			glctx.drawImageInternal(img.image,glctx.bitmapDrawable,m,null,true,colorTransform._glColorArr,true);
+			glctx.drawImageInternal(img.image,glctx.bitmapDrawable,m,null,true,colorTransform._glColorArr,true,true);
 		}
 		
 		/**
@@ -67,6 +67,7 @@ package flash.__native
 			if (g.lastFill)
 			{
 				endFillInstance.fill = g.lastFill;
+				endFillInstance._worldMatrix = g._worldMatrix;
 				endFillInstance.gldraw(glctx,colorTransform);
 			}
 			
@@ -78,6 +79,9 @@ package flash.__native
 			ctx.strokeStyle = null;
 		}
 		
+		/**
+		 * @flexjsignorecoercion flash.__native.GLCanvasRenderingContext2D
+		 */
 		override public function renderText(ctx:CanvasRenderingContext2D, txt:String, textFormat:TextFormat, m:Matrix, blendMode:String, colorTransform:ColorTransform, x:Number, y:Number):void{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
 			glctx.colorTransform = colorTransform;
@@ -87,6 +91,14 @@ package flash.__native
 			ctx.fillStyle = textFormat.csscolor;
 			ctx.textBaseline = "top";
 			ctx.fillText(txt, x, y);
+		}
+		
+		/**
+		 * @flexjsignorecoercion flash.__native.GLCanvasRenderingContext2D
+		 */
+		override public function finish(ctx:CanvasRenderingContext2D):void{
+			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
+			glctx.drawImageInternal(null, null, null, null, true, null, true, true);
 		}
 	}
 

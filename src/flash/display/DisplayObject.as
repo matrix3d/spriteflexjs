@@ -310,7 +310,7 @@ package flash.display
 		
 		public function set metaData(param1:Object):void  {/**/ }
 		
-		public function __update():void
+		public function __update(ctx:CanvasRenderingContext2D):void
 		{
 			/*if (hasEventListener(Event.ENTER_FRAME))
 				dispatchEvent(new Event(Event.ENTER_FRAME));*/
@@ -329,7 +329,9 @@ package flash.display
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.clearRect(0, 0, stage.stageWidth, stage.stageHeight);
 			SpriteFlexjs.drawCounter = 0;
-			__update();
+			SpriteFlexjs.renderer.start(ctx);
+			__update(ctx);
+			SpriteFlexjs.renderer.finish(ctx);
 			//if (SpriteFlexjs.debug) {
 				//trace("__update",getTimer() - time);
 			//}

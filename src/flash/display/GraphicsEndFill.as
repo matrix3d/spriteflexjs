@@ -52,8 +52,10 @@ package flash.display
 				if(m){
 					//ctx.save();
 					_worldMatrix.copyFrom(m);
-					ctx.transform2(_worldMatrix);
+				}else{
+					_worldMatrix.identity();
 				}
+				ctx.transform2(_worldMatrix);
 				ctx.fill();
 				//if (m) {
 					//ctx.restore();

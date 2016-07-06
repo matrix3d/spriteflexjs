@@ -114,6 +114,7 @@ package flash.display
 				}
 			}
 			ctx.fillStyle = gradient as String;
+			ctx.fillStyleIsImage = false;
 		}
 	}
 }

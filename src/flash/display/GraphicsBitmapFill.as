@@ -44,6 +44,7 @@ package flash.display
 			if (pattern==null&&bitmapData) {
 				pattern = ctx.createPattern(bitmapData.image, this.repeat ? "repeat" : "no-repeat");
 			}
+			ctx.fillStyleIsImage = true;
 			ctx.fillStyle = pattern as String;
 		}
 	}

@@ -375,12 +375,11 @@ package flash.text
 		
 		public function set useRichTextClipboard(param1:Boolean):void  {/**/ }
 		
-		override public function __update():void
+		override public function __update(ctx:CanvasRenderingContext2D):void
 		{
-			super.__update();
-			if (stage && _text != null&&visible)
+			super.__update(ctx);
+			if (/*stage &&*/ _text != null&&visible)
 			{
-				var ctx:CanvasRenderingContext2D = stage.ctx;
 				__draw(ctx,transform.concatenatedMatrix);
 				SpriteFlexjs.drawCounter++;
 			}

@@ -95,7 +95,7 @@ package flash.__native
 					offset += vsdata.length / 2;
 				}
 				if(_drawable==null){
-					_drawable = new GLDrawable(pos, pos, index);
+					_drawable = new GLDrawable(pos, pos, index,WebGLRenderingContext.STATIC_DRAW);
 				}else{
 					_drawable.pos.data = pos;
 					_drawable.uv.data = diffuv?uv:pos;

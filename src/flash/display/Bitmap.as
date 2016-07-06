@@ -47,10 +47,10 @@ package flash.display
 			return null;
 		}
 		
-		override public function __update():void
+		override public function __update(ctx:CanvasRenderingContext2D):void
 		{
 			//super.__update();
-			if (stage && _bitmapData&&_bitmapData.image&&visible)
+			if (/*stage &&*/ _bitmapData&&_bitmapData.image&&visible)
 			{
 				var m:Matrix = transform.concatenatedMatrix;
 				
@@ -68,7 +68,7 @@ package flash.display
 				var sh:Number = stage.stageHeight;
 				
 				if (maxX > 0 && maxY > 0 && minX < sw && minY < sh){*/
-					SpriteFlexjs.renderer.renderImage(stage.ctx, _bitmapData, m, blendMode, transform.concatenatedColorTransform);
+					SpriteFlexjs.renderer.renderImage(ctx, _bitmapData, m, blendMode, transform.concatenatedColorTransform);
 					SpriteFlexjs.drawCounter++;
 				//}
 			}
@@ -76,7 +76,7 @@ package flash.display
 		
 		override protected function __doMouse(e:flash.events.MouseEvent):DisplayObject 
 		{
-			if (stage&&visible) {
+			if (/*stage&&*/visible) {
 				var obj:DisplayObject = super.__doMouse(e);
 				if (obj) {
 					return obj;

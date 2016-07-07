@@ -86,7 +86,7 @@ package flash.__native
 			this.canvas = stage.canvas;
 			ctx = new Context3D;
 			ctx.canvas = canvas;
-			ctx.gl = (canvas.getContext("webgl",{alpha:false}) || canvas.getContext("experimental-webgl",{alpha:false})) as WebGLRenderingContext;
+			ctx.gl = (canvas.getContext("webgl", {alpha:false,antialias:false}) || canvas.getContext("experimental-webgl", {alpha:false,antialias:false})) as WebGLRenderingContext;
 			stage_resize(null);
 			ctx.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			ctx.setCulling(Context3DTriangleFace.NONE);
@@ -151,7 +151,7 @@ package flash.__native
 			ctx.configureBackBuffer(stage.stageWidth, stage.stageHeight, 0, false);
 		}
 		
-		public function arc (x:Number, y:Number, radius:Number, startAngle:Number, endAngle:Number, opt_anticlockwise:Boolean=false) : Object{
+		public function arc (x:Number, y:Number, radius:Number, startAngle:Number, endAngle:Number/*, opt_anticlockwise:Boolean=false*/) : Object{
 			currentPath.path.arc(x, y, radius, startAngle, endAngle);
 			return null;
 		}
@@ -206,7 +206,7 @@ package flash.__native
 			return null;
 		}
 
-		public function drawImage (image:Object, dx:Number, dy:Number, opt_dw:Number = 0, opt_dh:Number = 0, opt_sx:Number = 0, opt_sy:Number = 0, opt_sw:Number = 0, opt_sh:Number = 0) : Object {
+		public function drawImage (image:Object, dx:Number, dy:Number/*, opt_dw:Number = 0, opt_dh:Number = 0, opt_sx:Number = 0, opt_sy:Number = 0, opt_sw:Number = 0, opt_sh:Number = 0*/) : Object {
 			drawImageInternal(image,bitmapDrawable, matr,null,true,colorTransform._glColorArr,true,true);
 			return null;
 		}
@@ -353,7 +353,7 @@ package flash.__native
 			var newi:GLIndexBufferSet = indexPool[indexKey];
 			if (newpos==null){
 				newpos = posPool[posKey] = new GLVertexBufferSet(new Float32Array(posKey * 2), 2,ctx.gl.DYNAMIC_DRAW);
-				trace("bat new pos",posKey);
+				trace("bat new pos",posKey,numPos);
 			}
 			if (newuv==null&&lastImageIsImage){
 				newuv = uvPool[posKey] = new GLVertexBufferSet(new Float32Array(posKey * 2), 2, ctx.gl.DYNAMIC_DRAW);
@@ -363,7 +363,7 @@ package flash.__native
 			}
 			if (newi==null){
 				newi = indexPool[indexKey] = new GLIndexBufferSet(new Uint16Array(indexKey * 3),ctx.gl.DYNAMIC_DRAW);
-				trace("bat new index",indexKey);
+				trace("bat new index",indexKey,numIndex);
 			}
 			var newposdata:Float32Array = newpos.data;
 			if(lastImageIsImage){
@@ -468,7 +468,7 @@ package flash.__native
 		/**
 		 * @flexjsignorecoercion Array
 		 */
-		public function fill (opt_fillRule:String = "") : Object {
+		public function fill (/*opt_fillRule:String = ""*/) : Object {
 			if (fillStyleIsImage) {
 				var glcp:GLCanvasPattern = fillStyle as GLCanvasPattern;
 				drawImageInternal(glcp.image, currentPath.drawable,currentPath.matr,matr,false,colorTransform._glColorArr,currentPath.path.tris.length>0,true);
@@ -483,7 +483,7 @@ package flash.__native
 			return null;
 		}
 
-		public function fillText (text:String, x:Number, y:Number, opt_maxWidth:Number = 0) : Object {
+		public function fillText (text:String, x:Number, y:Number/*, opt_maxWidth:Number = 0*/) : Object {
 			var image:HTMLCanvasElement = text2img[text];
 			if (image==null) {
 				image = text2img[text]=document.createElement("canvas") as HTMLCanvasElement;

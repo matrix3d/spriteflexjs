@@ -22,20 +22,18 @@ package flash.__native
 		}
 		
 		public function getBuff(ctx:Context3D):VertexBuffer3D{
-			//if (dirty){
-			//var key:String = data.length + "," + data32PerVertex+name;
-			//var buff:VertexBuffer3D = pool[key];
 			if (buff==null){
-				buff/* = pool[key]*/= ctx.createVertexBuffer(data.length / data32PerVertex, data32PerVertex);
-				//dirty = false;
-			}
-			if(dirty){
+				buff= ctx.createVertexBuffer(data.length / data32PerVertex, data32PerVertex);
 				buff.gl.bindBuffer(buff.gl.ARRAY_BUFFER, buff.buff);
 				buff.gl.bufferData(buff.gl.ARRAY_BUFFER, data, usage);
 				dirty = false;
 			}
-			//buff.uploadFromVector(Vector.<Number>(data), 0, data.length / data32PerVertex);
-			//}
+			if (dirty){
+				buff.gl.bindBuffer(buff.gl.ARRAY_BUFFER, buff.buff);
+				buff.gl.bufferSubData(buff.gl.ARRAY_BUFFER, 0, data);
+				//buff.gl.bufferData(buff.gl.ARRAY_BUFFER, data, usage);
+				dirty = false;
+			}
 			return buff;
 		}
 	}

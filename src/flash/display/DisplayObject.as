@@ -318,12 +318,6 @@ package flash.display
 		
 		private function __enterFrame(e:Event):void
 		{
-			if (stage.canvas.width != stage.stageWidth) {
-				stage.canvas.width = stage.stageWidth;
-			}
-			if (stage.canvas.height != stage.stageHeight) {
-				stage.canvas.height = stage.stageHeight;
-			}
 			var ctx:CanvasRenderingContext2D = stage.ctx;
 			//ctx.globalAlpha = 1;
 			ctx.setTransform(1, 0, 0, 1, 0, 0);

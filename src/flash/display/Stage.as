@@ -29,8 +29,7 @@ package flash.display
 		public function Stage()
 		{
 			super();
-			_stageWidth = window.innerWidth;
-			_stageHeight = window.innerHeight;
+			window_resize(null);
 			if (SpriteFlexjs.startTime==0) {
 				SpriteFlexjs.startTime = Date.now();
 			}
@@ -44,6 +43,10 @@ package flash.display
 		{
 			_stageWidth = window.innerWidth;
 			_stageHeight = window.innerHeight;
+			canvas.width = _stageWidth;
+			canvas.height = _stageHeight;
+			canvas.style.width = _stageWidth + "px";
+			canvas.style.height = _stageHeight + "px";
 			dispatchEvent(new Event(Event.RESIZE));
 		}
 		
@@ -176,8 +179,6 @@ package flash.display
 				_canvas.addEventListener("touchend", canvas_touchevent,false);
 				_canvas.addEventListener("touchmove", canvas_touchevent,false);
 				_canvas.addEventListener("touchstart", canvas_touchevent,false);
-				_canvas.width = stageWidth;
-				_canvas.height = stageHeight;
 				_canvas.style.position = "absolute";
 				_canvas.style.left = 0;
 				_canvas.style.top = 0;

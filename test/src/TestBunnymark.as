@@ -28,7 +28,7 @@ package
 			bg.x =-50;
 			bg.y =-50;
 			bg.setSize(_width, _height);
-			//addChild(bg);
+			addChild(bg);
 			
 			addChild(new TileTest());
 		}

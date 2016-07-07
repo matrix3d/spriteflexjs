@@ -4,7 +4,7 @@ package  flash.geom{
 	public class Matrix3D {
 		private static var TEMP:Matrix3D = new Matrix3D;
 		public function Matrix3D(v : Vector.<Number> = null) : void { 
-			if(v != null && v.length == 16) this.rawData = v;
+			if(v != null && v.length === 16) this.rawData = v;
 			else this.rawData = Vector.<Number>([1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]);
 		}
 		
@@ -610,10 +610,10 @@ package  flash.geom{
 			}
 			break;
 			};
-			if(components[2].x == 0) this.rawData[0] = 1e-15;
-			if(components[2].y == 0) this.rawData[5] = 1e-15;
-			if(components[2].z == 0) this.rawData[10] = 1e-15;
-			return !(components[2].x == 0 || components[2].y == 0 || components[2].y == 0);
+			if(components[2].x === 0) this.rawData[0] = 1e-15;
+			if(components[2].y === 0) this.rawData[5] = 1e-15;
+			if(components[2].z === 0) this.rawData[10] = 1e-15;
+			return !(components[2].x === 0 || components[2].y === 0 || components[2].y === 0);
 		}
 		
 		public function transformVector(v : flash.geom.Vector3D) : flash.geom.Vector3D {

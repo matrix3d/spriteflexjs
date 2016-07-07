@@ -117,7 +117,7 @@ package flash.display3D
 		
 		private function getUniformLocationName(programType:String, register:int):String
 		{
-			return (Context3DProgramType.VERTEX == programType) ? ("vc" + register) : ("fc" + register);
+			return (Context3DProgramType.VERTEX === programType) ? ("vc" + register) : ("fc" + register);
 		}
 		private function getUniformLocation(name:String):WebGLUniformLocation
 		{
@@ -228,7 +228,7 @@ package flash.display3D
 		
 		public function setCulling(triangleFaceToCull:String):void
 		{
-			if (triangleFaceToCull == Context3DTriangleFace.NONE)
+			if (triangleFaceToCull === Context3DTriangleFace.NONE)
 			{
 				gl.disable(gl.CULL_FACE);
 			}

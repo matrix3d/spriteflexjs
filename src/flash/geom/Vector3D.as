@@ -132,7 +132,7 @@ package flash.geom
       
       public function equals(toCompare:Vector3D, allFour:Boolean = false) : Boolean
       {
-         return this.x == toCompare.x && this.y == toCompare.y && this.z == toCompare.z && (allFour?this.w == toCompare.w:true);
+         return this.x === toCompare.x && this.y === toCompare.y && this.z === toCompare.z && (allFour?this.w === toCompare.w:true);
       }
       
       public function nearEquals(toCompare:Vector3D, tolerance:Number, allFour:Boolean = false) : Boolean

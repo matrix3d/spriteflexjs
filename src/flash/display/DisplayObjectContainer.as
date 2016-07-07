@@ -65,7 +65,7 @@ package flash.display
 			var len:int = children.length;
 			for (var i:int = 0; i < len;i++ ) {
 				var c:DisplayObject = children[i];
-				if (c.name==name) {
+				if (c.name===name) {
 					return c;
 				}
 			}

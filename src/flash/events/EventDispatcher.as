@@ -68,7 +68,7 @@ package flash.events
 				{
 					funcs.splice(i, 1);
 				}
-				if (funcs.length == 0)
+				if (funcs.length === 0)
 				{
 					listeners[type] = null;
 					delete listeners[type];

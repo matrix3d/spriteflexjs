@@ -91,7 +91,7 @@ package flash.display
 			endStrokAndFill();
 			if (!isNaN(thickness))
 			{
-				lastStroke = new GraphicsStroke(thickness == 0 ? 1 : thickness, pixelHinting, scaleMode, caps, joints, miterLimit, new GraphicsSolidFill(color, alpha));
+				lastStroke = new GraphicsStroke(thickness === 0 ? 1 : thickness, pixelHinting, scaleMode, caps, joints, miterLimit, new GraphicsSolidFill(color, alpha));
 				graphicsData.push(lastStroke);
 			}
 		}

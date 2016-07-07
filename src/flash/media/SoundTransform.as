@@ -63,7 +63,7 @@ package flash.media
 		
 		public function get pan():Number
 		{
-			if (this.leftToRight == 0 && this.rightToLeft == 0)
+			if (this.leftToRight === 0 && this.rightToLeft === 0)
 			{
 				return 1 - this.leftToLeft * this.leftToLeft;
 			}

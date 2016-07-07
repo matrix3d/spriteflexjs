@@ -30,7 +30,7 @@ package flash.display
 		{
 			super();
 			window_resize(null);
-			if (SpriteFlexjs.startTime==0) {
+			if (SpriteFlexjs.startTime===0) {
 				SpriteFlexjs.startTime = Date.now();
 			}
 			frameRate = 60;
@@ -232,7 +232,7 @@ package flash.display
 						needSendMouseMove = true;
 					}
 				}
-				if (flashType==TouchEvent.TOUCH_END&&hasEventListener(MouseEvent.CLICK)) {
+				if (flashType===TouchEvent.TOUCH_END&&hasEventListener(MouseEvent.CLICK)) {
 					dispatchEvent(new MouseEvent(MouseEvent.CLICK, true, false, _mouseX, _mouseY));
 				}
 			}
@@ -296,10 +296,10 @@ package flash.display
 		{
 			if (!_ctx)
 			{
-				if (SpriteFlexjs.wmode=="gpu") {
+				if (SpriteFlexjs.wmode==="gpu") {
 					_ctx = new GLCanvasRenderingContext2D(this) as CanvasRenderingContext2D;
 					SpriteFlexjs.renderer = new WebGLRenderer;
-				}else if (SpriteFlexjs.wmode=="gpu batch"){
+				}else if (SpriteFlexjs.wmode==="gpu batch"){
 					_ctx = new GLCanvasRenderingContext2D(this, true) as CanvasRenderingContext2D;
 					SpriteFlexjs.renderer = new WebGLRenderer;
 				}else{

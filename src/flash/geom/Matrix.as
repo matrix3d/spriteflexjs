@@ -65,7 +65,7 @@ package flash.geom
 			var a3:* = NaN;
 			var det:* = NaN;
 			var result_ty:* = NaN;
-			if (this.b == 0.0 && this.c == 0.0)
+			if (this.b === 0.0 && this.c === 0.0)
 			{
 				this.a = 1 / this.a;
 				this.d = 1 / this.d;
@@ -80,7 +80,7 @@ package flash.geom
 				a2 = this.c;
 				a3 = this.d;
 				det = a0 * a3 - a1 * a2;
-				if (det == 0.0)
+				if (det === 0.0)
 				{
 					this.identity();
 					return;

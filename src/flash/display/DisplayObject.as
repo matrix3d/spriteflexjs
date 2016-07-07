@@ -33,7 +33,7 @@ package flash.display
 			transform = new Transform(this);
 			innerID = ID++;
 			name = "instance" + innerID;
-			if (innerID == 0)
+			if (innerID === 0)
 			{
 				_stage = new Stage;
 				_stage.addEventListener(Event.ENTER_FRAME, __enterFrame);
@@ -102,14 +102,14 @@ package flash.display
 		public function get scaleX():Number
 		{
 			var m:Matrix = transform.matrix;
-			if (m.b == 0) return m.a;
+			if (m.b === 0) return m.a;
 			return Math.sqrt(m.a * m.a + m.b * m.b);
 		}
 		
 		public function set scaleX(v:Number):void
 		{
 			var m:Matrix = transform.matrix;
-			if (m.c == 0)
+			if (m.c === 0)
 			{
 				m.a = v;
 			}
@@ -124,7 +124,7 @@ package flash.display
 		public function get scaleY():Number
 		{
 			var m:Matrix = transform.matrix;
-			if (m.c == 0)
+			if (m.c === 0)
 			{
 				return m.d;
 			}
@@ -134,7 +134,7 @@ package flash.display
 		public function set scaleY(v:Number):void
 		{
 			var m:Matrix = transform.matrix;
-			if (m.c == 0)
+			if (m.c === 0)
 			{
 				m.d = v;
 			}
@@ -171,8 +171,8 @@ package flash.display
 			var r:Number = v * Math.PI / 180;
 			rsin = Math.sin(r);
 			rcos = Math.cos(r);
-			var sx:Number = scaleX;
-			var sy:Number = scaleY;
+			var sx:Number = m.b === 0?m.a:Math.sqrt(m.a * m.a + m.b * m.b);
+			var sy:Number = m.c === 0?m.d:Math.sqrt(m.c * m.c + m.d * m.d);
 			m.a = rcos * sx;
 			m.b = rsin * sx;
 			m.c = -rsin * sy;
@@ -338,7 +338,7 @@ package flash.display
 			var time:Number = getTimer();
 			var obj:DisplayObject = __doMouse(e);
 			time = getTimer();
-			if (e.type==MouseEvent.MOUSE_MOVE) {
+			if (e.type===MouseEvent.MOUSE_MOVE) {
 				//如果类型是mousemove 处理mouseover 和 mouseout事件
 				//如果上次鼠标经过obj不在obj上层节点
 				//递归抛出mouseout事件直到为null或当前节点

@@ -32,10 +32,10 @@ package flash.net
 		
 		private function xhr_onreadystatechange(e:*):void
 		{
-			if (xhr.readyState == 4 && xhr.status == 200)
+			if (xhr.readyState === 4 && xhr.status === 200)
 			{
 				dispatchEvent(new Event(Event.COMPLETE));
-			}else if (xhr.readyState==4&&xhr.status==404){
+			}else if (xhr.readyState===4&&xhr.status===404){
 				dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
 			}
 		}

@@ -37,7 +37,7 @@ package flash.utils
 		private function onTimer(event:Event):void
 		{
 			this.closure.apply(null, this.rest);
-			if (repeatCount == 1)
+			if (repeatCount === 1)
 			{
 				if (intervals[this.id - 1] == this)
 				{

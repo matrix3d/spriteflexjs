@@ -220,7 +220,7 @@ package flash.geom
 		
 		public function equals(toCompare:Rectangle):Boolean
 		{
-			return toCompare.x == this.x && toCompare.y == this.y && toCompare.width == this.width && toCompare.height == this.height;
+			return toCompare.x === this.x && toCompare.y === this.y && toCompare.width === this.width && toCompare.height === this.height;
 		}
 		
 		public function toString():String

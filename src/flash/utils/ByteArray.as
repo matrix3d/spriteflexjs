@@ -30,7 +30,7 @@ package flash.utils
 		}
 		
 		public function writeBytes(b:ByteArray, offset:uint = 0, length:uint = 0):void  {
-			if (length==0) {
+			if (length===0) {
 				length = b.length - offset;
 			}
 			beforWrite(length);
@@ -257,7 +257,7 @@ package flash.utils
 		
 		public function set endian(v:String):void  {
 			_endian = v;
-			isLittleEndian = v == Endian.LITTLE_ENDIAN;
+			isLittleEndian = v === Endian.LITTLE_ENDIAN;
 		}
 		
 		public function clear():void  {

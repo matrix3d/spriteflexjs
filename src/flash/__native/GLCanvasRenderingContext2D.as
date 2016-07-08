@@ -108,7 +108,7 @@ package flash.__native
 					"vUV=(vc4*vec4(va2,0.0,1.0)).xy;"+
 					"gl_Position =vc0*vec4(va0, 0.0,1.0);"+
 				"}";
-			var fcode:String = "precision mediump float;" +
+			var fcode:String = "precision lowp float;" +
 				"varying vec4 vColor;"+
 				"varying vec2 vUV;"+
 				"uniform sampler2D fs0;"+
@@ -131,7 +131,7 @@ package flash.__native
 					"vColor=va1;"+
 					"gl_Position =vc0*vec4(va0, 0.0,1.0);"+
 				"}";
-			fcode = "precision mediump float;" +
+			fcode = "precision lowp float;" +
 				"varying vec4 vColor;"+
 			   "void main(void) {" +
 					"gl_FragColor = vColor;"+
@@ -207,7 +207,7 @@ package flash.__native
 		}
 
 		public function drawImage (image:Object, dx:Number, dy:Number/*, opt_dw:Number = 0, opt_dh:Number = 0, opt_sx:Number = 0, opt_sy:Number = 0, opt_sw:Number = 0, opt_sh:Number = 0*/) : Object {
-			drawImageInternal(image,bitmapDrawable, matr,null,true,colorTransform._glColorArr,true,true);
+			drawImageInternal(image,bitmapDrawable, matr,null,true,colorTransform.tint,true,true);
 			return null;
 		}
 		
@@ -224,18 +224,21 @@ package flash.__native
 			return null;
 		}
 		
-		public function drawImageInternal(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean,color:Array,scaleWithImageUV:Boolean,isImage:Boolean):void{
+		/**
+		 * @flexjsignorecoercion Float32Array
+		 */
+		public function drawImageInternal(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean,color:uint,scaleWithImageUV:Boolean,isImage:Boolean):void{
 			if (!isBatch){
 				if(image){
 					var colorb:GLVertexBufferSet = drawable.color;
 					colorb.dirty = true;
-					var data:Float32Array = colorb.data;
+					var data:Uint32Array = colorb.data as Uint32Array;
 					var len:int = data.length;
-					for (var i:int = 0; i < len;i+=4 ){
-						data[i] = color[0];
-						data[i + 1] = color[1];
-						data[i + 2] = color[2];
-						data[i + 3] = color[3];
+					for (var i:int = 0; i < len;i++ ){
+						data[i] = color;//color[0];
+						//data[i + 1] = color[1];
+						//data[i + 2] = color[2];
+						//data[i + 3] = color[3];
 					}
 					renderImage(image, drawable, posmatr, uvmatr, scaleWithImage, scaleWithImageUV, isImage);
 				}
@@ -282,7 +285,7 @@ package flash.__native
 				ctx.setVertexBufferAt(2, drawable.uv.getBuff(ctx), 0, Context3DVertexBufferFormat.FLOAT_2);
 			}
 			ctx.setVertexBufferAt(0, drawable.pos.getBuff(ctx),0, Context3DVertexBufferFormat.FLOAT_2);
-			ctx.setVertexBufferAt(1, drawable.color.getBuff(ctx), 0, Context3DVertexBufferFormat.FLOAT_4);
+			ctx.setVertexBufferAt(1, drawable.color.getBuff(ctx), 0, Context3DVertexBufferFormat.BYTES_4);
 			if(posmatr){
 				matr3d.rawData[0] = posmatr.a*2  / stage.stageWidth;
 				matr3d.rawData[1] = -posmatr.b*2 / stage.stageHeight;
@@ -344,6 +347,9 @@ package flash.__native
 			ctx.drawTriangles(drawable.index.getBuff(ctx),0,drawable.numTriangles);
 		}
 		
+		/**
+		 * @flexjsignorecoercion Float32Array
+		 */
 		private function batchFinish():void{
 			var posKey:int = getNextPow2(numPos);
 			var indexKey:int = getNextPow2(numIndex);
@@ -359,18 +365,18 @@ package flash.__native
 				newuv = uvPool[posKey] = new GLVertexBufferSet(new Float32Array(posKey * 2), 2, ctx.gl.DYNAMIC_DRAW);
 			}
 			if (newcolor==null&&updateColor){
-				newcolor = colorPool[posKey] = new GLVertexBufferSet(new Float32Array(posKey * 4), 4,ctx.gl.DYNAMIC_DRAW);
+				newcolor = colorPool[posKey] = new GLVertexBufferSet(new Uint32Array(posKey), 4,ctx.gl.DYNAMIC_DRAW);
 			}
 			if (newi==null){
 				newi = indexPool[indexKey] = new GLIndexBufferSet(new Uint16Array(indexKey * 3),ctx.gl.DYNAMIC_DRAW);
 				trace("bat new index",indexKey,numIndex);
 			}
-			var newposdata:Float32Array = newpos.data;
+			var newposdata:Float32Array = newpos.data as Float32Array;
 			if(lastImageIsImage){
-				var newuvdata:Float32Array = newuv.data;
+				var newuvdata:Float32Array = newuv.data as Float32Array;
 			}
 			if(updateColor){
-				var newcolordata:Float32Array = newcolor.data;
+				var newcolordata:Uint32Array = newcolor.data as Uint32Array;
 			}
 			var newidata:Uint16Array = newi.data;
 			newDrawable.index = newi;
@@ -391,7 +397,7 @@ package flash.__native
 				var posmatr:Matrix = batch[2];
 				var scaleWithImage:Boolean = batch[4];
 				var scaleWithImageUV:Boolean = batch[6];
-				var color:Array = batch[5];
+				var color:uint = batch[5];
 				if(lastImageIsImage){
 					var uvmatr:Matrix = batch[3];
 					if(uvmatr){
@@ -404,9 +410,9 @@ package flash.__native
 						matrhelp.ty *=-1;
 					}
 				}
-				var data:Float32Array = drawable2.pos.data;
+				var data:Float32Array = drawable2.pos.data as Float32Array;
 				if(lastImageIsImage){
-					var uvdata:Float32Array = drawable2.uv.data;
+					var uvdata:Float32Array = drawable2.uv.data as Float32Array;
 				}
 				var len2:int = data.length/2 ;
 				for (var j:int = 0; j < len2; j++ ){
@@ -438,10 +444,10 @@ package flash.__native
 						}
 					}
 					if(updateColor){
-						newcolordata[(si + j) * 4] = color[0];
-						newcolordata[(si + j)*4+1] = color[1];
-						newcolordata[(si + j)*4+2] = color[2];
-						newcolordata[(si + j)*4+3] = color[3];
+						newcolordata[(si + j)] = color;//0xff0000ff// color[0];
+						//newcolordata[(si + j)*4+1] = color[1];
+						//newcolordata[(si + j)*4+2] = color[2];
+						//newcolordata[(si + j)*4+3] = color[3];
 					}
 				}
 				var did:Uint16Array = drawable2.index.data;
@@ -471,10 +477,10 @@ package flash.__native
 		public function fill (/*opt_fillRule:String = ""*/) : Object {
 			if (fillStyleIsImage) {
 				var glcp:GLCanvasPattern = fillStyle as GLCanvasPattern;
-				drawImageInternal(glcp.image, currentPath.drawable,currentPath.matr,matr,false,colorTransform._glColorArr,currentPath.path.tris.length>0,true);
+				drawImageInternal(glcp.image, currentPath.drawable,currentPath.matr,matr,false,colorTransform.tint,currentPath.path.tris.length>0,true);
 			}else if(currentPath){
-				var carrn:Array = fillStyle as Array;
-				drawImageInternal(fillStyle, currentPath.drawable,currentPath.matr,null,false,carrn,false,false);
+				//var carrn:Array = fillStyle as Array;
+				drawImageInternal(fillStyle, currentPath.drawable,currentPath.matr,null,false,fillStyle as uint,false,false);
 			}
 			return null;
 		}
@@ -499,7 +505,7 @@ package flash.__native
 			}
 			matrhelp.copyFrom(matr);
 			matrhelp.translate(x, y);
-			drawImageInternal(image, bitmapDrawable,matrhelp.clone(),null,true,colorTransform._glColorArr,true,true);
+			drawImageInternal(image, bitmapDrawable,matrhelp.clone(),null,true,colorTransform.tint,true,true);
 			return null;
 		}
 

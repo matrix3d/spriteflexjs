@@ -8,13 +8,12 @@ package flash.__native
 	 */
 	public class GLVertexBufferSet 
 	{
-		public var data:Float32Array;
+		public var data:Object;
 		public var data32PerVertex:int;
 		private var buff:VertexBuffer3D;
 		private var usage:Number;
 		public var dirty:Boolean = true;
-		//public var dirty:Boolean = true;
-		public function GLVertexBufferSet(data:Float32Array,data32PerVertex:int,usage:Number) 
+		public function GLVertexBufferSet(data:Object,data32PerVertex:int,usage:Number) 
 		{
 			this.usage = usage;
 			this.data32PerVertex = data32PerVertex;
@@ -31,7 +30,6 @@ package flash.__native
 			if (dirty){
 				buff.gl.bindBuffer(buff.gl.ARRAY_BUFFER, buff.buff);
 				buff.gl.bufferSubData(buff.gl.ARRAY_BUFFER, 0, data);
-				//buff.gl.bufferData(buff.gl.ARRAY_BUFFER, data, usage);
 				dirty = false;
 			}
 			return buff;

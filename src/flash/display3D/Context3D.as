@@ -134,7 +134,9 @@ package flash.display3D
 				currentVBufs[name] = buffer;
 				var loc:Number= currentProgram.getAttribLocation(name);
 				gl.bindBuffer(gl.ARRAY_BUFFER, buffer.buff);
+				var type:int = gl.FLOAT;
 				var size:int = 0;
+				var normalized:Boolean = false;
 				switch (format)
 				{
 				case Context3DVertexBufferFormat.FLOAT_1: 
@@ -149,8 +151,13 @@ package flash.display3D
 				case Context3DVertexBufferFormat.FLOAT_4: 
 					size = 4;
 					break;
+				case Context3DVertexBufferFormat.BYTES_4: 
+					size = 4;
+					type = gl.UNSIGNED_BYTE;
+					normalized = true;
+					break;
 				}
-				gl.vertexAttribPointer(loc, size, gl.FLOAT, false, 0, bufferOffset);
+				gl.vertexAttribPointer(loc, size, type, normalized, bufferOffset, bufferOffset);
 			}
 		}
 		

@@ -27,13 +27,14 @@ package flash.__native
 		/**
 		 * @flexjsignorecoercion String
 		 */
-		override public function getCssColor(color:uint, alpha:Number, ct:ColorTransform,toarr:Array):String 
+		override public function getCssColor(color:uint, alpha:Number, ct:ColorTransform,toarr:Array):Object 
 		{
-			toarr[0] = ((color >> 16 & 0xff)*ct.redMultiplier+ct.redOffset)/0xff;
-			toarr[1] = ((color >> 8 & 0xff)*ct.greenMultiplier+ct.greenOffset)/0xff;
-			toarr[2] = ((color & 0xff)*ct.greenMultiplier+ct.greenOffset)/0xff;
-			toarr[3] = (alpha * ct.alphaMultiplier + ct.alphaOffset);
-			return null;
+			var r:uint = ((color >> 16 & 0xff)*ct.redMultiplier+ct.redOffset);
+			var g:uint = ((color >> 8 & 0xff) * ct.greenMultiplier + ct.greenOffset);
+			var b:uint = ((color & 0xff)*ct.greenMultiplier+ct.greenOffset);
+			var a:uint = (alpha * ct.alphaMultiplier + ct.alphaOffset)*0xff;
+			var c:uint = ((r << 0) | (g << 8) | (b << 16) | (a << 24))>>>0;
+			return c;
 		}
 		
 		/**
@@ -42,7 +43,7 @@ package flash.__native
 		override public function renderImage(ctx:CanvasRenderingContext2D, img:BitmapData, m:Matrix, blendMode:String, colorTransform:ColorTransform):void 
 		{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
-			glctx.drawImageInternal(img.image,glctx.bitmapDrawable,m,null,true,colorTransform._glColorArr,true,true);
+			glctx.drawImageInternal(img.image,glctx.bitmapDrawable,m,null,true,colorTransform.tint,true,true);
 		}
 		
 		/**

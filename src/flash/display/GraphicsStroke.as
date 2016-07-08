@@ -86,6 +86,9 @@ package flash.display
 			this._scaleMode = value;
 		}
 		
+		/**
+		 * @flexjsignorecoercion String
+		 */
 		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{
 			if (isNaN(thickness))
@@ -98,7 +101,7 @@ package flash.display
 				if (fill is GraphicsSolidFill)
 				{
 					var sf:GraphicsSolidFill = fill as GraphicsSolidFill;
-					ctx.strokeStyle = SpriteFlexjs.renderer.getCssColor(sf.color, sf.alpha,colorTransform,null);//sf.getCssColor(colorTransform);
+					ctx.strokeStyle = SpriteFlexjs.renderer.getCssColor(sf.color, sf.alpha,colorTransform,null) as String;//sf.getCssColor(colorTransform);
 				}
 			}
 		}

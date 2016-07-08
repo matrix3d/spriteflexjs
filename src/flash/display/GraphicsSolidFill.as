@@ -24,7 +24,7 @@ package flash.display
 		 */
 		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{
-			ctx.fillStyle = SpriteFlexjs.renderer.getCssColor(color,alpha, colorTransform,null);//getCssColor(colorTransform);
+			ctx.fillStyle = SpriteFlexjs.renderer.getCssColor(color,alpha, colorTransform,null) as String;//getCssColor(colorTransform);
 		}
 		
 		/*public function getCssColor(ct:ColorTransform):String 
@@ -35,8 +35,8 @@ package flash.display
 		 * @flexjsignorecoercion String
 		 */
 		public function gldraw(ctx:GLCanvasRenderingContext2D, colorTransform:ColorTransform):void{
-			SpriteFlexjs.renderer.getCssColor(color, alpha, colorTransform, _glcolor);
-			ctx.fillStyle = _glcolor as String; 
+			//SpriteFlexjs.renderer.getCssColor(color, alpha, colorTransform, _glcolor);
+			ctx.fillStyle = SpriteFlexjs.renderer.getCssColor(color, alpha, colorTransform, _glcolor) as String//_glcolor as String; 
 			ctx.fillStyleIsImage = false;
 		}
 	}

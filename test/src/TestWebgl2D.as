@@ -18,7 +18,7 @@ package
 	{
 		private var renderer:GLCanvasRenderingContext2D;
 		private var bmd:BitmapData;
-		private var num:int = 30000;
+		private var num:int = 30;
 		private var poss:Array = [];
 		public function TestWebgl2D() 
 		{
@@ -26,7 +26,7 @@ package
 			renderer.colorTransform = new ColorTransform;
 			bmd = new BitmapData(10, 10, false, 0xffffff * Math.random());
 			for (var i:int = 0; i < num;i++ ){
-				poss.push([[Math.random(),Math.random(),Math.random(),Math.random()],new Matrix(1,0,0,1,400*Math.random(),400*Math.random())]);
+				poss.push([0xff0000ff,new Matrix(1,0,0,1,400*Math.random(),400*Math.random())]);
 			}
 			
 			
@@ -34,7 +34,6 @@ package
 		}
 		
 		public function animation():void{
-			trace("frame");
 			requestAnimationFrame(animation);
 			renderer.clearRect(0, 0, 0, 0);
 			for (var i:int = 0; i < num;i++ ){

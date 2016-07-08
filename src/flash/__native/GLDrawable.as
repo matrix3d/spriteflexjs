@@ -22,8 +22,9 @@ package flash.__native
 		
 		public function get color():GLVertexBufferSet 
 		{
-			if (_color==null||_color.data.length/4!=pos.data.length/2){
-				_color = new GLVertexBufferSet(new Float32Array(pos.data.length * 2), 4, usage);
+			if (_color==null||_color.data.length!=pos.data.length/2){
+				//_color = new GLVertexBufferSet(new Float32Array(pos.data.length * 2), 4, usage);
+				_color = new GLVertexBufferSet(new Uint32Array(pos.data.length /2), 4, usage);
 			}
 			return _color;
 		}

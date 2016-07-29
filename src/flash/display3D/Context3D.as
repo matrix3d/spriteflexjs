@@ -38,6 +38,10 @@ package flash.display3D
 		
 		public function configureBackBuffer(width:int, height:int, antiAlias:int, enableDepthAndStencil:Boolean = true, wantsBestResolution:Boolean = false):void
 		{
+			canvas.width = width;
+			canvas.height = height;
+			canvas.style.width = width + "px";
+			canvas.style.height = height + "px";
 			gl.viewport(0, 0, width, height);
 			if (enableDepthAndStencil)
 			{

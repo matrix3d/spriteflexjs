@@ -161,6 +161,9 @@ package flash.__native
 			return null;
 		}
 
+		/**
+		 * @flexjsignorecoercion flash.__native.GLGraphicsPath
+		 */
 		public function beginPath () : Object {
 			currentPath = new GLPath2D;
 			currentPath.path = SpriteFlexjs.renderer.createPath() as GLGraphicsPath;
@@ -212,7 +215,7 @@ package flash.__native
 		}
 		
 		/**
-		 * @flexjsignorecoercion CanvasRenderingContext2D
+		 * @flexjsignorecoercion flash.__native.GLGraphicsPath
 		 */
 		public function drawPath (path:GraphicsPath, colorTransform:ColorTransform) : Object {
 			currentPath = path["glpath2d"];
@@ -225,7 +228,7 @@ package flash.__native
 		}
 		
 		/**
-		 * @flexjsignorecoercion Float32Array
+		 * @flexjsignorecoercion Uint32Array
 		 */
 		public function drawImageInternal(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean,color:uint,scaleWithImageUV:Boolean,isImage:Boolean):void{
 			if (!isBatch){
@@ -245,7 +248,7 @@ package flash.__native
 			}else{
 				if (!isImage&&!lastImageIsImage){
 					
-				}else if (lastImage != image){
+				}else if (image==null||lastImage != image){
 					if (numPos > 0){
 						batchFinish();
 					}
@@ -349,6 +352,7 @@ package flash.__native
 		
 		/**
 		 * @flexjsignorecoercion Float32Array
+		 * @flexjsignorecoercion Uint32Array
 		 */
 		private function batchFinish():void{
 			var posKey:int = getNextPow2(numPos);
@@ -472,14 +476,14 @@ package flash.__native
 		}
 
 		/**
-		 * @flexjsignorecoercion Array
+		 * @flexjsignorecoercion flash.__native.GLCanvasPattern
+		 * @flexjsignorecoercion uint
 		 */
 		public function fill (/*opt_fillRule:String = ""*/) : Object {
 			if (fillStyleIsImage) {
 				var glcp:GLCanvasPattern = fillStyle as GLCanvasPattern;
 				drawImageInternal(glcp.image, currentPath.drawable,currentPath.matr,matr,false,colorTransform.tint,currentPath.path.tris.length>0,true);
 			}else if(currentPath){
-				//var carrn:Array = fillStyle as Array;
 				drawImageInternal(fillStyle, currentPath.drawable,currentPath.matr,null,false,fillStyle as uint,false,false);
 			}
 			return null;

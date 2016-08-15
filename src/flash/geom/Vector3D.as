@@ -176,7 +176,6 @@ package flash.geom
          return s;
       }
       
-      [API("674")]
       public function copyFrom(sourceVector3D:Vector3D) : void
       {
          this.x = sourceVector3D.x;
@@ -184,7 +183,6 @@ package flash.geom
          this.z = sourceVector3D.z;
       }
       
-      [API("674")]
       public function setTo(xa:Number, ya:Number, za:Number) : void
       {
          this.x = xa;

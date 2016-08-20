@@ -8,9 +8,11 @@ package flash.events
       public static const KEY_UP:String = "keyUp";
        
       private var m_keyLocation:uint;
-      
       private var m_keyCode:uint;
-      
+      private var m_ctrlKey:Boolean;
+      private var m_altKey:Boolean;
+      private var m_shiftKey:Boolean;
+
       public function KeyboardEvent(type:String, bubbles:Boolean = true, cancelable:Boolean = false, charCodeValue:uint = 0, keyCodeValue:uint = 0, keyLocationValue:uint = 0, ctrlKeyValue:Boolean = false, altKeyValue:Boolean = false, shiftKeyValue:Boolean = false)
       {
          super(type,bubbles,cancelable);
@@ -56,17 +58,35 @@ package flash.events
          this.m_keyLocation = value;
       }
       
-     public function get ctrlKey() : Boolean{return false}
+     public function get ctrlKey() : Boolean
+     {
+         return m_ctrlKey;
+     }
       
-     public function set ctrlKey(param1:Boolean) : void{}
+     public function set ctrlKey(param1:Boolean) : void
+     {
+         m_ctrlKey = param1;
+     }
       
-     public function get altKey() : Boolean{return false}
+     public function get altKey() : Boolean
+     {
+         return m_altKey;
+     }
       
-     public function set altKey(param1:Boolean) : void{}
+     public function set altKey(param1:Boolean) : void
+     {
+         m_altKey = param1;
+     }
       
-     public function get shiftKey() : Boolean{return false}
+     public function get shiftKey() : Boolean
+     {
+         return m_shiftKey;
+     }
       
-     public function set shiftKey(param1:Boolean) : void{}
+     public function set shiftKey(param1:Boolean) : void
+     {
+         m_shiftKey = param1;
+     }
       
      public function updateAfterEvent() : void{}
    }

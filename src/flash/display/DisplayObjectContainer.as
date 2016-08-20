@@ -191,8 +191,7 @@ package flash.display
 				if (rect == null) {
 					rect = rect1;
 				}else if(rect1){
-					rect.inflate(rect1.x, rect1.y);
-					rect.inflate(rect1.right, rect1.bottom);
+					rect.union(rect1);
 				}
 			}
 			return rect;

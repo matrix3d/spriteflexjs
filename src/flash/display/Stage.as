@@ -4,6 +4,7 @@ package flash.display
 	import flash.__native.WebGLRenderer;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Rectangle;
@@ -24,12 +25,14 @@ package flash.display
 		private var needSendTouchMove:Boolean = false;
 		private var lastUpdateTime:int = -1000;
 		//private var requestAnimationFrameHander:Number;
+		private var _loaderInfo:LoaderInfo;
 		private var _stageWidth:Number;
 		private var _stageHeight:Number;
 		public function Stage()
 		{
 			super();
 			window_resize(null);
+			_loaderInfo = new LoaderInfo();
 			if (SpriteFlexjs.startTime===0) {
 				SpriteFlexjs.startTime = Date.now();
 			}
@@ -83,6 +86,8 @@ package flash.display
 		
 		public function invalidate():void  {/**/ }
 		
+		public function get loaderInfo():LoaderInfo  { return _loaderInfo; }
+		
 		public function get scaleMode():String  { return null }
 		
 		public function set scaleMode(param1:String):void  {/**/ }
@@ -119,9 +124,19 @@ package flash.display
 		
 		public function set quality(param1:String):void  {/**/ }
 		
-		public function get displayState():String  { return null }
+		public function get displayState():String  {
+			return (document["fullscreen"] || document["webkitIsFullScreen"] || document["mozFullScreen"]) ? "fullScreen" : "normal";
+		}
 		
-		public function set displayState(param1:String):void  {/**/ }
+		public function set displayState(param1:String):void  {
+			if (param1.indexOf("fullScreen")!=-1) {
+				var requestFunc:Function = (_canvas["requestFullscreen"] || _canvas["webkitRequestFullScreen"] || _canvas["mozRequestFullScreen"] || _canvas["msRequestFullscreen"]);
+				requestFunc.call(_canvas);
+			} else {
+				var cancelFunc:Function = (document["exitFullscreen"] || document["webkitExitFullScreen"] || document["mozCancelFullScreen"] || document["msExitFullscreen"]);
+				cancelFunc.call(document);
+			}
+		}
 		
 		public function get fullScreenSourceRect():Rectangle  { return null }
 		
@@ -179,6 +194,8 @@ package flash.display
 				_canvas.addEventListener("touchend", canvas_touchevent,false);
 				_canvas.addEventListener("touchmove", canvas_touchevent,false);
 				_canvas.addEventListener("touchstart", canvas_touchevent,false);
+				document.addEventListener("keydown", canvas_keyevent,false);
+				document.addEventListener("keyup", canvas_keyevent,false);
 				_canvas.style.position = "absolute";
 				_canvas.style.left = 0;
 				_canvas.style.top = 0;
@@ -237,7 +254,22 @@ package flash.display
 				}
 			}
 		}
-		private function canvas_mouseevent(e:Object):void 
+		private function canvas_keyevent(e:Object):void {
+			var jsType:String = e.type;
+			var flashType:String;
+			switch(jsType) {
+				case "keydown":
+					flashType = KeyboardEvent.KEY_DOWN;
+					break;
+				case "keyup":
+					flashType = KeyboardEvent.KEY_UP;
+					break;
+			}
+			if (hasEventListener(flashType)) {
+				dispatchEvent(new KeyboardEvent(flashType, true, false, e.charCode, e.keyCode, e.location, e.ctrlKey, e.altKey, e.shiftKey));
+			}
+		}
+		private function canvas_mouseevent(e:Object):void
 		{
 			var jsType:String = e.type;
 			var flashType:String;

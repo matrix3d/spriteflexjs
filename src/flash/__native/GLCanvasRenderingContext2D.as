@@ -609,12 +609,12 @@ package flash.__native
 			return null;
 		}*/
 		public function transform2 (m:Matrix) : Object {
-			var result_a:Number = matr.a * m.a;
+			var result_a:Number = matr.a / m.a;
 			var result_b:Number = 0.0;
 			var result_c:Number = 0.0;
-			var result_d:Number = matr.d * m.d;
-			var result_tx:Number = matr.tx * m.a + m.tx;
-			var result_ty:Number = matr.ty * m.d + m.ty;
+			var result_d:Number = matr.d / m.d;
+			var result_tx:Number = matr.tx / m.a + m.tx / m.a;
+			var result_ty:Number = matr.ty / m.d + m.ty / m.d;
 			if (matr.b != 0.0 || matr.c != 0.0 || m.b != 0.0 || m.c != 0.0)
 			{
 				result_a = result_a + matr.b * m.c;

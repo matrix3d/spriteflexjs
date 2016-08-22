@@ -40,7 +40,7 @@ package flash.display
 		 */
 		public function gldraw(ctx:GLCanvasRenderingContext2D, colorTransform:ColorTransform):void{
 			if (fill) {
-				if(fill is GraphicsBitmapFill){
+				/*if(fill is GraphicsBitmapFill){
 					var bfill:GraphicsBitmapFill = fill as GraphicsBitmapFill;
 					if (bfill.matrix) {
 						var m:Matrix = bfill.matrix;
@@ -48,7 +48,8 @@ package flash.display
 					ctx.globalAlpha = colorTransform.alphaMultiplier;
 				}else{
 					ctx.globalAlpha = 1;
-				}
+				}*/
+				var m:Matrix = fill["matrix"];
 				if(m){
 					//ctx.save();
 					_worldMatrix.copyFrom(m);

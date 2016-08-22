@@ -60,7 +60,7 @@ package flash.__native
 		private var colorProg:Program3D;
 		private var matr3d:Matrix3D = new Matrix3D;
 		private var uvmatr3d:Matrix3D = new Matrix3D;
-		private var matr:Matrix = new Matrix;
+		public var matr:Matrix = new Matrix;
 		private var matrhelp:Matrix = new Matrix;
 		private var stage:Stage;
 		private var isBatch:Boolean;

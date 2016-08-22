@@ -56,8 +56,10 @@ package flash.display
 				}else{
 					_worldMatrix.identity();
 				}
+				var temp:Matrix = ctx.matr;
 				ctx.transform2(_worldMatrix);
 				ctx.fill();
+				ctx.matr = temp;
 				//if (m) {
 					//ctx.restore();
 				//}

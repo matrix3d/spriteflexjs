@@ -52,6 +52,7 @@ package flash.__native
 		 */
 		override public function renderGraphics(ctx:CanvasRenderingContext2D, g:Graphics, m:Matrix, blendMode:String, colorTransform:ColorTransform):void{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
+			glctx.setTransform2(m);
 			ctx.globalCompositeOperation = blendMode;
 			//ctx.globalAlpha = colorTransform.alphaMultiplier;
 			//glctx.globalRed = colorTransform.redMultiplier;
@@ -61,13 +62,11 @@ package flash.__native
 			var len:int = g.graphicsData.length;
 			for (var i:int = 0; i < len;i++ )
 			{
-				glctx.setTransform2(m);
 				var igd:IGraphicsData = g.graphicsData[i];
 				igd.gldraw(glctx, colorTransform);
 			}
 			if (g.lastFill)
 			{
-				glctx.setTransform2(m);
 				endFillInstance.fill = g.lastFill;
 				endFillInstance._worldMatrix = g._worldMatrix;
 				endFillInstance.gldraw(glctx,colorTransform);

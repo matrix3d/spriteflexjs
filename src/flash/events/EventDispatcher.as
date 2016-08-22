@@ -4,11 +4,11 @@ package flash.events
 	
 	[Event(name = "deactivate", type = "flash.events.Event")]
 	[Event(name = "activate", type = "flash.events.Event")]
-	public class EventDispatcher
+	public class EventDispatcher implements IEventDispatcher
 	{
 		private var listeners:Object = {};
 		
-		public function EventDispatcher(target:EventDispatcher = null)
+		public function EventDispatcher(target:IEventDispatcher = null)
 		{
 			super();
 			this.ctor(target);
@@ -43,7 +43,7 @@ package flash.events
 			return headerValue.substring(indexOfFirstValueChar, indexOfLastValueChar);
 		}
 		
-		private function ctor(param1:EventDispatcher):void
+		private function ctor(param1:IEventDispatcher):void
 		{
 		}
 		

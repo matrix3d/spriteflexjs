@@ -94,6 +94,9 @@ package flash.events
 		
 		private var _bubbles:Boolean;
 		private var _cancelable:Boolean;
+		private var _target:Object;
+		private var _currentTarget:Object;
+
 		public function Event(type:String, bubbles:Boolean = false, cancelable:Boolean = false)
 		{
 			super();
@@ -128,9 +131,13 @@ package flash.events
 		
 		public function get cancelable():Boolean  { return _cancelable }
 		
-		public var target:Object;
+		public function get target():Object  { return _target }
 		
-		public var currentTarget:Object;
+		public function set target(value:Object):void  { _target = value }
+		
+		public function get currentTarget():Object  { return _currentTarget }
+		
+		public function set currentTarget(value:Object):void  { _currentTarget = value }
 		
 		public function get eventPhase():uint  { return 0 }
 		

@@ -7,7 +7,7 @@ package flash.display
 	 * ...
 	 * @author lizhi http://matrix3d.github.io/
 	 */
-	public class BitmapData
+	public class BitmapData  implements IBitmapDrawable
 	{
 		private var data:Uint8ClampedArray;
 		//private var data32:Uint32Array;

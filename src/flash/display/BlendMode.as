@@ -4,7 +4,7 @@ package flash.display
 	public final class BlendMode extends Object
 	{
 		
-		public static const NORMAL:String //= "normal";
+		public static const NORMAL:String = "normal";
 		
 		public static const LAYER:String = "layer";
 		

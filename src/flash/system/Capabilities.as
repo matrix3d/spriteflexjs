@@ -66,7 +66,7 @@ package flash.system
 		public static function get cpuArchitecture():String  { return null }
 
 		
-		public static function get playerType():String  { return null }
+		public static function get playerType():String  { return "spriteflexjs" }
 
 		
 		public static function get serverString():String  { return null }

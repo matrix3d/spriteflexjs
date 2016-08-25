@@ -11,3 +11,7 @@ support canvas and webgl.
 ### tests
 
 <a href='http://matrix3d.github.io/assets/html5/flexjsstage3d/bin/js-release'>tests</a>
+
+### wiki
+
+<a href='https://github.com/matrix3d/spriteflexjs/wiki'>wiki</a>

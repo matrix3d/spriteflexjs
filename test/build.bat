@@ -1,9 +1,9 @@
-set FLEX_HOME=d:/sdk/flexjs7
+set FLEX_HOME=d:/sdk/flexjs
 ::set main=TestBitmapDraw
 ::set main=TestHungryHero
 ::set main=TestByteArrayVSArray
 ::set main=Main
-set main=Test3
+set main=Main
 
 set ARGS=-remove-circulars
 ::set ARGS=-debug=true -remove-circulars

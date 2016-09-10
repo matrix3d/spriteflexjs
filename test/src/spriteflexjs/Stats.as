@@ -51,9 +51,9 @@ package spriteflexjs
 			}
 			tf.text = text;
 			
-			//graphics.clear();
-			//graphics.beginFill(0xffffff, .7);
-			//graphics.drawRect(0, 0, tf.textWidth, tf.textHeight);
+			graphics.clear();
+			graphics.beginFill(0xffffff, .7);
+			graphics.drawRect(0, 0, tf.textWidth, tf.textHeight);
 		}
 		
 	}

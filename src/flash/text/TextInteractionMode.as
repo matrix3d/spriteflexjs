@@ -1,6 +1,5 @@
 package flash.text
 {
-   [API("670")]
    public final class TextInteractionMode extends Object
    {
       

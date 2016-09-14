@@ -1,6 +1,5 @@
 package flash.display3D
 {
-   [API("686")]
    public final class Context3DMipFilter extends Object
    {
       

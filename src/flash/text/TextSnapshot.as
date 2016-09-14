@@ -1,6 +1,5 @@
 package flash.text
 {
-   [native(instance="TextSnapshotObject",methods="auto",cls="TextSnapshotClass",construct="native")]
    public class TextSnapshot extends Object
    {
        
@@ -9,22 +8,40 @@ package flash.text
          super();
       }
       
-      native public function findText(param1:int, param2:String, param3:Boolean) : int;
+       public function findText(param1:int, param2:String, param3:Boolean) : int{
+		   return 0;
+	   }
       
-      native public function get charCount() : int;
+       public function get charCount() : int{
+		   return 0;
+	   }
       
-      native public function getSelected(param1:int, param2:int) : Boolean;
+       public function getSelected(param1:int, param2:int) : Boolean{
+		   return true;
+	   }
       
-      native public function getSelectedText(param1:Boolean = false) : String;
+       public function getSelectedText(param1:Boolean = false) : String{
+		   return null;
+	   }
       
-      native public function getText(param1:int, param2:int, param3:Boolean = false) : String;
+       public function getText(param1:int, param2:int, param3:Boolean = false) : String{
+		   return null;
+	   }
       
-      native public function getTextRunInfo(param1:int, param2:int) : Array;
+       public function getTextRunInfo(param1:int, param2:int) : Array{
+		   return null;
+	   }
       
-      native public function hitTestTextNearPos(param1:Number, param2:Number, param3:Number = 0) : Number;
+       public function hitTestTextNearPos(param1:Number, param2:Number, param3:Number = 0) : Number{
+		   return 0;
+	   }
       
-      native public function setSelectColor(param1:uint = 16776960) : void;
+       public function setSelectColor(param1:uint = 16776960) : void{
+		   
+	   }
       
-      native public function setSelected(param1:int, param2:int, param3:Boolean) : void;
+       public function setSelected(param1:int, param2:int, param3:Boolean) : void{
+		   
+	   }
    }
 }

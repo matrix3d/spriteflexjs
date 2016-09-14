@@ -1,6 +1,5 @@
 package flash.text
 {
-   [native(instance="CSMSettingsObject",methods="auto",cls="CSMSettingsClass")]
    public final class CSMSettings extends Object
    {
        

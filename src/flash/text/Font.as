@@ -1,6 +1,5 @@
 package flash.text
 {
-   [native(instance="FontObject",methods="auto",cls="FontClass")]
    public class Font extends Object
    {
        
@@ -9,16 +8,28 @@ package flash.text
          super();
       }
       
-      native public static function enumerateFonts(param1:Boolean = false) : Array;
+      public static function enumerateFonts(param1:Boolean = false) : Array{
+	  return null;
+	  
+	  }
       
-      native public static function registerFont(param1:Class) : void;
+      public static function registerFont(param1:Class) : void{
+	  }
       
-      native public function get fontName() : String;
+      public function get fontName() : String{
+		  return null;
+	  }
       
-      native public function get fontStyle() : String;
+      public function get fontStyle() : String{
+		  return null;
+	  }
       
-      native public function get fontType() : String;
+      public function get fontType() : String{
+		  return null;
+	  }
       
-      native public function hasGlyphs(param1:String) : Boolean;
+      public function hasGlyphs(param1:String) : Boolean{
+		  return null;
+	  }
    }
 }

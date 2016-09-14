@@ -3,7 +3,6 @@ package flash.display3D.textures
    import flash.display.BitmapData;
    import flash.utils.ByteArray;
    
-   [API("690")]
    public final class RectangleTexture extends TextureBase
    {
        

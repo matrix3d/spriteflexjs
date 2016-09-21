@@ -199,7 +199,7 @@ package flash.display
 				_canvas.style.position = "absolute";
 				_canvas.style.left = 0;
 				_canvas.style.top = 0;
-				_canvas.style.zIndex = 1;
+				_canvas.style.zIndex = 0;
 				document.body.appendChild(_canvas as HTMLCanvasElement);
 			}
 			return _canvas;

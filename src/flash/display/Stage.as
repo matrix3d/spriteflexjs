@@ -44,8 +44,15 @@ package flash.display
 		
 		private function window_resize(e:Object):void
 		{
-			_stageWidth = window.innerWidth;
-			_stageHeight = window.innerHeight;
+			SpriteFlexjs.dirtyGraphics = true;
+			if (SpriteFlexjs.autoSize){
+				_stageWidth = window.innerWidth;
+				_stageHeight = window.innerHeight;
+			}else{
+				_stageWidth = SpriteFlexjs.stageWidth;
+				_stageHeight = SpriteFlexjs.stageHeight;
+			}
+			
 			canvas.width = _stageWidth;
 			canvas.height = _stageHeight;
 			canvas.style.width = _stageWidth + "px";
@@ -178,7 +185,16 @@ package flash.display
 			if (!_canvas)
 			{
 				//http://www.w3schools.com/jsref/dom_obj_event.asp
-				_canvas = document.createElement("canvas") as HTMLCanvasElement;
+				_canvas = document.getElementById("spriteflexjsstage") as HTMLCanvasElement;
+				if (_canvas == null){
+					_canvas=document.createElement("canvas") as HTMLCanvasElement;
+					_canvas.style.position = "absolute";
+					_canvas.style.left = 0;
+					_canvas.style.top = 0;
+					_canvas.style.zIndex = 0;
+					document.body.appendChild(_canvas as HTMLCanvasElement);
+				}
+				
 				_canvas.addEventListener("click", canvas_mouseevent,false);
 				_canvas.addEventListener("contextmenu", canvas_mouseevent,false);
 				_canvas.addEventListener("dblclick", canvas_mouseevent,false);
@@ -196,11 +212,6 @@ package flash.display
 				_canvas.addEventListener("touchstart", canvas_touchevent,false);
 				document.addEventListener("keydown", canvas_keyevent,false);
 				document.addEventListener("keyup", canvas_keyevent,false);
-				_canvas.style.position = "absolute";
-				_canvas.style.left = 0;
-				_canvas.style.top = 0;
-				_canvas.style.zIndex = 0;
-				document.body.appendChild(_canvas as HTMLCanvasElement);
 			}
 			return _canvas;
 		}

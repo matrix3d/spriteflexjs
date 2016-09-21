@@ -195,6 +195,7 @@ package flash.display
 		public function updateTransforms():void
 		{
 			transform.updateTransforms();
+			SpriteFlexjs.dirtyGraphics = true;
 		}
 		
 		public function get alpha():Number  {
@@ -318,17 +319,16 @@ package flash.display
 		
 		private function __enterFrame(e:Event):void
 		{
-			var ctx:CanvasRenderingContext2D = stage.ctx;
-			//ctx.globalAlpha = 1;
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.clearRect(0, 0, stage.stageWidth, stage.stageHeight);
-			SpriteFlexjs.drawCounter = 0;
-			SpriteFlexjs.renderer.start(ctx);
-			__update(ctx);
-			SpriteFlexjs.renderer.finish(ctx);
-			//if (SpriteFlexjs.debug) {
-				//trace("__update",getTimer() - time);
-			//}
+			if(SpriteFlexjs.dirtyGraphics){
+				SpriteFlexjs.dirtyGraphics = false;
+				var ctx:CanvasRenderingContext2D = stage.ctx;
+				ctx.setTransform(1, 0, 0, 1, 0, 0);
+				ctx.clearRect(0, 0, stage.stageWidth, stage.stageHeight);
+				SpriteFlexjs.drawCounter = 0;
+				SpriteFlexjs.renderer.start(ctx);
+				__update(ctx);
+				SpriteFlexjs.renderer.finish(ctx);
+			}
 		}
 		
 		private function __mouseevent(e:flash.events.MouseEvent):void 

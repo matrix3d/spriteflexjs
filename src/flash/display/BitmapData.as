@@ -38,7 +38,8 @@ package flash.display
 		}
 		
 		public function fromImage(img:Object,dx:Number=0,dy:Number=0,opt_dw:Number=0,opt_dy:Number=0):void {
-			ctx.drawImage(img,dx,dy);
+			ctx.drawImage(img, dx, dy);
+			SpriteFlexjs.dirtyGraphics = true;
 			imageData = ctx.getImageData(0, 0, width, height);
 			this.data = this.imageData.data;
 		}
@@ -78,7 +79,8 @@ package flash.display
 			/*var p:int = y * width + x;
 			data32[p] = 0xff000000 | color;*/
 			if (!_lock) {
-				ctx.putImageData(imageData,0,0);
+				ctx.putImageData(imageData, 0, 0);
+				SpriteFlexjs.dirtyGraphics = true;
 			}
 		}
 		
@@ -92,6 +94,7 @@ package flash.display
 			data32[p] = color;*/
 			if (!_lock) {
 				ctx.putImageData(imageData,0,0);
+				SpriteFlexjs.dirtyGraphics = true;
 			}
 		}
 		
@@ -302,6 +305,7 @@ package flash.display
 		public function unlock(param1:Rectangle = null):void  {
 			_lock = false;
 			ctx.putImageData(imageData, 0, 0);
+			SpriteFlexjs.dirtyGraphics = true;
 		}
 		
 		public function histogram(param1:Rectangle = null):Vector.<Vector.<Number>>  { return null }

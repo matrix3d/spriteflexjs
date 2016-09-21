@@ -139,6 +139,7 @@ package flash.text
 		public function set text(txt:String):void  {
 			_text = txt; 
 			lines = txt.split("\n");
+			SpriteFlexjs.dirtyGraphics = true;
 		}
 		
 		public function get textColor():uint  { return int(_textFormat.color); }

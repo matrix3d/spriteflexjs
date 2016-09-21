@@ -39,6 +39,7 @@ package flash.display
 		public function set bitmapData(param1:BitmapData):void
 		{
 			_bitmapData = param1;
+			SpriteFlexjs.dirtyGraphics = true;
 		}
 		
 		override public function __getRect():Rectangle 

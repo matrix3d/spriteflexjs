@@ -7,9 +7,11 @@ package flash.display
 	public class Stage3D extends EventDispatcher
 	{
 		private var _context3D:Context3D;
-		
+		private static var ID:int = 0;
+		private var id:int;
 		public function Stage3D()
 		{
+			id = ID++;
 			super();
 		}
 		
@@ -18,13 +20,16 @@ package flash.display
 		public function requestContext3D(param1:String = "auto", param2:String = "baseline"):void
 		{
 			_context3D = new Context3D;
-			var canvas:HTMLCanvasElement = document.createElement("canvas") as HTMLCanvasElement;
+			var canvas:HTMLCanvasElement = (document.getElementById("spriteflexjsstage3d" + id)) as HTMLCanvasElement;
+			if(canvas==null){
+				canvas = document.createElement("canvas") as HTMLCanvasElement;
+				canvas.style.position = "absolute";
+				canvas.style.left = 0;
+				canvas.style.top = 0;
+				canvas.style.zIndex = -1;
+				document.body.appendChild(canvas);
+			}
 			_context3D.canvas = canvas;
-			canvas.style.position = "absolute";
-			canvas.style.left = 0;
-			canvas.style.top = 0;
-			canvas.style.zIndex = -1;
-			document.body.appendChild(canvas);
 			_context3D.gl = (canvas.getContext("webgl",{alpha:false,antialias:false}) || canvas.getContext("experimental-webgl",{alpha:false,antialias:false})) as WebGLRenderingContext;
 			dispatchEvent(new Event(Event.CONTEXT3D_CREATE));
 		}

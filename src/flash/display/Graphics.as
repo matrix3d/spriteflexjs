@@ -26,6 +26,7 @@ package flash.display
 		
 		public function clear():void
 		{
+			SpriteFlexjs.dirtyGraphics = true;
 			lastStroke = null;
 			lastPath = null;
 			pathPoolPos = 0;
@@ -241,6 +242,7 @@ package flash.display
 				lastPath.gpuPath2DDirty = true;
 				pathPoolPos++;
 				graphicsData.push(lastPath);
+				SpriteFlexjs.dirtyGraphics = true;
 			}
 		}
 		

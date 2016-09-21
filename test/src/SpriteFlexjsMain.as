@@ -1,6 +1,7 @@
 package 
 {
 	import flash.display.Sprite;
+	import flash.text.TextField;
 	/**
 	 * ...
 	 * @author lizhi
@@ -10,7 +11,7 @@ package
 		
 		public function SpriteFlexjsMain() 
 		{
-			
+			var cs:Array = [TextField];
 		}
 		
 	}

@@ -26,8 +26,8 @@ package flash.display
 		private var lastUpdateTime:int = -1000;
 		//private var requestAnimationFrameHander:Number;
 		private var _loaderInfo:LoaderInfo;
-		private var _stageWidth:Number;
-		private var _stageHeight:Number;
+		private var _stageWidth:Number=0;
+		private var _stageHeight:Number=0;
 		public function Stage()
 		{
 			super();
@@ -46,13 +46,11 @@ package flash.display
 		{
 			SpriteFlexjs.dirtyGraphics = true;
 			if (SpriteFlexjs.autoSize){
-				_stageWidth = window.innerWidth;
-				_stageHeight = window.innerHeight;
-			}else{
-				_stageWidth = SpriteFlexjs.stageWidth;
-				_stageHeight = SpriteFlexjs.stageHeight;
+				SpriteFlexjs.stageWidth = window.innerWidth;
+				SpriteFlexjs.stageHeight = window.innerHeight;
 			}
-			
+			_stageWidth = SpriteFlexjs.stageWidth;
+			_stageHeight = SpriteFlexjs.stageHeight;
 			canvas.width = _stageWidth;
 			canvas.height = _stageHeight;
 			canvas.style.width = _stageWidth + "px";
@@ -72,6 +70,11 @@ package flash.display
 		}
 		
 		private function __update():void {
+			if(_stageWidth != SpriteFlexjs.stageWidth||
+			_stageHeight != SpriteFlexjs.stageHeight){
+				window_resize(null);
+			}
+			
 			//http://codetheory.in/controlling-the-frame-rate-with-requestanimationframe/	
 			/*requestAnimationFrameHander = */SpriteFlexjs.requestAnimationFrame.call(window,__update);
 			//var now:Number = getTimer();

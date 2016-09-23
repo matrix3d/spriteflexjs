@@ -104,12 +104,15 @@ package flash.display3D
 			gl.uniform4fv(getUniformLocation(name), data as Object);
 		}
 		
+		/**
+		 * @flexjsignorecoercion Object
+		 */
 		public function setProgramConstantsFromMatrixGL(name:String, matrix:Matrix3D, transposedMatrix:Boolean = false):void
 		{
 			if (transposedMatrix) {
 				matrix.transpose();
 			}
-			gl.uniformMatrix4fv(getUniformLocation(name), false, matrix.rawData);
+			gl.uniformMatrix4fv(getUniformLocation(name), false, matrix.rawData as Object);
 			if (transposedMatrix) {
 				matrix.transpose();
 			}

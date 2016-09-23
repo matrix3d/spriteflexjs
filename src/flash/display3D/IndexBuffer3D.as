@@ -22,6 +22,9 @@ package flash.display3D
       
      public function uploadFromByteArray(data:ByteArray, byteArrayOffset:int, startOffset:int, count:int) : void{}
       
-     public function dispose() : void{}
+     public function dispose() : void{
+		 gl.deleteBuffer(buff);
+		 buff=null
+	 }
    }
 }

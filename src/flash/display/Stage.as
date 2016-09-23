@@ -31,15 +31,15 @@ package flash.display
 		public function Stage()
 		{
 			super();
-			window_resize(null);
 			_loaderInfo = new LoaderInfo();
 			if (SpriteFlexjs.startTime===0) {
 				SpriteFlexjs.startTime = Date.now();
 			}
 			frameRate = 60;
-			__update();
 			_stage3Ds = Vector.<Stage3D>([new Stage3D, new Stage3D, new Stage3D, new Stage3D]);
 			window.addEventListener("resize", window_resize, false);
+			window.addEventListener("orientationchange", window_resize, false);
+			setTimeout(__update);
 		}
 		
 		private function window_resize(e:Object):void

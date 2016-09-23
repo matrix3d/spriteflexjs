@@ -16,7 +16,7 @@ package flash.net
       
       public function decode(source:String) : void
       {
-         /*var param:String = null;
+         var param:String = null;
          var equalsIndex:* = 0;
          var name:String = null;
          var value:String = null;
@@ -32,8 +32,8 @@ package flash.net
             }
             else
             {
-               name = this._unescape(param.substr(0,equalsIndex));
-               value = this._unescape(param.substr(equalsIndex + 1));
+               name = unescape(param.substr(0,equalsIndex));
+               value = unescape(param.substr(equalsIndex + 1));
                oldValue = this[name];
                if(oldValue != undefined)
                {
@@ -48,7 +48,7 @@ package flash.net
                   this[name] = value;
                }
             }
-         }*/
+         }
       }
       
       /*public function toString() : String

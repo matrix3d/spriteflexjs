@@ -101,7 +101,7 @@ package flash.display3D
 		}
 		public function setProgramConstantsFromVectorGL(name:String, data:Vector.<Number>, numRegisters:int = -1):void
 		{
-			gl.uniform4fv(getUniformLocation(name), data);
+			gl.uniform4fv(getUniformLocation(name), data as Object);
 		}
 		
 		public function setProgramConstantsFromMatrixGL(name:String, matrix:Matrix3D, transposedMatrix:Boolean = false):void

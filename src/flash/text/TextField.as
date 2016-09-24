@@ -1,6 +1,7 @@
 package flash.text
 {
 	import flash.display.BlendMode;
+	import flash.display.Graphics;
 	import flash.display.InteractiveObject;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
@@ -8,13 +9,18 @@ package flash.text
 	
 	public class TextField extends InteractiveObject
 	{
-		
+		private var graphics:Graphics = new Graphics;
 		private static var richTextFields:Array = ["font", "size", "color", "bold", "italic", "underline", "url", "target", "align", "leftMargin", "rightMargin", "indent", "leading", "blockIndent", "kerning", "letterSpacing", "display"];
 		private var _text:String;
 		private var lines:Array;
 		private var _textFormat:TextFormat=new TextFormat;
 		private var _width:Number = 100;
 		private var _height:Number = 100;
+		private var _autoSize:String;
+		private var _background:Boolean = false;
+		private var _backgroundColor:uint = 0;
+		private var _border:Boolean = false;
+		private var _borderColor:uint=0;
 		public function TextField()
 		{
 			super();
@@ -31,25 +37,25 @@ package flash.text
 		
 		public function set antiAliasType(param1:String):void  {/**/ }
 		
-		public function get autoSize():String  { return null; }
+		public function get autoSize():String  { return _autoSize; }
 		
-		public function set autoSize(param1:String):void  {/**/ }
+		public function set autoSize(param1:String):void  {_autoSize = param1; }
 		
-		public function get background():Boolean  { return false; }
+		public function get background():Boolean  { return _background; }
 		
-		public function set background(param1:Boolean):void  {/**/ }
+		public function set background(param1:Boolean):void  {_background=param1}
 		
-		public function get backgroundColor():uint  { return 0; }
+		public function get backgroundColor():uint  { return _backgroundColor; }
 		
-		public function set backgroundColor(param1:uint):void  {/**/ }
+		public function set backgroundColor(param1:uint):void  {_backgroundColor=param1 }
 		
-		public function get border():Boolean  { return false; }
+		public function get border():Boolean  { return _border; }
 		
-		public function set border(param1:Boolean):void  {/**/ }
+		public function set border(param1:Boolean):void  {_border=param1 }
 		
-		public function get borderColor():uint  { return 0; }
+		public function get borderColor():uint  { return _borderColor; }
 		
-		public function set borderColor(param1:uint):void  {/**/ }
+		public function set borderColor(param1:uint):void  {_borderColor=param1 }
 		
 		public function get bottomScrollV():int  { return 0; }
 		
@@ -189,7 +195,7 @@ package flash.text
 		
 		override public function get width():Number 
 		{
-			return _width;
+			return autoSize==TextFieldAutoSize.LEFT?textWidth:_width;
 		}
 		
 		override public function set width(value:Number):void 
@@ -199,7 +205,7 @@ package flash.text
 		
 		override public function get height():Number 
 		{
-			return _height;
+			return autoSize==TextFieldAutoSize.LEFT?textHeight:_height;
 		}
 		
 		override public function set height(value:Number):void 
@@ -387,7 +393,19 @@ package flash.text
 		}
 		
 		public function __draw(ctx:CanvasRenderingContext2D, m:Matrix):void{
-			for (var i:int = 0; i < lines.length;i++ ){
+			for (var i:int = 0; i < lines.length; i++ ){
+				if (border||background){
+					graphics.clear();
+					if (border){
+						graphics.lineStyle(0, borderColor);
+					}
+					if (background){
+						graphics.beginFill(backgroundColor);
+					}
+					graphics.drawRect(0, 0, width, height);
+					SpriteFlexjs.renderer.renderGraphics(ctx, graphics, m, blendMode, transform.concatenatedColorTransform);
+				}
+				
 				SpriteFlexjs.renderer.renderText(ctx, lines[i], defaultTextFormat, m, blendMode, transform.concatenatedColorTransform, 0, i * int(defaultTextFormat.size));
 			}
 		}

@@ -353,6 +353,7 @@ package flash.__native
 		/**
 		 * @flexjsignorecoercion Float32Array
 		 * @flexjsignorecoercion Uint32Array
+		 * @flexjsignorecoercion Number
 		 */
 		private function batchFinish():void{
 			var posKey:int = getNextPow2(numPos);

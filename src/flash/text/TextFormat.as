@@ -6,7 +6,7 @@ package flash.text
 		private var _css:String;
 		private var dirty:Boolean = true;
 		private var _font:String;
-		private var _size:Object;
+		private var _size:Object=12;
 		private var _color:Object;
 		public function TextFormat(font:String = null, size:Object = null, color:Object = null, bold:Object = null, italic:Object = null, underline:Object = null, url:String = null, target:String = null, align:String = null, leftMargin:Object = null, rightMargin:Object = null, indent:Object = null, leading:Object = null)
 		{
@@ -143,7 +143,7 @@ package flash.text
 		
 		public function get css():String
 		{
-			_css = (size?size:12)+"px " +font;
+			_css = size+"px " +font;
 			return _css;
 		}
 		

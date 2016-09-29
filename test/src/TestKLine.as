@@ -130,7 +130,7 @@ package
 						}
 					}
 					
-					var h:Number =  (stage.stageHeight - 2 * oy) / numline;
+					var h:Number =  int((stage.stageHeight - 2 * oy) / numline);
 					for (var i:int = 0; i <= numline; i++ ){
 						var y:Number = getY(minV + i, minV, maxV, s, h);
 						drawDashLine(kline.graphics, 0, y, w-ox, y,2);
@@ -166,7 +166,7 @@ package
 		}
 		
 		private function getY(v:Number, min:Number, max:Number,s:Number,h:Number):Number{
-			return (max - v)  * h;
+			return Math.round((max - v)  * h)+.5;
 		}
 		
 		private function drawDashLine(ctx:Graphics, x1:Number, y1:Number, x2:Number, y2:Number, dashLen:Number=5):void

@@ -223,7 +223,7 @@ package flash.text
 		
 		override public function get width():Number 
 		{
-			return autoSize==TextFieldAutoSize.LEFT?textWidth:_width;
+			return autoSize==TextFieldAutoSize.LEFT?(textWidth+4):_width;
 		}
 		
 		override public function set width(value:Number):void 
@@ -233,7 +233,7 @@ package flash.text
 		
 		override public function get height():Number 
 		{
-			return autoSize==TextFieldAutoSize.LEFT?textHeight:_height;
+			return autoSize==TextFieldAutoSize.LEFT?(textHeight+2):_height;
 		}
 		
 		override public function set height(value:Number):void 
@@ -431,7 +431,7 @@ package flash.text
 					if (background){
 						graphics.beginFill(backgroundColor);
 					}
-					graphics.drawRect(0, 0, width, height);
+					graphics.drawRect(-2, -1, width, height);
 				}
 				SpriteFlexjs.renderer.renderGraphics(ctx, graphics, m, blendMode, transform.concatenatedColorTransform);
 			}

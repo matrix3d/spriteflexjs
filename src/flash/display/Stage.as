@@ -32,6 +32,7 @@ package flash.display
 		{
 			super();
 			_loaderInfo = new LoaderInfo();
+			window.location;
 			if (SpriteFlexjs.startTime===0) {
 				SpriteFlexjs.startTime = Date.now();
 			}

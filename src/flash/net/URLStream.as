@@ -20,9 +20,15 @@ package flash.net
 			xhr = new XMLHttpRequest;
 			xhr.open("get", v.url);
 			xhr.responseType = "arraybuffer";
-			xhr.addEventListener("readystatechange", xhr_onreadystatechange,false);
+			xhr.addEventListener("readystatechange", xhr_onreadystatechange, false);
+			xhr.addEventListener("error", xhr_error,false);
 			xhr.addEventListener("progress", xhr_progress,false);
 			xhr.send();
+		}
+		
+		private function xhr_error(e:Event):void 
+		{
+			dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
 		}
 		
 		private function xhr_progress(e:Object):void 

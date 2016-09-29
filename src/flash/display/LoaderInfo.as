@@ -1,6 +1,7 @@
 package flash.display
 {
 	import flash.errors.*;
+	import flash.net.URLVariables;
 	import flash.utils.ByteArray;
 	import flash.events.*;
 	
@@ -15,9 +16,9 @@ package flash.display
 		
 		public static function getLoaderInfoByDefinition(param1:Object):LoaderInfo  { return null; }
 		
-		public function get loaderURL():String  { return null; }
+		public function get loaderURL():String  { return url; }
 		
-		public function get url():String  { return null }
+		public function get url():String  { return window.location.href; }
 		
 		public function get isURLInaccessible():Boolean  { return false }
 		
@@ -49,7 +50,7 @@ package flash.display
 		
 		public function get height():int  { return 0; }
 		
-		public function get contentType():String  { return null; }
+		public function get contentType():String  { return "spriteflexjs"; }
 		
 		public function get sharedEvents():EventDispatcher  { return null; }
 		
@@ -81,7 +82,12 @@ package flash.display
 		
 		public function get bytes():ByteArray  { return null }
 		
-		private function _getArgs():Object  { return null }
+		private function _getArgs():Object  { 
+			try{
+			var uv:URLVariables = new URLVariables(window.location.search.substr(1));
+			}catch(err:Error){}
+			return uv;
+		}
 	
 	/*public function get uncaughtErrorEvents() : UncaughtErrorEvents
 	   {

@@ -2,7 +2,7 @@ echo off
 for /F tokens^=2^,3^,5delims^=^<^"^= %%a in (%2.as3proj) do (
    if "%%a" equ "compile path" set main=%%b
 )
-set ARGS=-remove-circulars 
+set ARGS=-remove-circulars -js-output-optimization=skipAsCoercions
 ::set ARGS=-remove-circulars -js-compiler-option="--compilation_level WHITESPACE_ONLY"
 if %3==debug (
 	set ARGS=%ARGS% -debug=true

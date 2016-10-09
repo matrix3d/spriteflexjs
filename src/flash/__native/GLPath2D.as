@@ -28,9 +28,9 @@ package flash.__native
 				
 				var nump:int = 0;
 				var numi:int = 0;
-				var len:int = path.polys.length;
+				var len:int = path.polys.length as Number;
 				for (var i:int = 0; i < len;i++ ){
-					var plen:int = path.polys.array[i].length;
+					var plen:int = path.polys.array[i].length as Number;
 					nump += plen;
 					if(plen>=6){
 						numi += (plen / 2 - 2) * 3;
@@ -40,8 +40,8 @@ package flash.__native
 				var diffuv:Boolean = false;
 				for (i = 0; i < tlen;i++ ){
 					var tri:Array = path.tris[i];
-					nump += tri[0].length;
-					numi += tri[1].length;
+					nump += tri[0].length as Number;
+					numi += tri[1].length as Number;
 					if (tri[2]){
 						diffuv = true;
 					}
@@ -63,8 +63,8 @@ package flash.__native
 					plen = poly.length;
 					var plendiv2:int = plen / 2;
 					for (var j:int = 0; j < plendiv2; j++ ){
-						var x:Number = poly.array[2 * j];
-						var y:Number = poly.array[2 * j + 1];
+						var x:Number = poly.array[2 * j] as Number;
+						var y:Number = poly.array[2 * j + 1] as Number;
 						pos[pi++] = x;
 						pos[pi++] = y;
 						if (j>=2){
@@ -81,14 +81,14 @@ package flash.__native
 					var vsdata:Vector.<Number> = tri[0];
 					var idata:Vector.<int> = tri[1];
 					var uvdata:Vector.<Number> = tri[2];
-					var len2:int = vsdata.length;
+					var len2:int = vsdata.length as Number;
 					for (j = 0; j < len2;j++ ){
 						pos[pi] = vsdata[j];
 						if(uvdata)
 						uv[pi] = uvdata[j];
 						pi++;
 					}
-					len2 = idata.length;
+					len2 = idata.length as Number;
 					for (j = 0; j < len2;j++ ){
 						index[ii++] = offset + idata[j];
 					}

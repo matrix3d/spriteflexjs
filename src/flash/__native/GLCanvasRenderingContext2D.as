@@ -392,8 +392,8 @@ package flash.__native
 			var si:int = 0;
 			var il:int = 0;
 			if (lastImageIsImage){
-				var iw:int = lastImage.width;
-				var ih:int = lastImage.height;
+				var iw:int = lastImage.width as Number;
+				var ih:int = lastImage.height as Number;
 			}
 			var len:int = batchsLen;
 			for (var i:int = 0; i < len; i++ ){
@@ -402,7 +402,7 @@ package flash.__native
 				var posmatr:Matrix = batch[2];
 				var scaleWithImage:Boolean = batch[4];
 				var scaleWithImageUV:Boolean = batch[6];
-				var color:uint = batch[5];
+				var color:uint = batch[5] as Number;
 				if(lastImageIsImage){
 					var uvmatr:Matrix = batch[3];
 					if(uvmatr){
@@ -421,8 +421,8 @@ package flash.__native
 				}
 				var len2:int = data.length/2 ;
 				for (var j:int = 0; j < len2; j++ ){
-					var x:Number = data[j*2];
-					var y:Number = data[j*2 + 1];
+					var x:Number = data[j*2] as Number;
+					var y:Number = data[j*2 + 1] as Number;
 					if (scaleWithImage){
 						x *= iw;
 						y *= ih;
@@ -432,8 +432,8 @@ package flash.__native
 					newposdata[(si + j)*2] = x2;
 					newposdata[(si + j)*2 + 1] = y2;
 					if(lastImageIsImage){
-						x = uvdata[j*2];
-						y = uvdata[j*2 + 1];
+						x = uvdata[j*2] as Number;
+						y = uvdata[j*2 + 1] as Number;
 						if (scaleWithImageUV){
 							x *=iw;
 							y *= ih;
@@ -458,7 +458,7 @@ package flash.__native
 				var did:Uint16Array = drawable2.index.data;
 				var didl:int = did.length;
 				for (j = 0; j < didl;j++){
-					var vi:int = did[j];
+					var vi:int = did[j] as Number;
 					newidata[il + j] = vi + si;
 				}
 				si += len2;

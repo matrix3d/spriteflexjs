@@ -19,38 +19,38 @@ package  flash.geom{
 		}
 		public var rawData : Vector.<Number>;
 		public function append(lhs : Matrix3D) : void {
-			var m111 : Number = this.rawData[0];
-			var m121 : Number = this.rawData[4];
-			var m131 : Number = this.rawData[8];
-			var m141 : Number = this.rawData[12];
-			var m112 : Number = this.rawData[1];
-			var m122 : Number = this.rawData[5];
-			var m132 : Number = this.rawData[9];
-			var m142 : Number = this.rawData[13];
-			var m113 : Number = this.rawData[2];
-			var m123 : Number = this.rawData[6];
-			var m133 : Number = this.rawData[10];
-			var m143 : Number = this.rawData[14];
-			var m114 : Number = this.rawData[3];
-			var m124 : Number = this.rawData[7];
-			var m134 : Number = this.rawData[11];
-			var m144 : Number = this.rawData[15];
-			var m211 : Number = lhs.rawData[0];
-			var m221 : Number = lhs.rawData[4];
-			var m231 : Number = lhs.rawData[8];
-			var m241 : Number = lhs.rawData[12];
-			var m212 : Number = lhs.rawData[1];
-			var m222 : Number = lhs.rawData[5];
-			var m232 : Number = lhs.rawData[9];
-			var m242 : Number = lhs.rawData[13];
-			var m213 : Number = lhs.rawData[2];
-			var m223 : Number = lhs.rawData[6];
-			var m233 : Number = lhs.rawData[10];
-			var m243 : Number = lhs.rawData[14];
-			var m214 : Number = lhs.rawData[3];
-			var m224 : Number = lhs.rawData[7];
-			var m234 : Number = lhs.rawData[11];
-			var m244 : Number = lhs.rawData[15];
+			var m111 : Number = this.rawData[0] as Number;
+			var m121 : Number = this.rawData[4] as Number;
+			var m131 : Number = this.rawData[8] as Number;
+			var m141 : Number = this.rawData[12] as Number;
+			var m112 : Number = this.rawData[1] as Number;
+			var m122 : Number = this.rawData[5] as Number;
+			var m132 : Number = this.rawData[9] as Number;
+			var m142 : Number = this.rawData[13] as Number;
+			var m113 : Number = this.rawData[2] as Number;
+			var m123 : Number = this.rawData[6] as Number;
+			var m133 : Number = this.rawData[10] as Number;
+			var m143 : Number = this.rawData[14] as Number;
+			var m114 : Number = this.rawData[3] as Number;
+			var m124 : Number = this.rawData[7] as Number;
+			var m134 : Number = this.rawData[11] as Number;
+			var m144 : Number = this.rawData[15] as Number;
+			var m211 : Number = lhs.rawData[0] as Number;
+			var m221 : Number = lhs.rawData[4] as Number;
+			var m231 : Number = lhs.rawData[8] as Number;
+			var m241 : Number = lhs.rawData[12] as Number;
+			var m212 : Number = lhs.rawData[1] as Number;
+			var m222 : Number = lhs.rawData[5] as Number;
+			var m232 : Number = lhs.rawData[9] as Number;
+			var m242 : Number = lhs.rawData[13] as Number;
+			var m213 : Number = lhs.rawData[2] as Number;
+			var m223 : Number = lhs.rawData[6] as Number;
+			var m233 : Number = lhs.rawData[10] as Number;
+			var m243 : Number = lhs.rawData[14] as Number;
+			var m214 : Number = lhs.rawData[3] as Number;
+			var m224 : Number = lhs.rawData[7] as Number;
+			var m234 : Number = lhs.rawData[11] as Number;
+			var m244 : Number = lhs.rawData[15] as Number;
 			this.rawData[0] = m111 * m211 + m112 * m221 + m113 * m231 + m114 * m241;
 			this.rawData[1] = m111 * m212 + m112 * m222 + m113 * m232 + m114 * m242;
 			this.rawData[2] = m111 * m213 + m112 * m223 + m113 * m233 + m114 * m243;
@@ -136,43 +136,11 @@ package  flash.geom{
 		}
 		
 		public function copyColumnTo(column : int,vector3D : flash.geom.Vector3D) : void {
-			switch(column) {
-			case 0:
-			{
-				vector3D.x = this.rawData[0];
-				vector3D.y = this.rawData[1];
-				vector3D.z = this.rawData[2];
-				vector3D.w = this.rawData[3];
-			}
-			break;
-			case 1:
-			{
-				vector3D.x = this.rawData[4];
-				vector3D.y = this.rawData[5];
-				vector3D.z = this.rawData[6];
-				vector3D.w = this.rawData[7];
-			}
-			break;
-			case 2:
-			{
-				vector3D.x = this.rawData[8];
-				vector3D.y = this.rawData[9];
-				vector3D.z = this.rawData[10];
-				vector3D.w = this.rawData[11];
-			}
-			break;
-			case 3:
-			{
-				vector3D.x = this.rawData[12];
-				vector3D.y = this.rawData[13];
-				vector3D.z = this.rawData[14];
-				vector3D.w = this.rawData[15];
-			}
-			break;
-			default:
-			throw new Error("Error, Column " + column + " out of bounds [0, ..., 3]");
-			break;
-			}
+			var c4:int = column * 4;
+			vector3D.x = this.rawData[c4] as Number;
+			vector3D.y = this.rawData[1+c4] as Number;
+			vector3D.z = this.rawData[2+c4] as Number;
+			vector3D.w = this.rawData[3+c4] as Number;		
 		}
 		
 		public function copyFrom(other : Matrix3D) : void {
@@ -194,10 +162,10 @@ package  flash.geom{
 		
 		public function copyRawDataTo(vector : Vector.<Number>,index : uint = 0,transpose : Boolean = false) : void {
 			if(transpose) this.transpose();
-			var l : uint = this.rawData.length;
+			var l : uint = this.rawData.length as Number;
 			{
 				var _g : int = 0;
-				while(_g < int(l)) {
+				while(_g < l) {
 					var c : int = _g++;
 					vector[c + index] = this.rawData[c];
 				}
@@ -246,43 +214,10 @@ package  flash.geom{
 		}
 		
 		public function copyRowTo(row : int,vector3D : flash.geom.Vector3D) : void {
-			switch(row) {
-			case 0:
-			{
-				vector3D.x = this.rawData[0];
-				vector3D.y = this.rawData[4];
-				vector3D.z = this.rawData[8];
-				vector3D.w = this.rawData[12];
-			}
-			break;
-			case 1:
-			{
-				vector3D.x = this.rawData[1];
-				vector3D.y = this.rawData[5];
-				vector3D.z = this.rawData[9];
-				vector3D.w = this.rawData[13];
-			}
-			break;
-			case 2:
-			{
-				vector3D.x = this.rawData[2];
-				vector3D.y = this.rawData[6];
-				vector3D.z = this.rawData[10];
-				vector3D.w = this.rawData[14];
-			}
-			break;
-			case 3:
-			{
-				vector3D.x = this.rawData[3];
-				vector3D.y = this.rawData[7];
-				vector3D.z = this.rawData[11];
-				vector3D.w = this.rawData[15];
-			}
-			break;
-			default:
-			throw new Error("Error, Row " + row + " out of bounds [0, ..., 3]");
-			break;
-			}
+			vector3D.x = this.rawData[row] as Number;
+			vector3D.y = this.rawData[4+row] as Number;
+			vector3D.z = this.rawData[8+row] as Number;
+			vector3D.w = this.rawData[12+row] as Number;
 		}
 		
 		public function copyToMatrix3D(other : Matrix3D) : void {
@@ -325,7 +260,7 @@ package  flash.geom{
 			break;
 			case flash.geom.Orientation3D.QUATERNION:
 			{
-				var tr : Number = mr[0] + mr[5] + mr[10];
+				var tr : Number = (mr[0] + mr[5] + mr[10]) as Number;
 				if(tr > 0) {
 					rot.w = Math.sqrt(1 + tr) / 2;
 					rot.x = (mr[6] - mr[9]) / (4 * rot.w);
@@ -399,22 +334,22 @@ package  flash.geom{
 			var invertable : Boolean = Math.abs(d) > 0.00000000001;
 			if(invertable) {
 				d = 1 / d;
-				var m11 : Number = this.rawData[0];
-				var m21 : Number = this.rawData[4];
-				var m31 : Number = this.rawData[8];
-				var m41 : Number = this.rawData[12];
-				var m12 : Number = this.rawData[1];
-				var m22 : Number = this.rawData[5];
-				var m32 : Number = this.rawData[9];
-				var m42 : Number = this.rawData[13];
-				var m13 : Number = this.rawData[2];
-				var m23 : Number = this.rawData[6];
-				var m33 : Number = this.rawData[10];
-				var m43 : Number = this.rawData[14];
-				var m14 : Number = this.rawData[3];
-				var m24 : Number = this.rawData[7];
-				var m34 : Number = this.rawData[11];
-				var m44 : Number = this.rawData[15];
+				var m11 : Number = this.rawData[0] as Number;
+				var m21 : Number = this.rawData[4] as Number;
+				var m31 : Number = this.rawData[8] as Number;
+				var m41 : Number = this.rawData[12] as Number;
+				var m12 : Number = this.rawData[1] as Number;
+				var m22 : Number = this.rawData[5] as Number;
+				var m32 : Number = this.rawData[9] as Number;
+				var m42 : Number = this.rawData[13] as Number;
+				var m13 : Number = this.rawData[2] as Number;
+				var m23 : Number = this.rawData[6] as Number;
+				var m33 : Number = this.rawData[10] as Number;
+				var m43 : Number = this.rawData[14] as Number;
+				var m14 : Number = this.rawData[3] as Number;
+				var m24 : Number = this.rawData[7] as Number;
+				var m34 : Number = this.rawData[11] as Number;
+				var m44 : Number = this.rawData[15] as Number;
 				this.rawData[0] = d * (m22 * (m33 * m44 - m43 * m34) - m32 * (m23 * m44 - m43 * m24) + m42 * (m23 * m34 - m33 * m24));
 				this.rawData[1] = -d * (m12 * (m33 * m44 - m43 * m34) - m32 * (m13 * m44 - m43 * m14) + m42 * (m13 * m34 - m33 * m14));
 				this.rawData[2] = d * (m12 * (m23 * m44 - m43 * m24) - m22 * (m13 * m44 - m43 * m14) + m42 * (m13 * m24 - m23 * m14));
@@ -470,38 +405,38 @@ package  flash.geom{
 		}
 		
 		public function prepend(rhs : Matrix3D) : void {
-			var m111 : Number = rhs.rawData[0];
-			var m121 : Number = rhs.rawData[4];
-			var m131 : Number = rhs.rawData[8];
-			var m141 : Number = rhs.rawData[12];
-			var m112 : Number = rhs.rawData[1];
-			var m122 : Number = rhs.rawData[5];
-			var m132 : Number = rhs.rawData[9];
-			var m142 : Number = rhs.rawData[13];
-			var m113 : Number = rhs.rawData[2];
-			var m123 : Number = rhs.rawData[6];
-			var m133 : Number = rhs.rawData[10];
-			var m143 : Number = rhs.rawData[14];
-			var m114 : Number = rhs.rawData[3];
-			var m124 : Number = rhs.rawData[7];
-			var m134 : Number = rhs.rawData[11];
-			var m144 : Number = rhs.rawData[15];
-			var m211 : Number = this.rawData[0];
-			var m221 : Number = this.rawData[4];
-			var m231 : Number = this.rawData[8];
-			var m241 : Number = this.rawData[12];
-			var m212 : Number = this.rawData[1];
-			var m222 : Number = this.rawData[5];
-			var m232 : Number = this.rawData[9];
-			var m242 : Number = this.rawData[13];
-			var m213 : Number = this.rawData[2];
-			var m223 : Number = this.rawData[6];
-			var m233 : Number = this.rawData[10];
-			var m243 : Number = this.rawData[14];
-			var m214 : Number = this.rawData[3];
-			var m224 : Number = this.rawData[7];
-			var m234 : Number = this.rawData[11];
-			var m244 : Number = this.rawData[15];
+			var m111 : Number = rhs.rawData[0] as Number;
+			var m121 : Number = rhs.rawData[4] as Number;
+			var m131 : Number = rhs.rawData[8] as Number;
+			var m141 : Number = rhs.rawData[12] as Number;
+			var m112 : Number = rhs.rawData[1] as Number;
+			var m122 : Number = rhs.rawData[5] as Number;
+			var m132 : Number = rhs.rawData[9] as Number;
+			var m142 : Number = rhs.rawData[13] as Number;
+			var m113 : Number = rhs.rawData[2] as Number;
+			var m123 : Number = rhs.rawData[6] as Number;
+			var m133 : Number = rhs.rawData[10] as Number;
+			var m143 : Number = rhs.rawData[14] as Number;
+			var m114 : Number = rhs.rawData[3] as Number;
+			var m124 : Number = rhs.rawData[7] as Number;
+			var m134 : Number = rhs.rawData[11] as Number;
+			var m144 : Number = rhs.rawData[15] as Number;
+			var m211 : Number = this.rawData[0] as Number;
+			var m221 : Number = this.rawData[4] as Number;
+			var m231 : Number = this.rawData[8] as Number;
+			var m241 : Number = this.rawData[12] as Number;
+			var m212 : Number = this.rawData[1] as Number;
+			var m222 : Number = this.rawData[5] as Number;
+			var m232 : Number = this.rawData[9] as Number;
+			var m242 : Number = this.rawData[13] as Number;
+			var m213 : Number = this.rawData[2] as Number;
+			var m223 : Number = this.rawData[6] as Number;
+			var m233 : Number = this.rawData[10] as Number;
+			var m243 : Number = this.rawData[14] as Number;
+			var m214 : Number = this.rawData[3] as Number;
+			var m224 : Number = this.rawData[7] as Number;
+			var m234 : Number = this.rawData[11] as Number;
+			var m244 : Number = this.rawData[15] as Number;
 			this.rawData[0] = m111 * m211 + m112 * m221 + m113 * m231 + m114 * m241;
 			this.rawData[1] = m111 * m212 + m112 * m222 + m113 * m232 + m114 * m242;
 			this.rawData[2] = m111 * m213 + m112 * m223 + m113 * m233 + m114 * m243;
@@ -581,10 +516,10 @@ package  flash.geom{
 			break;
 			default:
 			{
-				var x : Number = components[1].x;
-				var y : Number = components[1].y;
-				var z : Number = components[1].z;
-				var w : Number = components[1].w;
+				var x : Number = components[1].x as Number;
+				var y : Number = components[1].y as Number;
+				var z : Number = components[1].z as Number;
+				var w : Number = components[1].w as Number;
 				if(orientationStyle==flash.geom.Orientation3D.AXIS_ANGLE) {
 					x *= Math.sin(w / 2);
 					y *= Math.sin(w / 2);
@@ -626,9 +561,9 @@ package  flash.geom{
 		public function transformVectors(vin : Vector.<Number>,vout : Vector.<Number>) : void {
 			var i : int = 0;
 			while(i + 3 <= vin.length) {
-				var x : Number = vin[i];
-				var y : Number = vin[i + 1];
-				var z : Number = vin[i + 2];
+				var x : Number = vin[i] as Number;
+				var y : Number = vin[i + 1] as Number;
+				var z : Number = vin[i + 2] as Number;
 				vout[i] = x * this.rawData[0] + y * this.rawData[4] + z * this.rawData[8] + this.rawData[12];
 				vout[i + 1] = x * this.rawData[1] + y * this.rawData[5] + z * this.rawData[9] + this.rawData[13];
 				vout[i + 2] = x * this.rawData[2] + y * this.rawData[6] + z * this.rawData[10] + this.rawData[14];

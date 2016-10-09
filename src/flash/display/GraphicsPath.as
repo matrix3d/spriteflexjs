@@ -120,9 +120,9 @@ package flash.display
 				ctx.beginPath();
 				var p:int = 0;
 				var trip:int = 0;
-				var len:int=commands.length
+				var len:int = commands.length as Number;
 				for (var i:int = 0; i < len;i++ ){
-					var cmd:int = commands[i];
+					var cmd:int = commands[i] as Number;
 					switch (cmd)
 					{
 					case GraphicsPathCommand.MOVE_TO: 
@@ -182,17 +182,17 @@ package flash.display
 			var vertices:Vector.<Number> = tri[0]
 			var indices:Vector.<int> = tri[1];
 			//, uvtData
-			var len:int = indices.length;
+			var len:int = indices.length as Number;
 			for (var i:int = 0; i < len; ){
-				var i0:int = indices[i++];
-				var i1:int = indices[i++];
-				var i2:int = indices[i++];
-				var x0:Number = vertices[2*i0];
-				var y0:Number = vertices[2*i0+1];
-				var x1:Number = vertices[2*i1];
-				var y1:Number = vertices[2*i1+1];
-				var x2:Number = vertices[2*i2];
-				var y2:Number = vertices[2 * i2 + 1];
+				var i0:int = indices[i++] as Number;
+				var i1:int = indices[i++] as Number;
+				var i2:int = indices[i++] as Number;
+				var x0:Number = vertices[2*i0] as Number;
+				var y0:Number = vertices[2*i0+1] as Number;
+				var x1:Number = vertices[2*i1] as Number;
+				var y1:Number = vertices[2*i1+1] as Number;
+				var x2:Number = vertices[2*i2] as Number;
+				var y2:Number = vertices[2 * i2 + 1] as Number;
 				ctx.moveTo(x0, y0);
 				ctx.lineTo(x1, y1);
 				ctx.lineTo(x2, y2);

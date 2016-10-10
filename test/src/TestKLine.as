@@ -21,16 +21,21 @@ package
 		private var datas:Array = [];
 		private var kline:Sprite = new Sprite;
 		private var labelTF:TextField = new TextField;
-		private var ox:Number = 80;
+		private var fontsize:int = 30;
+		private var ox:Number = fontsize*3.2;
 		private var ox2:Number = 200;
 		private var oy:Number = 30;
+		
+		//private var debugTf:TextField = new TextField;
 		public function TestKLine()
 		{
+			//addChild(debugTf);
+			//debugTf.autoSize = "left";
 			CONFIG::js_only{
 			SpriteFlexjs.autoSize = true;
 			}
 			stage.loaderInfo.parameters;
-			labelTF.defaultTextFormat=new TextFormat("Courier New",24);
+			labelTF.defaultTextFormat=new TextFormat("Courier New",fontsize);
 			labelTF.background = true;
 			labelTF.backgroundColor = 0xdb5f4a;
 			labelTF.textColor = 0xffffff;
@@ -39,7 +44,7 @@ package
 			var loader:URLLoader = new URLLoader;
 			loader.addEventListener(Event.COMPLETE, loader_complete_all);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, loader_ioError);
-			loader.load(new URLRequest("http://121.43.100.114:9095/getAllMobilePrice.do?pcode=XTAG100G&v="+Math.random()));
+			loader.load(new URLRequest("http://120.26.39.108:9090/getAllMobilePrice.do?pcode=XTAG200G&v="+Math.random()));
 			addChild(kline);
 			kline.y = oy;
 			//update();
@@ -47,7 +52,6 @@ package
 		
 		private function loader_ioError(e:IOErrorEvent):void 
 		{
-			trace(e);
 			loader_complete_all(null);
 		}
 		
@@ -55,13 +59,14 @@ package
 		{
 			var loader:URLLoader = new URLLoader;
 			loader.addEventListener(Event.COMPLETE, loader_complete);
-			loader.load(new URLRequest("http://121.43.100.114:9095/getNewMobilePrice.do?pcode=XTAG100G&v="+Math.random()));
+			loader.load(new URLRequest("http://120.26.39.108:9090/getNewMobilePrice.do?pcode=XTAG100G&v="+Math.random()));
 			//todo del
 			//addData(10*Math.random());
 			//update();
 		}
 		private function loader_complete_all(e:Event):void 
 		{
+			//debugTf.appendText("loadercompall");
 			if(e)
 			var loader:URLLoader = e.currentTarget as URLLoader;
 			if (loader){
@@ -135,7 +140,7 @@ package
 						var y:Number = getY(minV + i, minV, maxV, s, h);
 						drawDashLine(kline.graphics, 0, y, w-ox, y,2);
 						var tf:TextField = new TextField;
-						tf.defaultTextFormat=new TextFormat("Courier New",24);
+						tf.defaultTextFormat=new TextFormat("Courier New",fontsize);
 						tf.autoSize = "left";
 						kline.addChild(tf);
 						tf.text = ""+((minV + i)*s).toFixed(2);
@@ -146,7 +151,7 @@ package
 				}
 				s += .5;
 			}
-			kline.graphics.lineStyle(0, 0xdb5f4a);
+			kline.graphics.lineStyle(2, 0xdb5f4a);
 			for (i = 0; i < datas.length; i++ ){
 				d = datas[i];
 				y = getY(d/s, minV, maxV, s, h);

@@ -164,15 +164,19 @@ package flash.utils
 		}
 		
 		public function readMultiByte(length:uint, charSet:String):String  {
-			var u8:Uint8Array = new Uint8Array(length);
-			u8.set(new Uint8Array(dataView.buffer.slice(_position, _position + length)));
-			_position += length;
 			try{
+				var u8:Uint8Array = new Uint8Array(length);
+				u8.set(new Uint8Array(_slice(dataView.buffer,_position, _position + length)));
 				var decoder:TextDecoder = new TextDecoder(charSet);
 				var str:String = decoder.decode(u8);
-			}catch(err:Object){
-				str=String.fromCharCode.apply(null,u8);
+			}catch (err:Object){
+				//str = String.fromCharCode.apply(null, u8);
+				str = "";
+				for (var i:int = 0; i < length;i++ ){
+					str += String.fromCharCode(dataView.getUint8(_position + i));
+				}
 			}
+			_position += length;
 			return str;
 		}
 		
@@ -191,7 +195,7 @@ package flash.utils
 		public function set length(v:uint):void  {
 			_length = v;
 			var u8:Uint8Array = new Uint8Array(v);
-			u8.set(new Uint8Array(dataView.buffer.byteLength > v?dataView.buffer.slice(0, v):dataView.buffer));
+			u8.set(new Uint8Array(dataView.buffer.byteLength > v?_slice(dataView.buffer,0, v):dataView.buffer));
 			dataView = new DataView(u8.buffer);
 		}
 		
@@ -272,5 +276,21 @@ package flash.utils
 		public function get shareable():Boolean  { return false }
 		
 		public function set shareable(param1:Boolean):void  {/**/ }
+		
+		//http://stackoverflow.com/questions/21440050/arraybuffer-prototype-slice-shim-for-ie
+		private static function _slice(buff:ArrayBuffer, begin:Number, end:Number):ArrayBuffer{
+			try{
+				var newbuffer:ArrayBuffer = buff.slice(begin, end);
+			}catch (err:Object){
+				if (end===0){
+					end = buff.byteLength;
+				}
+				newbuffer = new ArrayBuffer(end - begin);
+				var rb:Uint8Array = new Uint8Array(newbuffer);
+				var sb:Uint8Array = new Uint8Array(buff, begin, end - begin);
+				rb.set(sb);
+			}
+			return newbuffer;
+		}
 	}
 }

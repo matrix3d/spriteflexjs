@@ -12,7 +12,7 @@ package flash.text
 		private var graphics:Graphics = new Graphics;
 		private var graphicsDirty:Boolean = true;
 		private static var richTextFields:Array = ["font", "size", "color", "bold", "italic", "underline", "url", "target", "align", "leftMargin", "rightMargin", "indent", "leading", "blockIndent", "kerning", "letterSpacing", "display"];
-		private var _text:String;
+		private var _text:String="";
 		private var lines:Array;
 		private var _textFormat:TextFormat=new TextFormat;
 		private var _width:Number = 100;

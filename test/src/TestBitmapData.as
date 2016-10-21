@@ -18,7 +18,7 @@ package
 		
 		public function TestBitmapData()
 		{
-			b = new BitmapData(200, 200, false);
+			b = new BitmapData(200, 100, false);
 			addChild(new Bitmap(b));
 			addEventListener(Event.ENTER_FRAME, enterFrame);
 		}

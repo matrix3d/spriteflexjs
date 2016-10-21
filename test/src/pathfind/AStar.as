@@ -72,7 +72,7 @@ package pathfind
 							if (y != 0 || x != 0)
 							{
 								var test:Node = line[node.x + x];
-								if (test && line[test.x] && nodes[test.y][node.x])
+								if (test && nodes[node.y][test.x] && line[node.x])
 								{
 									if (x == 0 || y == 0)
 									{

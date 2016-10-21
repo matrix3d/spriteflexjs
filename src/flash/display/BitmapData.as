@@ -142,8 +142,8 @@ package flash.display
 		
 		public function fillRect(rect:Rectangle, fillColor:uint):void  {
 			lock();
-			for (var y:int = 0; y < width; ++y) {
-				for (var x:int = 0; x < height; ++x) {
+			for (var y:int = 0; y < height; ++y) {
+				for (var x:int = 0; x < width; ++x) {
 					setPixel32(x, y,transparent?fillColor:(0xff000000|fillColor));
 				}
 			}
@@ -168,8 +168,8 @@ package flash.display
 		
 		public function noise(randomSeed:int, low:uint=0, high:uint=255, channelOptions:uint=7, grayScale:Boolean=false):void  {
 			lock();
-			for (var y:int = 0; y < width; ++y) {
-				for (var x:int = 0; x < height; ++x) {
+			for (var y:int = 0; y < height; ++y) {
+				for (var x:int = 0; x < width; ++x) {
 					setPixel32(x, y, 0xff000000|0xffffff*Math.random());
 				}
 			}

@@ -1,9 +1,6 @@
 package 
 {
-	CONFIG::js_only{
-	import flash.__native.WebGLRenderer;
 	import flash.display.Bitmap;
-	}
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -22,17 +19,18 @@ package
 		private var astar:AStar;
 		private var cw:int = 10;
 		private var ch:int = 10;
+		private var ecolor:uint=0;
 		public function TestAStar() 
 		{
 			var d:Number = .5;
-			CONFIG::js_only{
+			//CONFIG::js_only{
 			//SpriteFlexjs.wmode = "gpu batch";
 			//SpriteFlexjs.renderer = new WebGLRenderer;
 			//d = .2;
-			}
+			//}
 			astar = new AStar;
-			var bmd:BitmapData = new BitmapData(100, 100, false, 0);
-			bmd.perlinNoise(10, 10, 2, Math.random() * 0xffffff, true, true, 7, true);
+			var bmd:BitmapData = new BitmapData(80, 60, false, 0);
+			bmd.perlinNoise(10, 10, 3, Math.random() * 0xffffff, true, true, 7, true);
 			addChild(new Bitmap(bmd));
 			for (var i:int = 0; i < bmd.width;i++ ){
 				for (var j:int = 0; j < bmd.height; j++ ){
@@ -51,13 +49,19 @@ package
 		private function stage_click(e:MouseEvent):void 
 		{
 			var end:Point = new Point(int(mouseX / cw), int(mouseY / ch));
+			
 			if (astar.findPath(start.x, start.y, end.x, end.y)){
-				
+				ecolor = 0xff00;
+			}else{
+				ecolor = 0xff0000;
 			}
-			start = end;
 			draw();
-			graphics.beginFill(0xff00);
-			graphics.drawRect(end.x * cw, end.y * ch, cw, ch);
+			graphics.endFill();
+			graphics.lineStyle(0, 0xff);
+			graphics.drawCircle((start.x+.5) * cw, (start.y+.5) * ch, cw/2);
+			graphics.lineStyle(0, 0xff00ff);
+			graphics.drawCircle((end.x+.5) * cw, (end.y+.5) * ch, cw/2);
+			start = end;
 		}
 		
 		private function draw():void{
@@ -72,7 +76,7 @@ package
 				}
 			}
 			if (astar.path){
-				graphics.beginFill(0xff0000);
+				graphics.beginFill(ecolor,.5);
 				for each(node in astar.path){
 					graphics.drawRect(node.x * cw, node.y * ch, cw, ch);
 				}

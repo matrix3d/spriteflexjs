@@ -1,56 +1,32 @@
 package
 {
-	import flash.__native.WebGLRenderer;
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.geom.ColorTransform;
-	import flash.geom.Matrix;
+	import flash.net.URLVariables;
+	import flash.text.Font;
+	import flash.utils.Timer;
+	import flash.utils.setInterval;
 	import spriteflexjs.Stats;
-	
-	/**
-	 * ...
-	 * @author lizhi
-	 */
-	public class Main extends Sprite 
-	{
-		private var bmd:BitmapData=new BitmapData(10, 10,false,0xffffff*Math.random())
+	public class Main extends Sprite{
+		private var arr:Array = [0];
+		private var arr2:Float32Array = new Float32Array(1);
 		public function Main() 
 		{
-			//SpriteFlexjs.wmode = "gpu";
-			SpriteFlexjs.wmode = "gpu batch";
-			SpriteFlexjs.renderer = new WebGLRenderer;
-			//alpha = .1;
-			if (stage) init();
-			else addEventListener(Event.ADDED_TO_STAGE, init);
-			//addChild(new Stats);
-		}
-		
-		private function init(e:Event = null):void 
-		{
-			removeEventListener(Event.ADDED_TO_STAGE, init);
-			for (var i:int = 0; i < 50;i++ ){
-				//var b:Bitmap = new Bitmap(bmd);
-				var b:Shape = new Shape;
-				//b.graphics.beginBitmapFill(bmd,new Matrix);
-				b.graphics.beginFill(0xffffff*Math.random());
-				b.graphics.drawRect(0, 0, bmd.width, bmd.height);
-				
-				b.transform.colorTransform = new ColorTransform(Math.random(), Math.random(), Math.random(),Math.random());
-				addChild(b);
-				b.x = 400 * Math.random();
-				b.y = 400 * Math.random();
-			}
-			//addEventListener(Event.ENTER_FRAME, enterFrame);
+			var v:URLVariables = new URLVariables("sa=t&rct=j&q=&esrc=s&source=web&cd=1&ved=0ahUKEwiWgMXk2KLPAhVHxoMKHXEmCtIQFgghMAA&url=http%3A%2F%2Fwww.w3school.com.cn%2Fjsref%2Fjsref_unescape.asp&usg=AFQjCNGo_udYljpJ-_SA4piSBsBgcSCYvw");
+			trace(v);
+			addEventListener(Event.ENTER_FRAME, enterFrame);
+			addChild(new Stats);
+			
+			setInterval(null);
+			new Timer(1000);setInterval()
 		}
 		
 		private function enterFrame(e:Event):void 
 		{
-			graphics.clear();
-			graphics.beginFill(0xff00ff);// .beginBitmapFill(bmd, new Matrix(1, 0, 0, 1, 10 * Math.random());
-			graphics.drawRect(0, 0, 100 , 100 );
+			for (var i:int = 0; i < 100000000;i++ ){
+				var a:Number = arr2[0] as Number;
+			}
 		}
 	}
 }

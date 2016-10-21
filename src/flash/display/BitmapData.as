@@ -178,115 +178,79 @@ package flash.display
 		
 		public function paletteMap(param1:BitmapData, param2:Rectangle, param3:Point, param4:Array = null, param5:Array = null, param6:Array = null, param7:Array = null):void  {/**/ }
 		
-		//https://chengkehan.github.io/PerlinNoise.html
-		public function perlinNoise(baseX:Number, baseY:Number, numOctaves:uint, randomSeed:int, stitch:Boolean, fractalNoise:Boolean, channelOptions:uint=7, grayScale:Boolean=false, offsets:Array=null):void  {
-			noise(0);
-			/*lock();
-			
-			var width:int = this.width;
-			var height:int = this.height;
-			
-			var smoothNoises:Array = [];
-
-			// 不同采样级别的 Noise 的叠加系数
-			var persistance:Number = 0.8;
-
-			// 生成不同采样级别的 Noise
-			for (var k:int = 0; k < numOctaves; k++)
-			{
-				var whiteNoise:Array = [];
-				for (var i:int = 0; i < width;i++ ){
-					whiteNoise[i] = [];
-					for (var j:int = 0; j < height; j++ ){
-						whiteNoise[i][j] = Math.random();// int(Math.random() * 0xffffffff);
-					}
-				}
-
-				var smoothNoise:Array = [];
-				smoothNoises[k] = smoothNoise;
-				// 采样步长
-				var samplePeriod:int = Math.pow(2, k);
-				// 采样频率
-				var sampleFrequency:Number = 1 / samplePeriod;
-
-				for (i = 0; i < width; i++)
-				{
-					smoothNoise[i] = [];
-					// 最左点位置
-					var sampler_l:int =  int(i / samplePeriod) * samplePeriod;
-					// 最右点位置
-					var sampler_r:int = (sampler_l + samplePeriod) % width;
-					// 根据实际点与最左最右的距离，计算水平混合系数
-					var horizontal_blend:Number = (i - sampler_l) * sampleFrequency;
-
-					for (j = 0; j < height; j++)
-					{
-						// 最上点位置
-						var sampler_t:int = int(j / samplePeriod) * samplePeriod;
-						// 最下点位置
-						var sampler_d:int = (sampler_t + samplePeriod) % height;
-						// 根据实际点与最上最下的距离，计算垂直混合系数
-						var vertical_blend:Number = (j - sampler_t) * sampleFrequency;
-
-						// 左上和右上根据水平混合系数进行插值
-						var top:Number = interpolate(whiteNoise[sampler_l][ sampler_t], whiteNoise[sampler_r][sampler_t], horizontal_blend);
-						// 左下和右下根据水平混合系数进行插值
-						var bottom:Number = interpolate(whiteNoise[sampler_l][ sampler_d], whiteNoise[sampler_r][sampler_d], horizontal_blend);
-						// 最总数值为 top down 根据垂直混合系数进行插值
-						smoothNoise[i][j] = interpolate(top, bottom, vertical_blend);
-						//var c:int = 0xff * (interpolate(top, bottom, vertical_blend));
-						//setPixel32(i,j, 0xff000000|(c<<16)|(c<<8)|c);                    
-					}
-				}
+		//https://zh.wikipedia.org/zh-hans/Perlin%E5%99%AA%E5%A3%B0
+		public function perlinNoise(baseX:Number, baseY:Number, numOctaves:uint, randomSeed:int, stitch:Boolean, fractalNoise:Boolean, channelOptions:uint = 7, grayScale:Boolean = false, offsets:Array = null):void  {
+			//noise(0);
+			//return;
+			var perm:Array = [151,160,137,91,90,15,
+  131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
+  190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,
+  88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,
+  77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,
+  102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,
+  135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,
+  5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,
+  223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,
+  129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,
+  251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,
+  49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,
+  138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180];
+			var bw:int = width;
+			var bh:int = height;
+			var vec:Vector.<uint> = new Vector.<uint>([]);
+			for (var i:int = 0; i < bw * bh;i++ ){
+				vec[i] = 0;
 			}
-			
-			// 最终生成的 Perlin Noise
-			var perlinNoise:Array = [];
-
-			// 不同采样级别的 Noise 的叠加比重
-			var amplitude:Number = 1;
-			// 所有采样级别的 Noise 的叠加总比重
-			var totalAmplitude:Number = 0;
-
-			// 开始混合所有采样级别的 Noise
-			for (var octave:int = numOctaves - 1; octave >= 0; octave--)
-			{
-				amplitude *= persistance;
-				totalAmplitude += amplitude;
-
-				for ( i = 0; i < width; i++)
-				{
-					if(octave==numOctaves-1){
-						perlinNoise[i] = [];
-					}
-					for (j = 0; j < height; j++)
-					{
-						if(octave==numOctaves-1){
-							perlinNoise[i][j] = smoothNoises[octave][i][j] * amplitude;
-						}else{
-							perlinNoise[i][j] += smoothNoises[octave][i][j] * amplitude;
+			var octaves:int = numOctaves;
+			while (true){
+				baseX = int(baseX);
+				baseY = int(baseY);
+				if (octaves<=0||baseX<=1||baseY<=1){
+					break;
+				}
+				trace(baseX, baseY, octaves);
+				var nx:int = Math.ceil(bw/baseX);
+				var ny:int = Math.ceil(bh/baseY);
+				for (var y:int = 0; y <=ny; y++ ){
+					for (var x:int = 0; x <= nx; x++ ){
+						if (x!=0&&y!=0){
+							var r00:Number = perm[((x-1) % 16) + ((y-1) % 16) * 16];
+							var r10:Number = perm[(x % 16) + ((y-1) % 16) * 16];
+							var r01:Number = perm[((x-1) % 16) + (y % 16) * 16];
+							var r11:Number = perm[(x % 16) + (y % 16) * 16];
+							var w:Number = x * baseX;
+							if (w>bw){
+								w = bw;
+							}
+							var h:Number = y * baseY;
+							if (h>bh){
+								h = bh;
+							}
+							var sx:int = (x - 1) * baseX;
+							var sy:int = (y - 1) * baseY;
+							for (var bx:int = sx; bx < w;bx++ ){
+								var tx:Number = (bx - sx) / baseX;
+								tx = tx * tx * (3   - 2 * tx);
+								//tx = 6 * tx * tx * tx * tx * tx - 15 * tx * tx * tx * tx + 10 * tx * tx * tx;
+								for (var by:int = sy; by < h; by++ ){
+									var ty:Number = (by - sy) / baseY;
+									ty = ty * ty * (3   - 2 * ty);
+									//ty = 6 * ty * ty * ty * ty * ty - 15 * ty * ty * ty * ty + 10 * ty * ty * ty;
+									var cx0:Number = r10 * tx + r00 * (1 - tx);
+									var cx1:Number = r11 * tx + r01 * (1 - tx);
+									var c:Number = cx1 * ty + cx0 * (1 - ty);
+									vec[bx + by * bw] += c/numOctaves;
+								}
+							}
 						}
 					}
 				}
+				octaves--;
+				baseX /= 2;
+				baseY /= 2;
 			}
-
-			// 归一化最终的 Perlin Noise
-			for ( i = 0; i < width; i++)
-			{
-				for (j = 0; j < height; j++)
-				{
-					var c:int=0xff*(perlinNoise[i][j] / totalAmplitude);
-					setPixel32(i, j, 0xff000000 | (c << 16) | (c << 8) | c);
-				}
-			}
-			unlock();*/
+			setVector(rect, vec);
 		}
-
-		// 在两个数值间进行插值
-		/*private function interpolate(x0:Number,x1:Number,alpha:Number):Number
-		{
-			return x0 * (1 - alpha) + alpha * x1;
-		}*/
 		
 		public function pixelDissolve(param1:BitmapData, param2:Rectangle, param3:Point, param4:int = 0, param5:int = 0, param6:uint = 0):int  { return 0 }
 		
@@ -294,7 +258,15 @@ package flash.display
 		
 		public function setPixels(param1:Rectangle, param2:ByteArray):void  {/**/ }
 		
-		public function setVector(param1:Rectangle, param2:Vector.<uint>):void  {/**/ }
+		public function setVector(param1:Rectangle, param2:Vector.<uint>):void  {
+			lock();
+			for (var x:int = 0; x < width;x++ ){
+				for (var y:int = 0; y < height; y++ ){
+					setPixel(x,y,param2[x+y*width]
+				}
+			}
+			unlock();
+		}
 		
 		public function threshold(param1:BitmapData, param2:Rectangle, param3:Point, param4:String, param5:uint, param6:uint = 0, param7:uint = 4.294967295E9, param8:Boolean = false):uint  { return 0 }
 		

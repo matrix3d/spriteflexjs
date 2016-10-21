@@ -10,6 +10,8 @@ package bunnymark{
 	{
 		public var speedX:Number;
 		public var speedY:Number;
+		public var x:Number=0;
+		public var y:Number=0;
 		public var display:DisplayObject;
 		
 		public function Bunny()

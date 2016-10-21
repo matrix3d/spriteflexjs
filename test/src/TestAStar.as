@@ -2,6 +2,7 @@ package
 {
 	CONFIG::js_only{
 	import flash.__native.WebGLRenderer;
+	import flash.display.Bitmap;
 	}
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -25,13 +26,14 @@ package
 		{
 			var d:Number = .5;
 			CONFIG::js_only{
-			SpriteFlexjs.wmode = "gpu batch";
-			SpriteFlexjs.renderer = new WebGLRenderer;
-			d = .2;
+			//SpriteFlexjs.wmode = "gpu batch";
+			//SpriteFlexjs.renderer = new WebGLRenderer;
+			//d = .2;
 			}
 			astar = new AStar;
-			var bmd:BitmapData = new BitmapData(100, 100, true, 0);
+			var bmd:BitmapData = new BitmapData(100, 100, false, 0);
 			bmd.perlinNoise(10, 10, 2, Math.random() * 0xffffff, true, true, 7, true);
+			addChild(new Bitmap(bmd));
 			for (var i:int = 0; i < bmd.width;i++ ){
 				for (var j:int = 0; j < bmd.height; j++ ){
 					if ((bmd.getPixel(i,j)&0xff)/0xff>d){

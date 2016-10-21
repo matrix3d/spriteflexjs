@@ -12,14 +12,14 @@
     <movie minorVersion="0" />
     <movie platform="Custom" />
     <movie background="#FFFFFF" />
-    <movie preferredSDK="Apache Flex (FlexJS) 0.7.0 FP20.0 AIR20.0 en_US;4.14.1;" />
+    <movie preferredSDK="D:\sdk\flexjs" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
-    <class path="D:\sdk\flexjs7\js\libs" />
+    <class path="D:\sdk\flexjs\js\libs" />
     <class path="..\src" />
-    <class path="D:\sdk\flexjs7\frameworks\libs" />
+    <class path="D:\sdk\flexjs\frameworks\libs" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -56,8 +56,9 @@
   </includeLibraries>
   <!-- SWC Libraries -->
   <libraryPaths>
-    <element path="D:\sdk\flexjs7\frameworks\libs\Core.swc" />
-    <element path="D:\sdk\flexjs7\js\libs\js.swc" />
+    <element path="D:\sdk\flexjs\frameworks\libs\Core.swc" />
+    <element path="D:\sdk\flexjs\js\libs\js.swc" />
+    <element path="lib\pixijs.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>
@@ -77,7 +78,7 @@
   </library>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <compile path="src\TestHungryHeroGPU.as" />
+    <compile path="src\TestAStar.as" />
   </compileTargets>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>

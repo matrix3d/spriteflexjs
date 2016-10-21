@@ -11,11 +11,16 @@ package
 		
 		public function TestLib() 
 		{
-			
-		}
-		
-		public function start():void{
-			trace(describeType( new Proxy));
+			var obj:HTMLObjectElement = document.createElement("object") as HTMLObjectElement;
+			obj.type = "application/x-shockwave-flash";
+			obj.data = "WebMain.swf";
+			obj.width = "100%";
+			obj.height = "100%";
+			var parm:HTMLParamElement = document.createElement("param") as HTMLParamElement;
+			parm.name = "wmode";
+			parm.value = "direct";
+			obj.appendChild(parm);
+			document.body.appendChild(obj);
 		}
 		
 	}

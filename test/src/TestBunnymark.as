@@ -2,6 +2,7 @@ package
 {
 	CONFIG::js_only{
 	import flash.__native.WebGLRenderer;
+	import spriteflexjs.Stats;
 	}
 	import bunnymark.Background;
 	import bunnymark.TileTest;
@@ -20,6 +21,8 @@ package
 			CONFIG::js_only{
 				SpriteFlexjs.wmode = "gpu batch";
 				SpriteFlexjs.renderer = new WebGLRenderer;
+				SpriteFlexjs.stageWidth = _width;
+				SpriteFlexjs.stageHeight = _height;
 			}
 			
 			var bg:Background = new Background;
@@ -31,6 +34,10 @@ package
 			addChild(bg);
 			
 			addChild(new TileTest());
+			
+			var sts:Stats = new Stats;
+			addChild(sts);
+			sts.y = 200;
 		}
 		
 	}

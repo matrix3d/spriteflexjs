@@ -105,7 +105,7 @@ package
         private function init():void
         {
 			SpriteFlexjs.wmode = "gpu batch";
-			//SpriteFlexjs.renderer = new WebGLRenderer;
+			SpriteFlexjs.renderer = new WebGLRenderer;
             // SWF設定
             stage.frameRate = 60;
 ////v0.2

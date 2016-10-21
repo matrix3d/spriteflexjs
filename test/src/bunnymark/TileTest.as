@@ -88,7 +88,7 @@ package bunnymark{
 
 		public function counter_click(e:Event):void
 		{
-			var i:int = 500;
+			var i:int = 100000;
 			numBunnies += i;
 			trace("numBunies",numBunnies);
 			while(i-->0){
@@ -126,7 +126,7 @@ package bunnymark{
 				bunny.display.x += bunny.speedX;
 				bunny.display.y += bunny.speedY;
 				bunny.speedY += gravity;
-				bunny.display.alpha = 0.3 + 0.7 * bunny.display.y / maxY;
+				//bunny.display.alpha = 0.3 + 0.7 * bunny.display.y / maxY;
 				
 				if (bunny.display.x > maxX)
 				{

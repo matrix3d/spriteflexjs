@@ -1,5 +1,6 @@
 package 
 {
+	import flash.__native.WebGLRenderer;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.BlendMode;
@@ -24,7 +25,8 @@ package
 		public function TestGraphics() 
 		{
 			CONFIG::js_only{
-				SpriteFlexjs.wmode = "gpu";
+				//SpriteFlexjs.wmode = "gpu batch";
+				//SpriteFlexjs.renderer = new WebGLRenderer;
 			}
 			
 			var s:Sprite = new Sprite;

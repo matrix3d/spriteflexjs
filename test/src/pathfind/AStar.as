@@ -58,8 +58,8 @@ package pathfind
 			var node:Node = startNode;
 			node.version = nowVersion;
 			var isFind:Boolean = true;
-			var best:Node;
-			var bestH:int = 10000;
+			var best:Node = node;
+			var bestH:int = Math.sqrt((node.x-endX)*(node.x-endX)+(node.y-endY)*(node.y-endY))//Math.abs(node.x - endX) + Math.abs(node.y - endY);
 			while (node.x!=endX||node.y!=endY)
 			{
 				for (var y:int = -1; y < 2; y++)
@@ -83,7 +83,7 @@ package pathfind
 										cost = Math.SQRT2;
 									}
 									var g:Number = node.g + cost;
-									var h:Number = Math.abs(test.x - endX) + Math.abs(test.y - endY);
+									var h:Number = Math.sqrt((test.x-endX)*(test.x-endX)+(test.y-endY)*(test.y-endY))//Math.abs(test.x - endX) + Math.abs(test.y - endY);
 									var f:Number = g + h;
 									if (test.version == nowVersion)
 									{

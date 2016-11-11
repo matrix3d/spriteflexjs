@@ -44,16 +44,18 @@ package spriteflexjs
 				text +=  stage.frameRate;
 			}
 			CONFIG::js_only{
-				//text += "\ndc  : " + SpriteFlexjs.drawCounter;
+				text += "\ndc  : " + SpriteFlexjs.drawCounter;
 				if (SpriteFlexjs.batDrawCounter>0){
-					//text += "\nbdc : " + SpriteFlexjs.batDrawCounter;
+					text += "\nbdc : " + SpriteFlexjs.batDrawCounter;
 				}
 			}
+			if(tf.text!=text){
 			tf.text = text;
 			
 			graphics.clear();
 			graphics.beginFill(0xffffff, .7);
 			graphics.drawRect(0, 0, tf.textWidth, tf.textHeight);
+			}
 		}
 		
 	}

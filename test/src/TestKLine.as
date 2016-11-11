@@ -44,7 +44,10 @@ package
 			var loader:URLLoader = new URLLoader;
 			loader.addEventListener(Event.COMPLETE, loader_complete_all);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, loader_ioError);
-			loader.load(new URLRequest("http://120.26.39.108:9090/getAllMobilePrice.do?pcode=XTAG200G&v="+Math.random()));
+			loader.load(new URLRequest(
+			//"http://120.26.39.108:9090/getAllMobilePrice.do?pcode=XTAG200G"
+			"http://120.26.52.171:9091/pass/marketTimeList?pcode=CU10"
+			+"&v="+Math.random()));
 			addChild(kline);
 			kline.y = oy;
 			//update();
@@ -59,7 +62,10 @@ package
 		{
 			var loader:URLLoader = new URLLoader;
 			loader.addEventListener(Event.COMPLETE, loader_complete);
-			loader.load(new URLRequest("http://120.26.39.108:9090/getNewMobilePrice.do?pcode=XTAG100G&v="+Math.random()));
+			loader.load(new URLRequest(
+				//"http://120.26.39.108:9090/getNewMobilePrice.do?pcode=XTAG100G"
+				"http://120.26.52.171:9091/pass/newMarketTimeList?pcode=CU10"
+				+"&v="+Math.random()));
 			//todo del
 			//addData(10*Math.random());
 			//update();
@@ -84,8 +90,12 @@ package
 		private function loader_complete(e:Event):void 
 		{
 			var loader:URLLoader = e.currentTarget as URLLoader;
-			var obj:Object = JSON.parse(loader.data+"");
-			var d:Number = obj["content"]["price"];
+			var obj:Object = JSON.parse(loader.data + "");
+			var content:Object = obj["content"];
+			if (content[0]){
+				content = content[0];
+			}
+			var d:Number = content["price"];
 			addData(d);
 			update();
 		}
@@ -103,8 +113,8 @@ package
 		}
 		
 		private function update():void{
-			var min:Number = 1000;
-			var max:Number =-1000;
+			var min:Number = 100000;
+			var max:Number =-100000;
 			for each(var d:Number in datas){
 				if (d<min){
 					min = d;

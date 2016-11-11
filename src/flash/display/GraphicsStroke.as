@@ -93,6 +93,7 @@ package flash.display
 		{
 			if (isNaN(thickness))
 			{
+				ctx.lineJoin = _joints;
 				ctx.stroke();
 			}
 			else

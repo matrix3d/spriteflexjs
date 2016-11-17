@@ -46,11 +46,12 @@ package
 			loader.addEventListener(IOErrorEvent.IO_ERROR, loader_ioError);
 			loader.load(new URLRequest(
 			//"http://120.26.39.108:9090/getAllMobilePrice.do?pcode=XTAG200G"
-			"http://120.26.52.171:9091/pass/marketTimeList?pcode=CU10"
+			"http://121.43.100.114:9095/pass/marketTimeList?pcode=CU10"
 			+"&v="+Math.random()));
 			addChild(kline);
 			kline.y = oy;
 			//update();
+			
 		}
 		
 		private function loader_ioError(e:IOErrorEvent):void 
@@ -64,7 +65,7 @@ package
 			loader.addEventListener(Event.COMPLETE, loader_complete);
 			loader.load(new URLRequest(
 				//"http://120.26.39.108:9090/getNewMobilePrice.do?pcode=XTAG100G"
-				"http://120.26.52.171:9091/pass/newMarketTimeList?pcode=CU10"
+				"http://121.43.100.114:9095/pass/newMarketTimeList?pcode=CU10"
 				+"&v="+Math.random()));
 			//todo del
 			//addData(10*Math.random());
@@ -146,6 +147,16 @@ package
 					}
 					
 					var h:Number =  int((stage.stageHeight - 2 * oy) / numline);
+					var numDot:int = 0;
+					var n:String = h + "";
+					var di:int = n.indexOf(".");
+					if (di ==-1){
+						numDot = 0;
+					}else{
+						n=n.substr(di+1)
+						numDot = n.length;
+					}
+					trace("小数点位数",numDot);
 					for (var i:int = 0; i <= numline; i++ ){
 						var y:Number = getY(minV + i, minV, maxV, s, h);
 						drawDashLine(kline.graphics, 0, y, w-ox, y,2);
@@ -153,7 +164,7 @@ package
 						tf.defaultTextFormat=new TextFormat("Courier New",fontsize);
 						tf.autoSize = "left";
 						kline.addChild(tf);
-						tf.text = ""+((minV + i)*s).toFixed(2);
+						tf.text = ""+((minV + i)*s).toFixed(numDot);
 						tf.y = y-tf.height/2;
 						tf.x = w-ox;
 					}
@@ -171,7 +182,7 @@ package
 					kline.addChild(labelTF);
 					labelTF.y = y - labelTF.height / 2;
 					labelTF.x = w - ox;
-					labelTF.text = d.toFixed(2) + "";
+					labelTF.text = d.toFixed(numDot) + "";
 				}
 				kline.graphics.lineTo(x, y);
 				if (x < 0){

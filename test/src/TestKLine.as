@@ -23,19 +23,26 @@ package
 		private var labelTF:TextField = new TextField;
 		private var fontsize:int = 30;
 		private var ox:Number = fontsize*3.2;
-		private var ox2:Number = 200;
+		private var ox2:Number = ox+100;
 		private var oy:Number = 30;
-		
-		//private var debugTf:TextField = new TextField;
+		private var numdot:int = 2;
+		private var debugTf:TextField = new TextField;
 		public function TestKLine()
 		{
 			//addChild(debugTf);
-			//debugTf.autoSize = "left";
+			debugTf.autoSize = "left";
 			CONFIG::js_only{
 			SpriteFlexjs.autoSize = true;
 			}
-			stage.loaderInfo.parameters;
-			labelTF.defaultTextFormat=new TextFormat("Courier New",fontsize);
+			var p:Object = stage.loaderInfo.parameters;
+			if (p["numdot"]){
+				numdot = p["numdot"];
+			}
+			if (p["textwidth"]){
+				ox = p["textwidth"];
+				ox2 = ox + 100;
+			}
+			labelTF.defaultTextFormat=new TextFormat(null,fontsize);
 			labelTF.background = true;
 			labelTF.backgroundColor = 0xdb5f4a;
 			labelTF.textColor = 0xffffff;
@@ -147,30 +154,40 @@ package
 					}
 					
 					var h:Number =  int((stage.stageHeight - 2 * oy) / numline);
-					var numDot:int = 0;
-					var n:String = h + "";
+					/*numdot = 0;
+					var n:String = s + "";
 					var di:int = n.indexOf(".");
 					if (di ==-1){
-						numDot = 0;
+						numdot = 0;
 					}else{
 						n=n.substr(di+1)
-						numDot = n.length;
-					}
-					trace("小数点位数",numDot);
+						numdot = n.length;
+					}*/
 					for (var i:int = 0; i <= numline; i++ ){
 						var y:Number = getY(minV + i, minV, maxV, s, h);
 						drawDashLine(kline.graphics, 0, y, w-ox, y,2);
 						var tf:TextField = new TextField;
-						tf.defaultTextFormat=new TextFormat("Courier New",fontsize);
+						tf.defaultTextFormat=new TextFormat(null,fontsize);
 						tf.autoSize = "left";
 						kline.addChild(tf);
-						tf.text = ""+((minV + i)*s).toFixed(numDot);
+						tf.text = ""+((minV + i)*s).toFixed(numdot);
 						tf.y = y-tf.height/2;
-						tf.x = w-ox;
+						tf.x = w - ox;
+						//debugTf.appendText("tf,"+y+","+tf.height+"\n")
 					}
 					break;
 				}
-				s += .5;
+				if (s<.1){
+					s += .05;
+				}else if (s==.1){
+					s = .5;
+				}else if(s<1){
+					s += .5;
+				}else if(s==1){
+					s = 5;
+				}else{
+					s += 5;
+				}
 			}
 			kline.graphics.lineStyle(2, 0xdb5f4a);
 			for (i = 0; i < datas.length; i++ ){
@@ -180,9 +197,10 @@ package
 				if(i==0){
 					kline.graphics.moveTo(x + ox2-ox, y);
 					kline.addChild(labelTF);
+					labelTF.text = d.toFixed(numdot) + "";
 					labelTF.y = y - labelTF.height / 2;
 					labelTF.x = w - ox;
-					labelTF.text = d.toFixed(numDot) + "";
+					//debugTf.appendText("ltf,"+labelTF.y+","+tf.height+"\n")
 				}
 				kline.graphics.lineTo(x, y);
 				if (x < 0){

@@ -13,7 +13,7 @@ package flash.text
 		private var graphicsDirty:Boolean = true;
 		private static var richTextFields:Array = ["font", "size", "color", "bold", "italic", "underline", "url", "target", "align", "leftMargin", "rightMargin", "indent", "leading", "blockIndent", "kerning", "letterSpacing", "display"];
 		private var _text:String="";
-		private var lines:Array;
+		private var lines:Array = [];
 		private var _textFormat:TextFormat=new TextFormat;
 		private var _width:Number = 100;
 		private var _height:Number = 100;
@@ -436,6 +436,9 @@ package flash.text
 				SpriteFlexjs.renderer.renderGraphics(ctx, graphics, m, blendMode, transform.concatenatedColorTransform);
 			}
 			for (var i:int = 0; i < lines.length; i++ ){
+				//if(m.ty>0){
+				//	alert(m.toString()+","+transform.matrix.toString()+" "+y);
+				//}
 				SpriteFlexjs.renderer.renderText(ctx, lines[i], defaultTextFormat, m, blendMode, transform.concatenatedColorTransform, 0, i * int(defaultTextFormat.size));
 			}
 		}

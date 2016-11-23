@@ -57,6 +57,7 @@ package flash.display3D
 		
 		public function clear(red:Number = 0, green:Number = 0, blue:Number = 0, alpha:Number = 1, depth:Number = 1, stencil:uint = 0, mask:uint = 4294967295):void
 		{
+			SpriteFlexjs.dirtyGraphics = true;
 			gl.clearColor(red, green, blue, alpha);
 			gl.clearDepth(depth);
 			gl.clearStencil(stencil);
@@ -71,6 +72,7 @@ package flash.display3D
 		
 		public function present():void
 		{
+			SpriteFlexjs.dirtyGraphics = true;
 		}
 		
 		public function setProgram(program:Program3D):void

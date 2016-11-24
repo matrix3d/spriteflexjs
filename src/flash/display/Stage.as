@@ -12,6 +12,7 @@ package flash.display
 	
 	public class Stage extends EventDispatcher
 	{
+		private var __rootHtmlElement:Element;
 		private var _frameRate:int;
 		private var _stage3Ds:Vector.<Stage3D>;
 		private static const kInvalidParamError:uint = 2004;
@@ -31,6 +32,8 @@ package flash.display
 		public function Stage()
 		{
 			super();
+			__rootHtmlElement = document.createElement("div");
+			document.body.appendChild(__rootHtmlElement);
 			trace("power by SpriteFlexJS");
 			_loaderInfo = new LoaderInfo();
 			if (SpriteFlexjs.startTime===0) {
@@ -196,7 +199,7 @@ package flash.display
 					_canvas.style.left = 0;
 					_canvas.style.top = 0;
 					_canvas.style.zIndex = 0;
-					document.body.appendChild(_canvas as HTMLCanvasElement);
+					__rootHtmlElement.appendChild(_canvas as HTMLCanvasElement);
 				}
 				
 				_canvas.addEventListener("click", canvas_mouseevent,false);

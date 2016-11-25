@@ -17,3 +17,7 @@ support canvas and webgl.
 ### wiki
 
 <a href='https://github.com/matrix3d/spriteflexjs/wiki'>wiki</a>
+
+### qq群
+
+523374300

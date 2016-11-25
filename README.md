@@ -21,3 +21,5 @@ support canvas and webgl.
 ### qq群
 
 523374300
+
+<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=82d280f77c6d3462c1b6c58ace4a2c63a1354bae66462f0ef418c7d91026bbfe"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="flexjs3D" title="flexjs3D"></a>

@@ -2,7 +2,7 @@
 
 a html5 engine build with flexjs.
 
-support all flash runtime api.
+support most flash runtime api.
 
 support canvas and webgl.
 

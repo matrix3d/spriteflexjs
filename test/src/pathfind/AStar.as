@@ -42,9 +42,10 @@ package pathfind
 			return x.f < y.f;
 		}
 		
-		public function findPath(startX:int, startY:int, endX:int, endY:int):Boolean
+		public function findPath(startX:int, startY:int, endX:int, endY:int,maxStep:int=1000000):Boolean
 		{
 			nowVersion++;
+			var step:int = 0;
 			open = new BinaryHeap(justMin);
 			if (nodes[startY] && nodes[startY][startX])
 			{
@@ -82,6 +83,7 @@ package pathfind
 									{
 										cost = Math.SQRT2;
 									}
+									step++;
 									var g:Number = node.g + cost;
 									var h:Number = Math.sqrt((test.x-endX)*(test.x-endX)+(test.y-endY)*(test.y-endY))//Math.abs(test.x - endX) + Math.abs(test.y - endY);
 									var f:Number = g + h;
@@ -117,7 +119,7 @@ package pathfind
 						}
 					}
 				}
-				if (open.a.length == 1)
+				if (open.a.length == 1||step>maxStep)
 				{
 					isFind = false;
 					break;

@@ -42,7 +42,7 @@ package pathfind
 			return x.f < y.f;
 		}
 		
-		public function findPath(startX:int, startY:int, endX:int, endY:int,maxStep:int=1000000):Boolean
+		public function findPath(startX:int, startY:int, endX:int, endY:int,maxStep:int=0):Boolean
 		{
 			nowVersion++;
 			var step:int = 0;
@@ -119,7 +119,7 @@ package pathfind
 						}
 					}
 				}
-				if (open.a.length == 1||step>maxStep)
+				if (open.a.length == 1||(maxStep!=0&&step>maxStep))
 				{
 					isFind = false;
 					break;

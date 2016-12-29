@@ -12,7 +12,8 @@ package flash.display
 	
 	public class Stage extends EventDispatcher
 	{
-		private var __rootHtmlElement:Element;
+		public var __rootHtmlElement:Element;
+		public var __htmlWrapper:Element;
 		private var _frameRate:int;
 		private var _stage3Ds:Vector.<Stage3D>;
 		private static const kInvalidParamError:uint = 2004;
@@ -31,16 +32,27 @@ package flash.display
 		private var _stageHeight:Number=0;
 		public function Stage()
 		{
-			super();
+			trace("power by SpriteFlexJS");
 			__rootHtmlElement = document.createElement("div");
 			document.body.appendChild(__rootHtmlElement);
-			trace("power by SpriteFlexJS");
+			
+			__htmlWrapper = document.createElement("div");
+			document.body.appendChild(__htmlWrapper);
+			__htmlWrapper.style.position = "absolute";
+			__htmlWrapper.style.left = 0;
+			__htmlWrapper.style.top = 0;
+			__htmlWrapper.style.zIndex = 0;
+			
 			_loaderInfo = new LoaderInfo();
 			if (SpriteFlexjs.startTime===0) {
 				SpriteFlexjs.startTime = Date.now();
 			}
 			frameRate = 60;
 			_stage3Ds = Vector.<Stage3D>([new Stage3D, new Stage3D, new Stage3D, new Stage3D]);
+			_stage3Ds[0].__stage = this;
+			_stage3Ds[1].__stage = this;
+			_stage3Ds[2].__stage = this;
+			_stage3Ds[3].__stage = this;
 			window.addEventListener("resize", window_resize, false);
 			window.addEventListener("orientationchange", window_resize, false);
 			setTimeout(__update);
@@ -198,7 +210,7 @@ package flash.display
 					_canvas.style.position = "absolute";
 					_canvas.style.left = 0;
 					_canvas.style.top = 0;
-					_canvas.style.zIndex = 0;
+					_canvas.style.zIndex = -10;
 					__rootHtmlElement.appendChild(_canvas as HTMLCanvasElement);
 				}
 				

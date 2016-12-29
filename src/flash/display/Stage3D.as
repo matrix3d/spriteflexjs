@@ -6,6 +6,7 @@ package flash.display
 	
 	public class Stage3D extends EventDispatcher
 	{
+		public var __stage:Stage;
 		private var _context3D:Context3D;
 		private static var ID:int = 0;
 		private var id:int;
@@ -26,8 +27,9 @@ package flash.display
 				canvas.style.position = "absolute";
 				canvas.style.left = 0;
 				canvas.style.top = 0;
-				canvas.style.zIndex = -1;
-				document.body.appendChild(canvas);
+				canvas.style.zIndex =id-20;
+				
+				__stage.__rootHtmlElement.appendChild(canvas);
 			}
 			_context3D.canvas = canvas;
 			_context3D.gl = (canvas.getContext("webgl",{alpha:false,antialias:false}) || canvas.getContext("experimental-webgl",{alpha:false,antialias:false})) as WebGLRenderingContext;

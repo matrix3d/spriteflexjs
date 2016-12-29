@@ -27,6 +27,7 @@ package
 		private var oy:Number = 30;
 		private var numdot:int = 2;
 		private var debugTf:TextField = new TextField;
+		private var timer:Timer = new Timer(5000);
 		public function TestKLine()
 		{
 			//addChild(debugTf);
@@ -61,6 +62,14 @@ package
 			
 		}
 		
+		public function start():void{
+			timer.start();
+		}
+		
+		public function stop():void{
+			timer.stop();
+		}
+		
 		private function loader_ioError(e:IOErrorEvent):void 
 		{
 			loader_complete_all(null);
@@ -91,9 +100,8 @@ package
 				}
 				update();
 			}
-			var timer:Timer = new Timer(5000);
 			timer.addEventListener(TimerEvent.TIMER, timer_timer);
-			timer.start();
+			start();
 		}
 		private function loader_complete(e:Event):void 
 		{

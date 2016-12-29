@@ -9,6 +9,8 @@ package flash.text
 	
 	public class TextField extends InteractiveObject
 	{
+		private var input:HTMLInputElement;
+		private var _type:String = TextFieldType.DYNAMIC;
 		private var graphics:Graphics = new Graphics;
 		private var graphicsDirty:Boolean = true;
 		private static var richTextFields:Array = ["font", "size", "color", "bold", "italic", "underline", "url", "target", "align", "leftMargin", "rightMargin", "indent", "leading", "blockIndent", "kerning", "letterSpacing", "display"];
@@ -24,7 +26,6 @@ package flash.text
 		private var _borderColor:uint = 0;
 		public function TextField()
 		{
-			super();
 			textColor = 0;
 		}
 		
@@ -172,6 +173,9 @@ package flash.text
 			lines = txt.split("\n");
 			SpriteFlexjs.dirtyGraphics = true;
 			graphicsDirty = true;
+			if (input){
+				input.value = txt;
+			}
 		}
 		
 		public function get textColor():uint  { return int(_textFormat.color); }
@@ -208,9 +212,26 @@ package flash.text
 		
 		public function set thickness(param1:Number):void  {/**/ }
 		
-		public function get type():String  { return null; }
+		public function get type():String  { return _type; }
 		
-		public function set type(param1:String):void  {/**/ }
+		public function set type(param1:String):void  {
+			_type = param1;
+			if (_type==TextFieldType.INPUT){
+				if (input==null){
+					input = document.createElement("input") as HTMLInputElement;
+					input.oninput = input_change;
+					input.style.position = "absolute";
+					input.style.backgroundColor = "transparent";
+					input.style.borderWidth = 0;
+					input.style.outline = "none";
+				}
+			}
+		}
+		
+		private function input_change(e:Event):void 
+		{
+			text = input.value;
+		}
 		
 		public function get wordWrap():Boolean  { return false; }
 		
@@ -431,15 +452,24 @@ package flash.text
 					if (background){
 						graphics.beginFill(backgroundColor);
 					}
-					graphics.drawRect(-2, -1, width, height);
+					graphics.drawRect( -2, -1, width, height);
 				}
 				SpriteFlexjs.renderer.renderGraphics(ctx, graphics, m, blendMode, transform.concatenatedColorTransform);
 			}
-			for (var i:int = 0; i < lines.length; i++ ){
-				//if(m.ty>0){
-				//	alert(m.toString()+","+transform.matrix.toString()+" "+y);
-				//}
-				SpriteFlexjs.renderer.renderText(ctx, lines[i], defaultTextFormat, m, blendMode, transform.concatenatedColorTransform, 0, i * int(defaultTextFormat.size));
+			if(type==TextFieldType.DYNAMIC){
+				for (var i:int = 0; i < lines.length; i++ ){
+					//if(m.ty>0){
+					//	alert(m.toString()+","+transform.matrix.toString()+" "+y);
+					//}
+					SpriteFlexjs.renderer.renderText(ctx, lines[i], defaultTextFormat, m, blendMode, transform.concatenatedColorTransform, 0, i * int(defaultTextFormat.size));
+				}
+			}else{
+				input.style.left = m.tx+"px";
+				input.style.top = m.ty+"px";
+				//input.style.transform = "matrix("+m.a+","+m.b+","+m.c+","+m.d+","+m.tx+","+m.ty+")";
+				if(input.parentElement==null){
+					stage.__htmlWrapper.appendChild(input);
+				}
 			}
 		}
 	}

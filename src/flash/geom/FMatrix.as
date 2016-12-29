@@ -1,48 +1,46 @@
-package flash.geom
+package flash.geom 
 {
-	
-	public class Matrix
+	/**
+	 * ...
+	 * @author lizhi
+	 */
+	public class FMatrix 
 	{
-		
-		public var a:Number;
-		public var b:Number;
-		public var c:Number;
-		public var d:Number;
-		public var tx:Number;
-		public var ty:Number;
+		public var f:Float32Array = new Float32Array(6);
 		private var t0:Number;
 		private var t1:Number;
 		private var t2:Number;
 		private var t3:Number;
-		public function Matrix(a:Number = 1, b:Number = 0, c:Number = 0, d:Number = 1, tx:Number = 0, ty:Number = 0)
+		public function FMatrix(a:Number = 1, b:Number = 0, c:Number = 0, d:Number = 1, tx:Number = 0, ty:Number = 0)
 		{
 			super();
-			this.a = a;
-			this.b = b;
-			this.c = c;
-			this.d = d;
-			this.tx = tx;
-			this.ty = ty;
+			f[0] = a;
+			f[1] = b;
+			f[2] = c;
+			f[3] = d;
+			f[4] = tx;
+			f[5] = ty;
 		}
 		
 		public function clone():Matrix
 		{
-			return new Matrix(a, b, c, d, tx, ty);
+			return new Matrix(f[0], f[1], f[2], f[3], f[4], f[5]);
 		}
 		
-		public function concat(m:Matrix):void
+		public function concat(m:FMatrix):void
 		{
-			t0 = a;
-			a = a * m.a + b * m.c;
-			b = t0 * m.b + b * m.d;
+			var f2:Float32Array = m.f;
+			t0 = f[0];
+			f[0] = f[0] * m.a + f[1] * m.c;
+			f[1] = t0 * m.b + f[1] * m.d;
 			
-			t0 = c;
-			c = c * m.a + d * m.c;
-			d = t0 * m.b + d * m.d;
+			t0 = f[2];
+			f[2] = f[2] * m.a + f[3] * m.c;
+			f[3] = t0 * m.b + f[3] * m.d;
 
 			t0 = tx;
-			tx = tx * m.a + ty * m.c + m.tx;
-			ty = t0 * m.b + ty * m.d + m.ty;
+			f[4] = tx * m.a + ty * m.c + m.tx;
+			f[5] = t0 * m.b + ty * m.d + m.ty;
 		}
 		
 		public function invert():void
@@ -254,5 +252,7 @@ package flash.geom
 				tx = vector3D.z;
 			}
 		}
+		
 	}
+
 }

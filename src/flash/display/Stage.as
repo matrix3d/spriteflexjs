@@ -39,9 +39,9 @@ package flash.display
 			__htmlWrapper = document.createElement("div");
 			document.body.appendChild(__htmlWrapper);
 			__htmlWrapper.style.position = "absolute";
-			__htmlWrapper.style.left = 0;
-			__htmlWrapper.style.top = 0;
-			__htmlWrapper.style.zIndex = 0;
+			__htmlWrapper.style.left = "0px";
+			__htmlWrapper.style.top = "0px";
+			__htmlWrapper.style.zIndex =0;
 			
 			_loaderInfo = new LoaderInfo();
 			if (SpriteFlexjs.startTime===0) {
@@ -208,8 +208,8 @@ package flash.display
 				if (_canvas == null){
 					_canvas=document.createElement("canvas") as HTMLCanvasElement;
 					_canvas.style.position = "absolute";
-					_canvas.style.left = 0;
-					_canvas.style.top = 0;
+					_canvas.style.left = "0px";
+					_canvas.style.top = "0px";
 					_canvas.style.zIndex = -10;
 					__rootHtmlElement.appendChild(_canvas as HTMLCanvasElement);
 				}

@@ -3,6 +3,7 @@ package flash.text
 	import flash.display.BlendMode;
 	import flash.display.Graphics;
 	import flash.display.InteractiveObject;
+	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.display.DisplayObject;
@@ -27,6 +28,14 @@ package flash.text
 		public function TextField()
 		{
 			textColor = 0;
+			addEventListener(Event.REMOVED_FROM_STAGE, removedFromStage);
+		}
+		
+		private function removedFromStage(e:Event):void 
+		{
+			if (input&&input.parentElement){
+				input.parentElement.removeChild(input);
+			}
 		}
 		
 		public static function isFontCompatible(param1:String, param2:String):Boolean  { return false; }
@@ -173,9 +182,6 @@ package flash.text
 			lines = txt.split("\n");
 			SpriteFlexjs.dirtyGraphics = true;
 			graphicsDirty = true;
-			if (input){
-				input.value = txt;
-			}
 		}
 		
 		public function get textColor():uint  { return int(_textFormat.color); }
@@ -465,7 +471,14 @@ package flash.text
 				}
 			}else{
 				input.style.left = m.tx+"px";
-				input.style.top = m.ty+"px";
+				input.style.top = m.ty + "px";
+				input.style.width = width + "px";
+				input.style.height = height + "px";
+				input.style.fontFamily = defaultTextFormat.font;
+				input.style.fontSize = defaultTextFormat.size+"px";
+				input.style.color = defaultTextFormat.csscolor;
+				if(input.value!=text)
+				input.value = text;
 				//input.style.transform = "matrix("+m.a+","+m.b+","+m.c+","+m.d+","+m.tx+","+m.ty+")";
 				if(input.parentElement==null){
 					stage.__htmlWrapper.appendChild(input);

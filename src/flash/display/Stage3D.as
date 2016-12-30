@@ -25,8 +25,8 @@ package flash.display
 			if(canvas==null){
 				canvas = document.createElement("canvas") as HTMLCanvasElement;
 				canvas.style.position = "absolute";
-				canvas.style.left = 0;
-				canvas.style.top = 0;
+				canvas.style.left = "0px";
+				canvas.style.top = "0px";
 				canvas.style.zIndex =id-20;
 				
 				__stage.__rootHtmlElement.appendChild(canvas);

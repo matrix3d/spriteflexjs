@@ -312,7 +312,7 @@ package flash.display
 			lock();
 			for (var x:int = 0; x < width;x++ ){
 				for (var y:int = 0; y < height; y++ ){
-					setPixel(x,y,param2[x+y*width]
+					setPixel(x, y, param2[x + y * width]);
 				}
 			}
 			unlock();

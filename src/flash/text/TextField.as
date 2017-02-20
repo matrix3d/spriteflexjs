@@ -25,6 +25,7 @@ package flash.text
 		private var _backgroundColor:uint = 0;
 		private var _border:Boolean = false;
 		private var _borderColor:uint = 0;
+		private var boundHelpRect:Rectangle = new Rectangle;
 		public function TextField()
 		{
 			textColor = 0;
@@ -484,6 +485,26 @@ package flash.text
 					stage.__htmlWrapper.appendChild(input);
 				}
 			}
+		}
+		
+		override protected function __doMouse(e:flash.events.MouseEvent):DisplayObject 
+		{
+			if (/*stage &&*/ mouseEnabled&&visible) {
+				if (hitTestPoint(stage.mouseX, stage.mouseY)) {
+					return this;
+				}
+			}
+			return null;
+		}
+		
+		override public function __getRect():Rectangle 
+		{
+			if (text && text != "") {
+				boundHelpRect.width = width;
+				boundHelpRect.height = height;
+				return boundHelpRect;
+			}
+			return null;
 		}
 	}
 }

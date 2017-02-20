@@ -78,10 +78,10 @@ package flash.display
 		override protected function __doMouse(e:flash.events.MouseEvent):DisplayObject 
 		{
 			if (/*stage&&*/visible) {
-				var obj:DisplayObject = super.__doMouse(e);
+				/*var obj:DisplayObject = super.__doMouse(e);
 				if (obj) {
 					return obj;
-				}
+				}*/
 				if (hitTestPoint(stage.mouseX, stage.mouseY)) {
 					return this;
 				}

@@ -68,7 +68,7 @@ package flash.media
 		
 		private function xhr_load(e:Object):void 
 		{
-			ctx.decodeAudioData(xhr.response, decodeAudioDataSuccess);
+			ctx.decodeAudioData(xhr.response as ArrayBuffer, decodeAudioDataSuccess);
 		}
 		
 		private function decodeAudioDataSuccess(buffer:AudioBuffer):void 

@@ -22,6 +22,7 @@ package flash.utils
 			}
 			this.m_delay = delay;
 			this.m_repeatCount = repeatCount;
+			this.m_iteration = 0;
 		}
 		
 		public function get delay():Number

@@ -43,6 +43,7 @@ package flash.__native
 		override public function renderImage(ctx:CanvasRenderingContext2D, img:BitmapData, m:Matrix, blendMode:String, colorTransform:ColorTransform):void 
 		{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
+			ctx.globalCompositeOperation = blendMode;
 			glctx.drawImageInternal(img.image,glctx.bitmapDrawable,m,null,true,colorTransform.tint,true,true);
 		}
 		

@@ -1,6 +1,7 @@
 package flash.__native 
 {
 	import flash.display.BitmapData;
+	import flash.display.BlendMode;
 	import flash.display.GraphicsPath;
 	import flash.display.Stage;
 	import flash.display3D.Context3D;
@@ -177,7 +178,7 @@ package flash.__native
 		}
 
 		public function clearRect (x:Number, y:Number, w:Number, h:Number) : Object {
-			ctx.clear(1,1,1);
+			ctx.clear(0,0,0);
 			batchsLen = 0;
 			SpriteFlexjs.batDrawCounter = 0;
 			return null;
@@ -348,6 +349,35 @@ package flash.__native
 				}
 				ctx.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, uvmatr3d);
 			}
+			
+			switch (globalCompositeOperation) {
+				/*case BlendMode.NORMAL:
+					var sourceFactor:String = Context3DBlendFactor.ONE;
+					var destinationFactor:String = Context3DBlendFactor.ZERO;
+					break;*/
+				/*case BlendMode.LAYER:
+					sourceFactor = Context3DBlendFactor.SOURCE_ALPHA;
+					destinationFactor = Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA;
+					break;*/
+				case BlendMode.MULTIPLY:
+					var sourceFactor:String = Context3DBlendFactor.ZERO;
+					var destinationFactor:String = Context3DBlendFactor.SOURCE_COLOR;
+					break;
+				case BlendMode.ADD:
+					sourceFactor = Context3DBlendFactor.SOURCE_ALPHA;
+					destinationFactor = Context3DBlendFactor.ONE;
+					break;
+				case BlendMode.ALPHA:
+					sourceFactor = Context3DBlendFactor.ZERO;
+					destinationFactor = Context3DBlendFactor.SOURCE_ALPHA;
+					break;
+				default:
+					sourceFactor = Context3DBlendFactor.SOURCE_ALPHA;
+					destinationFactor = Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA;
+					break;
+					
+			}
+			ctx.setBlendFactors(sourceFactor, destinationFactor);
 			ctx.drawTriangles(drawable.index.getBuff(ctx),0,drawable.numTriangles);
 		}
 		

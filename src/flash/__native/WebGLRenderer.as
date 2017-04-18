@@ -53,7 +53,9 @@ package flash.__native
 		 */
 		override public function renderGraphics(ctx:CanvasRenderingContext2D, g:Graphics, m:Matrix, blendMode:String, colorTransform:ColorTransform):void{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
-			glctx.setTransform2(m);
+			//glctx.setTransform2(m);
+			//inline
+			glctx.matr = m;
 			ctx.globalCompositeOperation = blendMode;
 			//ctx.globalAlpha = colorTransform.alphaMultiplier;
 			//glctx.globalRed = colorTransform.redMultiplier;

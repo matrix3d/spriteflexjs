@@ -348,7 +348,7 @@ package flash.display
 						break;
 					}else{
 						t.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT,false,false,e.localX,e.localY));
-						t.dispatchEvent(new MouseEvent(MouseEvent.ROLL_OVER,false,false,e.localX,e.localY));
+						t.dispatchEvent(new MouseEvent(MouseEvent.ROLL_OUT,false,false,e.localX,e.localY));
 					}
 					t = t.parent;
 				}

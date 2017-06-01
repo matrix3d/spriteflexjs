@@ -13,6 +13,7 @@ package flash.__native
 		public var img:Object;
 		public var width:int;
 		public var height:int;
+		public var dirty:Boolean = true;
 		public function BitmapTexture() 
 		{
 			

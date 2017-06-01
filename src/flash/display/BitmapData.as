@@ -1,6 +1,8 @@
 package flash.display
 {
 	import flash.geom.*;
+	import flash.__native.BitmapTexture;
+	import flash.display3D.textures.Texture;
 	import flash.text.TextField;
 	import flash.utils.ByteArray;
 	/**
@@ -40,6 +42,7 @@ package flash.display
 		public function fromImage(img:Object,dx:Number=0,dy:Number=0,opt_dw:Number=0,opt_dy:Number=0):void {
 			ctx.drawImage(img, dx, dy);
 			SpriteFlexjs.dirtyGraphics = true;
+			clearTexture();
 			imageData = ctx.getImageData(0, 0, width, height);
 			this.__data = this.imageData.data;
 		}
@@ -81,6 +84,7 @@ package flash.display
 			if (!_lock) {
 				ctx.putImageData(imageData, 0, 0);
 				SpriteFlexjs.dirtyGraphics = true;
+				clearTexture();
 			}
 		}
 		
@@ -95,6 +99,7 @@ package flash.display
 			if (!_lock) {
 				ctx.putImageData(imageData,0,0);
 				SpriteFlexjs.dirtyGraphics = true;
+				clearTexture();
 			}
 		}
 		
@@ -298,6 +303,7 @@ package flash.display
 			if (!_lock) {
 				ctx.putImageData(imageData,0,0);
 				SpriteFlexjs.dirtyGraphics = true;
+				clearTexture();
 			}
 			//setVector(rect, vec);
 		}
@@ -328,6 +334,14 @@ package flash.display
 			_lock = false;
 			ctx.putImageData(imageData, 0, 0);
 			SpriteFlexjs.dirtyGraphics = true;
+			clearTexture();
+		}
+		
+		private function clearTexture():void{
+			if (image&&image["_texture"]){
+				var t:BitmapTexture = image["_texture"] as BitmapTexture;
+				t.dirty = true;
+			}
 		}
 		
 		public function histogram(param1:Rectangle = null):Vector.<Vector.<Number>>  { return null }

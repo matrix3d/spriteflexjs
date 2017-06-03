@@ -64,7 +64,7 @@ package flash.__native
 		public var matr:Matrix = new Matrix;
 		private var matrhelp:Matrix = new Matrix;
 		private var stage:Stage;
-		private var isBatch:Boolean;
+		public var isBatch:Boolean;
 		private var batchs:Array = [];
 		private var batchsLen:int = 0;
 		private var states:Array = [];

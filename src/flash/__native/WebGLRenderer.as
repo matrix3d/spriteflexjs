@@ -43,8 +43,13 @@ package flash.__native
 		override public function renderImage(ctx:CanvasRenderingContext2D, img:BitmapData, m:Matrix, blendMode:String, colorTransform:ColorTransform):void 
 		{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
-			ctx.globalCompositeOperation = blendMode;
-			glctx.drawImageInternal(img.image,glctx.bitmapDrawable,m,null,true,colorTransform.tint,true,true);
+			if (!glctx.isBatch){
+				ctx.globalCompositeOperation = blendMode;
+			}
+			glctx.drawImageInternal(img.image, glctx.bitmapDrawable, m, null, true, colorTransform.tint, true, true);
+			if (glctx.isBatch){
+				ctx.globalCompositeOperation = blendMode;
+			}
 		}
 		
 		/**
@@ -56,7 +61,9 @@ package flash.__native
 			//glctx.setTransform2(m);
 			//inline
 			glctx.matr = m;
-			ctx.globalCompositeOperation = blendMode;
+			if (!glctx.isBatch){
+				ctx.globalCompositeOperation = blendMode;
+			}
 			//ctx.globalAlpha = colorTransform.alphaMultiplier;
 			//glctx.globalRed = colorTransform.redMultiplier;
 			//glctx.globalGreen = colorTransform.greenMultiplier;
@@ -81,6 +88,9 @@ package flash.__native
 			}
 			ctx.fillStyle = null;
 			ctx.strokeStyle = null;
+			if (glctx.isBatch){
+				ctx.globalCompositeOperation = blendMode;
+			}
 		}
 		
 		/**
@@ -89,12 +99,18 @@ package flash.__native
 		override public function renderText(ctx:CanvasRenderingContext2D, txt:String, textFormat:TextFormat, m:Matrix, blendMode:String, colorTransform:ColorTransform, x:Number, y:Number):void{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
 			glctx.colorTransform = colorTransform;
-			ctx.globalCompositeOperation = blendMode;//BlendMode.getCompVal(blendMode);
+			//ctx.globalCompositeOperation = blendMode;//BlendMode.getCompVal(blendMode);
+			if (!glctx.isBatch){
+				ctx.globalCompositeOperation = blendMode;
+			}
 			glctx.setTransform2(m);
 			ctx.font = textFormat.css;
 			ctx.fillStyle = textFormat.csscolor;
 			ctx.textBaseline = "top";
 			ctx.fillText(txt, x, y);
+			if (glctx.isBatch){
+				ctx.globalCompositeOperation = blendMode;
+			}
 		}
 		
 		/**

@@ -1,10 +1,11 @@
 package flash.display
 {
+	//http://www.w3school.com.cn/tags/canvas_globalcompositeoperation.asp
 	
 	public final class BlendMode extends Object
 	{
 		
-		public static const NORMAL:String = "normal";
+		public static const NORMAL:String = "source-over";
 		
 		public static const LAYER:String = "layer";
 		
@@ -16,7 +17,7 @@ package flash.display
 		
 		public static const DARKEN:String = "darken";
 		
-		public static const ADD:String = "add";
+		public static const ADD:String = "lighter";
 		
 		public static const SUBTRACT:String = "subtract";
 		

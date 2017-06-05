@@ -30,6 +30,7 @@ package flash.display
 		private var _blendMode:String;
 		public function DisplayObject()
 		{
+			_blendMode = BlendMode.NORMAL;
 			transform = new Transform(this);
 			innerID = ID++;
 			name = "instance" + innerID;

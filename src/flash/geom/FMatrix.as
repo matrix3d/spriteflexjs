@@ -22,7 +22,7 @@ package flash.geom
 			f[5] = ty;
 		}
 		
-		public function clone():Matrix
+		/*public function clone():Matrix
 		{
 			return new Matrix(f[0], f[1], f[2], f[3], f[4], f[5]);
 		}
@@ -251,7 +251,7 @@ package flash.geom
 				c = vector3D.y;
 				tx = vector3D.z;
 			}
-		}
+		}*/
 		
 	}
 

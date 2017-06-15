@@ -4,7 +4,7 @@ package flash.events
 	
 	[Event(name = "deactivate", type = "flash.events.Event")]
 	[Event(name = "activate", type = "flash.events.Event")]
-	public class EventDispatcher implements IEventDispatcher
+	public class EventDispatcher extends Object implements IEventDispatcher
 	{
 		private var listeners:Object = {};
 		

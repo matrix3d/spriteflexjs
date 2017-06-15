@@ -9,9 +9,14 @@ package flash.display
 	public class Sprite extends DisplayObjectContainer
 	{
 		public var graphics:Graphics = new Graphics;
-		private var tempPos:Point
+		private var tempPos:Point;
+		
 		public function Sprite()
 		{
+			super();
+			
+			DisplayObject.initStage = Stage.instance;
+			init();
 		}
 		
 		public function get buttonMode():Boolean  { return false }

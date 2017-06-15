@@ -17,7 +17,7 @@ package
          super();
          this.message = message;
          this._errorID = id;
-         this.name ;
+         this.name = "";
       }
       
      public static function getErrorMessage(param1:int) : String{return null}

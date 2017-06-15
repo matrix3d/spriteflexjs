@@ -16,10 +16,13 @@ package flash.display
 	 */
 	public class DisplayObject extends EventDispatcher implements IBitmapDrawable
 	{
+		private static var _globalStage:Stage;
+		private var _stage:Stage;
+		private var _inited:Boolean = false;
+		
 		private static var ID:int = 0;
 		public var innerID:int;
 		private var _name:String;
-		protected var _stage:Stage;
 		private var _rotation:Number = 0;
 		private var rsin:Number = 0;
 		private var rcos:Number = 1;
@@ -28,23 +31,41 @@ package flash.display
 		private var _visible:Boolean = true;
 		private var lastMouseOverObj:DisplayObject;
 		private var _blendMode:String;
+		
 		public function DisplayObject()
 		{
-			_blendMode = BlendMode.NORMAL;
-			transform = new Transform(this);
-			innerID = ID++;
-			name = "instance" + innerID;
-			if (innerID === 0)
+			_stage = _globalStage;
+			
+			if (_stage) init();
+		}
+		
+		public function init():void
+		{
+			if (!_inited)
 			{
-				_stage = new Stage;
-				_stage.addEventListener(Event.ENTER_FRAME, __enterFrame);
-				_stage.addEventListener(MouseEvent.CLICK, __mouseevent);
-				_stage.addEventListener(MouseEvent.CONTEXT_MENU, __mouseevent);
-				_stage.addEventListener(MouseEvent.DOUBLE_CLICK, __mouseevent);
-				_stage.addEventListener(MouseEvent.MOUSE_DOWN, __mouseevent);
-				_stage.addEventListener(MouseEvent.MOUSE_MOVE, __mouseevent);
-				_stage.addEventListener(MouseEvent.MOUSE_UP, __mouseevent);
+				_blendMode = BlendMode.NORMAL;
+				transform = new Transform(this);
+				innerID = ID++;
+				name = "instance" + innerID;
+				
+				if (innerID === 0)
+				{
+					_stage = _globalStage;
+					_stage.addEventListener(Event.ENTER_FRAME, __enterFrame);
+					_stage.addEventListener(MouseEvent.CLICK, __mouseevent);
+					_stage.addEventListener(MouseEvent.CONTEXT_MENU, __mouseevent);
+					_stage.addEventListener(MouseEvent.DOUBLE_CLICK, __mouseevent);
+					_stage.addEventListener(MouseEvent.MOUSE_DOWN, __mouseevent);
+					_stage.addEventListener(MouseEvent.MOUSE_MOVE, __mouseevent);
+					_stage.addEventListener(MouseEvent.MOUSE_UP, __mouseevent);
+				}
+				_inited = true;
 			}
+		}
+		
+		public static function set initStage(value:Stage):void 
+		{
+			_globalStage = value;
 		}
 		
 		public function get stage():Stage  { return _stage; }
@@ -55,6 +76,7 @@ package flash.display
 				if (_stage) {
 					dispatchEvent(new Event(Event.ADDED_TO_STAGE));
 				}else {
+					SpriteFlexjs.dirtyGraphics = true;
 					dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
 				}
 			}

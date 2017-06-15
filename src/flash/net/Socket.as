@@ -15,9 +15,11 @@ package flash.net
 			websocket = new WebSocket("ws://"+host+":"+port);
 			//websocket.onclose
 		}
+		/*
 		public function get bytesAvailable () : uint{
 			
 		}
+		
 		public function get bytesPending () : uint;
 		public function get connected () : Boolean;
 		public function get endian () : String;
@@ -54,6 +56,6 @@ package flash.net
 		public function writeShort (value:int) : void;
 		public function writeUnsignedInt (value:uint) : void;
 		public function writeUTF (value:String) : void;
-		public function writeUTFBytes (value:String) : void;
+		public function writeUTFBytes (value:String) : void;*/
 	}
 }

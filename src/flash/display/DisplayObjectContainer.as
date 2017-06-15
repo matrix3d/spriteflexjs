@@ -9,9 +9,11 @@ package flash.display
 	{
 		private var children:Array = [];
 		private var _mouseChildren:Boolean = true;
+		
 		public function DisplayObjectContainer()
 		{
 			super();
+			
 		}
 		
 		public function addChild(child:DisplayObject):DisplayObject
@@ -74,7 +76,7 @@ package flash.display
 		
 		public function get numChildren():int  { return children.length; }
 		
-		override public function get stage():Stage 
+		/*override public function get stage():Stage 
 		{
 			return _stage;
 		}
@@ -94,7 +96,7 @@ package flash.display
 				var c:DisplayObject = children[i];
 				c.stage = v;
 			}
-		}
+		}*/
 		
 		
 		//flexjs 编译变慢bug，等sdk改正后再改回来

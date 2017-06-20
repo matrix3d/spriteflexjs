@@ -32,8 +32,11 @@ package flash.display
 		private var lastMouseOverObj:DisplayObject;
 		private var _blendMode:String;
 		
+		private var _loaderInfo:LoaderInfo;
 		public function DisplayObject()
 		{
+			
+			_loaderInfo = new LoaderInfo();
 			_stage = _globalStage;
 			
 			if (_stage) init();
@@ -81,6 +84,10 @@ package flash.display
 				}
 			//}
 		}
+		
+		
+		/************************ <Non Flash API Helper Methods> *****************************************/
+		public function get loaderInfo():LoaderInfo  { return _loaderInfo; }
 		
 		public function get root():DisplayObject  { return null }
 		

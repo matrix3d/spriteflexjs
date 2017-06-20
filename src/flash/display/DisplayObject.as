@@ -71,7 +71,7 @@ package flash.display
 		public function get stage():Stage  { return _stage; }
 		
 		public function set stage(v:Stage):void  { 
-			if (_stage != v) {
+			//if (_stage != v) {
 				_stage = v;
 				if (_stage) {
 					dispatchEvent(new Event(Event.ADDED_TO_STAGE));
@@ -79,7 +79,7 @@ package flash.display
 					SpriteFlexjs.dirtyGraphics = true;
 					dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
 				}
-			}
+			//}
 		}
 		
 		public function get root():DisplayObject  { return null }

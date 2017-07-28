@@ -166,7 +166,7 @@ package flash.display3D
 					normalized = true;
 					break;
 				}
-				gl.vertexAttribPointer(loc, size, type, normalized, bufferOffset, bufferOffset);
+				gl.vertexAttribPointer(loc, size, type, normalized, buffer.data32PerVertex * 4, bufferOffset*4);
 			}
 		}
 		
@@ -280,6 +280,7 @@ package flash.display3D
 		{
 			var buffer:VertexBuffer3D = new VertexBuffer3D;
 			buffer.buff = gl.createBuffer();
+			buffer.data32PerVertex = data32PerVertex;
 			buffer.gl = gl;
 			return buffer;
 		}

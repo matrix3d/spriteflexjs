@@ -545,7 +545,7 @@ package fairygui
 					
 					value = strings[elementId+"-texts_def"];
 					if(value!=undefined)
-						dxml.@["default"] = value;
+						dxml.@default = value;
 				}
 				
 				if(ename=="text" || ename=="richtext")

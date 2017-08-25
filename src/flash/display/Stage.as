@@ -242,6 +242,8 @@ package flash.display
 			_stage3Ds[2].__stage = this;
 			_stage3Ds[3].__stage = this;
 			
+			window_resize();
+			
 			window.addEventListener("resize", window_resize, false);
 			window.addEventListener("orientationchange", window_resize, false);
 			setTimeout(__update);
@@ -261,7 +263,7 @@ package flash.display
 			return _instance;
 		}
 		
-		private function window_resize(e:Object):void
+		private function window_resize(e:Object = null):void
 		{
 			SpriteFlexjs.dirtyGraphics = true;
 			if (SpriteFlexjs.autoSize){
@@ -913,7 +915,11 @@ package flash.display
 		 *   the Security.allowDomain() method or the Security.allowInsecureDomain() method.
 		 *   For more information, see the "Security" chapter in the ActionScript 3.0 Developer's Guide.
 		 */
-		public function get stageHeight ():int { return _stageHeight; }
+		public function get stageHeight ():int
+		{ 
+			if (SpriteFlexjs.autoSize) _stageHeight = window.innerHeight;
+			return _stageHeight; 
+		}
 		public function set stageHeight (value:int):void { _stageHeight = value; }
 
 		/**
@@ -962,7 +968,11 @@ package flash.display
 		 *   the Security.allowDomain() method or the Security.allowInsecureDomain() method.
 		 *   For more information, see the "Security" chapter in the ActionScript 3.0 Developer's Guide.
 		 */
-		public function get stageWidth ():int { return _stageWidth; }
+		public function get stageWidth ():int 
+		{ 
+			if (SpriteFlexjs.autoSize) _stageWidth = window.innerWidth;
+			return _stageWidth; 
+		}
 		public function set stageWidth (value:int):void { _stageWidth = value; }
 
 		/**

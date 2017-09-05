@@ -1,15 +1,15 @@
 package fairygui
 {
-	import com.greensock.easing.Ease;
+	/*import com.greensock.easing.Ease;
 	import com.greensock.easing.EaseLookup;
-	import com.greensock.easing.Quad;
+	import com.greensock.easing.Quad;*/
 	
 	public class GearBase
 	{
 		public static var disableAllTweenEffect:Boolean = false;
 		
 		protected var _tween:Boolean;
-		protected var _easeType:Ease;
+		protected var _easeType:Object//Ease;
 		protected var _tweenTime:Number;
 		protected var _delay:Number;
 		protected var _displayLockToken:uint;
@@ -20,7 +20,7 @@ package fairygui
 		public function GearBase(owner:GObject)
 		{
 			_owner = owner;
-			_easeType = Quad.easeOut;
+			//_easeType = Quad.easeOut;
 			_tweenTime = 0.3;
 			_delay = 0;
 		}
@@ -70,12 +70,12 @@ package fairygui
 			_delay = value;
 		}
 		
-		final public function get easeType():Ease
+		final public function get easeType():Object/*Ease*/
 		{
 			return _easeType;
 		}
 		
-		public function set easeType(value:Ease):void
+		public function set easeType(value:Object/*Ease*/):void
 		{
 			_easeType = value;
 		}
@@ -100,10 +100,10 @@ package fairygui
 				var pos:int = str.indexOf(".");
 				if(pos!=-1)
 					str = str.substr(0,pos) + ".ease" + str.substr(pos+1);
-				if(str=="Linear")
-					_easeType = EaseLookup.find("linear.easenone");
-				else
-					_easeType = EaseLookup.find(str);
+				//if(str=="Linear")
+				//	_easeType = EaseLookup.find("linear.easenone");
+				//else
+				//	_easeType = EaseLookup.find(str);
 			}
 			
 			str = xml.@duration;

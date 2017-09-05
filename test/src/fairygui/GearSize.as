@@ -1,10 +1,10 @@
 package fairygui
 {
-	import com.greensock.TweenLite;	
+	/*import com.greensock.TweenLite;	*/
 
 	public class GearSize extends GearBase
 	{
-		public var tweener:TweenLite;
+		//public var tweener:TweenLite;
 		
 		private var _storage:Object;
 		private var _default:GearSizeValue;
@@ -54,7 +54,7 @@ package fairygui
 			{
 				var a:Boolean;
 				var b:Boolean;
-				if(tweener!=null)
+				/*if(tweener!=null)
 				{
 					a = tweener.vars.onUpdateParams[0];
 					b = tweener.vars.onUpdateParams[1];
@@ -77,7 +77,7 @@ package fairygui
 					}
 					else
 						return;
-				}
+				}*/
 				
 				a = gv.width != _owner.width || gv.height != _owner.height;
 				b = gv.scaleX != _owner.scaleX || gv.scaleY != _owner.scaleY;
@@ -104,7 +104,7 @@ package fairygui
 					_tweenValue.height = _owner.height;
 					_tweenValue.scaleX = _owner.scaleX;
 					_tweenValue.scaleY = _owner.scaleY;
-					tweener = TweenLite.to(_tweenValue, _tweenTime, vars);
+					//tweener = TweenLite.to(_tweenValue, _tweenTime, vars);
 				}
 			}
 			else
@@ -133,7 +133,7 @@ package fairygui
 				_owner.releaseDisplayLock(_displayLockToken);
 				_displayLockToken = 0;
 			}
-			tweener = null;
+			//tweener = null;
 		}
 		
 		override public function updateState():void

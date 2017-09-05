@@ -1,8 +1,8 @@
 package fairygui
 {
-	import com.greensock.TweenLite;
+	/*import com.greensock.TweenLite;
 	import com.greensock.easing.Ease;
-	import com.greensock.easing.EaseLookup;
+	import com.greensock.easing.EaseLookup;*/
 	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -57,10 +57,10 @@ package fairygui
 		private var _xPos:Number, _yPos:Number;
 		private var _xOverlap:Number, _yOverlap:Number;
 		
-		private static var _easeTypeFunc:Ease;
+		//private static var _easeTypeFunc:Ease;
 		private var _throwTween:ThrowTween;
 		private var _tweening:int;
-		private var _tweener:TweenLite;
+		//private var _tweener:TweenLite;
 		
 		private var _time1:uint, _time2:uint;
 		private var _y1:Number, _y2:Number;
@@ -95,9 +95,9 @@ package fairygui
 								   vtScrollBarRes:String,
 								   hzScrollBarRes:String):void
 		{
-			if(_easeTypeFunc==null)
-				_easeTypeFunc = EaseLookup.find("Cubic.easeOut");
-			_throwTween = new ThrowTween();
+			//if(_easeTypeFunc==null)
+				//_easeTypeFunc = EaseLookup.find("Cubic.easeOut");
+			//_throwTween = new ThrowTween();
 			
 			_owner = owner;
 			owner.opaque = true;
@@ -862,7 +862,7 @@ package fairygui
 		
 		private function killTween():void
 		{
-			if(_tweening==1)
+			/*if(_tweening==1)
 			{
 				_tweener.totalTime(_tweener.totalDuration());
 			}
@@ -875,7 +875,7 @@ package fairygui
 				validateHolderPos();
 				syncScrollBar(true);
 				dispatchEvent(new Event(SCROLL_END));
-			}			
+			}	*/		
 		}
 		
 		private function refresh():void
@@ -989,7 +989,7 @@ package fairygui
 				
 				if(toX!=_container.x || toY!=_container.y)
 				{
-					if(_tweener!=null)
+					/*if(_tweener!=null)
 						_tweener.kill();
 					
 					_maskContainer.mouseChildren = false;
@@ -997,13 +997,13 @@ package fairygui
 					
 					_tweener = TweenLite.to(_container, 0.5, { x:toX, y:toY,
 						onUpdate:__tweenUpdate, onComplete:__tweenComplete, 
-						ease:_easeTypeFunc } );
+						ease:_easeTypeFunc } );*/
 				}
 			}
 			else
 			{
-				if(_tweener!=null)
-					killTween();
+				/*if(_tweener!=null)
+					killTween();*/
 				
 				//如果在拖动的过程中Refresh，这里要进行处理，保证拖动继续正常进行
 				if (isDragged)
@@ -1082,8 +1082,8 @@ package fairygui
 			if(!_touchEffect)
 				return;
 
-			if(_tweener!=null)
-				killTween();
+			/*if(_tweener!=null)
+				killTween();*/
 
 			_x1 = _x2 = _container.x;
 			_y1 = _y2 = _container.y;
@@ -1406,13 +1406,13 @@ package fairygui
 			_throwTween.change1 = change1;
 			_throwTween.change2 = change2;
 			
-			if(_tweener!=null)
+			/*if(_tweener!=null)
 				killTween();
 			
 			_tweening = 2;			
 			_tweener = TweenLite.to(_throwTween, duration, { value:1, 
 				onUpdate:__tweenUpdate2, onComplete:__tweenComplete2, 
-				ease:_easeTypeFunc } );
+				ease:_easeTypeFunc } );*/
 			
 			if (fireRelease == 1)
 				dispatchEvent(new Event(PULL_DOWN_RELEASE));
@@ -1484,8 +1484,8 @@ package fairygui
 		
 		private function __tweenComplete():void
 		{
-			_tweener = null;
-			_tweening = 0;
+			/*_tweener = null;
+			_tweening = 0;*/
 			
 			validateHolderPos();
 			syncScrollBar(true);
@@ -1505,8 +1505,8 @@ package fairygui
 		
 		private function __tweenComplete2():void
 		{			
-			_tweener = null;
-			_tweening = 0;
+			/*_tweener = null;
+			_tweening = 0;*/
 			
 			validateHolderPos();
 			syncPos();

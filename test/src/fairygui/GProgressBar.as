@@ -1,7 +1,7 @@
 package fairygui
 {	
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Linear;
+	/*import com.greensock.TweenLite;
+	import com.greensock.easing.Linear;*/
 
 	public class GProgressBar extends GComponent
 	{
@@ -21,7 +21,7 @@ package fairygui
 		private var _barStartX:int;
 		private var _barStartY:int;
 		
-		private var _tweener:TweenLite;		
+		//private var _tweener:TweenLite;		
 		public var _tweenValue:int;
 		
 		public function GProgressBar()
@@ -68,11 +68,11 @@ package fairygui
 		
 		final public function set value(value:Number):void
 		{
-			if(_tweener)
+			/*if(_tweener)
 			{
 				_tweener.kill();
 				_tweener = null;
-			}
+			}*/
 			
 			if(_value != value)
 			{
@@ -81,7 +81,7 @@ package fairygui
 			}
 		}
 		
-		public function tweenValue(value:Number, duration:Number):TweenLite
+		/*public function tweenValue(value:Number, duration:Number):TweenLite
 		{
 			if(_value != value)
 			{
@@ -96,7 +96,7 @@ package fairygui
 			}
 			else
 				return null;
-		}
+		}*/
 		
 		private function onTweenUpdate():void
 		{
@@ -105,7 +105,7 @@ package fairygui
 		
 		private function onTweenComplete():void
 		{
-			_tweener = null;
+			//_tweener = null;
 		}
 		
 		public function update(newValue:int):void
@@ -225,8 +225,8 @@ package fairygui
 		
 		override public function dispose():void
 		{
-			if(_tweener)
-				_tweener.kill();
+			//if(_tweener)
+			//	_tweener.kill();
 			super.dispose();
 		}
 	}

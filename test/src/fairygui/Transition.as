@@ -1,7 +1,7 @@
 package fairygui
 {
-	import com.greensock.TweenMax;
-	import com.greensock.easing.EaseLookup;
+	/*import com.greensock.TweenMax;
+	import com.greensock.easing.EaseLookup;*/
 	
 	import flash.filters.ColorMatrixFilter;
 	import flash.media.Sound;
@@ -181,11 +181,11 @@ package fairygui
 			if(item.completed)
 				return;
 			
-			if (item.tweener != null)
+			/*if (item.tweener != null)
 			{
 				item.tweener.kill();
 				item.tweener = null;
-			}
+			}*/
 			
 			if (item.type == TransitionActionType.Transition)
 			{
@@ -233,11 +233,11 @@ package fairygui
 				if (item.target == null || item.completed)
 					continue;
 				
-				if (item.tweener != null)
+				/*if (item.tweener != null)
 				{
 					item.tweener.kill();
 					item.tweener = null;
-				}
+				}*/
 				
 				if (item.type == TransitionActionType.Transition)
 				{
@@ -411,8 +411,8 @@ package fairygui
 				for (var i:int = 0; i < cnt; i++)
 				{
 					var item:TransitionItem = _items[i];
-					if (item.tweener != null)
-						item.tweener.timeScale(_timeScale);
+					/*if (item.tweener != null)
+						item.tweener.timeScale(_timeScale);*/
 				}
 			}
 		}
@@ -482,9 +482,9 @@ package fairygui
 					{
 						_totalTasks++;
 						item.completed = false;
-						item.tweener = TweenMax.delayedCall(startTime, __delayCall, item.params);
-						if(_timeScale!=1)
-							item.tweener.timeScale(_timeScale);
+						//item.tweener = TweenMax.delayedCall(startTime, __delayCall, item.params);
+						/*if(_timeScale!=1)
+							item.tweener.timeScale(_timeScale);*/
 					}
 					else
 						startTween(item, startTime);
@@ -502,9 +502,9 @@ package fairygui
 					{
 						item.completed = false;
 						_totalTasks++;
-						item.tweener =  TweenMax.delayedCall(startTime, __delayCall2, item.params);
-						if(_timeScale!=1)
-							item.tweener.timeScale(_timeScale);
+						//item.tweener =  TweenMax.delayedCall(startTime, __delayCall2, item.params);
+						/*if(_timeScale!=1)
+							item.tweener.timeScale(_timeScale);*/
 					}
 				}
 			}
@@ -519,7 +519,7 @@ package fairygui
 			parms.onUpdateParams = item.params;
 			parms.onComplete = __tweenComplete;
 			parms.onCompleteParams = item.params;
-			parms.ease = item.easeType;
+			//parms.ease = item.easeType;
 			
 			var startValue:TransitionValue;
 			var endValue:TransitionValue;
@@ -629,14 +629,14 @@ package fairygui
 			_totalTasks++;
 			item.completed = false;
 			
-			item.tweener = TweenMax.to(item.value, item.duration, parms);
+			/*item.tweener = TweenMax.to(item.value, item.duration, parms);
 			if(_timeScale!=1)
-				item.tweener.timeScale(_timeScale);
+				item.tweener.timeScale(_timeScale);*/
 		}
 		
 		private function __delayCall(item:TransitionItem):void
 		{
-			item.tweener = null;
+			//item.tweener = null;
 			_totalTasks--;
 			
 			startTween(item, 0);
@@ -644,7 +644,7 @@ package fairygui
 		
 		private function __delayCall2(item:TransitionItem):void
 		{
-			item.tweener = null;
+			//item.tweener = null;
 			_totalTasks--;
 			item.completed = true;
 			
@@ -668,7 +668,7 @@ package fairygui
 		
 		private function __tweenComplete(item:TransitionItem):void
 		{
-			item.tweener = null;
+			//item.tweener = null;
 			_totalTasks--;
 			item.completed = true;
 			
@@ -1002,10 +1002,10 @@ package fairygui
 						var pos:int = str.indexOf(".");
 						if(pos!=-1)
 							str = str.substr(0,pos) + ".ease" + str.substr(pos+1);
-						if(str=="Linear")
-							item.easeType = EaseLookup.find("linear.easenone");
-						else
-							item.easeType = EaseLookup.find(str);
+						//if(str=="Linear")
+						//	item.easeType = EaseLookup.find("linear.easenone");
+						//else
+						//	item.easeType = EaseLookup.find(str);
 					}
 					
 					item.repeat = parseInt(cxml.@repeat);
@@ -1143,9 +1143,9 @@ package fairygui
 	}
 }
 
-import com.greensock.TweenLite;
+/*import com.greensock.TweenLite;
 import com.greensock.easing.Ease;
-import com.greensock.easing.Quad;
+import com.greensock.easing.Quad;*/
 
 import fairygui.GObject;
 
@@ -1177,7 +1177,7 @@ class TransitionItem
 	public var value:TransitionValue;
 	public var startValue:TransitionValue;
 	public var endValue:TransitionValue;
-	public var easeType:Ease;
+	//public var easeType:Ease;
 	public var repeat:int;
 	public var yoyo:Boolean;
 	public var tween:Boolean;
@@ -1185,7 +1185,7 @@ class TransitionItem
 	public var label2:String;
 	public var hook:Function;
 	public var hook2:Function;
-	public var tweener:TweenLite;
+	//public var tweener:TweenLite;
 	public var completed:Boolean;
 	public var target:GObject;
 	public var filterCreated:Boolean;
@@ -1194,7 +1194,7 @@ class TransitionItem
 	public var params:Array;
 	public function TransitionItem()
 	{
-		easeType = Quad.easeOut;
+		//easeType = Quad.easeOut;
 		value = new TransitionValue();
 		startValue = new TransitionValue();
 		endValue = new TransitionValue();

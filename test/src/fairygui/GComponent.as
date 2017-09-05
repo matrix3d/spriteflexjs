@@ -898,12 +898,12 @@ package fairygui
 				var ar:int = int.MIN_VALUE, ab:int = int.MIN_VALUE;
 				var tmp:int;
 	
-				for each(child in _children)
+				for each(var child:GObject in _children)
 				{
 					child.ensureSizeCorrect();
 				}
 				
-				for each(var child:GObject in _children)
+				for each(child in _children)
 				{
 					tmp = child.x;
 					if(tmp<ax)

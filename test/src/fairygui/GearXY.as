@@ -1,12 +1,12 @@
 package fairygui
 {
-	import com.greensock.TweenLite;
+	/*import com.greensock.TweenLite;*/
 	
 	import flash.geom.Point;	
 	
 	public class GearXY extends GearBase
 	{
-		public var tweener:TweenLite;
+		//public var tweener:TweenLite;
 		
 		private var _storage:Object;
 		private var _default:Point;
@@ -49,7 +49,7 @@ package fairygui
 
 			if(_tween && !UIPackage._constructing && !disableAllTweenEffect)
 			{
-				if(tweener!=null)
+				/*if(tweener!=null)
 				{
 					if(tweener.vars.x!=pt.x || tweener.vars.y!=pt.y)
 					{
@@ -63,7 +63,7 @@ package fairygui
 					}
 					else
 						return;
-				}
+				}*/
 				
 				if (_owner.x != pt.x || _owner.y != pt.y)
 				{
@@ -83,7 +83,7 @@ package fairygui
 						_tweenValue = new Point();
 					_tweenValue.x = _owner.x;
 					_tweenValue.y = _owner.y;
-					tweener = TweenLite.to(_tweenValue, _tweenTime, vars);
+					//tweener = TweenLite.to(_tweenValue, _tweenTime, vars);
 				}
 			}
 			else
@@ -108,7 +108,7 @@ package fairygui
 				_owner.releaseDisplayLock(_displayLockToken);
 				_displayLockToken = 0;
 			}
-			tweener = null;
+			//tweener = null;
 		}
 		
 		override public function updateState():void

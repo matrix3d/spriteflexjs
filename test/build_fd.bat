@@ -2,21 +2,12 @@ echo off
 for /F tokens^=2^,3^,5delims^=^<^"^= %%a in (%2.as3proj) do (
    if "%%a" equ "compile path" set main=%%b
 )
-<<<<<<< develop
 
 set ARGS= -external-library-path+=lib\* -source-path+=../src -js-compiler-option="--compilation_level SIMPLE_OPTIMIZATIONS" -js-output-optimization=skipAsCoercions 
 
-=======
-set ARGS=-js-output-optimization=skipAsCoercions -remove-circulars
-::set ARGS=-remove-circulars -js-compiler-option="--compilation_level WHITESPACE_ONLY"
->>>>>>> master
 if %3==debug (
 	set ARGS=%ARGS% -debug=true -source-map
 )
 set FLEX_HOME=%1
 echo on
-<<<<<<< develop
 %FLEX_HOME%/js/bin/asjsc.bat %main% %ARGS% -external-library-path+="%FLEX_HOME%\js\libs\js.swc" -targets=JSFlex -define=CONFIG::as_only,false -define=CONFIG::js_only,true
-=======
-%FLEX_HOME%/js/bin/mxmlc -targets=JSFlex %ARGS% -external-library-path="%FLEX_HOME%\js\libs\js.swc" -compiler.source-path=../src %main% -define=CONFIG::as_only,false -define=CONFIG::js_only,true
->>>>>>> master

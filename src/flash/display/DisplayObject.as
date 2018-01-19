@@ -75,7 +75,6 @@ package flash.display
 		public function get stage():Stage  { return _stage; }
 		
 		public function set stage(v:Stage):void  { 
-<<<<<<< develop
 			_stage = v;
 			if (_stage) {
 				dispatchEvent(new Event(Event.ADDED_TO_STAGE));
@@ -83,17 +82,6 @@ package flash.display
 				SpriteFlexjs.dirtyGraphics = true;
 				dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
 			}
-=======
-			//if (_stage != v) {
-				_stage = v;
-				if (_stage) {
-					dispatchEvent(new Event(Event.ADDED_TO_STAGE));
-				}else {
-					SpriteFlexjs.dirtyGraphics = true;
-					dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
-				}
-			//}
->>>>>>> master
 		}
 		
 		

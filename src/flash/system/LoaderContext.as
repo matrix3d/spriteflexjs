@@ -7,6 +7,7 @@ package flash.system
 	public class LoaderContext 
 	{
 		
+		public var allowCodeImport : Boolean = false;
 		public function LoaderContext() 
 		{
 			

@@ -33,8 +33,11 @@ package flash.display
 		private var _blendMode:String;
 		private var _cacheAsBitmap:Boolean = false;
 		
+		private var _loaderInfo:LoaderInfo;
 		public function DisplayObject()
 		{
+			
+			_loaderInfo = new LoaderInfo();
 			_stage = _globalStage;
 			
 			if (_stage) initDisplayObjectStage();
@@ -72,6 +75,7 @@ package flash.display
 		public function get stage():Stage  { return _stage; }
 		
 		public function set stage(v:Stage):void  { 
+<<<<<<< develop
 			_stage = v;
 			if (_stage) {
 				dispatchEvent(new Event(Event.ADDED_TO_STAGE));
@@ -79,7 +83,22 @@ package flash.display
 				SpriteFlexjs.dirtyGraphics = true;
 				dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
 			}
+=======
+			//if (_stage != v) {
+				_stage = v;
+				if (_stage) {
+					dispatchEvent(new Event(Event.ADDED_TO_STAGE));
+				}else {
+					SpriteFlexjs.dirtyGraphics = true;
+					dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
+				}
+			//}
+>>>>>>> master
 		}
+		
+		
+		/************************ <Non Flash API Helper Methods> *****************************************/
+		public function get loaderInfo():LoaderInfo  { return _loaderInfo; }
 		
 		public function get root():DisplayObject  { return null }
 		

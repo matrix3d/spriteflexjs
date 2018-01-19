@@ -148,7 +148,6 @@ package flash.display
 		private var needSendTouchMove:Boolean = false;
 		private var lastUpdateTime:int = -1000;
 		//private var requestAnimationFrameHander:Number;
-		private var _loaderInfo:LoaderInfo;
 		
 		private var _align:String = StageAlign.TOP_LEFT;
 		private var _allowsFullScreen:Boolean = true;
@@ -232,7 +231,6 @@ package flash.display
 			__htmlWrapper.style.zIndex = 0;
 			document.body.appendChild(__htmlWrapper);
 			
-			_loaderInfo = new LoaderInfo();
 			if (SpriteFlexjs.startTime===0)  SpriteFlexjs.startTime = Date.now();
 				
 			_frameRate = 60;
@@ -1424,11 +1422,6 @@ package flash.display
 		{
 			return super.willTrigger(param1);
 		}
-		
-
-		
-		/************************ <Non Flash API Helper Methods> *****************************************/
-		public function get loaderInfo():LoaderInfo  { return _loaderInfo; }
 		
 		public function get canvas():HTMLCanvasElement
 		{

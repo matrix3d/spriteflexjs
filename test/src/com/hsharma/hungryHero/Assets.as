@@ -17,7 +17,7 @@ package com.hsharma.hungryHero
 	import flash.display.BitmapData;
 	import flash.media.Sound;
 	import flash.net.URLRequest;
-	import flash.utils.Dictionary;
+	//import flash.utils.Dictionary;
 	
 	/**
 	 * This class holds all embedded textures, fonts and sounds and other embedded files.  
@@ -51,7 +51,7 @@ package com.hsharma.hungryHero
 		/**
 		 * Texture Cache 
 		 */
-		private static var gameTextures:Dictionary = new Dictionary();
+		private static var gameTextures:Object = {};
 		private static var gameTextureAtlas:TextureAtlas;
 		
 		/**

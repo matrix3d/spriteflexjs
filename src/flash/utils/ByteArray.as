@@ -6,7 +6,7 @@ package flash.utils
 	 * @author lizhi http://matrix3d.github.io/
 	 */
 	//http://www.ruanyifeng.com/blog/2012/09/xmlhttprequest_level_2.html
-	public class ByteArray
+	public class ByteArray  implements IDataInput2, IDataOutput2
 	{
 		private static var _defaultObjectEncoding:uint;
 		public var dataView:DataView;

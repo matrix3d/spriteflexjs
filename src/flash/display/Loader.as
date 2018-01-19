@@ -80,17 +80,17 @@ package flash.display
 		   return context;
 		   }*/
 		
-		/*public function loadBytes(bytes:ByteArray, context:LoaderContext = null) : void
+		public function loadBytes(bytes:ByteArray, context:LoaderContext = null) : void
 		   {
-		   var _context:LoaderContext = this._buildLoaderContext(context);
-		   var deblockingFilter:Number = 0.0;
-		   deblockingFilter = this._getJPEGLoaderContextdeblockingfilter(_context);
-		   if(_context.parameters != null)
-		   {
-		   cloneParams(_context);
+		  // var _context:LoaderContext = this._buildLoaderContext(context);
+		   //var deblockingFilter:Number = 0.0;
+		   //deblockingFilter = this._getJPEGLoaderContextdeblockingfilter(_context);
+		   //if(_context.parameters != null)
+		   //{
+		   //cloneParams(_context);
+		   //}
+		   //this._loadBytes(bytes,_context.checkPolicyFile,_context.applicationDomain,_context.securityDomain,_context.requestedContentParent,_context.parameters,deblockingFilter,_context.allowCodeImport,_context.imageDecodingPolicy);
 		   }
-		   this._loadBytes(bytes,_context.checkPolicyFile,_context.applicationDomain,_context.securityDomain,_context.requestedContentParent,_context.parameters,deblockingFilter,_context.allowCodeImport,_context.imageDecodingPolicy);
-		   }*/
 		
 		//native private function _loadBytes(param1:ByteArray, param2:Boolean, param3:ApplicationDomain, param4:SecurityDomain, param5:DisplayObjectContainer, param6:Object, param7:Number, param8:Boolean, param9:String) : void;
 		

@@ -6,6 +6,7 @@ package flash.display3D
    {
        public var buff:WebGLBuffer;
 	   public var gl:WebGLRenderingContext;
+	   public var data32PerVertex:int;
       public function VertexBuffer3D()
       {
          super();

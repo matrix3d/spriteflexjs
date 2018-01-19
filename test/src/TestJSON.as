@@ -1,6 +1,5 @@
 package 
 {
-	import org.apache.flex.utils.Proxy;
 	/**
 	 * ...
 	 * @author lizhi

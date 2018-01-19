@@ -1,7 +1,5 @@
 package 
 {
-	import org.apache.flex.reflection.describeType;
-	import org.apache.flex.utils.Proxy;
 	/**
 	 * ...
 	 * @author lizhi

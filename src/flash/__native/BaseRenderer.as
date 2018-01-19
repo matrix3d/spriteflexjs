@@ -54,11 +54,18 @@ package flash.__native
 			ctx.strokeStyle = null;
 		}
 		
-		override public function renderImage(ctx:CanvasRenderingContext2D,img:BitmapData,m:Matrix,blendMode:String,colorTransform:ColorTransform):void{
+		override public function renderImage(ctx:CanvasRenderingContext2D,img:BitmapData,m:Matrix,blendMode:String,colorTransform:ColorTransform, offsetX:Number = 0, offsetY:Number = 0):void{
 			ctx.globalAlpha = colorTransform.alphaMultiplier;
 			ctx.globalCompositeOperation = blendMode;
 			ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-			ctx.drawImage(img.image, 0, 0);
+			ctx.drawImage(img.image, offsetX, offsetY);
+		}
+		
+		override public function renderVideo(ctx:CanvasRenderingContext2D,video:HTMLVideoElement,m:Matrix, width:int, height:int, blendMode:String,colorTransform:ColorTransform):void{
+			ctx.globalAlpha = colorTransform.alphaMultiplier;
+			ctx.globalCompositeOperation = blendMode;
+			ctx.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+			ctx.drawImage(video, 0, 0, width, height);
 		}
 		
 		override public function renderText(ctx:CanvasRenderingContext2D,txt:String,textFormat:TextFormat, m:Matrix, blendMode:String, colorTransform:ColorTransform,x:Number,y:Number):void{

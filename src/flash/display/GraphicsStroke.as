@@ -25,11 +25,12 @@ package flash.display
 			super();
 			this.thickness = thickness;
 			this.pixelHinting = pixelHinting;
-			this._caps = caps;
+			this._caps = (caps == "none") ? "butt" : caps;
 			this._joints = joints;
 			this.miterLimit = miterLimit;
-			this._scaleMode = scaleMode;
+			this._scaleMode = scaleMode;  // TODO implement scaleMode
 			this.fill = fill;
+			
 		/*if(this._scaleMode != LineScaleMode.NORMAL && this._scaleMode != LineScaleMode.NONE && this._scaleMode != LineScaleMode.VERTICAL && this._scaleMode != LineScaleMode.HORIZONTAL)
 		   {
 		   Error.throwError(null,2008,"scaleMode");
@@ -102,7 +103,19 @@ package flash.display
 				if (fill is GraphicsSolidFill)
 				{
 					var sf:GraphicsSolidFill = fill as GraphicsSolidFill;
+					ctx.lineCap = _caps
+					ctx.lineJoin = _joints;
+					ctx.miterLimit = miterLimit;
 					ctx.strokeStyle = SpriteFlexjs.renderer.getCssColor(sf.color, sf.alpha,colorTransform,null) as String;//sf.getCssColor(colorTransform);
+				}
+				else if (fill is GraphicsGradientFill)
+				{
+					var gf:GraphicsGradientFill = fill as GraphicsGradientFill;
+					gf.draw(ctx, colorTransform);
+					ctx.lineCap = _caps;
+					ctx.lineJoin = _joints;
+					ctx.miterLimit = miterLimit;
+					ctx.strokeStyle = gf.gradient as String;
 				}
 			}
 		}

@@ -94,8 +94,8 @@ package flash.geom
 			b = v * scaleY;
 			c = -v * scaleX;
 			d = u * scaleY;
-			tx = tx;
-			ty = ty;
+			this.tx = tx;
+			this.ty = ty;
 		}
 		
 		public function createGradientBox(width:Number, height:Number, rotation:Number = 0, tx:Number = 0, ty:Number = 0):void

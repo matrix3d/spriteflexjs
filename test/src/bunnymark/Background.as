@@ -33,7 +33,7 @@ package bunnymark{
 			texture.perlinNoise(50, 50, 3, 1, true, true);
 			loader = new Loader;
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loader_complete);
-			loader.load(new URLRequest("../../assets/bunnyMark/grass.png"));
+			loader.load(new URLRequest("../assets/bunnyMark/grass.png"));
 			addEventListener(Event.ADDED_TO_STAGE, added);
 		}
 		

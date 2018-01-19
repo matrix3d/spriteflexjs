@@ -1,0 +1,744 @@
+{
+    "localName": "TextureAtlas",
+    "attributes": {
+        "imagePath": "mySpritesheet.png"
+    },
+    "children": [
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "about_backButton",
+                "y": "338",
+                "width": "124",
+                "height": "61",
+                "x": "707"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "about_hsharmaLogo",
+                "y": "2",
+                "width": "184",
+                "height": "65",
+                "x": "1717"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "about_starlingLogo",
+                "y": "2",
+                "width": "184",
+                "height": "65",
+                "x": "1531"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "403",
+                "frameHeight": "362",
+                "frameY": "-26",
+                "name": "bgLayer2",
+                "frameWidth": "1024",
+                "frameX": "0",
+                "width": "1024",
+                "height": "292",
+                "x": "2"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "697",
+                "frameHeight": "279",
+                "frameY": "0",
+                "name": "bgLayer3",
+                "frameWidth": "1024",
+                "frameX": "0",
+                "width": "1024",
+                "height": "229",
+                "x": "2"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "bgLayer4",
+                "y": "212",
+                "width": "1024",
+                "height": "124",
+                "x": "415"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "928",
+                "frameHeight": "77",
+                "frameY": "0",
+                "name": "fly_0001",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "77",
+                "x": "766"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "928",
+                "frameHeight": "77",
+                "frameY": "0",
+                "name": "fly_0002",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "77",
+                "x": "611"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "301",
+                "frameHeight": "77",
+                "frameY": "-2",
+                "name": "fly_0003",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "73",
+                "x": "1869"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "219",
+                "frameHeight": "77",
+                "frameY": "-2",
+                "name": "fly_0004",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "73",
+                "x": "1651"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "69",
+                "frameHeight": "77",
+                "frameY": "-2",
+                "name": "fly_0005",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "75",
+                "x": "1531"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "2",
+                "frameHeight": "77",
+                "frameY": "-2",
+                "name": "fly_0006",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "75",
+                "x": "1376"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "146",
+                "frameHeight": "77",
+                "frameY": "-2",
+                "name": "fly_0007",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "73",
+                "x": "1496"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "226",
+                "frameHeight": "77",
+                "frameY": "-2",
+                "name": "fly_0008",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "73",
+                "x": "1883"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "79",
+                "frameHeight": "77",
+                "frameY": "-2",
+                "name": "fly_0009",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "75",
+                "x": "1341"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "2",
+                "frameHeight": "77",
+                "frameY": "-2",
+                "name": "fly_0010",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "75",
+                "x": "1221"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "151",
+                "frameHeight": "77",
+                "frameY": "-2",
+                "name": "fly_0011",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "73",
+                "x": "1883"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "144",
+                "frameHeight": "77",
+                "frameY": "-2",
+                "name": "fly_0012",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "73",
+                "x": "1686"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "79",
+                "frameHeight": "77",
+                "frameY": "-2",
+                "name": "fly_0013",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "75",
+                "x": "1186"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "2",
+                "frameHeight": "77",
+                "frameY": "-2",
+                "name": "fly_0014",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "75",
+                "x": "1066"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "76",
+                "frameHeight": "77",
+                "frameY": "-2",
+                "name": "fly_0015",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "73",
+                "x": "1883"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "69",
+                "frameHeight": "77",
+                "frameY": "-2",
+                "name": "fly_0016",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "73",
+                "x": "1686"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "106",
+                "frameHeight": "77",
+                "frameY": "-2",
+                "name": "fly_0017",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "75",
+                "x": "1031"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "110",
+                "frameHeight": "77",
+                "frameY": "-2",
+                "name": "fly_0018",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "75",
+                "x": "876"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "110",
+                "frameHeight": "77",
+                "frameY": "0",
+                "name": "fly_0019",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "75",
+                "x": "721"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "928",
+                "frameHeight": "77",
+                "frameY": "0",
+                "name": "fly_0020",
+                "frameWidth": "155",
+                "frameX": "-2",
+                "width": "153",
+                "height": "75",
+                "x": "921"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "gameOver_aboutButton",
+                "y": "928",
+                "width": "167",
+                "height": "79",
+                "x": "442"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "gameOver_mainButton",
+                "y": "928",
+                "width": "166",
+                "height": "90",
+                "x": "2"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "gameOver_playAgainButton",
+                "y": "2",
+                "width": "165",
+                "height": "102",
+                "x": "899"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "item1",
+                "y": "79",
+                "width": "29",
+                "height": "30",
+                "x": "1496"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "item2",
+                "y": "111",
+                "width": "22",
+                "height": "33",
+                "x": "1496"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "item3",
+                "y": "187",
+                "width": "25",
+                "height": "23",
+                "x": "721"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "item4",
+                "y": "183",
+                "width": "23",
+                "height": "24",
+                "x": "1059"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "item5",
+                "y": "183",
+                "width": "26",
+                "height": "25",
+                "x": "1031"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "item6",
+                "y": "338",
+                "width": "56",
+                "height": "55",
+                "x": "988"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "item7",
+                "y": "338",
+                "width": "57",
+                "height": "55",
+                "x": "929"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "obstacle1",
+                "y": "156",
+                "width": "139",
+                "height": "53",
+                "x": "1274"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "obstacle1_crash",
+                "y": "338",
+                "width": "94",
+                "height": "58",
+                "x": "833"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "obstacle2",
+                "y": "221",
+                "width": "79",
+                "height": "71",
+                "x": "1555"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "obstacle2_crash",
+                "y": "237",
+                "width": "61",
+                "height": "75",
+                "x": "1806"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "obstacle3",
+                "y": "2",
+                "width": "137",
+                "height": "72",
+                "x": "1903"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "obstacle3_crash",
+                "y": "928",
+                "width": "102",
+                "height": "80",
+                "x": "338"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "obstacle4_0001",
+                "y": "338",
+                "width": "145",
+                "height": "61",
+                "x": "415"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "338",
+                "frameHeight": "61",
+                "frameY": "0",
+                "name": "obstacle4_0002",
+                "frameWidth": "145",
+                "frameX": "-2",
+                "width": "143",
+                "height": "61",
+                "x": "562"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "obstacle4_crash",
+                "y": "366",
+                "width": "95",
+                "height": "66",
+                "x": "1553"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "particleEat",
+                "y": "1007",
+                "width": "15",
+                "height": "15",
+                "x": "611"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "1014",
+                "frameHeight": "4",
+                "frameY": "0",
+                "name": "particleWindForce",
+                "frameWidth": "294",
+                "frameX": "-4",
+                "width": "286",
+                "height": "4",
+                "x": "170"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "pauseButton",
+                "y": "195",
+                "width": "40",
+                "height": "40",
+                "x": "1841"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "soundOff",
+                "y": "153",
+                "width": "40",
+                "height": "40",
+                "x": "1841"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "soundOn0000",
+                "y": "111",
+                "width": "40",
+                "height": "40",
+                "x": "1841"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "soundOn0001",
+                "y": "69",
+                "width": "40",
+                "height": "40",
+                "x": "1841"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "soundOn0002",
+                "y": "156",
+                "width": "40",
+                "height": "40",
+                "x": "1415"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "startButton",
+                "y": "928",
+                "width": "166",
+                "height": "84",
+                "x": "170"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "221",
+                "frameHeight": "80",
+                "frameY": "-4",
+                "name": "watchOut_0001",
+                "frameWidth": "112",
+                "frameX": "0",
+                "width": "112",
+                "height": "72",
+                "x": "1441"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "295",
+                "frameHeight": "80",
+                "frameY": "-6",
+                "name": "watchOut_0002",
+                "frameWidth": "112",
+                "frameX": "0",
+                "width": "110",
+                "height": "70",
+                "x": "1441"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "294",
+                "frameHeight": "80",
+                "frameY": "-6",
+                "name": "watchOut_0003",
+                "frameWidth": "112",
+                "frameX": "0",
+                "width": "106",
+                "height": "70",
+                "x": "1667"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "294",
+                "frameHeight": "80",
+                "frameY": "-6",
+                "name": "watchOut_0004",
+                "frameWidth": "112",
+                "frameX": "0",
+                "width": "110",
+                "height": "70",
+                "x": "1555"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "y": "221",
+                "frameHeight": "80",
+                "frameY": "-4",
+                "name": "watchOut_0005",
+                "frameWidth": "112",
+                "frameX": "0",
+                "width": "112",
+                "height": "72",
+                "x": "1441"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "welcome_aboutButton",
+                "y": "156",
+                "width": "86",
+                "height": "54",
+                "x": "1186"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "welcome_hero",
+                "y": "2",
+                "width": "411",
+                "height": "399",
+                "x": "2"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "welcome_playButton",
+                "y": "2",
+                "width": "176",
+                "height": "106",
+                "x": "721"
+            }
+        },
+        {
+            "localName": "SubTexture",
+            "attributes": {
+                "name": "welcome_title",
+                "y": "2",
+                "width": "304",
+                "height": "208",
+                "x": "415"
+            }
+        }
+    ]
+}

@@ -42,7 +42,7 @@ package bunnymark{
 			
 			loader = new Loader;
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loader_complete);
-			loader.load(new URLRequest("../../assets/bunnyMark/wabbit_alpha.png"));
+			loader.load(new URLRequest("../assets/bunnyMark/wabbit_alpha.png"));
 			bunnyAsset.perlinNoise(10, 10, 2, 1, true, true);
 			
 			bunnies = new Array();
@@ -88,7 +88,7 @@ package bunnymark{
 
 		public function counter_click(e:Event):void
 		{
-			var i:int = 100000;
+			var i:int = 5000;
 			numBunnies += i;
 			trace("numBunies",numBunnies);
 			while(i-->0){

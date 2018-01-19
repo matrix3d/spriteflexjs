@@ -31,22 +31,23 @@ package flash.display
 		private var _visible:Boolean = true;
 		private var lastMouseOverObj:DisplayObject;
 		private var _blendMode:String;
+		private var _cacheAsBitmap:Boolean = false;
 		
 		public function DisplayObject()
 		{
 			_stage = _globalStage;
 			
-			if (_stage) init();
+			if (_stage) initDisplayObjectStage();
 		}
 		
-		public function init():void
+		public function initDisplayObjectStage():void
 		{
 			if (!_inited)
 			{
 				_blendMode = BlendMode.NORMAL;
 				transform = new Transform(this);
 				innerID = ID++;
-				name = "instance" + innerID;
+				_name = "instance" + innerID;
 				
 				if (innerID === 0)
 				{
@@ -71,14 +72,12 @@ package flash.display
 		public function get stage():Stage  { return _stage; }
 		
 		public function set stage(v:Stage):void  { 
-			if (_stage != v) {
-				_stage = v;
-				if (_stage) {
-					dispatchEvent(new Event(Event.ADDED_TO_STAGE));
-				}else {
-					SpriteFlexjs.dirtyGraphics = true;
-					dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
-				}
+			_stage = v;
+			if (_stage) {
+				dispatchEvent(new Event(Event.ADDED_TO_STAGE));
+			}else {
+				SpriteFlexjs.dirtyGraphics = true;
+				dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
 			}
 		}
 		
@@ -231,7 +230,11 @@ package flash.display
 		}
 		
 		public function get width():Number  { 
-			var rect:Rectangle = getRect(parent);
+			var rect:Rectangle = getRect(this);
+			
+			var radians:Number = _rotation * (Math.PI / 180);
+			rect.width = Math.round((rect.height * Math.sin(radians) + rect.width * Math.cos(radians)) * 10) / 10;
+			
 			if (rect) return rect.width;
 			return 0;
 		}
@@ -239,16 +242,24 @@ package flash.display
 		public function set width(v:Number):void  {/**/ }
 		
 		public function get height():Number  { 
-			var rect:Rectangle = getRect(parent);
+			var rect:Rectangle = getRect(this);
+			
+			var radians:Number = _rotation * (Math.PI / 180);
+			rect.height = Math.round((rect.height * Math.cos(radians) + rect.width * Math.sin(radians)) * 10) / 10;
+			
 			if (rect) return rect.height;
 			return 0;
 		}
 		
 		public function set height(v:Number):void  {/**/ }
 		
-		public function get cacheAsBitmap():Boolean  { return false }
+		public function get cacheAsBitmap():Boolean  { return _cacheAsBitmap }
 		
-		public function set cacheAsBitmap(v:Boolean):void  {/**/ }
+		public function set cacheAsBitmap(v:Boolean):void 
+		{ 
+			_cacheAsBitmap = v;
+			if (SpriteFlexjs.wmode.indexOf("gpu") != -1) _cacheAsBitmap = false;
+		}
 		
 		public function get opaqueBackground():Object  { return null }
 		
@@ -286,19 +297,39 @@ package flash.display
 			return transform.concatenatedMatrix.transformPoint(v);
 		}
 		
-		public function getBounds(v:DisplayObject):Rectangle  { 
-			return getRect(v);
+		public function getBounds(v:DisplayObject):Rectangle
+		{ 
+			var gfx:Graphics = Object(v).graphics;
+			return (gfx && gfx.bound) ? gfx.bound.clone() : new Rectangle();
 		}
 		
-		public function getRect(v:DisplayObject):Rectangle  {
-			var rect:Rectangle = __getRect();
-			if (rect) {
-				if (v==null||v==this) {
-					return rect; 
-				}
-				var ps:Array = [rect.topLeft,rect.bottomRight];
-			}
-			return __getRect(); 
+		/**
+		 * Use to provide proper bounds when object is rotated, scaled, or has filters applied.  Mainly used for cacheAsBitmap.
+		 * @param	v	DisplayObject to get bounds from.
+		 * @return		Rectangle of bounds
+		 */
+		public function getFullBounds(v:DisplayObject):Rectangle 
+		{
+			var gfx:Graphics = Object(v).graphics;
+			var bounds:Rectangle = (gfx && gfx.bound) ? gfx.bound.clone() : new Rectangle();
+			
+			// adjust bounds for rotation
+			var radians:Number = _rotation * (Math.PI / 180);
+			var w:Number = Math.round((bounds.height * Math.sin(radians) + bounds.width * Math.cos(radians)) * 10) / 10;
+			var h:Number = Math.round((bounds.height * Math.cos(radians) + bounds.width * Math.sin(radians)) * 10) / 10;
+			
+			// adjust rectangle bigger if needed
+			w = (w > bounds.width) ? w - bounds.width : 0;
+			h = (h > bounds.height) ? h - bounds.width : 0;
+			bounds.inflate(w/2, h/2);
+			
+			return bounds;
+		}
+		
+		public function getRect(v:DisplayObject):Rectangle 
+		{
+			var gfx:Graphics = Object(v).graphics;
+			return (gfx && gfx.rect) ? gfx.rect.clone() : new Rectangle();
 		}
 		
 		public function __getRect():Rectangle {

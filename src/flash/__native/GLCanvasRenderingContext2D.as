@@ -178,7 +178,7 @@ package flash.__native
 		}
 
 		public function clearRect (x:Number, y:Number, w:Number, h:Number) : Object {
-			ctx.clear(0,0,0);
+			ctx.clear(255,255,255); // white background
 			batchsLen = 0;
 			SpriteFlexjs.batDrawCounter = 0;
 			return null;

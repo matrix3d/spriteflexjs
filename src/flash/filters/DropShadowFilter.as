@@ -1,6 +1,3 @@
-//
-// D:\sdk\airsdk24\frameworks\libs\player\18.0\playerglobal.swc\flash\filters\DropShadowFilter
-//
 package flash.filters
 {
 	import flash.filters.BitmapFilter;
@@ -101,6 +98,18 @@ package flash.filters
 	 */
 	public final class DropShadowFilter extends BitmapFilter
 	{
+		private var _alpha:Number = 1;
+		private var _angle:Number = 0;
+		private var _blurX:Number = 0;
+		private var _blurY:Number = 0;
+		private var _color:uint = 0x000000;
+		private var _distance:Number = 5;
+		private var _hideObject:Boolean = false;
+		private var _inner:Boolean = false;
+		private var _knockout:Boolean = false;
+		private var _quality:int = 1;
+		private var _strength:Number = 1;
+
 		/**
 		 * The alpha transparency value for the shadow color. Valid values are 0.0 to 1.0. 
 		 * For example,
@@ -138,15 +147,11 @@ package flash.filters
 		 *   }
 		 *   </listing>
 		 */
-		public function get alpha () : Number{
-			return 0;
-		}
-		public function set alpha (value:Number) : void{
-			
-		}
+		public function get alpha():Number { return _alpha; }
+		public function set alpha(value:Number):void { _alpha = value; }
 
 		/**
-		 * The angle of the shadow. Valid values are 0 to 360 degrees (floating point). The
+		 * The angle of the shadow. Valid values are 0 to 360 degrees(floating point). The
 		 * default value is 45.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
@@ -181,15 +186,11 @@ package flash.filters
 		 *   }
 		 *   </listing>
 		 */
-		public function get angle () : Number{
-			return 0;
-		}
-		public function set angle (value:Number) : void{
-			
-		}
+		public function get angle():Number { return _angle; }
+		public function set angle(value:Number):void { _angle = value; }
 
 		/**
-		 * The amount of horizontal blur. Valid values are 0 to 255.0 (floating point). The
+		 * The amount of horizontal blur. Valid values are 0 to 255.0(floating point). The
 		 * default value is 4.0.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
@@ -224,15 +225,11 @@ package flash.filters
 		 *   }
 		 *   </listing>
 		 */
-		public function get blurX () : Number{
-			return 0;
-		}
-		public function set blurX (value:Number) : void{
-			
-		}
+		public function get blurX():Number { return _blurX; }
+		public function set blurX(value:Number):void { _blurX = value; }
 
 		/**
-		 * The amount of vertical blur. Valid values are 0 to 255.0 (floating point). The
+		 * The amount of vertical blur. Valid values are 0 to 255.0(floating point). The
 		 * default value is 4.0.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
@@ -267,12 +264,8 @@ package flash.filters
 		 *   }
 		 *   </listing>
 		 */
-		public function get blurY () : Number{
-			return 0;
-		}
-		public function set blurY (value:Number) : void{
-			
-		}
+		public function get blurY():Number { return _blurY; }
+		public function set blurY(value:Number):void { _blurY = value; }
 
 		/**
 		 * The color of the shadow. Valid values are in hexadecimal format 0xRRGGBB. The 
@@ -310,16 +303,12 @@ package flash.filters
 		 *   }
 		 *   </listing>
 		 */
-		public function get color () : uint{
-			return 0;
-		}
-		public function set color (value:uint) : void{
-			
-		}
+		public function get color():uint { return _color; }
+		public function set color(value:uint):void { _color = value; }
 
 		/**
 		 * The offset distance for the shadow, in pixels. The default
-		 * value is 4.0 (floating point).
+		 * value is 4.0(floating point).
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @maelexample	The following example changes the <code>distance</code> property on an existing MovieClip 
@@ -353,17 +342,14 @@ package flash.filters
 		 *   }
 		 *   </listing>
 		 */
-		public function get distance () : Number{
-			return 0;
-		}
-		public function set distance (value:Number) : void{
-			
-		}
+		public function get distance():Number { return _distance; }
+		public function set distance(value:Number):void { _distance = value; }
+
 
 		/**
 		 * Indicates whether or not the object is hidden. The value true 
 		 * indicates that the object itself is not drawn; only the shadow is visible.
-		 * The default is false (the object is shown).
+		 * The default is false(the object is shown).
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @maelexample	The following example changes the <code>hideObject</code> property on an existing MovieClip 
@@ -397,16 +383,12 @@ package flash.filters
 		 *   }
 		 *   </listing>
 		 */
-		public function get hideObject () : Boolean{
-			return false;
-		}
-		public function set hideObject (value:Boolean) : void{
-			
-		}
+		public function get hideObject():Boolean { return _hideObject; }
+		public function set hideObject(value:Boolean):void { _hideObject = value; }
 
 		/**
 		 * Indicates whether or not the shadow is an inner shadow. The value true indicates
-		 * an inner shadow. The default is false, an outer shadow (a
+		 * an inner shadow. The default is false, an outer shadow(a
 		 * shadow around the outer edges of the object).
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
@@ -441,17 +423,13 @@ package flash.filters
 		 *   }
 		 *   </listing>
 		 */
-		public function get inner () : Boolean{
-			return false;
-		}
-		public function set inner (value:Boolean) : void{
-			
-		}
+		public function get inner():Boolean { return _inner; }
+		public function set inner(value:Boolean):void { _inner = value; }
 
 		/**
-		 * Applies a knockout effect (true), which effectively 
+		 * Applies a knockout effect(true), which effectively 
 		 * makes the object's fill transparent and reveals the background color of the document. The 
-		 * default is false (no knockout).
+		 * default is false(no knockout).
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @maelexample	The following example changes the <code>knockout</code> property on an existing MovieClip 
@@ -485,12 +463,8 @@ package flash.filters
 		 *   }
 		 *   </listing>
 		 */
-		public function get knockout () : Boolean{
-			return false;
-		}
-		public function set knockout (value:Boolean) : void{
-			
-		}
+		public function get knockout():Boolean { return _knockout; }
+		public function set knockout(value:Boolean):void { _knockout = value; }
 
 		/**
 		 * The number of times to apply the filter. 
@@ -537,12 +511,8 @@ package flash.filters
 		 *   }
 		 *   </listing>
 		 */
-		public function get quality () : int{
-			return 0;
-		}
-		public function set quality (value:int) : void{
-			
-		}
+		public function get quality():int { return _quality; }
+		public function set quality(value:int):void { _quality = value; }
 
 		/**
 		 * The strength of the imprint or spread. The higher the value, 
@@ -581,12 +551,8 @@ package flash.filters
 		 *   }
 		 *   </listing>
 		 */
-		public function get strength () : Number{
-			return 0;
-		}
-		public function set strength (value:Number) : void{
-			
-		}
+		public function get strength():Number { return _strength; }
+		public function set strength(value:Number):void { _strength = value; }
 
 		/**
 		 * Returns a copy of this filter object.
@@ -663,40 +629,56 @@ package flash.filters
 		 *   trace(clonedFilter.knockout);		// false
 		 *   </listing>
 		 */
-		//public function clone () : flash.filters.BitmapFilter;
+		override public function clone():flash.filters.BitmapFilter
+		{ 
+			return null; 
+		}
 
 		/**
 		 * Creates a new DropShadowFilter instance with the specified parameters.
 		 * @param	distance	Offset distance for the shadow, in pixels.
-		 * @param	angle	Angle of the shadow, 0 to 360 degrees (floating point).
+		 * @param	angle	Angle of the shadow, 0 to 360 degrees(floating point).
 		 * @param	color	Color of the shadow, in hexadecimal format 
 		 *   0xRRGGBB. The default value is 0x000000.
 		 * @param	alpha	Alpha transparency value for the shadow color. Valid values are 0.0 to 1.0. 
 		 *   For example,
 		 *   .25 sets a transparency value of 25%.
-		 * @param	blurX	Amount of horizontal blur. Valid values are 0 to 255.0 (floating point).
-		 * @param	blurY	Amount of vertical blur. Valid values are 0 to 255.0 (floating point).
+		 * @param	blurX	Amount of horizontal blur. Valid values are 0 to 255.0(floating point).
+		 * @param	blurY	Amount of vertical blur. Valid values are 0 to 255.0(floating point).
 		 * @param	strength	The strength of the imprint or spread. The higher the value, 
 		 *   the more color is imprinted and the stronger the contrast between the shadow and the background. 
 		 *   Valid values are 0 to 255.0.
 		 * @param	quality	The number of times to apply the filter. Use the BitmapFilterQuality constants:
 		 *   BitmapFilterQuality.LOWBitmapFilterQuality.MEDIUMBitmapFilterQuality.HIGHFor more information about these values, see the quality property description.
 		 * @param	inner	Indicates whether or not the shadow is an inner shadow. A value of true specifies
-		 *   an inner shadow. A value of false specifies an outer shadow (a
+		 *   an inner shadow. A value of false specifies an outer shadow(a
 		 *   shadow around the outer edges of the object).
-		 * @param	knockout	Applies a knockout effect (true), which effectively 
+		 * @param	knockout	Applies a knockout effect(true), which effectively 
 		 *   makes the object's fill transparent and reveals the background color of the document.
 		 * @param	hideObject	Indicates whether or not the object is hidden. A value of true 
 		 *   indicates that the object itself is not drawn; only the shadow is visible.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * 	The following example creates a new DropShadowFilter object
+		 * @oldexample	The following example creates a new DropShadowFilter object
 		 *   with the default values:
 		 *   <pre xml:space="preserve" class="- topic/pre ">
 		 *   myFilter = new flash.filters.DropShadowFilter()
 		 *   </pre>
 		 */
-		public function DropShadowFilter (distance:Number = 4, angle:Number = 45, color:uint = 0, alpha:Number = 1, blurX:Number = 4, blurY:Number = 4, strength:Number = 1, quality:int = 1, inner:Boolean = false, knockout:Boolean = false, hideObject:Boolean = false){
+		public function DropShadowFilter(distance:Number = 4, angle:Number = 45, color:uint = 0, alpha:Number = 1, blurX:Number = 4, blurY:Number = 4, strength:Number = 1, quality:int = 1, inner:Boolean = false, knockout:Boolean = false, hideObject:Boolean = false)
+		{
+			_distance = distance;
+			_angle = angle;
+			_color = color;
+			_alpha = alpha;
+			_blurX = blurX;
+			_blurY = blurY;
+			_strength = strength;
+			_quality = quality;
+			_inner = inner;
+			_knockout = knockout;
+			_hideObject = hideObject;
+			
 			
 		}
 	}

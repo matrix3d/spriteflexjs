@@ -76,40 +76,6 @@ package flash.display
 		
 		public function get numChildren():int  { return children.length; }
 		
-		/*override public function get stage():Stage 
-		{
-			return _stage;
-		}
-		
-		override public function set stage(v:Stage):void 
-		{
-			if (_stage != v) {
-				_stage = v;
-				if (_stage) {
-					dispatchEvent(new Event(Event.ADDED_TO_STAGE));
-				}else {
-					dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
-				}
-			}
-			var len:int = children.length
-			for (var i:int = 0; i < len;i++ ) {
-				var c:DisplayObject = children[i];
-				c.stage = v;
-			}
-		}*/
-		
-		
-		//flexjs 编译变慢bug，等sdk改正后再改回来
-		/*override public function set stage(value:Stage):void 
-		{
-			super.stage = value;
-			var len:int = children.length
-			for (var i:int = 0; i < len;i++ ) {
-				var c:DisplayObject = children[i];
-				c.stage = value;
-			}
-		}*/
-		
 		// public function get textSnapshot() : TextSnapshot;
 		
 		public function getObjectsUnderPoint(p:Point):Array  { return null }
@@ -183,19 +149,60 @@ package flash.display
 			return null;
 		}
 		
+		override public function getBounds(v:DisplayObject):Rectangle 
+		{
+			var rect:Rectangle = super.getBounds(v);
+			
+			var len:int = children.length;
+			for (var i:int = 0; i < len; i++ )
+			{
+				var c:DisplayObject = children[i];
+				var cRect:Rectangle = c.getBounds(c);
+				cRect.left += c.x;
+				cRect.right += c.x;
+				cRect.top += c.y;
+				cRect.bottom += c.y;
+				rect = rect.union(cRect);
+			}
+			
+			return rect;
+		}
+		
 		override public function getRect(v:DisplayObject):Rectangle 
 		{
 			var rect:Rectangle = super.getRect(v);
-			var len:int = children.length
-			for (var i:int = 0; i < len;i++ ){
+			
+			var len:int = children.length;
+			for (var i:int = 0; i < len; i++ )
+			{
 				var c:DisplayObject = children[i];
-				var rect1:Rectangle = c.getRect(v);
-				if (rect == null) {
-					rect = rect1;
-				}else if(rect1){
-					rect.union(rect1);
-				}
+				var cRect:Rectangle = c.getRect(c);
+				cRect.left += c.x;
+				cRect.right += c.x;
+				cRect.top += c.y;
+				cRect.bottom += c.y;
+				rect = rect.union(cRect);
 			}
+			
+			return rect;
+		}
+		
+		override public function getFullBounds(v:DisplayObject):Rectangle 
+		{
+			var rect:Rectangle = super.getBounds(v);
+			
+			var len:int = children.length;
+			for (var i:int = 0; i < len; i++ )
+			{
+				var c:DisplayObject = children[i];
+				var cRect:Rectangle = c.getFullBounds(c);
+				cRect.left += c.x;
+				cRect.right += c.x;
+				cRect.top += c.y;
+				cRect.bottom += c.y;
+				rect = rect.union(cRect);
+			}
+			
 			return rect;
 		}
 	}

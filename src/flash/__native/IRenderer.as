@@ -30,7 +30,11 @@ package flash.__native
 			
 		}
 		
-		public function renderImage(ctx:CanvasRenderingContext2D,img:BitmapData,m:Matrix,blendMode:String,colorTransform:ColorTransform):void{
+		public function renderImage(ctx:CanvasRenderingContext2D,img:BitmapData,m:Matrix,blendMode:String,colorTransform:ColorTransform, offsetX:Number = 0, offsetY:Number = 0):void{
+			
+		}
+		
+		public function renderVideo(ctx:CanvasRenderingContext2D,video:HTMLVideoElement,m:Matrix, width:int, height:int, blendMode:String,colorTransform:ColorTransform):void{
 			
 		}
 		

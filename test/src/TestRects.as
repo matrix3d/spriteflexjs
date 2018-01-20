@@ -21,19 +21,22 @@ package
 				obj.vy = 20 * (Math.random() - .5);
 				obj.x = 400 * Math.random();
 				obj.y = 400 * Math.random();
-				addChild(obj);
 				obj.graphics.beginFill(0xffffff * Math.random());
 				var size2:Number=20+20*Math.random()
 				obj.graphics.drawRect(0, 0, size2, size2);
+				//obj.cacheAsBitmap = true;
+				addChild(obj);
 				objs.push(obj);
 			}
+			
 			addEventListener(Event.ENTER_FRAME, enterFrame);
-			addChild(new Stats);0
+			//addChild(new Stats);
 		}
 		
 		private function enterFrame(e:Event):void 
 		{
-			for (var i:int=0;i<this.objs.length;i++){
+			var len:int = objs.length;
+			for (var i:int = 0; i < len; i++){
 				var obj:MySprite=this.objs[i];
 				obj.x+=obj.vx;
 				obj.y+=obj.vy;

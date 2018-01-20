@@ -12,14 +12,13 @@
     <movie minorVersion="0" />
     <movie platform="Custom" />
     <movie background="#FFFFFF" />
-    <movie preferredSDK="D:\sdk\flexjs" />
+    <movie preferredSDK="Apache Flex (FlexJS) 0.8.0 FP23.0 AIR23.0 en_US;4.14.1;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
-    <class path="src" />
-    <class path="D:\sdk\flexjs\js\libs" />
+    <class path="D:\flexjssdk\js\libs" />
     <class path="..\src" />
-    <class path="D:\sdk\flexjs\frameworks\libs" />
+    <class path="src" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -56,8 +55,7 @@
   </includeLibraries>
   <!-- SWC Libraries -->
   <libraryPaths>
-    <element path="D:\sdk\flexjs\frameworks\libs\Core.swc" />
-    <element path="D:\sdk\flexjs\js\libs\js.swc" />
+    <element path="D:\flexjssdk\js\libs\js.swc" />
     <element path="lib\pixijs.swc" />
   </libraryPaths>
   <!-- External Libraries -->
@@ -78,7 +76,7 @@
   </library>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <compile path="src\TestAStar.as" />
+    <compile path="src\TestVideo.as" />
   </compileTargets>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
@@ -92,11 +90,25 @@
   <options>
     <option showHiddenPaths="False" />
     <option testMovie="Webserver" />
-    <option testMovieCommand="" />
+    <option testMovieCommand="bin/$(BuildConfig)-redirect.html" />
   </options>
   <!-- Plugin storage -->
   <storage>
     <entry key="at_enabled"><![CDATA[0]]></entry>
     <entry key="at_password"><![CDATA[]]></entry>
+    <entry key="SWCProject_spriteflexjs"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
+<SWCProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <FlexBinPath />
+  <FlashBinPath />
+  <FlexIncludeASI>false</FlexIncludeASI>
+  <MakeCS3>false</MakeCS3>
+  <MakeMXI>false</MakeMXI>
+  <IntegrateAsDoc>true</IntegrateAsDoc>
+  <LaunchAEM>false</LaunchAEM>
+  <MXPIncludeASI>false</MXPIncludeASI>
+  <Flex_IgnoreClasses />
+  <CS3_IgnoreClasses />
+  <CS3_PreviewType>None</CS3_PreviewType>
+</SWCProject>]]></entry>
   </storage>
 </project>

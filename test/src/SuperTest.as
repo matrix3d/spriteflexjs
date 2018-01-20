@@ -12,7 +12,6 @@ package
 	public class SuperTest extends Sprite
 	{
 		private var ss:Array = [];
-		private var bmd:BitmapData;
 		public function SuperTest() 
 		{
 			addChild(new Stats);

@@ -1,7 +1,6 @@
 # Build and Release Folders
-test/bin/
-test/bin-debug/
-test/bin-release/
+test/bin/js-debug/
+test/bin/js-release/
 test/obj/
 
 # Other files and folders

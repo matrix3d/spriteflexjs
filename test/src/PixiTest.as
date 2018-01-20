@@ -15,7 +15,13 @@ package
 		private var stage:Container;
 		private var renderer:SystemRenderer;
 		private var s:Sprite;
-		private var tt:TileTestPixi
+		private var tt:TileTestPixi;
+		
+		/**
+		 * <inject_html>
+		 * <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.0.3/pixi.min.js"></script>
+		 * </inject_html>
+		 */
 		public function PixiTest() 
 		{
 			renderer = new WebGLRenderer(480,640);
@@ -23,7 +29,7 @@ package
 			
 			stage = new Container;
 			
-			var t:Texture = Texture.fromImage("http://192.168.1.250/flexjs/assets/wood.jpg");
+			var t:Texture = Texture.fromImage("../assets/wood.jpg");
 			
 			s = new Sprite(t);
 			s.anchor.x = .5;

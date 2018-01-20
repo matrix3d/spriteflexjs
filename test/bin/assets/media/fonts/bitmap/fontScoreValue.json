@@ -1,0 +1,426 @@
+{
+    "localName": "font",
+    "children": [
+        {
+            "localName": "info",
+            "attributes": {
+                "face": "BadaBoomBB-Value",
+                "padding": "0,0,0,0",
+                "bold": "0",
+                "size": "36",
+                "italic": "0",
+                "smooth": "1",
+                "chasrset": "",
+                "unicode": "0",
+                "stretchH": "100",
+                "aa": "1",
+                "spacing": "2,2"
+            }
+        },
+        {
+            "localName": "common",
+            "attributes": {
+                "base": "32",
+                "scaleW": "256",
+                "scaleH": "128",
+                "pages": "1",
+                "packed": "0",
+                "lineHeight": "32"
+            }
+        },
+        {
+            "localName": "pages",
+            "children": [
+                {
+                    "localName": "page",
+                    "attributes": {
+                        "file": "fontScoreValue.png",
+                        "id": "0"
+                    }
+                }
+            ]
+        },
+        {
+            "localName": "chars",
+            "attributes": {
+                "count": "23"
+            },
+            "children": [
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "48",
+                        "y": "2",
+                        "xoffset": "-1",
+                        "yoffset": "0",
+                        "xadvance": "17",
+                        "page": "0",
+                        "width": "23",
+                        "chnl": "0",
+                        "letter": "0",
+                        "height": "32",
+                        "x": "2"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "79",
+                        "y": "2",
+                        "xoffset": "-1",
+                        "yoffset": "0",
+                        "xadvance": "17",
+                        "page": "0",
+                        "width": "23",
+                        "chnl": "0",
+                        "letter": "O",
+                        "height": "32",
+                        "x": "27"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "33",
+                        "y": "2",
+                        "xoffset": "-1",
+                        "yoffset": "0",
+                        "xadvance": "11",
+                        "page": "0",
+                        "width": "19",
+                        "chnl": "0",
+                        "letter": "!",
+                        "height": "32",
+                        "x": "52"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "87",
+                        "y": "2",
+                        "xoffset": "-0",
+                        "yoffset": "1",
+                        "xadvance": "21",
+                        "page": "0",
+                        "width": "28",
+                        "chnl": "0",
+                        "letter": "W",
+                        "height": "31",
+                        "x": "73"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "56",
+                        "y": "2",
+                        "xoffset": "-2",
+                        "yoffset": "1",
+                        "xadvance": "18",
+                        "page": "0",
+                        "width": "24",
+                        "chnl": "0",
+                        "letter": "8",
+                        "height": "31",
+                        "x": "103"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "65",
+                        "y": "2",
+                        "xoffset": "-4",
+                        "yoffset": "1",
+                        "xadvance": "14",
+                        "page": "0",
+                        "width": "23",
+                        "chnl": "0",
+                        "letter": "A",
+                        "height": "31",
+                        "x": "129"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "83",
+                        "y": "2",
+                        "xoffset": "-1",
+                        "yoffset": "1",
+                        "xadvance": "16",
+                        "page": "0",
+                        "width": "20",
+                        "chnl": "0",
+                        "letter": "S",
+                        "height": "31",
+                        "x": "154"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "50",
+                        "y": "2",
+                        "xoffset": "-2",
+                        "yoffset": "2",
+                        "xadvance": "17",
+                        "page": "0",
+                        "width": "23",
+                        "chnl": "0",
+                        "letter": "2",
+                        "height": "30",
+                        "x": "176"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "57",
+                        "y": "2",
+                        "xoffset": "1",
+                        "yoffset": "2",
+                        "xadvance": "18",
+                        "page": "0",
+                        "width": "23",
+                        "chnl": "0",
+                        "letter": "9",
+                        "height": "30",
+                        "x": "201"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "75",
+                        "y": "2",
+                        "xoffset": "-1",
+                        "yoffset": "2",
+                        "xadvance": "15",
+                        "page": "0",
+                        "width": "23",
+                        "chnl": "0",
+                        "letter": "K",
+                        "height": "30",
+                        "x": "226"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "82",
+                        "y": "36",
+                        "xoffset": "-2",
+                        "yoffset": "2",
+                        "xadvance": "14",
+                        "page": "0",
+                        "width": "22",
+                        "chnl": "0",
+                        "letter": "R",
+                        "height": "30",
+                        "x": "2"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "68",
+                        "y": "36",
+                        "xoffset": "-2",
+                        "yoffset": "2",
+                        "xadvance": "15",
+                        "page": "0",
+                        "width": "22",
+                        "chnl": "0",
+                        "letter": "D",
+                        "height": "30",
+                        "x": "26"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "51",
+                        "y": "36",
+                        "xoffset": "-1",
+                        "yoffset": "2",
+                        "xadvance": "17",
+                        "page": "0",
+                        "width": "21",
+                        "chnl": "0",
+                        "letter": "3",
+                        "height": "30",
+                        "x": "50"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "52",
+                        "y": "36",
+                        "xoffset": "-1",
+                        "yoffset": "2",
+                        "xadvance": "16",
+                        "page": "0",
+                        "width": "21",
+                        "chnl": "0",
+                        "letter": "4",
+                        "height": "30",
+                        "x": "73"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "54",
+                        "y": "36",
+                        "xoffset": "-1",
+                        "yoffset": "2",
+                        "xadvance": "17",
+                        "page": "0",
+                        "width": "21",
+                        "chnl": "0",
+                        "letter": "6",
+                        "height": "30",
+                        "x": "96"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "53",
+                        "y": "36",
+                        "xoffset": "-0",
+                        "yoffset": "2",
+                        "xadvance": "16",
+                        "page": "0",
+                        "width": "20",
+                        "chnl": "0",
+                        "letter": "5",
+                        "height": "30",
+                        "x": "119"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "55",
+                        "y": "36",
+                        "xoffset": "0",
+                        "yoffset": "2",
+                        "xadvance": "13",
+                        "page": "0",
+                        "width": "20",
+                        "chnl": "0",
+                        "letter": "7",
+                        "height": "30",
+                        "x": "141"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "69",
+                        "y": "36",
+                        "xoffset": "-2",
+                        "yoffset": "2",
+                        "xadvance": "13",
+                        "page": "0",
+                        "width": "19",
+                        "chnl": "0",
+                        "letter": "E",
+                        "height": "30",
+                        "x": "163"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "72",
+                        "y": "36",
+                        "xoffset": "-1",
+                        "yoffset": "3",
+                        "xadvance": "16",
+                        "page": "0",
+                        "width": "23",
+                        "chnl": "0",
+                        "letter": "H",
+                        "height": "29",
+                        "x": "184"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "76",
+                        "y": "36",
+                        "xoffset": "-1",
+                        "yoffset": "3",
+                        "xadvance": "12",
+                        "page": "0",
+                        "width": "17",
+                        "chnl": "0",
+                        "letter": "L",
+                        "height": "29",
+                        "x": "209"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "49",
+                        "y": "36",
+                        "xoffset": "2",
+                        "yoffset": "3",
+                        "xadvance": "12",
+                        "page": "0",
+                        "width": "16",
+                        "chnl": "0",
+                        "letter": "1",
+                        "height": "29",
+                        "x": "228"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "73",
+                        "y": "68",
+                        "xoffset": "-1",
+                        "yoffset": "3",
+                        "xadvance": "8",
+                        "page": "0",
+                        "width": "14",
+                        "chnl": "0",
+                        "letter": "I",
+                        "height": "29",
+                        "x": "2"
+                    }
+                },
+                {
+                    "localName": "char",
+                    "attributes": {
+                        "id": "32",
+                        "y": "68",
+                        "xoffset": "7",
+                        "yoffset": "32",
+                        "xadvance": "7",
+                        "page": "0",
+                        "width": "0",
+                        "chnl": "0",
+                        "letter": "space",
+                        "height": "0",
+                        "x": "18"
+                    }
+                }
+            ]
+        },
+        {
+            "localName": "kernings",
+            "attributes": {
+                "count": "0"
+            }
+        }
+    ]
+}

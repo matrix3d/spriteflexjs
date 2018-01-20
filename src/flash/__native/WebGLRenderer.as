@@ -40,7 +40,7 @@ package flash.__native
 		/**
 		 * @flexjsignorecoercion flash.__native.GLCanvasRenderingContext2D
 		 */
-		override public function renderImage(ctx:CanvasRenderingContext2D, img:BitmapData, m:Matrix, blendMode:String, colorTransform:ColorTransform):void 
+		override public function renderImage(ctx:CanvasRenderingContext2D, img:BitmapData, m:Matrix, blendMode:String, colorTransform:ColorTransform, offsetX:Number = 0, offsetY:Number = 0):void 
 		{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
 			if (!glctx.isBatch){

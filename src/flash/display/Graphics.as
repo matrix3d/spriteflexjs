@@ -3,6 +3,7 @@ package flash.display
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
+	import flash.geom.Vector3D;
 	/**
 	 * ...
 	 * @author lizhi http://matrix3d.github.io/
@@ -10,12 +11,14 @@ package flash.display
 	public final class Graphics extends Object
 	{
 		public var graphicsData:Vector.<IGraphicsData> = new Vector.<IGraphicsData>;
+		public var gradientFills:Vector.<GraphicsGradientFill> = new Vector3D.<GraphicsGradientFill>;
 		public var lastStroke:GraphicsStroke;
 		public var lastFill:IGraphicsFill;
 		private var pathPool:Array = [];
 		private var pathPoolPos:int = 0;
 		private var lastPath:GraphicsPath;
-		public var bound:Rectangle;// = new Rectangle(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
+		private var _bound:Rectangle;
+		private var _rect:Rectangle;
 		private var lockBound:Boolean = false;
 		public static var debug:Boolean = false;
 		public var _worldMatrix:Matrix = new Matrix;
@@ -31,8 +34,8 @@ package flash.display
 			lastPath = null;
 			pathPoolPos = 0;
 			graphicsData = new Vector.<IGraphicsData>;
-			bound = null;
-			//bound.setTo(Number.MAX_VALUE,Number.MAX_VALUE,-Number.MAX_VALUE,-Number.MAX_VALUE);
+			_bound = null;
+			//_bound.setTo(Number.MAX_VALUE,Number.MAX_VALUE,-Number.MAX_VALUE,-Number.MAX_VALUE);
 		}
 		
 		public function beginFill(color:uint, alpha:Number = 1.0):void
@@ -45,7 +48,7 @@ package flash.display
 		public function beginGradientFill(type:String, colors:Array, alphas:Array, ratios:Array, matrix:* = null, spreadMethod:String = "pad", interpolationMethod:String = "rgb", focalPointRatio:Number = 0):void
 		{
 			endStrokAndFill();
-			lastFill = new GraphicsGradientFill(type, colors, alphas, ratios, matrix, spreadMethod, interpolationMethod, focalPointRatio);
+			lastFill = new GraphicsGradientFill(type, colors, alphas, ratios, _bound, matrix, spreadMethod, interpolationMethod, focalPointRatio);
 			graphicsData.push(lastFill);
 		}
 		
@@ -82,8 +85,9 @@ package flash.display
 		{
 			if (lastStroke)
 			{
+				endFill();
 				var gs:GraphicsStroke = lastStroke;
-				gs.fill = new GraphicsGradientFill(type, colors, alphas, ratios, matrix, spreadMethod, interpolationMethod, focalPointRatio);
+				gs.fill = new GraphicsGradientFill(type, colors, alphas, ratios, _bound, matrix, spreadMethod, interpolationMethod, focalPointRatio);
 			}
 		}
 		
@@ -92,7 +96,7 @@ package flash.display
 			endStrokAndFill();
 			if (!isNaN(thickness))
 			{
-				lastStroke = new GraphicsStroke(thickness === 0 ? 1 : thickness, pixelHinting, scaleMode, caps, joints, miterLimit, new GraphicsSolidFill(color, alpha));
+				lastStroke = new GraphicsStroke(thickness === 0 ? 1 : thickness, pixelHinting, scaleMode, (caps) ? caps : "round", (joints) ? joints : "round", miterLimit, new GraphicsSolidFill(color, alpha));
 				graphicsData.push(lastStroke);
 			}
 		}
@@ -213,19 +217,37 @@ package flash.display
 		
 		private function inflateBound(x:Number, y:Number):void {
 			if (lockBound) return;
-			if (bound == null) bound = new Rectangle(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
-			if (bound.left>x) {
-				bound.left = x;
+			
+			if (_bound == null)
+			{
+				_bound = new Rectangle(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
+				_rect = new Rectangle(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
 			}
-			if (bound.right<x) {
-				bound.right = x;
+			
+			if (_bound.left>x) {
+				_bound.left = x;
+				_rect.left = x;
+				if (lastStroke) _bound.left -= lastStroke.thickness / 2;
 			}
-			if (bound.top>y) {
-				bound.top = y;
+			if (_bound.right<x) {
+				_bound.right = x;
+				_rect.right = x;
+				if (lastStroke) _bound.right += lastStroke.thickness / 2;
 			}
-			if (bound.bottom<y) {
-				bound.bottom = y;
+			if (_bound.top>y) {
+				_bound.top = y;
+				_rect.top = y;
+				if (lastStroke) _bound.top -= lastStroke.thickness / 2;
 			}
+			if (_bound.bottom<y) {
+				_bound.bottom = y;
+				_rect.bottom = y;
+				if (lastStroke) _bound.bottom += lastStroke.thickness / 2;
+			}
+			
+			// update the bounds for gradient fills.
+			if (lastFill && lastFill is GraphicsGradientFill) GraphicsGradientFill(lastFill).bounds = _bound;
+			if (lastStroke && lastStroke.fill is GraphicsGradientFill) GraphicsGradientFill(lastStroke.fill).bounds = _bound;
 		}
 		
 		private function makePath():void
@@ -421,11 +443,35 @@ package flash.display
 			return graphicsData.slice();
 		}
 		
-		public function draw(ctx:CanvasRenderingContext2D, m:Matrix,blendMode:String,colorTransform:ColorTransform):void
+		
+		/**
+		 * returns rectangle of drawn graphics including strokes
+		 */
+		public function get rect():Rectangle 
 		{
-			if (graphicsData.length)
+			return _rect;
+		}
+		
+		/**
+		 * returns rectangle of drawn graphics not inclding strokes
+		 */
+		public function get bound():Rectangle 
+		{
+			return _bound
+		}
+		
+		public function draw(ctx:CanvasRenderingContext2D, m:Matrix,blendMode:String,colorTransform:ColorTransform, useCache:Boolean = false, cacheImage:BitmapData = null):void
+		{
+			if (graphicsData.length || useCache)
 			{
-				SpriteFlexjs.renderer.renderGraphics(ctx, this, m, blendMode, colorTransform);
+				if (useCache)
+				{
+					SpriteFlexjs.renderer.renderImage(ctx, cacheImage, m, blendMode, colorTransform, (_bound) ? _bound.x : 0, (_bound) ? _bound.y : 0);
+				}
+				else
+				{
+					SpriteFlexjs.renderer.renderGraphics(ctx, this, m, blendMode, colorTransform);
+				}
 				SpriteFlexjs.drawCounter++;
 			}
 		}

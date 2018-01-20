@@ -92,5 +92,19 @@
   <storage>
     <entry key="at_enabled"><![CDATA[1]]></entry>
     <entry key="at_password"><![CDATA[]]></entry>
+    <entry key="SWCProject_spriteflexjsswf"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
+<SWCProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <FlexBinPath />
+  <FlashBinPath />
+  <FlexIncludeASI>false</FlexIncludeASI>
+  <MakeCS3>false</MakeCS3>
+  <MakeMXI>false</MakeMXI>
+  <IntegrateAsDoc>true</IntegrateAsDoc>
+  <LaunchAEM>false</LaunchAEM>
+  <MXPIncludeASI>false</MXPIncludeASI>
+  <Flex_IgnoreClasses />
+  <CS3_IgnoreClasses />
+  <CS3_PreviewType>None</CS3_PreviewType>
+</SWCProject>]]></entry>
   </storage>
 </project>

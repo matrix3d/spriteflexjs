@@ -445,7 +445,7 @@ package flash.display
 		
 		
 		/**
-		 * returns rectangle of drawn graphics including strokes
+		 * returns rectangle of drawn graphics not including strokes
 		 */
 		public function get rect():Rectangle 
 		{
@@ -453,20 +453,20 @@ package flash.display
 		}
 		
 		/**
-		 * returns rectangle of drawn graphics not inclding strokes
+		 * returns rectangle of drawn graphics including strokes
 		 */
 		public function get bound():Rectangle 
 		{
 			return _bound
 		}
 		
-		public function draw(ctx:CanvasRenderingContext2D, m:Matrix,blendMode:String,colorTransform:ColorTransform, useCache:Boolean = false, cacheImage:BitmapData = null):void
+		public function draw(ctx:CanvasRenderingContext2D, m:Matrix, blendMode:String, colorTransform:ColorTransform, useCache:Boolean = false, cacheImage:BitmapData = null):void
 		{
 			if (graphicsData.length || useCache)
 			{
 				if (useCache)
 				{
-					SpriteFlexjs.renderer.renderImage(ctx, cacheImage, m, blendMode, colorTransform, (_bound) ? _bound.x : 0, (_bound) ? _bound.y : 0);
+					SpriteFlexjs.renderer.renderImage(ctx, cacheImage, m, blendMode, colorTransform);
 				}
 				else
 				{

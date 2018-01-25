@@ -1,6 +1,5 @@
 package flash.display
 {
-	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	
@@ -24,7 +23,16 @@ package flash.display
 		{
 			if (visible && graphics.graphicsData.length)
 			{
-				graphics.draw(ctx, transform.concatenatedMatrix, blendMode, transform.concatenatedColorTransform, cacheAsBitmap, _cacheImage);
+				var mat:Matrix = transform.concatenatedMatrix.clone();
+				if (cacheAsBitmap && !parent.cacheAsBitmap)
+				{
+					SpriteFlexjs.renderer.renderImage(ctx, _cacheImage, mat, blendMode, transform.concatenatedColorTransform, -this.x - _cacheOffsetX, -this.y - _cacheOffsetY);
+				}
+				else
+				{
+					graphics.draw(ctx, mat, blendMode, transform.concatenatedColorTransform);
+					ApplyFilters(ctx);
+				}
 			}
 		}
 		
@@ -36,45 +44,32 @@ package flash.display
 			{
 				var bounds:Rectangle = getFullBounds(this);
 				
+				bounds.inflate(filterOffsetX * 2, filterOffsetY * 2); // add space for filter effects
+				
 				_cacheCanvas = document.createElement("canvas") as HTMLCanvasElement;
 				_cacheCanvas.width = bounds.width; // TODO Add padding for Dropshadow
 				_cacheCanvas.height = bounds.height;
 				_cacheCTX = _cacheCanvas.getContext('2d') as CanvasRenderingContext2D;
 				//_cacheCTX.fillStyle = "blue";
 				//_cacheCTX.fillRect(0, 0, _cacheCanvas.width, _cacheCanvas.height);
-				var mat:Matrix = transform.concatenatedMatrix.clone();
 				_cacheOffsetX = bounds.width - bounds.right - x;
 				_cacheOffsetY = bounds.height - bounds.bottom - y;
-				
-				//trace("offsetX: " + offsetX + ", offsetY: " + offsetY + ", x: " + x + ", y: " + y);
 				
 				if (parent) 
 				{
 					_cacheOffsetX -= parent.x;
 					_cacheOffsetY -= parent.y;
 				}
+				
+				//trace("_cacheOffsetX: " + _cacheOffsetX + ", _cacheOffsetY: " + _cacheOffsetY + ", x: " + x + ", y: " + y);
+				var mat:Matrix = transform.concatenatedMatrix.clone();
 				mat.translate(_cacheOffsetX, _cacheOffsetY);
-				//mat.translate(0, -250);
 				graphics.draw(_cacheCTX, mat, blendMode, transform.concatenatedColorTransform);
 				
-				//trace("offsetX: " + offsetX + ", offsetY: " + offsetY + ", x: " + x + ", y: " + y);
-				
-				/*// shadow test
-				_cacheCTX.shadowColor = 'rgba(0,0,0, 0.50)';
-				_cacheCTX.shadowBlur = 10;
-				_cacheCTX.shadowOffsetX = 10;
-				_cacheCTX.shadowOffsetY = 10;
-				_cacheCTX.stroke();
-				_cacheCTX.fill();
-				// clear the shadow
-				_cacheCTX.shadowColor = "0";
-				_cacheCTX.shadowOffsetX = 0; 
-				_cacheCTX.shadowOffsetY = 0;
-				
-				// restroke w/o the shadow
-				_cacheCTX.stroke();*/
+				ApplyFilters(_cacheCTX);
 				
 				_cacheImage.image = _cacheCanvas;
+				updateTransforms();
 			}
 			else
 			{

@@ -1,6 +1,3 @@
-//
-// D:\sdk\airsdk24\frameworks\libs\player\18.0\playerglobal.swc\flash\filters\GlowFilter
-//
 package flash.filters
 {
 	import flash.filters.BitmapFilter;
@@ -102,6 +99,17 @@ package flash.filters
 	 */
 	public final class GlowFilter extends BitmapFilter
 	{
+		private var _color:uint;
+		private var _alpha:Number;
+		private var _blurX:Number;
+		private var _blurY:Number;
+		private var _strength:Number;
+		private var _quality:int;
+		private var _inner:Boolean;
+		private var _knockout:Boolean;
+		private var _blur:Number;
+		private var _rgba:String;
+		
 		/**
 		 * The alpha transparency value for the color. Valid values are 0 to 1. 
 		 * For example,
@@ -141,10 +149,10 @@ package flash.filters
 		 *   </listing>
 		 */
 		public function get alpha () : Number{
-			return 0;
+			return _alpha;
 		}
 		public function set alpha (value:Number) : void{
-			
+			_alpha = value;
 		}
 
 		/**
@@ -187,10 +195,12 @@ package flash.filters
 		 *   </listing>
 		 */
 		public function get blurX () : Number{
-			return 0;
+			return _blurX;
 		}
 		public function set blurX (value:Number) : void{
-			
+			_blurX = value;
+			_blur = Math.max(blurX, blurY);
+			_offsetX = _offsetY = _blur;
 		}
 
 		/**
@@ -233,10 +243,12 @@ package flash.filters
 		 *   </listing>
 		 */
 		public function get blurY () : Number{
-			return 0;
+			return _blurY;
 		}
 		public function set blurY (value:Number) : void{
-			
+			_blurY = value;
+			_blur = Math.max(blurX, blurY);
+			_offsetX = _offsetY = _blur;
 		}
 
 		/**
@@ -277,10 +289,11 @@ package flash.filters
 		 *   </listing>
 		 */
 		public function get color () : uint{
-			return 0;
+			return _color;
 		}
 		public function set color (value:uint) : void{
-			
+			_color = value;
+			_rgba = "rgba(" + (color >> 16 & 0xff) + "," + (color >> 8 & 0xff) + "," + (color & 0xff) + "," + alpha + ")";
 		}
 
 		/**
@@ -322,10 +335,10 @@ package flash.filters
 		 *   </listing>
 		 */
 		public function get inner () : Boolean{
-			return false;
+			return _inner;
 		}
 		public function set inner (value:Boolean) : void{
-			
+			_inner = value;
 		}
 
 		/**
@@ -367,10 +380,10 @@ package flash.filters
 		 *   </listing>
 		 */
 		public function get knockout () : Boolean{
-			return false;
+			return _knockout;
 		}
 		public function set knockout (value:Boolean) : void{
-			
+			_knockout = value;
 		}
 
 		/**
@@ -419,10 +432,10 @@ package flash.filters
 		 *   </listing>
 		 */
 		public function get quality () : int{
-			return 0;
+			return _quality;
 		}
 		public function set quality (value:int) : void{
-			
+			_quality = value;
 		}
 
 		/**
@@ -464,10 +477,20 @@ package flash.filters
 		 *   </listing>
 		 */
 		public function get strength () : Number{
-			return 0;
+			return _strength;
 		}
 		public function set strength (value:Number) : void{
-			
+			_strength = value;
+		}
+		
+		public function get blur():Number 
+		{
+			return _blur;
+		}
+		
+		public function get rgba():String 
+		{
+			return _rgba;
 		}
 
 		/**
@@ -606,8 +629,19 @@ package flash.filters
 		 *   }
 		 *   </listing>
 		 */
-		public function GlowFilter (color:uint = 16711680, alpha:Number = 1, blurX:Number = 6, blurY:Number = 6, strength:Number = 2, quality:int = 1, inner:Boolean = false, knockout:Boolean = false){
+		public function GlowFilter (color:uint = 0xFF0000, alpha:Number = 1, blurX:Number = 6, blurY:Number = 6, strength:Number = 2, quality:int = 1, inner:Boolean = false, knockout:Boolean = false)
+		{
+			_color = color;
+			_alpha = alpha;
+			_blurX = blurX;
+			_blurY = blurY;
+			_strength = strength;
+			_quality = quality;
+			_inner = inner;
+			_knockout = knockout;
 			
+			_rgba = "rgba(" + (color >> 16 & 0xff) + "," + (color >> 8 & 0xff) + "," + (color & 0xff) + "," + alpha + ")";
+			_offsetX = _offsetY = _blur = Math.max(blurX, blurY);
 		}
 	}
 }

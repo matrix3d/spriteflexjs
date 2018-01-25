@@ -1,5 +1,6 @@
 package flash.text
 {
+	import flash.display.BitmapData;
 	import flash.display.BlendMode;
 	import flash.display.Graphics;
 	import flash.display.InteractiveObject;
@@ -22,10 +23,22 @@ package flash.text
 		private var _height:Number = 100;
 		private var _autoSize:String;
 		private var _background:Boolean = false;
-		private var _backgroundColor:uint = 0;
+		private var _backgroundColor:uint = 0xFFFFFF;
 		private var _border:Boolean = false;
 		private var _borderColor:uint = 0;
 		private var boundHelpRect:Rectangle = new Rectangle;
+		private var _fullBounds:Rectangle;
+		
+		private var _cacheCanvas:HTMLCanvasElement;
+		private var _cacheCTX:CanvasRenderingContext2D;
+		private var _cacheImage:BitmapData = new BitmapData(1, 1);
+		private var _cacheMatrix:Matrix;
+		private var _cacheOffsetX:Number = 0;
+		private var _cacheOffsetY:Number = 0;
+		private var _filterOffsetX:Number = 0;
+		private var _filterOffsetY:Number = 0;
+		
+		
 		public function TextField()
 		{
 			textColor = 0;
@@ -34,7 +47,7 @@ package flash.text
 		
 		private function removedFromStage(e:Event):void 
 		{
-			if (input&&input.parentElement){
+			if (input && input.parentElement){
 				input.parentElement.removeChild(input);
 			}
 		}
@@ -273,6 +286,33 @@ package flash.text
 		   {
 		   return this.getXMLText(this.selectionBeginIndex,this.selectionEndIndex);
 		   }*/
+		   
+		override public function getBounds(v:DisplayObject):Rectangle
+		{ 
+			var bounds:Rectangle = new Rectangle(0, 0, textWidth, textHeight);
+			if (border || background) bounds.inflate(4, 4);
+			return bounds;
+		}
+		
+		override public function getFullBounds(v:DisplayObject):Rectangle 
+		{
+			var bounds:Rectangle = new Rectangle(0, 0, width, height);
+			if (border || background) bounds.inflate(3.5, 3);
+			
+			// adjust bounds for rotation
+			var radians:Number = rotation * (Math.PI / 180);
+			var w:Number = Math.round((bounds.height * Math.sin(radians) + bounds.width * Math.cos(radians)) * 10) / 10;
+			var h:Number = Math.round((bounds.height * Math.cos(radians) + bounds.width * Math.sin(radians)) * 10) / 10;
+			
+			// adjust rectangle bigger if needed
+			w = (w > bounds.width) ? w - bounds.width : 0;
+			h = (h > bounds.height) ? h - bounds.width : 0;
+			bounds.inflate(w / 2, h / 2);
+			
+			_fullBounds = bounds.clone();
+			
+			return bounds;
+		}
 		
 		public function getCharBoundaries(param1:int):Rectangle  { return null; }
 		
@@ -438,39 +478,104 @@ package flash.text
 		
 		public function set useRichTextClipboard(param1:Boolean):void  {/**/ }
 		
+		override public function set cacheAsBitmap(value:Boolean):void 
+		{
+			if (value && _type != TextFieldType.INPUT)
+			{
+				var bounds:Rectangle = getFullBounds(this);
+				
+				bounds.inflate(_filterOffsetX * 2, _filterOffsetY * 2); // add space for filter effects
+				
+				_cacheCanvas = document.createElement("canvas") as HTMLCanvasElement;
+				_cacheCanvas.width = bounds.width;
+				_cacheCanvas.height = bounds.height;
+				_cacheCTX = _cacheCanvas.getContext('2d') as CanvasRenderingContext2D;
+				//_cacheCTX.fillStyle = "blue";
+				//_cacheCTX.fillRect(0, 0, _cacheCanvas.width, _cacheCanvas.height);
+				_cacheOffsetX = bounds.width - bounds.right - x;
+				_cacheOffsetY = bounds.height - bounds.bottom - y;
+				
+				if (parent) 
+				{
+					_cacheOffsetX -= parent.x;
+					_cacheOffsetY -= parent.y;
+				}
+				
+				var mat:Matrix = transform.concatenatedMatrix.clone();
+				mat.translate(_cacheOffsetX, _cacheOffsetY);
+				__draw(_cacheCTX, mat);
+				
+				// cache after drawing all graphics
+				super.cacheAsBitmap = value;
+				
+				//ApplyFilters(_cacheCTX);
+				
+				_cacheImage.image = _cacheCanvas;
+				updateTransforms();
+			}
+			else
+			{
+				_cacheCanvas = null;
+				_cacheCTX = null;
+			}
+		}
+		
+		public function get cacheImage():BitmapData 
+		{
+			return _cacheImage;
+		}
+		
+		public function get cacheOffsetX():Number 
+		{
+			return _cacheOffsetX;
+		}
+		
+		public function get cacheOffsetY():Number 
+		{
+			return _cacheOffsetY;
+		}
+		
 		override public function __update(ctx:CanvasRenderingContext2D):void
 		{
 			super.__update(ctx);
-			if (/*stage &&*/ _text != null&&visible)
+			if (_text != null && visible)
 			{
 				__draw(ctx,transform.concatenatedMatrix);
 				SpriteFlexjs.drawCounter++;
 			}
 		}
 		
-		public function __draw(ctx:CanvasRenderingContext2D, m:Matrix):void{
-			if(border || background){
-				if (graphicsDirty){
+		public function __draw(ctx:CanvasRenderingContext2D, m:Matrix):void
+		{
+			if ((_border || _background) && !cacheAsBitmap)
+			{
+				if (graphicsDirty)
+				{
 					graphicsDirty = false;
 					graphics.clear();
-					if (border){
-						graphics.lineStyle(0, borderColor);
-					}
-					if (background){
-						graphics.beginFill(backgroundColor);
-					}
-					graphics.drawRect( -2, -1, width, height);
+					if (border) graphics.lineStyle(0, borderColor);
+					if (background) graphics.beginFill(backgroundColor);
+					graphics.drawRect( -2, 0, width + 4, height + 2);
 				}
 				SpriteFlexjs.renderer.renderGraphics(ctx, graphics, m, blendMode, transform.concatenatedColorTransform);
 			}
-			if(type==TextFieldType.DYNAMIC){
-				for (var i:int = 0; i < lines.length; i++ ){
-					//if(m.ty>0){
-					//	alert(m.toString()+","+transform.matrix.toString()+" "+y);
-					//}
-					SpriteFlexjs.renderer.renderText(ctx, lines[i], defaultTextFormat, m, blendMode, transform.concatenatedColorTransform, 0, i * int(defaultTextFormat.size));
+			
+			if (type == TextFieldType.DYNAMIC)
+			{
+				if (cacheAsBitmap && !parent.cacheAsBitmap)
+				{
+					SpriteFlexjs.renderer.renderImage(ctx, _cacheImage, m, blendMode, transform.concatenatedColorTransform, -this.x - _cacheOffsetX, -this.y - _cacheOffsetY);
 				}
-			}else{
+				else
+				{
+					for (var i:int = 0; i < lines.length; i++ ){
+						//if(m.ty>0) alert(m.toString()+","+transform.matrix.toString()+" "+y);
+						SpriteFlexjs.renderer.renderText(ctx, lines[i], defaultTextFormat, m, blendMode, transform.concatenatedColorTransform, 0, i * int(defaultTextFormat.size));
+					}
+				}
+			}
+			else
+			{
 				input.style.left = m.tx+"px";
 				input.style.top = m.ty + "px";
 				input.style.width = width + "px";
@@ -489,7 +594,7 @@ package flash.text
 		
 		override protected function __doMouse(e:flash.events.MouseEvent):DisplayObject 
 		{
-			if (/*stage &&*/ mouseEnabled&&visible) {
+			if (mouseEnabled && visible) {
 				if (hitTestPoint(stage.mouseX, stage.mouseY)) {
 					return this;
 				}

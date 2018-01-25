@@ -1,7 +1,6 @@
 package flash.display
 {
 	import flash.events.Event;
-	import flash.events.EventDispatcher;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -69,21 +68,16 @@ package flash.display
 					bounds.y = 0;
 				}
 				
-				//trace("Name: " + name + ", bounds: " + bounds);
+				bounds.inflate(filterOffsetX * 2, filterOffsetY * 2); // add space for filter effects
 				
 				_cacheCanvas = document.createElement("canvas") as HTMLCanvasElement;
 				_cacheCanvas.width = bounds.width; // TODO add filter padding
 				_cacheCanvas.height = bounds.height;
-				//trace("cache width: " + getBounds(this).width + ", height: " + getBounds(this).height);
 				_cacheCTX = _cacheCanvas.getContext('2d') as CanvasRenderingContext2D;
 				//_cacheCTX.fillStyle = "blue";
 				//_cacheCTX.fillRect(0, 0, _cacheCanvas.width, _cacheCanvas.height);
-				
-				var mat:Matrix = transform.concatenatedMatrix.clone();
 				_cacheOffsetX = (hasGraphics) ? bounds.width - bounds.right - x : -x;
 				_cacheOffsetY = (hasGraphics) ? bounds.height - bounds.bottom - y : -y;
-				
-				//trace("matX: " + mat.tx + ", matY: " + mat.ty);
 				
 				if (parent)
 				{
@@ -91,30 +85,22 @@ package flash.display
 					_cacheOffsetY -= parent.y;
 				}
 				
+				var mat:Matrix = transform.concatenatedMatrix.clone();
 				mat.translate(_cacheOffsetX, _cacheOffsetY);
-				
-				
-				//trace("Cache " + name + ": offsetX: " + _cacheOffsetX + ", offsetY: " + _cacheOffsetY);
-				
 				graphics.draw(_cacheCTX, mat, blendMode, transform.concatenatedColorTransform);
+				
+				ApplyFilters(_cacheCTX);
 				
 				// draw children to cache canvas
 				for (var i:int = 0; i < numChildren; i++) 
 				{
 					var child:DisplayObject = getChildAt(i);
-					if (child is Shape)
-					{
-						Shape(child).cacheAsBitmap = true;
-						_cacheCTX.drawImage(Shape(child).cacheImage.image, -(Shape(child).cacheOffsetX + this.x), -(Shape(child).cacheOffsetY + this.y));
-					}
-					else if (child is Sprite) 
-					{
-						Sprite(child).cacheAsBitmap = true;
-						_cacheCTX.drawImage(Sprite(child).cacheImage.image, -(Sprite(child).cacheOffsetX + this.x), -(Sprite(child).cacheOffsetY + this.y));
-					}
+					child.cacheAsBitmap = true;
+					_cacheCTX.drawImage(Object(child).cacheImage.image, -(Object(child).cacheOffsetX + this.x), -(Object(child).cacheOffsetY + this.y));
 				}
 				
 				_cacheImage.image = _cacheCanvas;
+				updateTransforms();
 			}
 			else
 			{
@@ -148,16 +134,16 @@ package flash.display
 			if (visible && (graphics.graphicsData.length || numChildren))
 			{
 				var mat:Matrix = transform.concatenatedMatrix.clone();
-				if (cacheAsBitmap && !parent.cacheAsBitmap)
+				if (cacheAsBitmap && !parent.cacheAsBitmap) 
 				{
-					//trace("Sprite: " + name + ", ParentX: " + parent.x + ", ParentY: " + parent.y);
-					var bounds:Rectangle = getRect(this);
-					mat.translate(parent.x, parent.y);
-					//trace("Parent X: " + parent.x + ", Y: " + parent.y);
-					//trace("This X: " + this.x + ", Y: " + this.y);
+					SpriteFlexjs.renderer.renderImage(ctx, _cacheImage, mat, blendMode, transform.concatenatedColorTransform, -this.x - _cacheOffsetX, -this.y - _cacheOffsetY);
+					//SpriteFlexjs.renderer.renderImage(ctx, _cacheImage, mat, blendMode, transform.concatenatedColorTransform);
 				}
-				
-				graphics.draw(ctx, mat, blendMode, transform.concatenatedColorTransform, cacheAsBitmap, _cacheImage);
+				else
+				{
+					graphics.draw(ctx, mat, blendMode, transform.concatenatedColorTransform, cacheAsBitmap, _cacheImage);
+					ApplyFilters(ctx);
+				}
 			}
 			
 			if (hasEventListener(Event.ENTER_FRAME))

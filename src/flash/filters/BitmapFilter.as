@@ -73,6 +73,9 @@ package flash.filters
 	 */
 	public class BitmapFilter extends Object
 	{
+		protected var _offsetX:Number;
+		protected var _offsetY:Number;
+		
 		public function BitmapFilter ()
 		{
 			
@@ -88,6 +91,16 @@ package flash.filters
 		public function clone () : flash.filters.BitmapFilter
 		{
 			return null;
+		}
+		
+		public function get offsetX():Number 
+		{
+			return _offsetX;
+		}
+		
+		public function get offsetY():Number 
+		{
+			return _offsetY;
 		}
 	}
 }

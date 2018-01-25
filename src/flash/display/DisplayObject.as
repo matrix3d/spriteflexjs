@@ -1,8 +1,11 @@
 package flash.display
 {
 	import flash.events.Event;
-	import flash.events.MouseEvent;
 	import flash.events.EventDispatcher;
+	import flash.events.MouseEvent;
+	import flash.filters.BitmapFilter;
+	import flash.filters.DropShadowFilter;
+	import flash.filters.GlowFilter;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -32,11 +35,13 @@ package flash.display
 		private var lastMouseOverObj:DisplayObject;
 		private var _blendMode:String;
 		private var _cacheAsBitmap:Boolean = false;
-		
 		private var _loaderInfo:LoaderInfo;
+		private var _filters:Array = [];
+		private var _filterOffsetX:Number = 0;
+		private var _filterOffsetY:Number = 0;
+		
 		public function DisplayObject()
 		{
-			
 			_loaderInfo = new LoaderInfo();
 			_stage = _globalStage;
 			
@@ -276,9 +281,17 @@ package flash.display
 		
 		public function set scrollRect(v:Rectangle):void  {/**/ }
 		
-		public function get filters():Array  { return null }
+		public function get filters():Array  { return _filters; }
 		
-		public function set filters(v:Array):void  {/**/ }
+		public function set filters(v:Array):void
+		{
+			_filters = v;
+			for each (var f:BitmapFilter in _filters) 
+			{
+				_filterOffsetX += Math.max(f.offsetX, _filterOffsetX);
+				_filterOffsetY += Math.max(f.offsetY, _filterOffsetY);
+			}
+		}
 		
 		public function get blendMode():String  { return _blendMode }
 		
@@ -371,6 +384,42 @@ package flash.display
 		public function get metaData():Object  { return null }
 		
 		public function set metaData(param1:Object):void  {/**/ }
+		
+		public function get filterOffsetX():Number { return _filterOffsetX; }
+		public function get filterOffsetY():Number { return _filterOffsetY; }
+		
+		protected function ApplyFilters(ctx:CanvasRenderingContext2D):void 
+		{
+			for each (var filter:BitmapFilter in _filters) 
+			{
+				if (filter is DropShadowFilter)
+				{
+					var ds:DropShadowFilter = filter as DropShadowFilter;
+					// shadow test
+					ctx.shadowColor = ds.rgba;
+					ctx.shadowBlur = ds.blur;
+					ctx.shadowOffsetX = ds.offsetX;
+					ctx.shadowOffsetY = ds.offsetY;
+					//ctx.stroke();
+					ctx.fill();
+					
+					// clear the shadow
+					ctx.shadowColor = "0";
+					ctx.shadowOffsetX = 0; 
+					ctx.shadowOffsetY = 0;
+					// restroke w/o the shadow
+					ctx.stroke();
+				}
+				else if (filter is GlowFilter)
+				{
+					var gf:GlowFilter = filter as GlowFilter;
+					ctx.shadowColor = gf.rgba;
+					ctx.shadowBlur = gf.blur;
+					//if (gf.knockout) ctx.globalCompositeOperation = "destination-out";
+					ctx.fill();
+				}
+			}
+		}
 		
 		public function __update(ctx:CanvasRenderingContext2D):void
 		{

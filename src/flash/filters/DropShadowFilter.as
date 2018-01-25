@@ -109,6 +109,8 @@ package flash.filters
 		private var _knockout:Boolean = false;
 		private var _quality:int = 1;
 		private var _strength:Number = 1;
+		private var _rgba:String;
+		private var _blur:Number;
 
 		/**
 		 * The alpha transparency value for the shadow color. Valid values are 0.0 to 1.0. 
@@ -553,6 +555,9 @@ package flash.filters
 		 */
 		public function get strength():Number { return _strength; }
 		public function set strength(value:Number):void { _strength = value; }
+		
+		public function get rgba():String { return _rgba; }
+		public function get blur():Number { return _blur; }
 
 		/**
 		 * Returns a copy of this filter object.
@@ -679,7 +684,12 @@ package flash.filters
 			_knockout = knockout;
 			_hideObject = hideObject;
 			
+			var radians:Number = Math.PI / 180 * angle;
+			_offsetX = distance * Math.cos(radians);
+			_offsetY = distance * Math.sin(radians);
 			
+			_rgba = "rgba(" + (color >> 16 & 0xff) + "," + (color >> 8 & 0xff) + "," + (color & 0xff) + "," + alpha + ")";
+			_blur = Math.max(blurX, blurY);
 		}
 	}
 }

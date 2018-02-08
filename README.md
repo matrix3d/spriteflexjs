@@ -12,7 +12,7 @@ support canvas and webgl.
 Quick Links
 -----------
 
-* [Official Homepage](http://matrix3d.github.io/assets/html5/flexjsstage3d/bin/js-release/)
+* [Official Homepage](http://spriteflexjs.com/)
 * [spriteflexjs Wiki](https://github.com/matrix3d/spriteflexjs/wiki)
   * [Showcase](http://matrix3d.github.io/assets/html5/flexjsstage3d/bin/js-release/)
   * [jsmin](https://codepen.io/matrix3d/pen/mAZmVy)

@@ -10,4 +10,4 @@ if %3==debug (
 )
 set FLEX_HOME=%1
 echo on
-%FLEX_HOME%/js/bin/asjsc.bat %main% %ARGS% -external-library-path+="%FLEX_HOME%\js\libs\js.swc" -targets=JSRoyale -define=CONFIG::as_only,false -define=CONFIG::js_only,true
+%FLEX_HOME%/js/bin/asjsc.bat %main% %ARGS% -external-library-path+="%FLEX_HOME%\js\libs\js.swc" -external-library-path+=%FLEX_HOME%\frameworks\js\libs\XMLJS.swc -targets=JSRoyale -define=CONFIG::as_only,false -define=CONFIG::js_only,true

@@ -5,30 +5,25 @@ package flash.net
 	
 	public class URLLoader extends EventDispatcher
 	{
-		
-		public var data:Object;
-		
-		public var dataFormat:String = "text";
-		
+		private var _data:*;		
+		private var _dataFormat:String = "text";
+		private var _bytesLoaded:uint = 0;
+		private var _bytesTotal:uint = 0;
 		private var stream:URLStream;
-		
-		public var bytesLoaded:uint = 0;
-		
-		public var bytesTotal:uint = 0;
 		
 		public function URLLoader(request:URLRequest = null)
 		{
 			super();
-			this.stream = new URLStream();
-			this.stream.addEventListener(Event.OPEN, this.redirectEvent);
-			this.stream.addEventListener(IOErrorEvent.IO_ERROR, stream_ioError);
-			this.stream.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this.redirectEvent);
-			this.stream.addEventListener(HTTPStatusEvent.HTTP_STATUS, this.redirectEvent);
-			this.stream.addEventListener(ProgressEvent.PROGRESS, this.onProgress);
-			this.stream.addEventListener(Event.COMPLETE, this.onComplete);
+			stream = new URLStream();
+			stream.addEventListener(Event.OPEN, this.redirectEvent);
+			stream.addEventListener(IOErrorEvent.IO_ERROR, stream_ioError);
+			stream.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this.redirectEvent);
+			stream.addEventListener(HTTPStatusEvent.HTTP_STATUS, this.redirectEvent);
+			stream.addEventListener(ProgressEvent.PROGRESS, this.onProgress);
+			stream.addEventListener(Event.COMPLETE, this.onComplete);
 			if (request != null)
 			{
-				this.load(request);
+				load(request);
 			}
 		}
 		
@@ -48,12 +43,12 @@ package flash.net
 		
 		public function load(request:URLRequest):void
 		{
-			this.stream.load(request);
+			stream.load(request);
 		}
 		
 		public function close():void
 		{
-			this.stream.close();
+			stream.close();
 		}
 		
 		private function redirectEvent(event:Event):void
@@ -67,28 +62,40 @@ package flash.net
 			var bytes:ByteArray = new ByteArray();
 			bytes.length = buff.byteLength;
 			bytes.dataView = new DataView(buff);
-			switch (this.dataFormat)
+			switch (_dataFormat)
 			{
 			case URLLoaderDataFormat.TEXT: 
-				this.data = bytes.toString();
+				_data = bytes.toString();
 				break;
 			case "variables": 
 				if (bytes.length > 0)
 				{
-					this.data = new URLVariables(bytes.toString());
+					_data = new URLVariables(bytes.toString());
 					break;
 				}
 			default: 
-				this.data = bytes;
+				_data = bytes;
 			}
 			dispatchEvent(event);
 		}
 		
 		private function onProgress(event:ProgressEvent):void
 		{
-			this.bytesLoaded = event.bytesLoaded;
-			this.bytesTotal = event.bytesTotal;
+			_bytesLoaded = event.bytesLoaded;
+			_bytesTotal = event.bytesTotal;
 			dispatchEvent(event);
 		}
+		
+		public function get data():* { return _data; }
+		public function set data(value:*):void { _data = value; }
+		
+		public function get dataFormat():String { return _dataFormat; }
+		public function set dataFormat(value:String):void { _dataFormat = value; }
+		
+		public function get bytesLoaded():uint { return _bytesLoaded; }
+		public function set bytesLoaded(value:uint):void { _bytesLoaded = value; }
+		
+		public function get bytesTotal():uint { return _bytesTotal; }
+		public function set bytesTotal(value:uint):void { _bytesTotal = value; }
 	}
 }

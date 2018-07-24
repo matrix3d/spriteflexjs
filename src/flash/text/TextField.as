@@ -503,15 +503,14 @@ package flash.text
 				
 				var mat:Matrix = transform.concatenatedMatrix.clone();
 				mat.translate(_cacheOffsetX, _cacheOffsetY);
+				
 				__draw(_cacheCTX, mat);
-				
-				// cache after drawing all graphics
-				super.cacheAsBitmap = value;
-				
-				//ApplyFilters(_cacheCTX);
 				
 				_cacheImage.image = _cacheCanvas;
 				updateTransforms();
+				
+				// cache after drawing all graphics
+				super.cacheAsBitmap = value;
 			}
 			else
 			{
@@ -540,7 +539,14 @@ package flash.text
 			super.__update(ctx);
 			if (_text != null && visible)
 			{
-				__draw(ctx,transform.concatenatedMatrix);
+				if (cacheAsBitmap && !parent.cacheAsBitmap && _type != TextFieldType.INPUT)
+				{
+					SpriteFlexjs.renderer.renderImage(ctx, _cacheImage, transform.concatenatedMatrix, blendMode, transform.concatenatedColorTransform, -this.x - _cacheOffsetX, -this.y - _cacheOffsetY);
+				}
+				else
+				{
+					__draw(ctx, transform.concatenatedMatrix);
+				}
 				SpriteFlexjs.drawCounter++;
 			}
 		}
@@ -558,20 +564,15 @@ package flash.text
 					graphics.drawRect( -2, 0, width + 4, height + 2);
 				}
 				SpriteFlexjs.renderer.renderGraphics(ctx, graphics, m, blendMode, transform.concatenatedColorTransform);
+				ApplyFilters(ctx);
 			}
 			
 			if (type == TextFieldType.DYNAMIC)
 			{
-				if (cacheAsBitmap && !parent.cacheAsBitmap)
-				{
-					SpriteFlexjs.renderer.renderImage(ctx, _cacheImage, m, blendMode, transform.concatenatedColorTransform, -this.x - _cacheOffsetX, -this.y - _cacheOffsetY);
-				}
-				else
-				{
-					for (var i:int = 0; i < lines.length; i++ ){
-						//if(m.ty>0) alert(m.toString()+","+transform.matrix.toString()+" "+y);
-						SpriteFlexjs.renderer.renderText(ctx, lines[i], defaultTextFormat, m, blendMode, transform.concatenatedColorTransform, 0, i * int(defaultTextFormat.size));
-					}
+				if (!_background) ApplyFilters(ctx, true);
+				for (var i:int = 0; i < lines.length; i++ ){
+					//if(m.ty>0) alert(m.toString()+","+transform.matrix.toString()+" "+y);
+					SpriteFlexjs.renderer.renderText(ctx, lines[i], defaultTextFormat, m, blendMode, transform.concatenatedColorTransform, 0, i * int(defaultTextFormat.size));
 				}
 			}
 			else

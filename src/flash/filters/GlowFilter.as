@@ -1,6 +1,9 @@
 package flash.filters
 {
+	import flash.display.DisplayObject;
+	import flash.display.Shape;
 	import flash.filters.BitmapFilter;
+	import flash.geom.Rectangle;
 
 	/**
 	 * The GlowFilter class lets you apply a glow effect to display objects.
@@ -109,6 +112,14 @@ package flash.filters
 		private var _knockout:Boolean;
 		private var _blur:Number;
 		private var _rgba:String;
+		private var _red:int;
+		private var _green:int;
+		private var _blue:int;
+		
+		//testing
+		public var origImage:ImageData;
+		public var copyData:ImageData;
+		public var copyCanvas:HTMLCanvasElement;
 		
 		/**
 		 * The alpha transparency value for the color. Valid values are 0 to 1. 
@@ -633,6 +644,8 @@ package flash.filters
 		{
 			_color = color;
 			_alpha = alpha;
+			if (_alpha < 0) _alpha = 0;
+			if (_alpha > 1) _alpha = 1;
 			_blurX = blurX;
 			_blurY = blurY;
 			_strength = strength;
@@ -640,8 +653,157 @@ package flash.filters
 			_inner = inner;
 			_knockout = knockout;
 			
-			_rgba = "rgba(" + (color >> 16 & 0xff) + "," + (color >> 8 & 0xff) + "," + (color & 0xff) + "," + alpha + ")";
+			_red = color >> 16 & 0xff;
+			_green = color >> 8 & 0xff;
+			_blue = color & 0xff;
+			_rgba = "rgba(" + _red + "," + _green + "," + _blue + "," + _alpha + ")";
 			_offsetX = _offsetY = _blur = Math.max(blurX, blurY);
+		}
+		
+		private function blurFilter(amount:Number, canvas:HTMLCanvasElement):HTMLCanvasElement
+		{
+			amount -= 1.75; // adjusted to match Flash API
+			
+			_offsetX = amount + _blur;
+			_offsetY = amount + _blur;
+			
+			// create bigger canvas with enough space to show all of the glow.
+			var biggerCanvas:HTMLCanvasElement = document.createElement("canvas") as HTMLCanvasElement;
+			biggerCanvas.width = canvas.width + _offsetX;
+			biggerCanvas.height = canvas.height + _offsetY;
+			var bgCtx:CanvasRenderingContext2D = biggerCanvas.getContext("2d") as CanvasRenderingContext2D;
+			
+			// fill with grey for testing only.
+			//bgCtx.fillStyle = 'gainsboro';  // light grey
+			//bgCtx.fillRect(0, 0, biggerCanvas.width, biggerCanvas.height);
+			
+			// draw the duplicate drawing centered in the new bigger canvas that allows space for glow.
+			bgCtx.drawImage(canvas,  (biggerCanvas.width - canvas.width) / 2, (biggerCanvas.height - canvas.height) / 2);
+			trace("Big Canvas offset: x: " + (Math.round((_offsetY / 2) + Math.floor(amount / 2))));
+			trace("diff: " + ((biggerCanvas.height - canvas.height) / 2));
+			
+			
+			//bgCtx.drawImage(canvas, 0, 0);
+			
+			// do the actual blurring
+			bgCtx.globalAlpha = 0.25; // Higher alpha made it more smooth
+			// Add blur layers by strength to x and y
+			// 2 made it a bit faster without noticeable quality loss
+			for (var y:int = -amount; y <= amount; y += 2) {
+				for (var x:int = -amount; x <= amount; x += 2) {
+					// Apply layers
+					bgCtx.drawImage(biggerCanvas, x, y);
+					// Add an extra layer, prevents it from rendering lines
+					// on top of the images (does makes it slower though)
+					if (x>=0 && y>=0) {
+						bgCtx.drawImage(biggerCanvas, -(x-1), -(y-1));
+					}
+				}
+			}
+			bgCtx.globalAlpha = 1;
+			
+			return biggerCanvas;
+		}
+		
+		
+		public function applyFilter(ctx:CanvasRenderingContext2D, displayObject:DisplayObject):void
+		{
+			ctx.shadowColor = _rgba;
+			//ctx.shadowBlur = _blur; //currently not needed
+			
+			var bounds:Rectangle = displayObject.getFullBounds(displayObject);
+			// remove cache offset, so we draw the full drawing.
+			trace("Inflate: x: " + Object(displayObject).cacheOffsetX + ", y: " + Object(displayObject).cacheOffsetY);
+			//bounds.inflate(Object(displayObject).cacheOffsetX, Object(displayObject).cacheOffsetY);
+			//bounds.inflate(-10,  -10);
+			//trace("filter bounds: " + bounds + ", x: " + displayObject.x + ", y: " + displayObject.y);
+			//trace("offsetX: " + displayObject.filterOffsetX + ", canvas width: " + ctx.canvas.width);
+			//origImage = ctx.getImageData(displayObject.x + bounds.x, displayObject.y + bounds.y, bounds.width, bounds.height);
+			origImage = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+			var dData:Uint8ClampedArray = origImage.data;
+			
+			
+			
+			copyCanvas = document.createElement("canvas") as HTMLCanvasElement;
+			copyCanvas.width = bounds.width;
+			copyCanvas.height = bounds.height;
+			
+			var copyCtx:CanvasRenderingContext2D = copyCanvas.getContext("2d") as CanvasRenderingContext2D;
+			
+			// fill with grey for testing only.
+			//copyCtx.fillColor = 'gainsboro';
+			//copyCtx.fillRect(0, 0, copyCanvas.width, copyCanvas.height);
+			
+			copyData = copyCtx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+			var copyDataArr:Uint8ClampedArray = copyData.data;
+			
+			// duplicate drawing as a solid color
+			var len:int = dData.length;
+			for (var i:int = 0; i < len; i += 4) 
+			{
+				var ia:int = i + 3;
+				var currentAlpha:Number = dData[ia];
+				
+				if (!_inner) {
+					if (currentAlpha !== 0) {
+						copyDataArr[i] = _red;
+						copyDataArr[i + 1] = _green;
+						copyDataArr[i + 2] = _blue;
+						copyDataArr[ia] = currentAlpha;
+					}
+				} else {
+					if (currentAlpha !== 255) {
+						copyDataArr[i] = _red;
+						copyDataArr[i + 1] = _green;
+						copyDataArr[i + 2] = _blue;
+						copyDataArr[ia] = 255 - currentAlpha;
+					}
+				}
+			}
+			
+			if (displayObject.cacheAsBitmap)
+			{
+				copyCtx.putImageData(copyData, -((ctx.canvas.width - copyCanvas.width)/2), -((ctx.canvas.height - copyCanvas.height)/2)); // cached version
+				trace("displayObject.x: " + displayObject.x + ", bounds.x: " + bounds.x);
+			}
+			else
+			{
+				copyCtx.putImageData(copyData, -(displayObject.x + bounds.x), -(displayObject.y + bounds.y)); // no cached version	
+			}
+			
+			
+			// testing
+			//copyCtx.putImageData(copyData, displayObject.x + bounds.x, displayObject.y + bounds.y); // no cached version
+			
+			// blur the duplicate solid color drawing
+			var bgCanvas:HTMLCanvasElement = blurFilter(_strength, copyCanvas);
+			
+			var gco:String;
+			if (_knockout) {
+				gco = (_inner) ? "source-in" : "source-out";
+			} else {
+				gco = (_inner) ? "source-atop" : "destination-over";
+			}
+			ctx.save();
+			//ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.globalAlpha = _alpha;
+			ctx.globalCompositeOperation = gco;
+			//ctx.drawImage(bgCanvas, displayObject.x + bounds.x - Math.round(_offsetX/2), displayObject.y + bounds.y - Math.round(_offsetY/2));
+			
+			trace("Bounds.x: " + bounds.x + ", y: " + bounds.y);
+			
+			ctx.drawImage(bgCanvas, bounds.x - Math.round(_offsetX/2), bounds.y - Math.round(_offsetY/2)); // testing without filter offset.
+			//ctx.drawImage(bgCanvas, -110, -110); // testing without filter offset.
+			//ctx.drawImage(copyCanvas, displayObject.x + bounds.x, displayObject.y + bounds.y); // used to test copy of drawing only.
+			//ctx.drawImage(copyCanvas, -(displayObject.x + bounds.x) + 5, -(displayObject.y + bounds.y) + 5); // used to test copy of drawing only.
+			//ctx.drawImage(copyCanvas, 0, 0, ); // used to test copy of drawing only.
+			trace("ctx: w: " + ctx.canvas.width + ", h: " + ctx.canvas.height);
+			trace("copyCanvas: w: " + bounds.width + ", h: " + bounds.height);
+			trace("x: " + (displayObject.x + bounds.x) + ", y: " + (displayObject.y + bounds.y));
+			ctx.restore();
+			
+			// clear shadow blur before next redraw or else double shadow blur.
+			ctx.shadowBlur = 0;
 		}
 	}
 }

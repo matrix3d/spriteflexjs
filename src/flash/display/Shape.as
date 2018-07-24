@@ -44,14 +44,19 @@ package flash.display
 			{
 				var bounds:Rectangle = getFullBounds(this);
 				
-				bounds.inflate(filterOffsetX * 2, filterOffsetY * 2); // add space for filter effects
+				// add space for filter effects
+				bounds.inflate(filterOffsetX, filterOffsetY); 
 				
 				_cacheCanvas = document.createElement("canvas") as HTMLCanvasElement;
 				_cacheCanvas.width = bounds.width; // TODO Add padding for Dropshadow
 				_cacheCanvas.height = bounds.height;
 				_cacheCTX = _cacheCanvas.getContext('2d') as CanvasRenderingContext2D;
-				//_cacheCTX.fillStyle = "blue";
+				//_cacheCTX.fillStyle = "black";
 				//_cacheCTX.fillRect(0, 0, _cacheCanvas.width, _cacheCanvas.height);
+				
+				trace("_cacheCanvas: w: " + bounds.width + ", h: " + bounds.height);
+				
+				// offsets to center drawing to larger cache canvas due to making for filters.
 				_cacheOffsetX = bounds.width - bounds.right - x;
 				_cacheOffsetY = bounds.height - bounds.bottom - y;
 				
@@ -66,9 +71,9 @@ package flash.display
 				mat.translate(_cacheOffsetX, _cacheOffsetY);
 				graphics.draw(_cacheCTX, mat, blendMode, transform.concatenatedColorTransform);
 				
-				ApplyFilters(_cacheCTX);
-				
 				_cacheImage.image = _cacheCanvas;
+				
+				ApplyFilters(_cacheCTX);
 				updateTransforms();
 			}
 			else

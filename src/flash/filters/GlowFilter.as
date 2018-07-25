@@ -679,11 +679,6 @@ package flash.filters
 			
 			// draw the duplicate drawing centered in the new bigger canvas that allows space for glow.
 			bgCtx.drawImage(canvas,  (biggerCanvas.width - canvas.width) / 2, (biggerCanvas.height - canvas.height) / 2);
-			trace("Big Canvas offset: x: " + (Math.round((_offsetY / 2) + Math.floor(amount / 2))));
-			trace("diff: " + ((biggerCanvas.height - canvas.height) / 2));
-			
-			
-			//bgCtx.drawImage(canvas, 0, 0);
 			
 			// do the actual blurring
 			bgCtx.globalAlpha = 0.25; // Higher alpha made it more smooth
@@ -709,20 +704,10 @@ package flash.filters
 		public function applyFilter(ctx:CanvasRenderingContext2D, displayObject:DisplayObject):void
 		{
 			ctx.shadowColor = _rgba;
-			//ctx.shadowBlur = _blur; //currently not needed
 			
 			var bounds:Rectangle = displayObject.getFullBounds(displayObject);
-			// remove cache offset, so we draw the full drawing.
-			trace("Inflate: x: " + Object(displayObject).cacheOffsetX + ", y: " + Object(displayObject).cacheOffsetY);
-			//bounds.inflate(Object(displayObject).cacheOffsetX, Object(displayObject).cacheOffsetY);
-			//bounds.inflate(-10,  -10);
-			//trace("filter bounds: " + bounds + ", x: " + displayObject.x + ", y: " + displayObject.y);
-			//trace("offsetX: " + displayObject.filterOffsetX + ", canvas width: " + ctx.canvas.width);
-			//origImage = ctx.getImageData(displayObject.x + bounds.x, displayObject.y + bounds.y, bounds.width, bounds.height);
 			origImage = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
 			var dData:Uint8ClampedArray = origImage.data;
-			
-			
 			
 			copyCanvas = document.createElement("canvas") as HTMLCanvasElement;
 			copyCanvas.width = bounds.width;
@@ -764,16 +749,12 @@ package flash.filters
 			if (displayObject.cacheAsBitmap)
 			{
 				copyCtx.putImageData(copyData, -((ctx.canvas.width - copyCanvas.width)/2), -((ctx.canvas.height - copyCanvas.height)/2)); // cached version
-				trace("displayObject.x: " + displayObject.x + ", bounds.x: " + bounds.x);
+				//trace("displayObject.x: " + displayObject.x + ", bounds.x: " + bounds.x);
 			}
 			else
 			{
 				copyCtx.putImageData(copyData, -(displayObject.x + bounds.x), -(displayObject.y + bounds.y)); // no cached version	
 			}
-			
-			
-			// testing
-			//copyCtx.putImageData(copyData, displayObject.x + bounds.x, displayObject.y + bounds.y); // no cached version
 			
 			// blur the duplicate solid color drawing
 			var bgCanvas:HTMLCanvasElement = blurFilter(_strength, copyCanvas);
@@ -784,22 +765,11 @@ package flash.filters
 			} else {
 				gco = (_inner) ? "source-atop" : "destination-over";
 			}
+			
 			ctx.save();
-			//ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.globalAlpha = _alpha;
 			ctx.globalCompositeOperation = gco;
-			//ctx.drawImage(bgCanvas, displayObject.x + bounds.x - Math.round(_offsetX/2), displayObject.y + bounds.y - Math.round(_offsetY/2));
-			
-			trace("Bounds.x: " + bounds.x + ", y: " + bounds.y);
-			
 			ctx.drawImage(bgCanvas, bounds.x - Math.round(_offsetX/2), bounds.y - Math.round(_offsetY/2)); // testing without filter offset.
-			//ctx.drawImage(bgCanvas, -110, -110); // testing without filter offset.
-			//ctx.drawImage(copyCanvas, displayObject.x + bounds.x, displayObject.y + bounds.y); // used to test copy of drawing only.
-			//ctx.drawImage(copyCanvas, -(displayObject.x + bounds.x) + 5, -(displayObject.y + bounds.y) + 5); // used to test copy of drawing only.
-			//ctx.drawImage(copyCanvas, 0, 0, ); // used to test copy of drawing only.
-			trace("ctx: w: " + ctx.canvas.width + ", h: " + ctx.canvas.height);
-			trace("copyCanvas: w: " + bounds.width + ", h: " + bounds.height);
-			trace("x: " + (displayObject.x + bounds.x) + ", y: " + (displayObject.y + bounds.y));
 			ctx.restore();
 			
 			// clear shadow blur before next redraw or else double shadow blur.

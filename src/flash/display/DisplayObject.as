@@ -350,6 +350,7 @@ package flash.display
 			h = (h > bounds.height) ? h - bounds.width : 0;
 			bounds.inflate(w/2, h/2);
 			
+			
 			return bounds;
 		}
 		

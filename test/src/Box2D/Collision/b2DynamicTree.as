@@ -447,7 +447,7 @@ package Box2D.Collision
 				while (node1)
 				{
 					var oldAABB:b2AABB = node1.aabb;
-					node1.aabb = b2AABB.Combine(node1.child1.aabb, node1.child2.aabb);
+					node1.aabb = b2AABB.Combine2(node1.child1.aabb, node1.child2.aabb);
 					
 					if (oldAABB.Contains(node1.aabb))
 						break;

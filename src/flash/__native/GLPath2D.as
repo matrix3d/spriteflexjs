@@ -2,6 +2,7 @@ package flash.__native
 {
 	import flash.display.GraphicsPath;
 	import flash.display.GraphicsPathCommand;
+	import flash.display3D.Context3D;
 	import flash.geom.Matrix;
 	/**
 	 * ...
@@ -14,9 +15,11 @@ package flash.__native
 		private var pos:Float32Array;
 		private var uv:Float32Array;
 		private var index:Uint16Array;
+		private var ctx:Context3D;
 		public var path:GLGraphicsPath;
-		public function GLPath2D() 
+		public function GLPath2D(ctx:Context3D) 
 		{
+			this.ctx = ctx;
 			
 		}
 		
@@ -95,7 +98,7 @@ package flash.__native
 					offset += vsdata.length / 2;
 				}
 				if(_drawable==null){
-					_drawable = new GLDrawable(pos, pos, index,WebGLRenderingContext.STATIC_DRAW);
+					_drawable = new GLDrawable(pos, pos, index,ctx.gl.STATIC_DRAW);
 				}else{
 					_drawable.pos.data = pos;
 					_drawable.uv.data = diffuv?uv:pos;

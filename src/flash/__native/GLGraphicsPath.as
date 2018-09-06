@@ -80,7 +80,14 @@ package flash.__native
 		
 		override public function arc(x:Number, y:Number,r:Number,a0:Number,a1:Number):void
 		{
-			var da:Number = Math.PI / 4;
+			var da:Number = int(1 / r *180/Math.PI);// Math.PI * 3 / 4;
+			if (da<1){
+				da = 1;
+			}
+			if (da>90){
+				da = 90;
+			}
+			da = da * Math.PI / 180;
 			var x0:Number = r;
 			var y0:Number = 0;
 			var sin:Number = Math.sin(da);

@@ -209,6 +209,7 @@ package flash.display
 		private var _x:Number = 0;
 		private var _y:Number = 0;
 		private var _z:Number = 0;
+		private var isButtonDown:Boolean = false;
 		
 		/**
 		 * Stage is a singular instance per window and cannot be instantiated twice.
@@ -291,7 +292,7 @@ package flash.display
 			//if (delta >= interval) {
 			//	lastUpdateTime = now - (delta % interval);
 				if (needSendMouseMove) {
-					dispatchEvent(new MouseEvent(MouseEvent.MOUSE_MOVE, true, false, _mouseX, _mouseY,null,needSendMouseMove.ctrlKey,needSendMouseMove.altKey,needSendMouseMove.shiftKey,needSendMouseMove.buttons>0));
+					dispatchEvent(new MouseEvent(MouseEvent.MOUSE_MOVE, true, false, _mouseX, _mouseY,null,needSendMouseMove.ctrlKey,needSendMouseMove.altKey,needSendMouseMove.shiftKey,(needSendMouseMove.buttons!=null)?(needSendMouseMove.buttons>0):isButtonDown));
 					needSendMouseMove = null;
 				}
 				if (needSendTouchMove) {
@@ -1542,6 +1543,7 @@ package flash.display
 					break;
 				case "mousedown":
 					flashType = MouseEvent.MOUSE_DOWN;
+					isButtonDown = true;
 					break;
 				case "mouseenter":
 					flashType = MouseEvent.ROLL_OVER;
@@ -1560,6 +1562,7 @@ package flash.display
 					break;
 				case "mouseup":
 					flashType = MouseEvent.MOUSE_UP;
+					isButtonDown = false;
 					break;
 				case "mousewheel":
 					flashType = MouseEvent.MOUSE_WHEEL;
@@ -1571,7 +1574,7 @@ package flash.display
 				_mouseY = e.pageY - canvas.offsetTop;
 				if (hasEventListener(flashType)) {
 					if(flashType!=MouseEvent.MOUSE_MOVE){
-						dispatchEvent(new MouseEvent(flashType,true,false,_mouseX,_mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,e.buttons>0,e.wheelDelta));
+						dispatchEvent(new MouseEvent(flashType,true,false,_mouseX,_mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,(e.buttons!=null)?(e.buttons>0):isButtonDown,e.wheelDelta));
 					}else {
 						needSendMouseMove = e;
 					}

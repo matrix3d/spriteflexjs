@@ -144,8 +144,8 @@ package flash.display
 		private var _ctx2d:CanvasRenderingContext2D
 		
 		//private var intervalID:Number;
-		private var needSendMouseMove:Boolean = false;
-		private var needSendTouchMove:Boolean = false;
+		private var needSendMouseMove:Object;
+		private var needSendTouchMove:Object = false;
 		private var lastUpdateTime:int = -1000;
 		//private var requestAnimationFrameHander:Number;
 		
@@ -291,12 +291,12 @@ package flash.display
 			//if (delta >= interval) {
 			//	lastUpdateTime = now - (delta % interval);
 				if (needSendMouseMove) {
-					dispatchEvent(new MouseEvent(MouseEvent.MOUSE_MOVE, true, false, _mouseX, _mouseY));
-					needSendMouseMove = false;
+					dispatchEvent(new MouseEvent(MouseEvent.MOUSE_MOVE, true, false, _mouseX, _mouseY,null,needSendMouseMove.ctrlKey,needSendMouseMove.altKey,needSendMouseMove.shiftKey,needSendMouseMove.buttons>0));
+					needSendMouseMove = null;
 				}
 				if (needSendTouchMove) {
 					dispatchEvent(new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, 0, true, _mouseX, _mouseY));
-					needSendTouchMove = false;
+					needSendTouchMove = null;
 				}
 				dispatchEvent(new Event(Event.ENTER_FRAME));
 			//}
@@ -1501,7 +1501,7 @@ package flash.display
 					if(flashType2!=MouseEvent.MOUSE_MOVE){
 						dispatchEvent(new MouseEvent(flashType2, true, false, _mouseX, _mouseY));
 					}else {
-						needSendMouseMove = true;
+						needSendMouseMove = e;
 					}
 				}
 				if (flashType===TouchEvent.TOUCH_END&&hasEventListener(MouseEvent.CLICK)) {
@@ -1571,9 +1571,9 @@ package flash.display
 				_mouseY = e.pageY - canvas.offsetTop;
 				if (hasEventListener(flashType)) {
 					if(flashType!=MouseEvent.MOUSE_MOVE){
-						dispatchEvent(new MouseEvent(flashType,true,false,_mouseX,_mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,e.button>0,e.wheelDelta));
+						dispatchEvent(new MouseEvent(flashType,true,false,_mouseX,_mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,e.buttons>0,e.wheelDelta));
 					}else {
-						needSendMouseMove = true;
+						needSendMouseMove = e;
 					}
 				}
 			}

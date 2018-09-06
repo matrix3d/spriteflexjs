@@ -170,9 +170,9 @@ package flash.events
 		{
 		}
 		
-		private function getStageX():Number  { return 0 }
+		private function getStageX():Number  { return localX }
 		
-		private function getStageY():Number  { return 0 }
+		private function getStageY():Number  { return localY }
 		
 		public function get isRelatedObjectInaccessible():Boolean
 		{

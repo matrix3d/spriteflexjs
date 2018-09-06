@@ -336,7 +336,7 @@ package flash.display3D
 				currentTextures[name] = texture;
 				if (texture)
 				{
-					gl.activeTexture(WebGLRenderingContext["TEXTURE"+sampler]);
+					gl.activeTexture(gl["TEXTURE"+sampler]);
 					gl.bindTexture(gl.TEXTURE_2D, texture.texture);
 					gl.uniform1i(currentProgram.getUniformLocation(name), sampler);
 				}

@@ -296,7 +296,7 @@ package flash.display
 					needSendMouseMove = null;
 				}
 				if (needSendTouchMove) {
-					dispatchEvent(new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, 0, true, _mouseX, _mouseY));
+					dispatchEvent(new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, 0, true, _mouseX, _mouseY,null,needSendTouchMove.ctrlKey,needSendTouchMove.altKey,needSendTouchMove.shiftKey,(needSendTouchMove.buttons!=null)?(needSendTouchMove.buttons>0):isButtonDown));
 					needSendTouchMove = null;
 				}
 				dispatchEvent(new Event(Event.ENTER_FRAME));
@@ -1471,10 +1471,12 @@ package flash.display
 				case "touchcancel":
 					flashType = TouchEvent.TOUCH_END;
 					flashType2 = MouseEvent.MOUSE_UP;
+					isButtonDown = false;
 					break;
 				case "touchend":
 					flashType = TouchEvent.TOUCH_END;
 					flashType2 = MouseEvent.MOUSE_UP;
+					isButtonDown = false;
 					break;
 				case "touchmove":
 					flashType = TouchEvent.TOUCH_MOVE;
@@ -1483,6 +1485,7 @@ package flash.display
 				case "touchstart":
 					flashType = TouchEvent.TOUCH_BEGIN;
 					flashType2 = MouseEvent.MOUSE_DOWN;
+					isButtonDown = true;
 					e.preventDefault();
 					break;
 			}
@@ -1493,20 +1496,20 @@ package flash.display
 				}
 				if (hasEventListener(flashType)) {
 					if(flashType!=TouchEvent.TOUCH_MOVE){
-						dispatchEvent(new TouchEvent(flashType, true, false, 0, true, _mouseX, _mouseY));
+						dispatchEvent(new TouchEvent(flashType, true, false, 0, true, _mouseX, _mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,(e.buttons!=null)?(e.buttons>0):isButtonDown));
 					}else {
 						needSendTouchMove = true;
 					}
 				}
 				if (hasEventListener(flashType2)) {
 					if(flashType2!=MouseEvent.MOUSE_MOVE){
-						dispatchEvent(new MouseEvent(flashType2, true, false, _mouseX, _mouseY));
+						dispatchEvent(new MouseEvent(flashType2, true, false, _mouseX, _mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,(e.buttons!=null)?(e.buttons>0):isButtonDown));
 					}else {
 						needSendMouseMove = e;
 					}
 				}
 				if (flashType===TouchEvent.TOUCH_END&&hasEventListener(MouseEvent.CLICK)) {
-					dispatchEvent(new MouseEvent(MouseEvent.CLICK, true, false, _mouseX, _mouseY));
+					dispatchEvent(new MouseEvent(MouseEvent.CLICK, true, false, _mouseX, _mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,(e.buttons!=null)?(e.buttons>0):isButtonDown));
 				}
 			}
 		}
@@ -1573,7 +1576,7 @@ package flash.display
 				_mouseX = e.pageX - canvas.offsetLeft;
 				_mouseY = e.pageY - canvas.offsetTop;
 				if (hasEventListener(flashType)) {
-					if(flashType!=MouseEvent.MOUSE_MOVE){
+					if (flashType != MouseEvent.MOUSE_MOVE){
 						dispatchEvent(new MouseEvent(flashType,true,false,_mouseX,_mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,(e.buttons!=null)?(e.buttons>0):isButtonDown,e.wheelDelta));
 					}else {
 						needSendMouseMove = e;

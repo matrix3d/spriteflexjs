@@ -28,7 +28,10 @@ package com.hsharma.hungryHero
 			}
 		}
 		
-		public function getTexture(target:Graphics,name:String):void {
+		public function getTexture(target:Graphics, name:String):void {
+			if (name.indexOf("obst")==0&&name.indexOf("crash")!=-1){
+				trace(name);
+			}
 			var rect:Rectangle = bmds[name][0];
 			target.beginBitmapFill(bmd, new Matrix(1,0,0,1,-rect.x,-rect.y), true, true);
 			target.drawRect(0, 0, rect.width, rect.height);

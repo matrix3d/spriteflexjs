@@ -19,7 +19,7 @@ package com.hsharma.hungryHero
 			this.text = text;
 		}
 		
-		override public function get text():String 
+		/*override public function get text():String 
 		{
 			return super.text;
 		}
@@ -27,7 +27,7 @@ package com.hsharma.hungryHero
 		override public function set text(value:String):void 
 		{
 			super.text = "value";
-		}
+		}*/
 	}
 
 }

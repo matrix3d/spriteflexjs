@@ -11,6 +11,7 @@ package{
 	
 	public class TestBox2D extends Sprite{
 		
+		private var drawShape:Sprite;
 		public function TestBox2D(){
 			
 			
@@ -29,7 +30,11 @@ package{
 			
 			// set debug draw
 			var debugDraw:b2DebugDraw = new b2DebugDraw();
-			debugDraw.SetSprite(this);
+			
+			drawShape = new Sprite;
+			addChild(drawShape);
+			
+			debugDraw.SetSprite(drawShape);
 			debugDraw.SetDrawScale(30.0);
 			debugDraw.SetFillAlpha(0.3);
 			debugDraw.SetLineThickness(1.0);
@@ -95,7 +100,12 @@ package{
 		}
 		
 		public function Update(e:Event):void{
+			graphics.clear();
+			graphics.beginFill(0xffffff);
+			graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
+			
 			m_world.Step(m_timeStep, m_velocityIterations, m_positionIterations);
+			
 			m_world.DrawDebugData();
 			
 		}

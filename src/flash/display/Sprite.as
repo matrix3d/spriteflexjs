@@ -133,15 +133,15 @@ package flash.display
 		{
 			if (visible && (graphics.graphicsData.length || numChildren))
 			{
-				var mat:Matrix = transform.concatenatedMatrix.clone();
+				//var mat:Matrix = transform.concatenatedMatrix.clone();
 				if (cacheAsBitmap && !parent.cacheAsBitmap) 
 				{
-					SpriteFlexjs.renderer.renderImage(ctx, _cacheImage, mat, blendMode, transform.concatenatedColorTransform, -this.x - _cacheOffsetX, -this.y - _cacheOffsetY);
+					SpriteFlexjs.renderer.renderImage(ctx, _cacheImage, transform.concatenatedMatrix, blendMode, transform.concatenatedColorTransform, -this.x - _cacheOffsetX, -this.y - _cacheOffsetY);
 					//SpriteFlexjs.renderer.renderImage(ctx, _cacheImage, mat, blendMode, transform.concatenatedColorTransform);
 				}
 				else
 				{
-					graphics.draw(ctx, mat, blendMode, transform.concatenatedColorTransform, cacheAsBitmap, _cacheImage);
+					graphics.draw(ctx, transform.concatenatedMatrix, blendMode, transform.concatenatedColorTransform, cacheAsBitmap, _cacheImage);
 					ApplyFilters(ctx);
 				}
 			}

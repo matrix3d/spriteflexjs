@@ -139,7 +139,8 @@ package flash.display3D
 		}
 		
 		public function setVertexBufferAtGL(name:String, buffer:VertexBuffer3D, bufferOffset:int = 0, format:String = "float4"):void {
-			if (currentVBufs[name] != buffer) {
+			if (buffer.dirty || currentVBufs[name] != buffer) {
+				buffer.dirty = false;
 				currentVBufs[name] = buffer;
 				var loc:Number= currentProgram.getAttribLocation(name);
 				gl.bindBuffer(gl.ARRAY_BUFFER, buffer.buff);

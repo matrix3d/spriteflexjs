@@ -158,6 +158,7 @@ package General{
 			}
 			mouseX = e.stageX - m_stageMc.x;
 			mouseY = e.stageY - m_stageMc.y;
+			//alert(e.stageX + ","+m_stageMc.x+","+mouseX);
 			// Store offset
 			mouseOffsetX = mouseX - mouse.x;
 			mouseOffsetY = mouseY - mouse.y;

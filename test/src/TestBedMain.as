@@ -24,6 +24,7 @@ import Box2D.Collision.Shapes.*
 import Box2D.Dynamics.Joints.*
 import Box2D.Dynamics.Contacts.*
 import Box2D.Common.Math.*
+import flash.__native.WebGLRenderer;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.display.*;
@@ -46,7 +47,12 @@ import TestBed.*;
 		// input
 		public var m_input:Input;
 		public function TestBedMain() {
-			
+			CONFIG::js_only{
+			SpriteFlexjs.renderer = new WebGLRenderer;
+			SpriteFlexjs.wmode = "gpu batch";
+			}
+			stage.scaleMode = StageScaleMode.SHOW_ALL;
+			stage.align=StageAlign.TOP_LEFT;
 			//m_fpsCounter = new FpsCounter;
 			addEventListener(Event.ENTER_FRAME, update, false, 0, true);
 			
@@ -90,9 +96,10 @@ import TestBed.*;
 			m_aboutText.mouseEnabled = false;
 			
 			var next:TextField = new TextField;
-			next.defaultTextFormat = new TextFormat(null, 20, 0xff0000);
+			next.defaultTextFormat = new TextFormat(null, 40, 0xff0000);
 			next.autoSize = "left";
 			next.text = "next";
+			next.y = 100;
 			addChild(next);
 			next.addEventListener(MouseEvent.CLICK, next_click);
 		}

@@ -171,7 +171,7 @@ package TestBed{
 			if (input.mouseDown && !m_mouseJoint){
 				
 				var body:b2Body = GetBodyAtMouse();
-				
+				//alert("mousedown"+body+input.mouseX+","+input.mouseY+","+mouseXWorldPhys+","+mouseYWorldPhys);
 				trace("getbody",input.mouseX,input.mouseY,mouseXWorldPhys,mouseYWorldPhys, body);
 				if (body)
 				{

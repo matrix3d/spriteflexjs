@@ -158,7 +158,7 @@ package com.hsharma.hungryHero.screens
 			hsharmaBtn = new Button//(com.hsharma.hungryHero.Assets.getAtlas().getTexture("about_hsharmaLogo"));
 			Assets.getAtlas().getTexture(hsharmaBtn.graphics,"about_hsharmaLogo")
 			hsharmaBtn.x = aboutText.x;
-			hsharmaBtn.y = aboutText.y+aboutText.height;//.bounds.bottom;
+			hsharmaBtn.y = aboutText.y + aboutText.height;//.bounds.bottom;
 			hsharmaBtn.addEventListener(MouseEvent.CLICK, onHsharmaBtnClick);
 			this.addChild(hsharmaBtn);
 			

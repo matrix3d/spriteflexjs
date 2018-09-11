@@ -25,8 +25,8 @@ package
 		public function TestGraphics() 
 		{
 			CONFIG::js_only{
-				//SpriteFlexjs.wmode = "gpu batch";
-				//SpriteFlexjs.renderer = new WebGLRenderer;
+				SpriteFlexjs.wmode = "gpu batch";
+				SpriteFlexjs.renderer = new WebGLRenderer;
 			}
 			
 			var s:Sprite = new Sprite;

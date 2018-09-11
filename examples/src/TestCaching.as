@@ -26,6 +26,7 @@ package
 		public function TestCaching() 
 		{
 			SpriteFlexjs.autoSize = true;
+			//SpriteFlexjs.debug = true;
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			
@@ -58,6 +59,7 @@ package
 				spinBox.addChild(circ);
 				
 				spinBox.cacheAsBitmap = true;
+				spinBox.buttonMode = true;
 				addChild(spinBox);
 				
 				boxes.push(spinBox);
@@ -68,23 +70,25 @@ package
 			circle.graphics.lineStyle(10, 0xFFFFFF);
 			circle.graphics.beginGradientFill(GradientType.RADIAL, [0xFF0000, 0x000000], [.75, .75], [0, 255], mat);
 			circle.graphics.drawCircle(0, 0, 200);
-			//circle.filters = [new GlowFilter(0xEC7600, 1, 20, 20)];
-			circle.filters = [new DropShadowFilter(15, 45, 0, .75)];
+			circle.filters = [new GlowFilter(0xEC7600, 1, 20, 20, 5)];
+			//circle.filters = [new DropShadowFilter(15, 45, 0, .75)];
 			circle.x = circle.y = 220;
 			
 			circText = new TextField();
-			circText.defaultTextFormat = new TextFormat("Arial", 26, 0x000000);
+			circText.defaultTextFormat = new TextFormat("Arial", 60, 0xFFFFFF);
 			circText.text = "Hello World";
 			circText.width = circText.textWidth;
 			circText.height = circText.textHeight;
-			circText.background = true; 
-			circText.border = true;
+			//circText.background = true; 
+			//circText.border = true;
+			//circText.filters = [new DropShadowFilter(15, 45, 0, 1)];
+			circText.filters = [new GlowFilter(0x000000, 1, 5, 5, 4), new DropShadowFilter(10, 45, 0, .25)];
 			circText.x = -circText.textWidth / 2;
 			circText.y = -circText.textHeight / 2;
 			//circText.cacheAsBitmap = true;
 			circle.addChild(circText);
 			
-			circle.cacheAsBitmap = true;
+			//circle.cacheAsBitmap = true;
 			addChild(circle);
 			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);

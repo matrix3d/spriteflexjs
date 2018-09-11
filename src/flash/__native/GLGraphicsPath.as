@@ -58,6 +58,12 @@ package flash.__native
 				var y0:Number = poly.array[poly.length - 1];
 				var d:Number = Math.abs(x0 - anchorX) + Math.abs(y0 - anchorY);
 				var step:Number = 5 / d;
+				if (step>.5){
+					step = .5;
+				}
+				if (step<0.01){
+					step = 0.01;
+				}
 				for (var t1:Number = step; t1 <= 1; t1 += step ){
 					var t0:Number = 1 - t1;
 					var q0x:Number = t0 * x0 + t1 * controlX;

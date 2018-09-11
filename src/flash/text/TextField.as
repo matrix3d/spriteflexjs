@@ -484,7 +484,7 @@ package flash.text
 			{
 				var bounds:Rectangle = getFullBounds(this);
 				
-				bounds.inflate(_filterOffsetX * 2, _filterOffsetY * 2); // add space for filter effects
+				bounds.inflate(_filterOffsetX, _filterOffsetY); // add space for filter effects
 				
 				_cacheCanvas = document.createElement("canvas") as HTMLCanvasElement;
 				_cacheCanvas.width = bounds.width;
@@ -539,6 +539,8 @@ package flash.text
 			super.__update(ctx);
 			if (_text != null && visible)
 			{
+				if (filters.length && !cacheAsBitmap && !parent.cacheAsBitmap) cacheAsBitmap = true;
+				
 				if (cacheAsBitmap && !parent.cacheAsBitmap && _type != TextFieldType.INPUT)
 				{
 					SpriteFlexjs.renderer.renderImage(ctx, _cacheImage, transform.concatenatedMatrix, blendMode, transform.concatenatedColorTransform, -this.x - _cacheOffsetX, -this.y - _cacheOffsetY);
@@ -569,11 +571,12 @@ package flash.text
 			
 			if (type == TextFieldType.DYNAMIC)
 			{
-				if (!_background) ApplyFilters(ctx, true);
+				if (!_background) ApplyFilters(ctx, true, true);  // shadows need to be applied before rendering text.
 				for (var i:int = 0; i < lines.length; i++ ){
 					//if(m.ty>0) alert(m.toString()+","+transform.matrix.toString()+" "+y);
 					SpriteFlexjs.renderer.renderText(ctx, lines[i], defaultTextFormat, m, blendMode, transform.concatenatedColorTransform, 0, i * int(defaultTextFormat.size));
 				}
+				if (!_background) ApplyFilters(ctx, true, false, true);
 			}
 			else
 			{

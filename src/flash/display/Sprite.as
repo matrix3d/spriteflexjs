@@ -4,6 +4,7 @@ package flash.display
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.events.MouseEvent;
 	
 	public class Sprite extends DisplayObjectContainer
 	{
@@ -17,6 +18,8 @@ package flash.display
 		private var _cacheOffsetX:Number = 0;
 		private var _cacheOffsetY:Number = 0;
 		
+		private var _buttonMode:Boolean = false;
+		
 		public function Sprite()
 		{
 			super();
@@ -25,9 +28,12 @@ package flash.display
 			initDisplayObjectStage();
 		}
 		
-		public function get buttonMode():Boolean  { return false }
+		public function get buttonMode():Boolean  { return _buttonMode }
 		
-		public function set buttonMode(param1:Boolean):void  {/**/ }
+		public function set buttonMode(value:Boolean):void  
+		{
+			_buttonMode = value;
+		}
 		
 		public function startDrag(param1:Boolean = false, param2:Rectangle = null):void  {/**/ }
 		
@@ -68,14 +74,15 @@ package flash.display
 					bounds.y = 0;
 				}
 				
-				bounds.inflate(filterOffsetX * 2, filterOffsetY * 2); // add space for filter effects
-				
 				_cacheCanvas = document.createElement("canvas") as HTMLCanvasElement;
 				_cacheCanvas.width = bounds.width; // TODO add filter padding
 				_cacheCanvas.height = bounds.height;
 				_cacheCTX = _cacheCanvas.getContext('2d') as CanvasRenderingContext2D;
-				//_cacheCTX.fillStyle = "blue";
-				//_cacheCTX.fillRect(0, 0, _cacheCanvas.width, _cacheCanvas.height);
+				if (SpriteFlexjs.debug)
+				{
+					_cacheCTX.fillStyle = "blue";
+					_cacheCTX.fillRect(0, 0, _cacheCanvas.width, _cacheCanvas.height);
+				}
 				_cacheOffsetX = (hasGraphics) ? bounds.width - bounds.right - x : -x;
 				_cacheOffsetY = (hasGraphics) ? bounds.height - bounds.bottom - y : -y;
 				
@@ -133,6 +140,8 @@ package flash.display
 		{
 			if (visible && (graphics.graphicsData.length || numChildren))
 			{
+				if (filters.length && !cacheAsBitmap && !parent.cacheAsBitmap) cacheAsBitmap = true;
+				
 				var mat:Matrix = transform.concatenatedMatrix.clone();
 				if (cacheAsBitmap && !parent.cacheAsBitmap) 
 				{
@@ -153,12 +162,16 @@ package flash.display
 		
 		override protected function __doMouse(e:flash.events.MouseEvent):DisplayObject 
 		{
+			Stage.instance.canvas.style.cursor = "default";
+			
 			if (mouseEnabled && visible) {
 				var obj:DisplayObject = super.__doMouse(e);
 				if (obj) {
 					return obj;
 				}
+				
 				if (hitTestPoint(stage.mouseX, stage.mouseY)) {
+					if (_buttonMode) Stage.instance.canvas.style.cursor = "pointer";
 					return this;
 				}
 			}

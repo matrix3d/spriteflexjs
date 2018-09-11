@@ -350,6 +350,7 @@ package flash.display
 			h = (h > bounds.height) ? h - bounds.width : 0;
 			bounds.inflate(w/2, h/2);
 			
+			bounds.inflate(filterOffsetX, filterOffsetY);
 			
 			return bounds;
 		}
@@ -396,11 +397,11 @@ package flash.display
 		public function get filterOffsetX():Number { return _filterOffsetX; }
 		public function get filterOffsetY():Number { return _filterOffsetY; }
 		
-		protected function ApplyFilters(ctx:CanvasRenderingContext2D, isText:Boolean = false):void 
+		protected function ApplyFilters(ctx:CanvasRenderingContext2D, isText:Boolean = false, shadowsOnly:Boolean = false, noShadows:Boolean = false):void 
 		{
 			for each (var filter:BitmapFilter in _filters) 
 			{
-				if (filter is DropShadowFilter)
+				if (filter is DropShadowFilter && !noShadows)
 				{
 					var ds:DropShadowFilter = filter as DropShadowFilter;
 					ctx.shadowOffsetX = ds.offsetX;
@@ -421,9 +422,9 @@ package flash.display
 						ctx.stroke();
 					}
 				}
-				else if (filter is GlowFilter)
+				else if (filter is GlowFilter && !shadowsOnly)
 				{
-					GlowFilter(filter).applyFilter(ctx, this);
+					GlowFilter(filter).applyFilter(ctx, this, isText);
 				}
 			}
 		}

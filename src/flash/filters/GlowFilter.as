@@ -4,6 +4,7 @@ package flash.filters
 	import flash.display.Shape;
 	import flash.filters.BitmapFilter;
 	import flash.geom.Rectangle;
+	import flash.text.TextField;
 
 	/**
 	 * The GlowFilter class lets you apply a glow effect to display objects.
@@ -120,6 +121,7 @@ package flash.filters
 		public var origImage:ImageData;
 		public var copyData:ImageData;
 		public var copyCanvas:HTMLCanvasElement;
+		public var biggerCanvas:HTMLCanvasElement;
 		
 		/**
 		 * The alpha transparency value for the color. Valid values are 0 to 1. 
@@ -668,7 +670,7 @@ package flash.filters
 			_offsetY = amount + _blur;
 			
 			// create bigger canvas with enough space to show all of the glow.
-			var biggerCanvas:HTMLCanvasElement = document.createElement("canvas") as HTMLCanvasElement;
+			biggerCanvas = document.createElement("canvas") as HTMLCanvasElement;
 			biggerCanvas.width = canvas.width + _offsetX;
 			biggerCanvas.height = canvas.height + _offsetY;
 			var bgCtx:CanvasRenderingContext2D = biggerCanvas.getContext("2d") as CanvasRenderingContext2D;
@@ -701,8 +703,8 @@ package flash.filters
 		}
 		
 		
-		public function applyFilter(ctx:CanvasRenderingContext2D, displayObject:DisplayObject):void
-		{
+		public function applyFilter(ctx:CanvasRenderingContext2D, displayObject:DisplayObject, isText:Boolean = false):void
+		{	
 			ctx.shadowColor = _rgba;
 			
 			var bounds:Rectangle = displayObject.getFullBounds(displayObject);
@@ -746,10 +748,9 @@ package flash.filters
 				}
 			}
 			
-			if (displayObject.cacheAsBitmap)
+			if (displayObject.cacheAsBitmap || isText)
 			{
 				copyCtx.putImageData(copyData, -((ctx.canvas.width - copyCanvas.width)/2), -((ctx.canvas.height - copyCanvas.height)/2)); // cached version
-				//trace("displayObject.x: " + displayObject.x + ", bounds.x: " + bounds.x);
 			}
 			else
 			{
@@ -757,7 +758,7 @@ package flash.filters
 			}
 			
 			// blur the duplicate solid color drawing
-			var bgCanvas:HTMLCanvasElement = blurFilter(_strength, copyCanvas);
+			var glowCanvas:HTMLCanvasElement = blurFilter(_strength, copyCanvas);
 			
 			var gco:String;
 			if (_knockout) {
@@ -769,7 +770,7 @@ package flash.filters
 			ctx.save();
 			ctx.globalAlpha = _alpha;
 			ctx.globalCompositeOperation = gco;
-			ctx.drawImage(bgCanvas, bounds.x - Math.round(_offsetX/2), bounds.y - Math.round(_offsetY/2)); // testing without filter offset.
+			ctx.drawImage(glowCanvas, bounds.x - Math.round(_offsetX/2), bounds.y - Math.round(_offsetY/2));
 			ctx.restore();
 			
 			// clear shadow blur before next redraw or else double shadow blur.

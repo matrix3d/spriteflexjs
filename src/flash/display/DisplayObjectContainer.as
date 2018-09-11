@@ -203,6 +203,8 @@ package flash.display
 				rect = rect.union(cRect);
 			}
 			
+			rect.inflate(filterOffsetX, filterOffsetY); // add space for filter effects
+			
 			return rect;
 		}
 	}

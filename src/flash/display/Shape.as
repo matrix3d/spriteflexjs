@@ -23,6 +23,8 @@ package flash.display
 		{
 			if (visible && graphics.graphicsData.length)
 			{
+				if (filters.length && !cacheAsBitmap && !parent.cacheAsBitmap) cacheAsBitmap = true;
+				
 				var mat:Matrix = transform.concatenatedMatrix.clone();
 				if (cacheAsBitmap && !parent.cacheAsBitmap)
 				{
@@ -44,9 +46,6 @@ package flash.display
 			{
 				var bounds:Rectangle = getFullBounds(this);
 				
-				// add space for filter effects
-				bounds.inflate(filterOffsetX, filterOffsetY); 
-				
 				_cacheCanvas = document.createElement("canvas") as HTMLCanvasElement;
 				_cacheCanvas.width = bounds.width; // TODO Add padding for Dropshadow
 				_cacheCanvas.height = bounds.height;
@@ -54,9 +53,7 @@ package flash.display
 				//_cacheCTX.fillStyle = "black";
 				//_cacheCTX.fillRect(0, 0, _cacheCanvas.width, _cacheCanvas.height);
 				
-				trace("_cacheCanvas: w: " + bounds.width + ", h: " + bounds.height);
-				
-				// offsets to center drawing to larger cache canvas due to making for filters.
+				// offsets to center drawing to larger cache canvas due to making space for filters.
 				_cacheOffsetX = bounds.width - bounds.right - x;
 				_cacheOffsetY = bounds.height - bounds.bottom - y;
 				

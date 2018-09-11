@@ -199,7 +199,7 @@ public class b2AABB
 	}
 	
 	/** Combine two AABBs into one. */
-	public static function Combine(aabb1:b2AABB, aabb2:b2AABB):b2AABB
+	public static function Combine2(aabb1:b2AABB, aabb2:b2AABB):b2AABB
 	{
 		var aabb:b2AABB = new b2AABB();
 		aabb.Combine(aabb1, aabb2);

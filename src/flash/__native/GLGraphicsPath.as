@@ -47,12 +47,44 @@ package flash.__native
 			if (poly==null){
 				makePoly();
 			}
-			poly.push(controlX);
-			poly.push(controlY);
-			poly.push(anchorX);
-			poly.push(anchorY);
+			//poly.push(controlX);
+			//poly.push(controlY);
+			//poly.push(anchorX);
+			//poly.push(anchorY);
 			//poly.push(controlX, controlY, anchorX, anchorY);
+			
+			if (poly.length>=2){
+				var x0:Number = poly.array[poly.length - 2];
+				var y0:Number = poly.array[poly.length - 1];
+				var d:Number = Math.abs(x0 - anchorX) + Math.abs(y0 - anchorY);
+				var step:Number = 5 / d;
+				if (step>.5){
+					step = .5;
+				}
+				if (step<0.01){
+					step = 0.01;
+				}
+				for (var t1:Number = step; t1 <= 1; t1 += step ){
+					var t0:Number = 1 - t1;
+					var q0x:Number = t0 * x0 + t1 * controlX;
+					var q0y:Number = t0 * y0 + t1 * controlY;
+					var q1x:Number = t0 * controlX + t1 * anchorX;
+					var q1y:Number = t0 * controlY + t1 * anchorY;
+					poly.push(t0 * q0x + t1 * q1x);
+					poly.push(t0 * q0y + t1 * q1y);
+				}
+			}
 		}
+		
+		/*private function getCurvePoint(t1:Number, p0:Point, p1:Point, p2:Point):Vector3D
+        {
+            var t0:Number = 1 - t1;
+            var q0x:Number = t0 * p0.x + t1 * p1.x;
+            var q0y:Number = t0 * p0.y + t1 * p1.y;
+            var q1x:Number = t0 * p1.x + t1 * p2.x;
+            var q1y:Number = t0 * p1.y + t1 * p2.y;
+            return new Vector3D(t0 * q0x + t1 * q1x, t0 * q0y + t1 * q1y, Math.atan2(q1y - q0y, q1x - q0x));
+        }*/
 		
 		override public function cubicCurveTo(controlX1:Number, controlY1:Number, controlX2:Number, controlY2:Number, anchorX:Number, anchorY:Number):void
 		{
@@ -80,7 +112,14 @@ package flash.__native
 		
 		override public function arc(x:Number, y:Number,r:Number,a0:Number,a1:Number):void
 		{
-			var da:Number = Math.PI / 4;
+			var da:Number = int(1 / r *180/Math.PI);// Math.PI * 3 / 4;
+			if (da<1){
+				da = 1;
+			}
+			if (da>90){
+				da = 90;
+			}
+			da = da * Math.PI / 180;
 			var x0:Number = r;
 			var y0:Number = 0;
 			var sin:Number = Math.sin(da);

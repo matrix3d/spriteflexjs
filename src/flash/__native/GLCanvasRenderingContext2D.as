@@ -73,7 +73,7 @@ package flash.__native
 		private var uvPool:Object = {};
 		private var colorPool:Object = {};
 		private var indexPool:Object = {};
-		private var newDrawable:GLDrawable = new GLDrawable(null, null, null,WebGLRenderingContext.DYNAMIC_DRAW);
+		private var newDrawable:GLDrawable;
 		
 		private var lastImage:Object;
 		private var lastImageIsImage:Object;
@@ -88,6 +88,7 @@ package flash.__native
 			ctx = new Context3D;
 			ctx.canvas = canvas;
 			ctx.gl = (canvas.getContext("webgl", {alpha:false,antialias:false}) || canvas.getContext("experimental-webgl", {alpha:false,antialias:false})) as WebGLRenderingContext;
+			newDrawable = new GLDrawable(null, null, null,ctx.gl.DYNAMIC_DRAW);
 			stage_resize(null);
 			ctx.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			ctx.setCulling(Context3DTriangleFace.NONE);
@@ -166,7 +167,7 @@ package flash.__native
 		 * @royaleignorecoercion flash.__native.GLGraphicsPath
 		 */
 		public function beginPath () : Object {
-			currentPath = new GLPath2D;
+			currentPath = new GLPath2D(ctx);
 			currentPath.path = SpriteFlexjs.renderer.createPath() as GLGraphicsPath;
 			currentPath.matr = matr;
 			return null;
@@ -222,7 +223,7 @@ package flash.__native
 		public function drawPath (path:GraphicsPath, colorTransform:ColorTransform) : Object {
 			currentPath = path["glpath2d"];
 			if (path["glpath2d"]==null){
-				currentPath = path["glpath2d"] = new GLPath2D;
+				currentPath = path["glpath2d"] = new GLPath2D(ctx);
 			}
 			currentPath.path = path as GLGraphicsPath;
 			currentPath.matr = matr;

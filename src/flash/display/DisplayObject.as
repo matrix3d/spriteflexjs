@@ -465,15 +465,15 @@ package flash.display
 					if (t==obj) {
 						break;
 					}else{
-						t.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT,false,false,e.localX,e.localY));
-						t.dispatchEvent(new MouseEvent(MouseEvent.ROLL_OUT,false,false,e.localX,e.localY));
+						t.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT,false,false,e.localX,e.localY,null,e.ctrlKey,e.altKey,e.shiftKey,e.buttonDown));
+						t.dispatchEvent(new MouseEvent(MouseEvent.ROLL_OUT,false,false,e.localX,e.localY,null,e.ctrlKey,e.altKey,e.shiftKey,e.buttonDown));
 					}
 					t = t.parent;
 				}
 				
 				//mouse over
-				var over:MouseEvent = new MouseEvent(MouseEvent.MOUSE_OVER,true,false,e.localX,e.localY);
-				var rollover:MouseEvent = new MouseEvent(MouseEvent.ROLL_OVER,true,false,e.localX,e.localY);
+				var over:MouseEvent = new MouseEvent(MouseEvent.MOUSE_OVER,true,false,e.localX,e.localY,null,e.ctrlKey,e.altKey,e.shiftKey,e.buttonDown);
+				var rollover:MouseEvent = new MouseEvent(MouseEvent.ROLL_OVER,true,false,e.localX,e.localY,null,e.ctrlKey,e.altKey,e.shiftKey,e.buttonDown);
 				if(obj&&obj!=t){
 					obj.dispatchEvent(over);
 					obj.dispatchEvent(rollover);

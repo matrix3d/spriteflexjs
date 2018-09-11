@@ -139,7 +139,8 @@ package flash.display3D
 		}
 		
 		public function setVertexBufferAtGL(name:String, buffer:VertexBuffer3D, bufferOffset:int = 0, format:String = "float4"):void {
-			if (currentVBufs[name] != buffer) {
+			if (buffer.dirty || currentVBufs[name] != buffer) {
+				buffer.dirty = false;
 				currentVBufs[name] = buffer;
 				var loc:Number= currentProgram.getAttribLocation(name);
 				gl.bindBuffer(gl.ARRAY_BUFFER, buffer.buff);
@@ -336,7 +337,7 @@ package flash.display3D
 				currentTextures[name] = texture;
 				if (texture)
 				{
-					gl.activeTexture(WebGLRenderingContext["TEXTURE"+sampler]);
+					gl.activeTexture(gl["TEXTURE"+sampler]);
 					gl.bindTexture(gl.TEXTURE_2D, texture.texture);
 					gl.uniform1i(currentProgram.getUniformLocation(name), sampler);
 				}

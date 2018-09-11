@@ -1,25 +1,41 @@
 # spriteflexjs
 
-a html5 engine build with flexjs.
+a html5 engine build with apache-royale.
+------------------------------
 
-support most flash runtime api.
+the spriteflexjs support most flash runtime api.
 
 support canvas and webgl.
 
 100% ActionScript written code base
 
-### tests
+Quick Links
+-----------
 
-<a href='http://matrix3d.github.io/assets/html5/flexjsstage3d/bin/js-release'>tests</a>
+* [Official Homepage](http://spriteflexjs.com/)
+* [spriteflexjs Wiki](https://github.com/matrix3d/spriteflexjs/wiki)
+  * [Showcase](http://matrix3d.github.io/assets/html5/flexjsstage3d/bin/js-release/)
+  * [jsmin](https://codepen.io/matrix3d/pen/mAZmVy)
 
-<a href='https://codepen.io/matrix3d/pen/mAZmVy'>jsmin</a>
+微信小游戏适配
+-----------
+更改game.js
 
-### wiki
+ ```as3
+ import './js/libs/weapp-adapter'
+ import "TestMinGame"
+ var canvas = window.canvas;
+ canvas.id = "spriteflexjsstage";//小游戏只有一个画布显示 如果是stage3d用这个id "spriteflexjsstage3d0"
+ new TestMinGame();
+ ```
 
-<a href='https://github.com/matrix3d/spriteflexjs/wiki'>wiki</a>
+更改代码的  `xxx=this` ,变成 `xxx=window`
 
-### qq群
+因为小游戏this为null
 
-523374300
+代码要大于500k，如果小于500k。小游戏进行es6转换，会导致编辑器卡死
 
-<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=82d280f77c6d3462c1b6c58ace4a2c63a1354bae66462f0ef418c7d91026bbfe"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png"></a>
+视频教程
+-----------
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/6mKdmKJqEK4/0.jpg)](https://www.youtube.com/watch?v=6mKdmKJqEK4)
+

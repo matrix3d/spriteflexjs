@@ -26,11 +26,13 @@ package flash.__native
 				buff.gl.bindBuffer(buff.gl.ARRAY_BUFFER, buff.buff);
 				buff.gl.bufferData(buff.gl.ARRAY_BUFFER, data, usage);
 				dirty = false;
+				buff.dirty = true;
 			}
 			if (dirty){
 				buff.gl.bindBuffer(buff.gl.ARRAY_BUFFER, buff.buff);
 				buff.gl.bufferSubData(buff.gl.ARRAY_BUFFER, 0, data);
 				dirty = false;
+				buff.dirty = true;
 			}
 			return buff;
 		}

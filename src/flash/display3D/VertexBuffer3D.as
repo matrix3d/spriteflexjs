@@ -7,6 +7,7 @@ package flash.display3D
        public var buff:WebGLBuffer;
 	   public var gl:WebGLRenderingContext;
 	   public var data32PerVertex:int;
+		public var dirty:Boolean = true;
       public function VertexBuffer3D()
       {
          super();
@@ -16,6 +17,7 @@ package flash.display3D
 		 * @royaleignorecoercion Object
 		 */
      public function uploadFromVector(data:Vector.<Number>, startVertex:int, numVertices:int) : void{
+		 dirty = true;
 		 gl.bindBuffer(gl.ARRAY_BUFFER, buff);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data as Object), gl.STATIC_DRAW);
 			

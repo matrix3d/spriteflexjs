@@ -20,7 +20,7 @@ package flash.display
 		}
 		
 		/**
-		 * @flexjsignorecoercion String
+		 * @royaleignorecoercion String
 		 */
 		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{
@@ -32,7 +32,7 @@ package flash.display
 			return "rgba(" + ((color >> 16 & 0xff)*ct.redMultiplier+ct.redOffset) + "," + ((color >> 8 & 0xff)*ct.greenMultiplier+ct.greenOffset) + "," + ((color & 0xff)*ct.greenMultiplier+ct.greenOffset) + "," + (this.alpha*ct.alphaMultiplier+ct.alphaOffset) + ")";
 		}*/
 		/**
-		 * @flexjsignorecoercion String
+		 * @royaleignorecoercion String
 		 */
 		public function gldraw(ctx:GLCanvasRenderingContext2D, colorTransform:ColorTransform):void{
 			//SpriteFlexjs.renderer.getCssColor(color, alpha, colorTransform, _glcolor);

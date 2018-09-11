@@ -27,7 +27,7 @@ package flash.display
 		}
 		
 		/**
-		 * @flexjsignorecoercion String
+		 * @royaleignorecoercion String
 		 */
 		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{
@@ -38,7 +38,7 @@ package flash.display
 		}
 		
 		/**
-		 * @flexjsignorecoercion String
+		 * @royaleignorecoercion String
 		 */
 		public function gldraw(ctx:GLCanvasRenderingContext2D, colorTransform:ColorTransform):void{
 			if (pattern==null&&bitmapData) {

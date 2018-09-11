@@ -1580,7 +1580,7 @@ package flash.display
 		}
 		
 		/**
-		 * @flexjsignorecoercion CanvasRenderingContext2D
+		 * @royaleignorecoercion CanvasRenderingContext2D
 		 */
 		public function get ctx():CanvasRenderingContext2D
 		{

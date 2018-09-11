@@ -47,12 +47,38 @@ package flash.__native
 			if (poly==null){
 				makePoly();
 			}
-			poly.push(controlX);
-			poly.push(controlY);
-			poly.push(anchorX);
-			poly.push(anchorY);
+			//poly.push(controlX);
+			//poly.push(controlY);
+			//poly.push(anchorX);
+			//poly.push(anchorY);
 			//poly.push(controlX, controlY, anchorX, anchorY);
+			
+			if (poly.length>=2){
+				var x0:Number = poly.array[poly.length - 2];
+				var y0:Number = poly.array[poly.length - 1];
+				var d:Number = Math.abs(x0 - anchorX) + Math.abs(y0 - anchorY);
+				var step:Number = 5 / d;
+				for (var t1:Number = step; t1 <= 1; t1 += step ){
+					var t0:Number = 1 - t1;
+					var q0x:Number = t0 * x0 + t1 * controlX;
+					var q0y:Number = t0 * y0 + t1 * controlY;
+					var q1x:Number = t0 * controlX + t1 * anchorX;
+					var q1y:Number = t0 * controlY + t1 * anchorY;
+					poly.push(t0 * q0x + t1 * q1x);
+					poly.push(t0 * q0y + t1 * q1y);
+				}
+			}
 		}
+		
+		/*private function getCurvePoint(t1:Number, p0:Point, p1:Point, p2:Point):Vector3D
+        {
+            var t0:Number = 1 - t1;
+            var q0x:Number = t0 * p0.x + t1 * p1.x;
+            var q0y:Number = t0 * p0.y + t1 * p1.y;
+            var q1x:Number = t0 * p1.x + t1 * p2.x;
+            var q1y:Number = t0 * p1.y + t1 * p2.y;
+            return new Vector3D(t0 * q0x + t1 * q1x, t0 * q0y + t1 * q1y, Math.atan2(q1y - q0y, q1x - q0x));
+        }*/
 		
 		override public function cubicCurveTo(controlX1:Number, controlY1:Number, controlX2:Number, controlY2:Number, anchorX:Number, anchorY:Number):void
 		{

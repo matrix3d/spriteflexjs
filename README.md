@@ -16,4 +16,6 @@ Quick Links
 * [spriteflexjs Wiki](https://github.com/matrix3d/spriteflexjs/wiki)
   * [Showcase](http://matrix3d.github.io/assets/html5/flexjsstage3d/bin/js-release/)
   * [jsmin](https://codepen.io/matrix3d/pen/mAZmVy)
+  
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/6mKdmKJqEK4/0.jpg)](https://www.youtube.com/watch?v=6mKdmKJqEK4)
 

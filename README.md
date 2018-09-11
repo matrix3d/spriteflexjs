@@ -29,7 +29,7 @@ Quick Links
  new TestMinGame();
  ```
 
-更改代码的  xxx=this ,变成 xxx=window
+更改代码的  `xxx=this` ,变成 `xxx=window`
 
 因为小游戏this为null
 

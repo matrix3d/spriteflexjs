@@ -107,7 +107,7 @@ package flash.display3D
 		}
 		
 		/**
-		 * @flexjsignorecoercion Object
+		 * @royaleignorecoercion Object
 		 */
 		public function setProgramConstantsFromMatrixGL(name:String, matrix:Matrix3D, transposedMatrix:Boolean = false):void
 		{

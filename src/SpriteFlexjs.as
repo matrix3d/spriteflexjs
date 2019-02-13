@@ -24,7 +24,7 @@ package
 			window["mozRequestAnimationFrame"]    ||
 			window["oRequestAnimationFrame"] ||
 			window["msRequestAnimationFrame"] ||
-			function(callback):void {
+			function(callback:Function):void {
 				window["setTimeout"](callback, 1000 / 60);
 			};
 

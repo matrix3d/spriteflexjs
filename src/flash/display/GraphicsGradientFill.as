@@ -190,7 +190,7 @@ package flash.display
 		}
 		
 		/**
-		 * @flexjsignorecoercion String
+		 * @royaleignorecoercion String
 		 */
 		public function draw(ctx:CanvasRenderingContext2D,colorTransform:ColorTransform):void
 		{

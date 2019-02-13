@@ -13,7 +13,7 @@ package flash.display3D
       }
       
 	  /**
-		 * @flexjsignorecoercion Object
+		 * @royaleignorecoercion Object
 		 */
      public function uploadFromVector(data:Vector.<uint>, startOffset:int, count:int) : void{
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buff);

@@ -36,7 +36,7 @@ package flash.display
 			}
 		}
 		/**
-		 * @flexjsignorecoercion flash.display.GraphicsBitmapFill
+		 * @royaleignorecoercion flash.display.GraphicsBitmapFill
 		 */
 		public function gldraw(ctx:GLCanvasRenderingContext2D, colorTransform:ColorTransform):void{
 			if (fill) {

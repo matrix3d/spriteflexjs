@@ -160,7 +160,7 @@ package flash.display
 		}
 		
 		/**
-		 * @flexjsignorecoercion flash.__native.GLCanvasRenderingContext2D
+		 * @royaleignorecoercion flash.__native.GLCanvasRenderingContext2D
 		 */
 		public function gldraw(ctx:GLCanvasRenderingContext2D, colorTransform:ColorTransform):void{
 			ctx.drawPath(this, colorTransform);

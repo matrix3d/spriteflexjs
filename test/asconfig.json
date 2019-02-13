@@ -1,0 +1,31 @@
+{
+    "config": "flex",
+    "compilerOptions": {
+        "debug": true,
+        "targets": ["JS"],
+        "source-map": false,
+        "remove-circulars": true,
+        "js-compiler-option": ["skip_type_inference"],
+        "warn-public-vars": false,
+        "source-path": [
+            "../src"
+        ],
+            "define": [
+                {
+                    "name": "CONFIG::as_only",
+                    "value": false
+                },
+                {
+                    "name": "CONFIG::js_only",
+                    "value": true
+                }
+            ]
+        },
+    "copySourcePathAssets": true,
+    "additionalOptions": "-js-output-optimization=skipAsCoercions",
+    
+    "files":
+    [
+        "src/TestMouseEvent.as"
+    ]
+}

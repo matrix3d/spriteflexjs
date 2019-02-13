@@ -25,7 +25,7 @@ package flash.__native
 		}
 		
 		/**
-		 * @flexjsignorecoercion String
+		 * @royaleignorecoercion String
 		 */
 		override public function getCssColor(color:uint, alpha:Number, ct:ColorTransform,toarr:Array):Object 
 		{
@@ -38,7 +38,7 @@ package flash.__native
 		}
 		
 		/**
-		 * @flexjsignorecoercion flash.__native.GLCanvasRenderingContext2D
+		 * @royaleignorecoercion flash.__native.GLCanvasRenderingContext2D
 		 */
 		override public function renderImage(ctx:CanvasRenderingContext2D, img:BitmapData, m:Matrix, blendMode:String, colorTransform:ColorTransform, offsetX:Number = 0, offsetY:Number = 0):void 
 		{
@@ -53,8 +53,8 @@ package flash.__native
 		}
 		
 		/**
-		 * @flexjsignorecoercion flash.display.GraphicsPath
-		 * @flexjsignorecoercion flash.__native.GLCanvasRenderingContext2D
+		 * @royaleignorecoercion flash.display.GraphicsPath
+		 * @royaleignorecoercion flash.__native.GLCanvasRenderingContext2D
 		 */
 		override public function renderGraphics(ctx:CanvasRenderingContext2D, g:Graphics, m:Matrix, blendMode:String, colorTransform:ColorTransform):void{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
@@ -94,7 +94,7 @@ package flash.__native
 		}
 		
 		/**
-		 * @flexjsignorecoercion flash.__native.GLCanvasRenderingContext2D
+		 * @royaleignorecoercion flash.__native.GLCanvasRenderingContext2D
 		 */
 		override public function renderText(ctx:CanvasRenderingContext2D, txt:String, textFormat:TextFormat, m:Matrix, blendMode:String, colorTransform:ColorTransform, x:Number, y:Number):void{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
@@ -114,7 +114,7 @@ package flash.__native
 		}
 		
 		/**
-		 * @flexjsignorecoercion flash.__native.GLCanvasRenderingContext2D
+		 * @royaleignorecoercion flash.__native.GLCanvasRenderingContext2D
 		 */
 		override public function finish(ctx:CanvasRenderingContext2D):void{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;

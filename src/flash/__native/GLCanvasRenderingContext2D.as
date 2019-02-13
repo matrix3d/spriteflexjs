@@ -164,7 +164,7 @@ package flash.__native
 		}
 
 		/**
-		 * @flexjsignorecoercion flash.__native.GLGraphicsPath
+		 * @royaleignorecoercion flash.__native.GLGraphicsPath
 		 */
 		public function beginPath () : Object {
 			currentPath = new GLPath2D(ctx);
@@ -202,7 +202,7 @@ package flash.__native
 		}
 
 		/**
-		 * @flexjsignorecoercion CanvasPattern
+		 * @royaleignorecoercion CanvasPattern
 		 */
 		public function createPattern (image:Object, repetition:String) : CanvasPattern {
 			return new GLCanvasPattern(image,repetition) as CanvasPattern;
@@ -218,7 +218,7 @@ package flash.__native
 		}
 		
 		/**
-		 * @flexjsignorecoercion flash.__native.GLGraphicsPath
+		 * @royaleignorecoercion flash.__native.GLGraphicsPath
 		 */
 		public function drawPath (path:GraphicsPath, colorTransform:ColorTransform) : Object {
 			currentPath = path["glpath2d"];
@@ -231,7 +231,7 @@ package flash.__native
 		}
 		
 		/**
-		 * @flexjsignorecoercion Uint32Array
+		 * @royaleignorecoercion Uint32Array
 		 */
 		public function drawImageInternal(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean,color:uint,scaleWithImageUV:Boolean,isImage:Boolean):void{
 			if (!isBatch){
@@ -383,9 +383,9 @@ package flash.__native
 		}
 		
 		/**
-		 * @flexjsignorecoercion Float32Array
-		 * @flexjsignorecoercion Uint32Array
-		 * @flexjsignorecoercion Number
+		 * @royaleignorecoercion Float32Array
+		 * @royaleignorecoercion Uint32Array
+		 * @royaleignorecoercion Number
 		 */
 		private function batchFinish():void{
 			var posKey:int = getNextPow2(numPos);
@@ -509,8 +509,8 @@ package flash.__native
 		}
 
 		/**
-		 * @flexjsignorecoercion flash.__native.GLCanvasPattern
-		 * @flexjsignorecoercion uint
+		 * @royaleignorecoercion flash.__native.GLCanvasPattern
+		 * @royaleignorecoercion uint
 		 */
 		public function fill (/*opt_fillRule:String = ""*/) : Object {
 			if (fillStyleIsImage) {

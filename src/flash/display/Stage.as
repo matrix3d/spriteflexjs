@@ -159,7 +159,7 @@ package flash.display
 		private var _color:uint = 0xFFFFFF;
 		private var _colorCorrection:String;
 		private var _colorCorrectionSupport:String;
-		private var _constructor:*;
+		// private var _constructor:*;
 		private var _contentsScaleFactor:Number = 1;
 		private var _contextMenu:ContextMenu;
 		private var _displayContextInfo:String;
@@ -202,7 +202,6 @@ package flash.display
 		private var _tabIndex:int = 0;
 		private var _tabEnabled:Boolean = true;
 		private var _textSnapshot:TextSnapshot;
-		private var _transform:Transform;
 		private var _visible:Boolean = true;
 		private var _width:Number;
 		private var _wmodeGPU:Boolean = true;
@@ -245,7 +244,7 @@ package flash.display
 			
 			window.addEventListener("resize", window_resize, false);
 			window.addEventListener("orientationchange", window_resize, false);
-			setTimeout(__update);
+			setTimeout(_updateStage);
 			
 			_instance = this;
 		}
@@ -278,7 +277,7 @@ package flash.display
 			dispatchEvent(new Event(Event.RESIZE));
 		}
 		
-		private function __update():void {
+		private function _updateStage():void {
 			if(_stageWidth != SpriteFlexjs.stageWidth||
 			_stageHeight != SpriteFlexjs.stageHeight){
 				window_resize(null);
@@ -407,8 +406,8 @@ package flash.display
 		 */
 		public function get colorCorrectionSupport ():String { return _colorCorrectionSupport; }
 
-		public function get constructor ():* { return _constructor; }
-		public function set constructor (c:*):void { _constructor = c; }
+		// public function get constructor ():* { return _constructor; }
+		// public function set constructor (c:*):void { _constructor = c; }
 
 		public function get contentsScaleFactor ():Number { return _contentsScaleFactor; }
 
@@ -1020,8 +1019,6 @@ package flash.display
 		 */
 		public function get textSnapshot ():flash.text.TextSnapshot { return _textSnapshot; }
 
-		public function set transform (value:Transform):void { _transform = value; }
-
 		override public function set visible(value:Boolean):void 
 		{
 			_visible = value;
@@ -1586,7 +1583,7 @@ package flash.display
 		}
 		
 		/**
-		 * @flexjsignorecoercion CanvasRenderingContext2D
+		 * @royaleignorecoercion CanvasRenderingContext2D
 		 */
 		public function get ctx():CanvasRenderingContext2D
 		{

@@ -11,6 +11,7 @@ package flash.display
 	import flash.geom.Rectangle;
 	import flash.geom.Transform;
 	import flash.geom.Vector3D;
+	import flash.text.TextField;
 	import flash.utils.getTimer;
 	
 	/**
@@ -22,6 +23,7 @@ package flash.display
 		private static var _globalStage:Stage;
 		private var _stage:Stage;
 		private var _inited:Boolean = false;
+		protected var _root:DisplayObject;
 		
 		private static var ID:int = 0;
 		public var innerID:int;
@@ -31,6 +33,7 @@ package flash.display
 		private var rcos:Number = 1;
 		public var transform:Transform;
 		public var _parent:DisplayObjectContainer;
+		private var _mask:DisplayObject;
 		private var _visible:Boolean = true;
 		private var lastMouseOverObj:DisplayObject;
 		private var _blendMode:String;
@@ -59,6 +62,8 @@ package flash.display
 				
 				if (innerID === 0)
 				{
+					//_globalStage.addChild(this);
+					_globalStage.setRoot(this); 
 					_stage = _globalStage;
 					_stage.addEventListener(Event.ENTER_FRAME, __enterFrame);
 					_stage.addEventListener(MouseEvent.CLICK, __mouseevent);
@@ -93,7 +98,7 @@ package flash.display
 		/************************ <Non Flash API Helper Methods> *****************************************/
 		public function get loaderInfo():LoaderInfo  { return _loaderInfo; }
 		
-		public function get root():DisplayObject  { return null }
+		public function get root():DisplayObject  { return _root }
 		
 		public function get name():String  { return _name; }
 		
@@ -103,9 +108,9 @@ package flash.display
 		
 		public function get parent():DisplayObjectContainer  { return _parent; }
 		
-		public function get mask():DisplayObject  { return null }
+		public function get mask():DisplayObject  { return _mask; }
 		
-		public function set mask(param1:DisplayObject):void  {/**/ }
+		public function set mask(param1:DisplayObject):void  { _mask = param1; }
 		
 		public function get visible():Boolean  { return _visible }
 		
@@ -200,7 +205,8 @@ package flash.display
 		
 		public function set rotation(v:Number):void
 		{
-			_rotation = v;
+			// TODO change to -180 to 180 instead of the (0 - 360) to match Flash API.
+			_rotation = (v >= 360) ? v - 360 : v;
 			var m:Matrix = transform.matrix;
 			var r:Number = v * Math.PI / 180;
 			rsin = Math.sin(r);
@@ -245,7 +251,7 @@ package flash.display
 			var rect:Rectangle = getRect(this);
 			
 			var radians:Number = _rotation * (Math.PI / 180);
-			rect.width = Math.round((rect.height * Math.sin(radians) + rect.width * Math.cos(radians)) * 10) / 10;
+			rect.width = Math.round((rect.height * Math.abs(Math.sin(radians)) + rect.width * Math.abs(Math.cos(radians))) * 10) / 10;
 			
 			if (rect) return rect.width;
 			return 0;
@@ -257,7 +263,7 @@ package flash.display
 			var rect:Rectangle = getRect(this);
 			
 			var radians:Number = _rotation * (Math.PI / 180);
-			rect.height = Math.round((rect.height * Math.cos(radians) + rect.width * Math.sin(radians)) * 10) / 10;
+			rect.height = Math.round((rect.height * Math.abs(Math.cos(radians)) + rect.width * Math.abs(Math.sin(radians))) * 10) / 10;
 			
 			if (rect) return rect.height;
 			return 0;
@@ -333,15 +339,21 @@ package flash.display
 			var gfx:Graphics = Object(v).graphics;
 			var bounds:Rectangle = (gfx && gfx.bound) ? gfx.bound.clone() : new Rectangle();
 			
-			// adjust bounds for rotation
-			var radians:Number = _rotation * (Math.PI / 180);
-			var w:Number = Math.round((bounds.height * Math.sin(radians) + bounds.width * Math.cos(radians)) * 10) / 10;
-			var h:Number = Math.round((bounds.height * Math.cos(radians) + bounds.width * Math.sin(radians)) * 10) / 10;
+			//trace("Width: " + v.width);
 			
+			// adjust bounds for rotation
+			var rot:Number = (_rotation >= 180) ? _rotation - 180 : _rotation;
+			var radians:Number = rot * (Math.PI / 180);
+			
+			var w:Number = Math.round((bounds.height * Math.abs(Math.sin(radians)) + bounds.width * Math.abs(Math.cos(radians))) * 10) / 10;
+			var h:Number = Math.round((bounds.height * Math.abs(Math.cos(radians)) + bounds.width * Math.abs(Math.sin(radians))) * 10) / 10;
+			//trace("w: " + w + ", h: " + h);
 			// adjust rectangle bigger if needed
 			w = (w > bounds.width) ? w - bounds.width : 0;
 			h = (h > bounds.height) ? h - bounds.width : 0;
 			bounds.inflate(w/2, h/2);
+			
+			bounds.inflate(filterOffsetX, filterOffsetY);
 			
 			return bounds;
 		}
@@ -364,8 +376,8 @@ package flash.display
 		
 		public function hitTestPoint(x:Number, y:Number, shapeFlag:Boolean = false):Boolean
 		{
-			var rect:Rectangle = __getRect();
-			if(rect)return rect.containsPoint(globalToLocal(new Point(x,y)));
+			//var rect:Rectangle = __getRect();
+			//if (rect) return rect.containsPoint(globalToLocal(new Point(x,y)));
 			return false;
 		}
 		
@@ -388,35 +400,34 @@ package flash.display
 		public function get filterOffsetX():Number { return _filterOffsetX; }
 		public function get filterOffsetY():Number { return _filterOffsetY; }
 		
-		protected function ApplyFilters(ctx:CanvasRenderingContext2D):void 
+		protected function ApplyFilters(ctx:CanvasRenderingContext2D, isText:Boolean = false, shadowsOnly:Boolean = false, noShadows:Boolean = false):void 
 		{
 			for each (var filter:BitmapFilter in _filters) 
 			{
-				if (filter is DropShadowFilter)
+				if (filter is DropShadowFilter && !noShadows)
 				{
 					var ds:DropShadowFilter = filter as DropShadowFilter;
-					// shadow test
-					ctx.shadowColor = ds.rgba;
-					ctx.shadowBlur = ds.blur;
 					ctx.shadowOffsetX = ds.offsetX;
 					ctx.shadowOffsetY = ds.offsetY;
-					//ctx.stroke();
-					ctx.fill();
+					ctx.shadowColor = ds.rgba;
+					ctx.shadowBlur = ds.blur;
 					
-					// clear the shadow
-					ctx.shadowColor = "0";
-					ctx.shadowOffsetX = 0; 
-					ctx.shadowOffsetY = 0;
-					// restroke w/o the shadow
-					ctx.stroke();
+					if (!isText)
+					{
+						//ctx.stroke();
+						ctx.fill();
+						// clear the shadow
+						ctx.shadowColor = "0";
+						ctx.shadowOffsetX = 0; 
+						ctx.shadowOffsetY = 0;
+						ctx.shadowBlur = 0;
+						// restroke w/o the shadow
+						ctx.stroke();
+					}
 				}
-				else if (filter is GlowFilter)
+				else if (filter is GlowFilter && !shadowsOnly)
 				{
-					var gf:GlowFilter = filter as GlowFilter;
-					ctx.shadowColor = gf.rgba;
-					ctx.shadowBlur = gf.blur;
-					//if (gf.knockout) ctx.globalCompositeOperation = "destination-out";
-					ctx.fill();
+					GlowFilter(filter).applyFilter(ctx, this, isText);
 				}
 			}
 		}
@@ -447,8 +458,10 @@ package flash.display
 			//如果找到向上遍历父级，抛出事件
 			var time:Number = getTimer();
 			var obj:DisplayObject = __doMouse(e);
+			
 			time = getTimer();
-			if (e.type===MouseEvent.MOUSE_MOVE) {
+			if (e.type === MouseEvent.MOUSE_MOVE)
+			{
 				//如果类型是mousemove 处理mouseover 和 mouseout事件
 				//如果上次鼠标经过obj不在obj上层节点
 				//递归抛出mouseout事件直到为null或当前节点
@@ -472,12 +485,10 @@ package flash.display
 				}
 				lastMouseOverObj = obj;
 			}
-			if(obj){
-				obj.dispatchEvent(e);
-			}
-			if(SpriteFlexjs.debug){
-				trace("__dispatchmouseevent", getTimer() - time);
-			}
+			
+			if (obj) obj.dispatchEvent(e);
+			
+			if (SpriteFlexjs.debug) trace("__dispatchmouseevent", getTimer() - time);
 		}
 		
 		protected function __doMouse(e:flash.events.MouseEvent):DisplayObject {

@@ -22,6 +22,7 @@ package flash.display
 		private var lockBound:Boolean = false;
 		public static var debug:Boolean = false;
 		public var _worldMatrix:Matrix = new Matrix;
+		
 		public function Graphics()
 		{
 			super();
@@ -254,14 +255,18 @@ package flash.display
 		{
 			if (lastPath == null)
 			{
+				var isInitial:Boolean = false;
 				lastPath = pathPool[pathPoolPos];
 				if (lastPath==null){
 					lastPath = pathPool[pathPoolPos] = SpriteFlexjs.renderer.createPath();
+					isInitial = true;
 				}
 				//lastPath.commands = null;
 				//lastPath.data = null;
 				lastPath.clear();
 				lastPath.gpuPath2DDirty = true;
+				if (isInitial) lastPath.moveTo(0, 0);
+				
 				pathPoolPos++;
 				graphicsData.push(lastPath);
 				SpriteFlexjs.dirtyGraphics = true;

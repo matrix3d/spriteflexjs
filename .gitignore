@@ -1,7 +1,11 @@
 # Build and Release Folders
-test/bin/js-debug/
-test/bin/js-release/
-test/obj/
+tests/bin/js-debug/
+tests/bin/js-release/
+tests/obj/
+
+examples/bin/js-debug/
+examples/bin/js-release/
+examples/obj/
 
 # Other files and folders
 .settings/
@@ -10,3 +14,5 @@ test/obj/
 # should NOT be excluded as they contain compiler settings and other important
 # information for Eclipse / Flash Builder.
 /test/assets/site
+
+bin/js-debug/

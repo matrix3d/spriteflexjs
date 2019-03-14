@@ -118,7 +118,7 @@ package flash.filters
 		 * .25 sets a transparency value of 25%. The default value is 1.0.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>alpha</code> property on an existing MovieClip 
+		 * @example	The following example changes the <code>alpha</code> property on an existing MovieClip 
 		 *   when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.DropShadowFilter;
@@ -157,7 +157,7 @@ package flash.filters
 		 * default value is 45.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>angle</code> property on an existing MovieClip 
+		 * @example	The following example changes the <code>angle</code> property on an existing MovieClip 
 		 *   when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.DropShadowFilter;
@@ -196,7 +196,7 @@ package flash.filters
 		 * default value is 4.0.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>blurX</code> property on an existing MovieClip 
+		 * @example	The following example changes the <code>blurX</code> property on an existing MovieClip 
 		 *   when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.DropShadowFilter;
@@ -235,7 +235,7 @@ package flash.filters
 		 * default value is 4.0.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>blurY</code> property on an existing MovieClip 
+		 * @example	The following example changes the <code>blurY</code> property on an existing MovieClip 
 		 *   when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.DropShadowFilter;
@@ -274,7 +274,7 @@ package flash.filters
 		 * default value is 0x000000.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>color</code> property on an existing MovieClip 
+		 * @example	The following example changes the <code>color</code> property on an existing MovieClip 
 		 *   when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.DropShadowFilter;
@@ -313,7 +313,7 @@ package flash.filters
 		 * value is 4.0(floating point).
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>distance</code> property on an existing MovieClip 
+		 * @example	The following example changes the <code>distance</code> property on an existing MovieClip 
 		 *   when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.DropShadowFilter;
@@ -354,7 +354,7 @@ package flash.filters
 		 * The default is false(the object is shown).
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>hideObject</code> property on an existing MovieClip 
+		 * @example	The following example changes the <code>hideObject</code> property on an existing MovieClip 
 		 *   when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.DropShadowFilter;
@@ -394,7 +394,7 @@ package flash.filters
 		 * shadow around the outer edges of the object).
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>inner</code> property on an existing MovieClip 
+		 * @example	The following example changes the <code>inner</code> property on an existing MovieClip 
 		 *   when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.DropShadowFilter;
@@ -434,7 +434,7 @@ package flash.filters
 		 * default is false(no knockout).
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>knockout</code> property on an existing MovieClip 
+		 * @example	The following example changes the <code>knockout</code> property on an existing MovieClip 
 		 *   when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.DropShadowFilter;
@@ -482,7 +482,7 @@ package flash.filters
 		 * the values of the blurX and blurY properties.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>quality</code> property on an existing MovieClip 
+		 * @example	The following example changes the <code>quality</code> property on an existing MovieClip 
 		 *   when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.DropShadowFilter;
@@ -522,7 +522,7 @@ package flash.filters
 		 * Valid values are from 0 to 255.0. The default is 1.0.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>strength</code> property on an existing MovieClip 
+		 * @example	The following example changes the <code>strength</code> property on an existing MovieClip 
 		 *   when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.DropShadowFilter;
@@ -565,7 +565,7 @@ package flash.filters
 		 *   properties of the original DropShadowFilter instance.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example creates three DropShadowFilter objects and compares them.  <code>filter_1</code>
+		 * @example	The following example creates three DropShadowFilter objects and compares them.  <code>filter_1</code>
 		 *   is created using the DropShadowFilter construtor.  <code>filter_2</code> is created by setting it equal to 
 		 *   <code>filter_1</code>.  And, <code>clonedFilter</code> is created by cloning <code>filter_1</code>.  Notice
 		 *   that while <code>filter_2</code> evaluates as being equal to <code>filter_1</code>, <code>clonedFilter</code>,
@@ -664,7 +664,7 @@ package flash.filters
 		 *   indicates that the object itself is not drawn; only the shadow is visible.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @oldexample	The following example creates a new DropShadowFilter object
+		 * @example	The following example creates a new DropShadowFilter object
 		 *   with the default values:
 		 *   <pre xml:space="preserve" class="- topic/pre ">
 		 *   myFilter = new flash.filters.DropShadowFilter()

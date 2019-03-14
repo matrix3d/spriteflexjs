@@ -92,7 +92,7 @@ package flash.filters
 		 * to render more quickly than other values.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>blurX</code> property on an existing MovieClip 
+		 * @example	The following example changes the <code>blurX</code> property on an existing MovieClip 
 		 *   when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.BlurFilter;
@@ -136,7 +136,7 @@ package flash.filters
 		 * to render more quickly than other values.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>blurY</code> property on an existing MovieClip 
+		 * @example	The following example changes the <code>blurY</code> property on an existing MovieClip 
 		 *   when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.BlurFilter;
@@ -189,7 +189,7 @@ package flash.filters
 		 * quality property:BitmapFilterQuality.LOWBitmapFilterQuality.MEDIUMBitmapFilterQuality.HIGH
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>quality</code> property on an existing MovieClip 
+		 * @example	The following example changes the <code>quality</code> property on an existing MovieClip 
 		 *   when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.BlurFilter;
@@ -243,7 +243,7 @@ package flash.filters
 		 *   that higher values are rendered more slowly.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	Instantiate a new <code>BlurFilter</code> and apply it to a flat, rectangular shape.
+		 * @example	Instantiate a new <code>BlurFilter</code> and apply it to a flat, rectangular shape.
 		 *   <listing version="2.0">
 		 *   import flash.filters.BlurFilter;
 		 *   var rect:MovieClip = createRectangle(100, 100, 0x003366, "BlurFilterExample");
@@ -280,7 +280,7 @@ package flash.filters
 		 *   properties as the original BlurFilter instance.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example creates three BlurFilter objects and compares them.  <code>filter_1</code>
+		 * @example	The following example creates three BlurFilter objects and compares them.  <code>filter_1</code>
 		 *   is created using the BlurFilter constructor.  <code>filter_2</code> is created by setting it equal to 
 		 *   <code>filter_1</code>.  And, <code>clonedFilter</code> is created by cloning <code>filter_1</code>.  Notice
 		 *   that while <code>filter_2</code> evaluates as being equal to <code>filter_1</code>, <code>clonedFilter</code>,

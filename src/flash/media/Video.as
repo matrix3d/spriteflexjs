@@ -225,10 +225,15 @@ package flash.media
 		public function attachCamera(camera:Camera):void
 		{
 			_camera = camera;
+			_videoElement.autoplay = true;
 			
 			if (_camera.cameraStream)
 			{
-				_videoElement.src = URL.createObjectURL( _camera.cameraStream ) || String(_camera.cameraStream);
+				try {
+					_videoElement.srcObject = _camera.cameraStream;
+				}catch (e:Error){
+					_videoElement.src = URL.createObjectURL(_camera.cameraStream); // deprecated fallback
+				}
 				_camera.videoElement = _videoElement as HTMLVideoElement;
 			}
 			else
@@ -236,7 +241,11 @@ package flash.media
 				_camera.addEventListener(ActivityEvent.ACTIVITY, function(e:ActivityEvent):void {
 					if (e.activating)
 					{
-						_videoElement.src = URL.createObjectURL( _camera.cameraStream ) || String(_camera.cameraStream);
+						try {
+							_videoElement.srcObject = _camera.cameraStream;
+						}catch (e:Error){
+							_videoElement.src = URL.createObjectURL(_camera.cameraStream); // deprecated fallback
+						}
 						_camera.videoElement = _videoElement as HTMLVideoElement;
 					}
 				});
@@ -316,7 +325,16 @@ package flash.media
 			_height = v;
 		}
 		
-
+		override public function getBounds(v:DisplayObject):Rectangle 
+		{
+			return _rect;
+		}
+		
+		override public function getRect(v:DisplayObject):Rectangle 
+		{
+			return _rect;
+		}
+		
 		/**
 		 * Creates a new Video instance. If no values for the width and
 		 * height parameters are supplied, 
@@ -338,6 +356,7 @@ package flash.media
 		{
 			this.width = width;
 			this.height = height;
+			
 			updateTransforms();
 			
 			_videoElement = document.createElement("video") as HTMLVideoElement;
@@ -345,6 +364,8 @@ package flash.media
 			_videoElement.height = height;
 			_videoElement.style.width = width + "px";
 			_videoElement.style.height = height + "px";
+			
+			_rect = new Rectangle(0, 0, width, height);
 		}
 		
 		override public function __update(ctx:CanvasRenderingContext2D):void 
@@ -358,5 +379,6 @@ package flash.media
 			
 			SpriteFlexjs.dirtyGraphics = true;
 		}
+		
 	}
 }

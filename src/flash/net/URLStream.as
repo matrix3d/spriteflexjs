@@ -17,13 +17,21 @@ package flash.net
 		
 		public function load(v:URLRequest):void
 		{
+			var url:String = v.url;
+			// add URLVariables
+			if (v.data && v.data is URLVariables)
+			{
+				url = url + "?" + JSON.stringify(v.data).replace(/:/g, "=").replace(/,/g, "&&").replace(/"/g, "").replace(/{/g, "").replace(/}/g, "");
+			}
+			
 			xhr = new XMLHttpRequest;
-			xhr.open("get", v.url);
+			xhr.open("get", url, true);
+			
 			xhr.responseType = "arraybuffer";
 			xhr.addEventListener("readystatechange", xhr_onreadystatechange, false);
-			xhr.addEventListener("error", xhr_error,false);
-			xhr.addEventListener("progress", xhr_progress,false);
-			xhr.send();
+			xhr.addEventListener("error", xhr_error, false);
+			xhr.addEventListener("progress", xhr_progress, false);
+			xhr.send(!(v.data is URLVariables) ? v.data : "");
 		}
 		
 		private function xhr_error(e:Event):void 

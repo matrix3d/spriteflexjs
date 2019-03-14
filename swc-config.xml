@@ -1,0 +1,32 @@
+<royale-config>
+	<output>build-swc/SpriteFlexjs.swc</output>
+	<warn-public-vars>false</warn-public-vars>
+    <compiler>
+        <accessible>false</accessible>
+
+        <!-- build for JS. -->
+        <targets>
+			<target>SWF</target>
+            <target>JSRoyale</target>
+        </targets>
+        <strict-xml>true</strict-xml>
+        <define>
+            <name>COMPILE::SWF</name>
+            <value>false</value>
+        </define>
+        <define>
+            <name>COMPILE::JS</name>
+            <value>true</value>
+        </define>
+		
+        <source-path>
+            <path-element>src</path-element>
+        </source-path>
+        
+        <warn-no-constructor>false</warn-no-constructor>
+    </compiler>
+
+    <include-sources>
+		<path-element>src</path-element>
+	</include-sources>
+</royale-config>

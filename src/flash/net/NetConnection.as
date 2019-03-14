@@ -127,7 +127,6 @@ package flash.net
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	Property documented; needs review.
 		 * @throws	TypeError The client property must be set to a non-null object.
 		 */
 		public function get client () : Object
@@ -164,7 +163,6 @@ package flash.net
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	This property is used in Breeze 5.5.
 		 * @throws	ArgumentError An attempt was made to access this property when the NetConnection instance
 		 *   was not connected.
 		 */
@@ -356,9 +354,6 @@ package flash.net
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	This property is used in Breeze 5.5. In the Breeze Add-in, the default value is <code>"best"</code>; if this value
-		 *   is not changed, native SSL sockets are used by default, and a fallback
-		 *   to other methods is used if necessary.
 		 */
 		public function get proxyType () : String
 		{
@@ -391,8 +386,6 @@ package flash.net
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	server-specific: Documented this method with server-specific info in span tags. The
-		 *   info is relevant for Flex servers, as well as Flash Media Server.
 		 */
 		public function get uri () : String
 		{
@@ -429,7 +422,6 @@ package flash.net
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	IMD: This method can be used in the client Flash Player for Flash Remoting
 		 *   and Flex apps. It is also a server side method used by Flash Media Server apps.
 		 */
 		public function addHeader (operation:String, mustUnderstand:Boolean = false, param:Object = null) : void
@@ -501,8 +493,6 @@ package flash.net
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	server-specific: Documented this method with server-specific info in span tags. The
-		 *   info is relevant for Flex servers, as well as Flash Media Server.
 		 */
 		public function close () : void
 		{
@@ -585,7 +575,6 @@ package flash.net
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @oldexample	See the example for <code>connect()</code>.
 		 */
 		public function NetConnection () {}
 	}

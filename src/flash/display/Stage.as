@@ -162,7 +162,7 @@ package flash.display
 		private var _color:uint = 0xFFFFFF;
 		private var _colorCorrection:String;
 		private var _colorCorrectionSupport:String;
-		private var _constructor:*;
+		// private var _constructor:*;
 		private var _contentsScaleFactor:Number = 1;
 		private var _contextMenu:ContextMenu;
 		private var _displayContextInfo:String;
@@ -257,7 +257,7 @@ package flash.display
 			
 			window.addEventListener("resize", window_resize, false);
 			window.addEventListener("orientationchange", window_resize, false);
-			setTimeout(updateStage);
+			setTimeout(_updateStage);
 			
 			_instance = this;
 			_instance.name = "Stage";
@@ -312,7 +312,7 @@ package flash.display
 			dispatchEvent(new Event(Event.RESIZE));
 		}
 		
-		private function updateStage():void {
+		private function _updateStage():void {
 			if(_stageWidth != SpriteFlexjs.stageWidth||
 			_stageHeight != SpriteFlexjs.stageHeight){
 				window_resize(null);

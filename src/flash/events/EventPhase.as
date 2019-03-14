@@ -8,7 +8,6 @@ package flash.events
 	 * @langversion	3.0
 	 * @playerversion	Flash 9
 	 * @playerversion	Lite 4
-	 * @internal	includeExample examples\EventPhaseExample.as -noswf
 	 */
 	public final class EventPhase extends Object
 	{

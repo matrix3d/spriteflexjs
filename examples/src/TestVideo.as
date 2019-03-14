@@ -2,22 +2,20 @@ package
 {
 	import flash.display.Sprite;
 	import flash.events.ActivityEvent;
+	import flash.events.Event;
 	import flash.events.NetStatusEvent;
-	import flash.events.TimerEvent;
+	import flash.media.Camera;
 	import flash.media.Video;
+	import flash.media.VideoCodec;
 	import flash.net.NetConnection;
 	import flash.net.NetStream;
-	import flash.events.SecurityErrorEvent;
-	import flash.media.VideoCodec;
-	import flash.media.Camera;
 	import flash.net.URLLoader;
+	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.utils.ByteArray;
-	import flash.utils.Timer;
-	import flash.net.URLLoaderDataFormat;
-	import flash.events.Event;
+	import flash.events.MouseEvent;
 	/**
 	 * ...
 	 * @author Kenny Lerma
@@ -39,6 +37,8 @@ package
 		{
 			SpriteFlexjs.autoSize = true;
 			
+			this.name = "TestVideo";
+			
 			// Webcam and Motion Detecton
 			var cam:Camera = Camera.getCamera(null, 360, 203);
 			cam.showMotionCanvas = true;
@@ -47,6 +47,7 @@ package
 			cam.addEventListener(ActivityEvent.MOTION_DETECTED, onMotionDetected);
 			cam.addEventListener(ActivityEvent.MOTION_ENDED, onMotionEnded);
 			_videoCamera = new Video(360, 203);
+			_videoCamera.name = "CameraVideo";
 			_videoCamera.attachCamera(cam);
 			addChild(_videoCamera);
 			
@@ -58,9 +59,19 @@ package
 			addChild(_motionText);
 			
 			// Video streamed from a file.
+			var videoBox:Sprite = new Sprite();
+			videoBox.x = 400;
+			videoBox.name = "StandardVideo";
+			videoBox.buttonMode = true;
+			videoBox.mouseEnabled = true;
+			videoBox.mouseChildren = true;
 			_videoURL = new Video(360, 203);
-			_videoURL.x = 400;
-			addChild(_videoURL);
+			_videoURL.name = "BuckBunny";
+			videoBox.addChild(_videoURL);
+			addChild(videoBox);
+			videoBox.addEventListener(MouseEvent.CLICK, onVideoBoxClicked);
+			
+			
 			var urlVideoText:TextField = new TextField();
 			urlVideoText.defaultTextFormat = new TextFormat("Arial", 18);
 			urlVideoText.text = "Standard video stream from URL";
@@ -74,6 +85,7 @@ package
 			
 			// Video streamed from raw bytes in seamless loop.
 			_videoBytes = new Video(608, 354);
+			_videoBytes.name = "BytesVideo";
 			_videoBytes.loop = true;
 			_videoBytes.y = 300;
 			addChild(_videoBytes);
@@ -95,6 +107,11 @@ package
 				_netConnection2.connect(null);
 			});
 			_ld.load(req);
+		}
+		
+		private function onVideoBoxClicked(e:MouseEvent):void 
+		{
+			trace("Video Box clicked!!!");
 		}
 		
 		private function connectStream():void 
@@ -179,5 +196,11 @@ class CustomClient
 	}
 	public function onCuePoint(info:Object):void {
 		trace("cuepoint: time=" + info.time + " name=" + info.name + " type=" + info.type);
+	}
+	public function onXMPData(info:Object):void {
+		trace("xmpdata", info);
+	}
+	public function onPlayStatus(info:Object):void {
+		trace("playstatus", info);
 	}
 }

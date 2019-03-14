@@ -5,7 +5,6 @@ package
 	import flash.display.Sprite;
 	import flash.utils.getTimer;
 	import flash.events.Event;
-	;
 	
 	/**
 	 * ...

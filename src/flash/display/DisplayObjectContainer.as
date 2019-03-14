@@ -138,12 +138,12 @@ package flash.display
 		
 		override protected function __doMouse(e:flash.events.MouseEvent):DisplayObject 
 		{
-			if (mouseEnabled&&mouseChildren&&visible) {
-				for (var i:int = children.length - 1; i >= 0; i-- ) {
+			if (mouseEnabled && mouseChildren && visible)
+			{
+				for (var i:int = children.length - 1; i >= 0; i--)
+				{
 					var obj:DisplayObject = children[i].__doMouse(e);
-					if (obj) {
-						return obj;
-					}
+					if (obj) return obj;
 				}
 			}
 			return null;
@@ -206,6 +206,19 @@ package flash.display
 			rect.inflate(filterOffsetX, filterOffsetY); // add space for filter effects
 			
 			return rect;
+		}
+		
+		override public function hitTestPoint(x:Number, y:Number, shapeFlag:Boolean = false):Boolean
+		{
+			
+			var rect:Rectangle = getBounds(this);
+			if (rect) return rect.containsPoint(globalToLocal(new Point(x,y)));
+			return false;
+		}
+		
+		override public function hitTestObject(obj:DisplayObject):Boolean
+		{
+			return this.getRect(parent).containsRect(obj.getRect(obj.parent));
 		}
 	}
 }

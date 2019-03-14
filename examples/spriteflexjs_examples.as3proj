@@ -12,11 +12,11 @@
     <movie minorVersion="0" />
     <movie platform="Custom" />
     <movie background="#FFFFFF" />
-    <movie preferredSDK="Apache Royale 0.9.3 FP11.7 AIR14.0 en_US;4.14.1;" />
+    <movie preferredSDK="Apache Royale 0.9.6 FP11.7 AIR14.0 en_US;4.14.1;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
-    <class path="D:\flexjssdk\js\libs" />
+    <class path="D:\apache-royale-0.9.41889\royale-asjs\js\libs" />
     <class path="..\src" />
     <class path="src" />
   </classpaths>
@@ -59,9 +59,8 @@
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>
-    <element path="D:\flexjssdk\js\libs\js.swc" />
+    <element path="D:\apache-royale-0.9.41889\royale-asjs\js\libs\js.swc" />
     <element path="lib\pixijs.swc" />
-    <element path="D:\flexjssdk\js\libs\jasmine.swc" />
   </externalLibraryPaths>
   <!-- Runtime Shared Libraries -->
   <rslPaths>
@@ -77,7 +76,7 @@
   </library>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <compile path="src\TestGraphics.as" />
+    <compile path="src\TestVideo.as" />
   </compileTargets>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>

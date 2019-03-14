@@ -72,7 +72,7 @@ package
 			circle.graphics.drawCircle(0, 0, 200);
 			circle.filters = [new GlowFilter(0xEC7600, 1, 20, 20, 5)];
 			//circle.filters = [new DropShadowFilter(15, 45, 0, .75)];
-			circle.x = circle.y = 220;
+			circle.x = circle.y = 240;
 			
 			circText = new TextField();
 			circText.defaultTextFormat = new TextFormat("Arial", 60, 0xFFFFFF);
@@ -103,7 +103,7 @@ package
 				(i % 2 == 0) ? box.rotation++ : box.rotation--;
 			}
 			
-			circle.rotation++;
+			//circle.rotation++;
 		}
 		
 	}

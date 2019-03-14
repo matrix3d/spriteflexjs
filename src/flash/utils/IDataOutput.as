@@ -98,7 +98,7 @@ package flash.utils
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	throws IOError An I/O error occurred?
+		 * @throws	throws IOError An I/O error occurred?
 		 */
 		function writeBoolean (value:Boolean) : void;
 
@@ -110,7 +110,7 @@ package flash.utils
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	throws IOError An I/O error occurred?
+		 * @throws	throws IOError An I/O error occurred?
 		 */
 		function writeByte (value:int) : void;
 
@@ -135,7 +135,7 @@ package flash.utils
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	throws IOError An I/O error occurred?
+		 * @throws	throws IOError An I/O error occurred?
 		 */
 		function writeBytes (bytes:ByteArray, offset:uint=0, length:uint=0) : void;
 
@@ -145,7 +145,7 @@ package flash.utils
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	throws IOError An I/O error occurred?
+		 * @throws	throws IOError An I/O error occurred?
 		 */
 		function writeDouble (value:Number) : void;
 
@@ -155,7 +155,7 @@ package flash.utils
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	throws IOError An I/O error occurred?
+		 * @throws	throws IOError An I/O error occurred?
 		 */
 		function writeFloat (value:Number) : void;
 
@@ -165,7 +165,7 @@ package flash.utils
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	throws IOError An I/O error occurred?
+		 * @throws	throws IOError An I/O error occurred?
 		 */
 		function writeInt (value:int) : void;
 
@@ -188,7 +188,7 @@ package flash.utils
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	throws IOError An I/O error occurred?
+		 * @throws	throws IOError An I/O error occurred?
 		 */
 		function writeObject (object:*) : void;
 
@@ -199,7 +199,7 @@ package flash.utils
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	throws IOError An I/O error occurred?
+		 * @throws	throws IOError An I/O error occurred?
 		 */
 		function writeShort (value:int) : void;
 
@@ -209,7 +209,7 @@ package flash.utils
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	throws IOError An I/O error occurred?
+		 * @throws	throws IOError An I/O error occurred?
 		 */
 		function writeUnsignedInt (value:uint) : void;
 
@@ -221,7 +221,7 @@ package flash.utils
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	throws IOError An I/O error occurred?
+		 * @throws	throws IOError An I/O error occurred?
 		 * @throws	RangeError If the length is larger than
 		 *   65535.
 		 */
@@ -234,7 +234,7 @@ package flash.utils
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 * @playerversion	Lite 4
-		 * @internal	throws IOError An I/O error occurred?
+		 * @throws	throws IOError An I/O error occurred?
 		 */
 		function writeUTFBytes (value:String) : void;
 	}

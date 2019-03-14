@@ -1,13 +1,13 @@
 package flash.media
 {
+	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.events.ActivityEvent;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
-	import flash.media.Camera;
-	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
+	import flash.media.Camera;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 
@@ -267,15 +267,6 @@ package flash.media
 		}
 
 		/**
-		 * An array of strings indicating the names of all available cameras
-		 * without displaying the Flash Player Privacy dialog box. This array behaves in the
-		 * same way as any other ActionScript array, implicitly providing the zero-based
-		 * index of each camera and the number of cameras on the system (by means of 
-		 * names.length). For more information, see the names Array class entry.
-		 * 
-		 *   Calling the names property requires an extensive examination of the hardware.
-		 * In most cases, you can just use the default camera.On Android, only one camera is supported, even if the device has more than one camera devices. The
-		 * name of the camera is always, "Default."
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 */
@@ -287,11 +278,6 @@ package flash.media
 		public function get position () : String { return null }
 
 		/**
-		 * The required level of picture quality, as determined by the amount of compression being applied to each video
-		 * frame. Acceptable quality values range from 1 (lowest quality, maximum compression) to 100 (highest quality, no compression). The 
-		 * default value is 0, which means that picture quality can vary as needed to avoid exceeding available bandwidth.
-		 * 
-		 *   To set this property, use the setQuality() method.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
 		 */
@@ -378,49 +364,6 @@ package flash.media
 		}
 
 		/**
-		 * Returns a reference to a Camera object for capturing video. To begin capturing
-		 * the video, you must attach the Camera object to a Video object (see Video.attachCamera()
-		 * ). To transmit video to Flash Media Server, call NetStream.attachCamera()
-		 * to attach the Camera object to a NetStream object.
-		 * 
-		 *   Multiple calls to the getCamera() method reference the same camera driver.
-		 * Thus, if your code contains code like firstCam:Camera = getCamera() 
-		 * and secondCam:Camera = getCamera(),
-		 * both firstCam and secondCam reference the same camera,
-		 * which is the user's default camera.On iOS devices with a both a front- and a rear-facing camera, you can only capture
-		 * video from one camera at a time. On Android devices, you can only access the rear-facing camera.In general, you shouldn't pass a value for the name parameter; simply use
-		 * getCamera() to return a reference to the default camera. By means of the Camera
-		 * settings panel (discussed later in this section), the user can specify the default camera
-		 * to use. You can't use ActionScript to set a user's Allow or Deny permission setting
-		 * for access to the camera, but you can display the Adobe Flash Player Settings camera 
-		 * setting dialog box where the user can set the camera permission. When a SWF file using 
-		 * the attachCamera() method tries to 
-		 * attach the camera returned by the getCamera() method to a Video or 
-		 * NetStream object, Flash Player displays a dialog box that lets the user choose  
-		 * to allow or deny access to the camera. (Make sure your application window size is at least 
-		 * 215 x 138 pixels; this is the minimum size Flash Player requires to display the dialog box.) 
-		 * When the user responds to the camera setting dialog box, Flash Player returns an 
-		 * information object in the status event that indicates the user's response: 
-		 * Camera.muted indicates 
-		 * the user denied access to a camera; Camera.Unmuted indicates the user allowed access 
-		 * to a camera. To determine whether the user has denied or allowed access to the camera without 
-		 * handling the status event, use the muted property.In Flash Player, the user can specify permanent privacy settings for a particular domain by right-clicking
-		 * (Windows and Linux) or Control-clicking (Macintosh) while a SWF file is playing, selecting Settings, 
-		 * opening the Privacy dialog, and selecting Remember. If the user selects Remember, Flash Player no longer 
-		 * asks the user whether to allow or deny SWF files from this domain access to your camera.Note: The attachCamera() method will not invoke the dialog box
-		 * to Allow or Deny access to the camera if the user has denied access by selecting Remember 
-		 * in the Flash Player Settings dialog box. In this case, you can prompt the user to change the
-		 * Allow or Deny setting by displaying the Flash Player Privacy panel for the user 
-		 * using Security.showSettings(SecurityPanel.PRIVACY).If getCamera() returns null, either the camera is in use by another
-		 * application, or there are no cameras installed on the system. To determine whether any cameras
-		 * are installed, use the names.length property. To display the Flash Player Camera Settings panel,
-		 * which lets the user choose the camera to be referenced by getCamera(), use 
-		 * Security.showSettings(SecurityPanel.CAMERA). Scanning the hardware for cameras takes time. When the runtime finds at least one camera, 
-		 * the hardware is not scanned again for the lifetime of the player instance. However, if
-		 * the runtime doesn't find any cameras, it will scan each time getCamera is called.
-		 * This is helpful if the camera is present but is disabled; if your SWF file provides a
-		 * Try Again button that calls getCamera, Flash Player can find the camera without the
-		 * user having to restart the SWF file.
 		 * @param	name	Specifies which camera to get, as determined from the array
 		 *   returned by the names property. For most applications, get the default camera 
 		 *   by omitting this parameter. To specify a value for this parameter, use the string representation
@@ -452,7 +395,7 @@ package flash.media
 				.then(function(devices:Array):void {
 					var foundVideoDevice:Boolean = false;
 					
-					trace("What...No Devices? 0 Total: " + devices.length);
+					//trace("What...No Devices? 0 Total: " + devices.length);
 					
 					for (var i:int = 0; i < devices.length; i++)
 					{
@@ -462,13 +405,14 @@ package flash.media
 						{
 							foundVideoDevice = true;
 							
-							var constraint:Object = {
+							var videoConstraint:Object = {
 								deviceId: {exact: device.deviceId}, 
 								facingMode:facingMode,
 								width: { min: minWidth, ideal: minWidth },
 								height: { min: minHeight, ideal: minHeight }
 							};
-							navigator.mediaDevices.getUserMedia({video: constraint})
+							
+							navigator.mediaDevices.getUserMedia({video: videoConstraint, audio: false} as MediaStreamConstraints)
 							.then(function(stream:MediaStream):void {
 								//trace("Camera.getCamera() Found Stream for device: " + device.label, stream);
 								_name = (device.label != "") ? device.label : device.deviceId;
@@ -499,24 +443,6 @@ package flash.media
 		}
 		
 		/**
-		 * Specifies which video frames are transmitted in full (called keyframes)
-		 * instead of being interpolated by the video compression algorithm. This method
-		 * is applicable only if you are transmitting video using Flash Media Server.
-		 * 
-		 *   The Flash Video compression algorithm compresses video by transmitting
-		 * only what has changed since the last frame of the video; these portions are 
-		 * considered to be interpolated frames. Frames of a video can be interpolated according
-		 * to the contents of the previous frame. A keyframe, however, is a video frame that
-		 * is complete; it is not interpolated from prior frames.To determine how to set a value for the keyFrameInterval parameter,
-		 * consider both bandwidth use and video playback accessibility. For example, 
-		 * specifying a higher value for keyFrameInterval (sending keyframes less frequently)
-		 * reduces bandwidth use. 
-		 * However, this may increase the amount of time required to position the playhead
-		 * at a particular point in the video; more prior video frames may have to be interpolated
-		 * before the video can resume.Conversely, specifying a lower value for keyFrameInterval 
-		 * (sending keyframes more frequently) increases bandwidth use because entire video frames
-		 * are transmitted more often, but may decrease the amount of time required to seek a 
-		 * particular video frame within a recorded video.
 		 * @param	keyFrameInterval	A value that specifies which video frames are transmitted in full
 		 *   (as keyframes) instead of being interpolated by the video compression algorithm. 
 		 *   A value of 1 means that every frame is a keyframe, a value of 3 means that every third frame
@@ -530,16 +456,6 @@ package flash.media
 		}
 
 		/**
-		 * Specifies whether to use a compressed video stream for a local view of the camera.
-		 * This method is applicable only if you are transmitting video using Flash Media Server;
-		 * setting compress to true lets you see more precisely how the video
-		 * will appear to users when they view it in real time.
-		 * 
-		 *   Although a compressed stream is useful for testing purposes, such as previewing video
-		 * quality settings, it has a significant processing cost, because the local view is not 
-		 * simply compressed; it is compressed, edited for transmission as it would be over a live
-		 * connection, and then decompressed for local viewing.To set the amount of compression used when you set compress to true,
-		 * use Camera.setQuality().
 		 * @param	compress	Specifies whether to use a compressed video stream (true) 
 		 *   or an uncompressed stream (false) for a local view of what the camera
 		 *   is receiving.
@@ -552,22 +468,6 @@ package flash.media
 		}
 
 		/**
-		 * Sets the camera capture mode to the native mode that best meets the specified requirements.
-		 * If the camera does not have a native mode that matches all the parameters you pass, 
-		 * Flash Player selects a capture mode that most closely synthesizes the requested mode. 
-		 * This manipulation may involve cropping the image and dropping frames.
-		 * 
-		 *   By default, Flash Player drops frames as needed to maintain image size. To minimize the number
-		 * of dropped frames, even if this means reducing the size of the image, pass false
-		 * for the favorArea parameter.When choosing a native mode, Flash Player tries to maintain the requested aspect ratio
-		 * whenever possible. For example, if you issue the command myCam.setMode(400, 400, 30),
-		 * and the maximum width and height values available on the camera are 320 and 288, Flash Player sets
-		 * both the width and height at 288; by setting these properties to the same value, Flash Player 
-		 * maintains the 1:1 aspect ratio you requested.To determine the values assigned to these properties after Flash Player selects the mode
-		 * that most closely matches your requested values, use the width, height,
-		 * and fps properties.
-		 * If you are using Flash Media Server, you can also capture single frames or create time-lapse
-		 * photography. For more information, see NetStream.attachCamera().
 		 * @param	width	The requested capture width, in pixels. The default value is 160.
 		 * @param	height	The requested capture height, in pixels. The default value is 120.
 		 * @param	fps	The requested rate at which the camera should capture data, in frames per second.
@@ -588,33 +488,6 @@ package flash.media
 		}
 
 		/**
-		 * Specifies how much motion is required to dispatch the activity event. 
-		 * Optionally sets the number of milliseconds that must elapse without activity before 
-		 * Flash Player considers motion to have stopped and dispatches the event. 
-		 * Note: Video can be displayed regardless of the value of the
-		 * motionLevel parameter. This parameter determines only when and under
-		 * what circumstances the event is dispatched—not whether video is actually being 
-		 * captured or displayed.
-		 * To prevent the camera from detecting motion at all, pass a value of 100 for the
-		 * motionLevel parameter; the activity event is never dispatched. 
-		 * (You would probably use this value only for testing purposes—for example, to 
-		 * temporarily disable any handlers that would normally be triggered when the event is dispatched.)
-		 * 
-		 *   To determine the amount of motion the camera is currently detecting, use the
-		 * activityLevel property. 
-		 * Motion sensitivity values correspond directly to activity values.
-		 * Complete lack of motion is an activity value of 0. Constant motion is an activity value of 100.
-		 * Your activity value is less than your motion sensitivity value when you're not moving; 
-		 * when you are moving, activity values frequently exceed your motion sensitivity value.
-		 * 
-		 *   This method is similar in purpose to the Microphone.setSilenceLevel() method; 
-		 * both methods are used to specify when the activity event
-		 * should be dispatched. However, these methods have a significantly different impact
-		 * on publishing streams:
-		 * Microphone.setSilenceLevel() is designed to optimize bandwidth. 
-		 * When an audio stream is considered silent, no audio data is sent. Instead, a single message
-		 * is sent, indicating that silence has started. Camera.setMotionLevel() is designed to detect motion and does not affect
-		 * bandwidth usage. Even if a video stream does not detect motion, video is still sent.
 		 * @param	motionLevel	Specifies the amount of motion required to dispatch the
 		 *   activity event. Acceptable values range from 0 to 100. The default value is 50.
 		 * @param	timeout	Specifies how many milliseconds must elapse without activity 
@@ -713,23 +586,6 @@ package flash.media
 		}
 
 		/**
-		 * Sets the maximum amount of bandwidth per second or the required picture quality
-		 * of the current outgoing video feed. This method is generally applicable only if
-		 * you are transmitting video using Flash Media Server.
-		 * 
-		 *   Use this method to specify which element of the outgoing video feed is more
-		 * important to your application—bandwidth use or picture quality.To indicate that bandwidth use takes precedence, pass a value for bandwidth
-		 * and 0 for quality. Flash Player transmits video at the highest quality
-		 * possible within the specified bandwidth. If necessary, Flash Player reduces picture
-		 * quality to avoid exceeding the specified bandwidth. In general, as motion increases,
-		 * quality decreases.To indicate that quality takes precedence, pass 0 for bandwidth 
-		 * and a numeric value for quality. Flash Player uses as much bandwidth
-		 * as required to maintain the specified quality. If necessary, Flash Player reduces the frame
-		 * rate to maintain picture quality. In general, as motion increases, bandwidth use also
-		 * increases.To specify that both bandwidth and quality are equally important, pass numeric 
-		 * values for both parameters. Flash Player transmits video that achieves the specified quality
-		 * and that doesn't exceed the specified bandwidth. If necessary, Flash Player reduces the 
-		 * frame rate to maintain picture quality without exceeding the specified bandwidth.
 		 * @param	bandwidth	Specifies the maximum amount of bandwidth that the current outgoing video
 		 *   feed can use, in bytes per second. To specify that Flash Player video can use as much bandwidth
 		 *   as needed to maintain the value of quality, pass 0 for 

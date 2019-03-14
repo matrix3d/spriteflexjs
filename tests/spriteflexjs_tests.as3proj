@@ -12,11 +12,11 @@
     <movie minorVersion="0" />
     <movie platform="Custom" />
     <movie background="#FFFFFF" />
-    <movie preferredSDK="Apache Royale 0.9.0 FP11.7 AIR14.0 en_US;4.14.1;" />
+    <movie preferredSDK="Apache Royale 0.9.6 FP11.7 AIR14.0 en_US;4.14.1;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
-    <class path="D:\flexjssdk\js\libs" />
+    <class path="D:\apache-royale-0.9.6-bin-js\royale-asjs\js\libs" />
     <class path="..\src" />
     <class path="." />
   </classpaths>
@@ -55,8 +55,8 @@
   </includeLibraries>
   <!-- SWC Libraries -->
   <libraryPaths>
-    <element path="D:\flexjssdk\js\libs\jasmine.swc" />
-    <element path="D:\flexjssdk\js\libs\js.swc" />
+    <element path="D:\apache-royale-0.9.6-bin-js\royale-asjs\js\libs\jasmine.swc" />
+    <element path="D:\apache-royale-0.9.6-bin-js\royale-asjs\js\libs\js.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

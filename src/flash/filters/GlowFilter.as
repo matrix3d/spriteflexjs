@@ -129,7 +129,7 @@ package flash.filters
 		 * .25 sets a transparency value of 25%. The default value is 1.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>alpha</code> property on an existing movie clip 
+		 * @example	The following example changes the <code>alpha</code> property on an existing movie clip 
 		 *   when a user clicks it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.GlowFilter;
@@ -175,7 +175,7 @@ package flash.filters
 		 * to render more quickly than other values.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>blurX</code> property on an existing movie clip 
+		 * @example	The following example changes the <code>blurX</code> property on an existing movie clip 
 		 *   when a user clicks it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.GlowFilter;
@@ -223,7 +223,7 @@ package flash.filters
 		 * to render more quickly than other values.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>blurY</code> property on an existing movie clip 
+		 * @example	The following example changes the <code>blurY</code> property on an existing movie clip 
 		 *   when a user clicks it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.GlowFilter;
@@ -269,7 +269,7 @@ package flash.filters
 		 * 0xRRGGBB. The default value is 0xFF0000.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>color</code> property on an existing movie clip 
+		 * @example	The following example changes the <code>color</code> property on an existing movie clip 
 		 *   when a user clicks it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.GlowFilter;
@@ -315,7 +315,7 @@ package flash.filters
 		 * around the outer edges of the object).
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>inner</code> property on an existing movie clip 
+		 * @example	The following example changes the <code>inner</code> property on an existing movie clip 
 		 *   when a user clicks it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.GlowFilter;
@@ -360,7 +360,7 @@ package flash.filters
 		 * default value is false (no knockout effect).
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>knockout</code> property on an existing movie clip 
+		 * @example	The following example changes the <code>knockout</code> property on an existing movie clip 
 		 *   when a user clicks it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.GlowFilter;
@@ -412,7 +412,7 @@ package flash.filters
 		 * of the blurX and blurY properties.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>quality</code> property on an existing movie clip 
+		 * @example	The following example changes the <code>quality</code> property on an existing movie clip 
 		 *   when a user clicks it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.GlowFilter;
@@ -457,7 +457,7 @@ package flash.filters
 		 * Valid values are 0 to 255. The default is 2.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>strength</code> property on an existing movie clip 
+		 * @example	The following example changes the <code>strength</code> property on an existing movie clip 
 		 *   when a user clicks it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.GlowFilter;
@@ -512,7 +512,7 @@ package flash.filters
 		 *   properties of the original GlowFilter instance.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example creates three GlowFilter objects and compares them: <code>filter_1</code>
+		 * @example	The following example creates three GlowFilter objects and compares them: <code>filter_1</code>
 		 *   is created by using the GlowFilter constructor; <code>filter_2</code> is created by setting it equal to 
 		 *   <code>filter_1</code>; and <code>clonedFilter</code> is created by cloning <code>filter_1</code>.  Notice
 		 *   that although <code>filter_2</code> evaluates as being equal to <code>filter_1</code>, <code>clonedFilter</code>,
@@ -601,7 +601,7 @@ package flash.filters
 		 *   makes the object's fill transparent and reveals the background color of the document.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example instantiates a new GlowFilter instance and applies
+		 * @example	The following example instantiates a new GlowFilter instance and applies
 		 *   it to a flat, rectangular shape.
 		 *   <listing version="2.0">
 		 *   import flash.filters.GlowFilter;
@@ -664,7 +664,7 @@ package flash.filters
 		
 		private function blurFilter(amount:Number, canvas:HTMLCanvasElement):HTMLCanvasElement
 		{
-			amount -= 1.75; // adjusted to match Flash API
+			amount -= 3; // adjusted to match Flash API
 			
 			_offsetX = amount + _blur;
 			_offsetY = amount + _blur;
@@ -683,17 +683,18 @@ package flash.filters
 			bgCtx.drawImage(canvas,  (biggerCanvas.width - canvas.width) / 2, (biggerCanvas.height - canvas.height) / 2);
 			
 			// do the actual blurring
-			bgCtx.globalAlpha = 0.25; // Higher alpha made it more smooth
+			bgCtx.globalAlpha = .25; // Higher alpha made it more smooth
 			// Add blur layers by strength to x and y
 			// 2 made it a bit faster without noticeable quality loss
-			for (var y:int = -amount; y <= amount; y += 2) {
-				for (var x:int = -amount; x <= amount; x += 2) {
+			// TODO use blurX and blurY for amount in for loops
+			for (var y:int = -amount; y <= amount; y += 1) {
+				for (var x:int = -amount; x <= amount; x += 1) {
 					// Apply layers
 					bgCtx.drawImage(biggerCanvas, x, y);
 					// Add an extra layer, prevents it from rendering lines
 					// on top of the images (does makes it slower though)
 					if (x>=0 && y>=0) {
-						bgCtx.drawImage(biggerCanvas, -(x-1), -(y-1));
+						bgCtx.drawImage(biggerCanvas, -((x-1)/2), ((y-1)/2));
 					}
 				}
 			}
@@ -770,7 +771,17 @@ package flash.filters
 			ctx.save();
 			ctx.globalAlpha = _alpha;
 			ctx.globalCompositeOperation = gco;
-			ctx.drawImage(glowCanvas, bounds.x - Math.round(_offsetX/2), bounds.y - Math.round(_offsetY/2));
+			ctx.drawImage(glowCanvas, bounds.x - Math.round(_offsetX / 2), bounds.y - Math.round(_offsetY / 2));
+			
+			//ctx.drawImage(glowCanvas, bounds.x - ((glowCanvas.width - bounds.width) / 2), bounds.y - ((glowCanvas.height - bounds.height) / 2));
+			
+			
+			//ctx.drawImage(glowCanvas, bounds.x - 7, bounds.y - 7); // 11.5
+			
+			trace("bounds: " + bounds.toString());
+			trace("glowCanvas: w: " + glowCanvas.width + ", h: " + glowCanvas.height);
+			trace("offsetX: " + _offsetX + ", offsetY: " + _offsetY);
+			
 			ctx.restore();
 			
 			// clear shadow blur before next redraw or else double shadow blur.

@@ -29,7 +29,7 @@ package bunnymark{
 			smooth = true;
 			numBunnies = 0;
 
-			bunnyAsset = Texture.fromImage("http://192.168.1.250/flexjs/assets/bunnyMark/wabbit_alpha.png"); //new BitmapData(26, 37);// = Assets.getBitmapData("assets/wabbit_alpha.png");
+			bunnyAsset = Texture.fromImage("../assets/bunnyMark/wabbit_alpha.png"); //new BitmapData(26, 37);// = Assets.getBitmapData("assets/wabbit_alpha.png");
 			
 			
 			

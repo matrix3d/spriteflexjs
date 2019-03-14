@@ -165,7 +165,7 @@ package flash.filters
 		 * -15.99 to 15.99 and the adder terms a[4], a[9], a[14], and a[19] are in the range -8000 to 8000.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example creates a new ColorMatrixFilter instance and then
+		 * @example	The following example creates a new ColorMatrixFilter instance and then
 		 *   changes its <code>matrix</code> property. The <code>matrix</code> property cannot be changed by directly modifying
 		 *   its value (for example, <code>clonedFilter.matrix[2] = 1;</code>). Instead, you must
 		 *   get a reference to the array, make the change to the reference, and reset the
@@ -201,7 +201,7 @@ package flash.filters
 		 *   one.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example creates a new ColorMatrixFilter instance and then
+		 * @example	The following example creates a new ColorMatrixFilter instance and then
 		 *   clones it using the <code>clone</code> method. The <code>matrix</code> property cannot be changed directly (for example,
 		 *   <code>clonedFilter.matrix[2] = 1;</code>). Instead, you must get a reference
 		 *   to the array, make the change, and reset the value using

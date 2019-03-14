@@ -117,7 +117,7 @@ package flash.filters
 		 * the angle property has no effect.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>angle</code> property on an existing MovieClip 
+		 * @example	The following example changes the <code>angle</code> property on an existing MovieClip 
 		 *   <code>rect</code> when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.BevelFilter;
@@ -162,7 +162,7 @@ package flash.filters
 		 * to render more quickly than other values.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>blurX</code> property on the existing MovieClip 
+		 * @example	The following example changes the <code>blurX</code> property on the existing MovieClip 
 		 *   <code>rect</code> when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.BevelFilter;
@@ -207,7 +207,7 @@ package flash.filters
 		 * to render more quickly than other values.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>blurY</code> property on the existing MovieClip 
+		 * @example	The following example changes the <code>blurY</code> property on the existing MovieClip 
 		 *   <code>rect</code> when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.BevelFilter;
@@ -250,7 +250,7 @@ package flash.filters
 		 * The offset distance of the bevel. Valid values are in pixels (floating point). The default is 4.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>distance</code> property on the existing MovieClip 
+		 * @example	The following example changes the <code>distance</code> property on the existing MovieClip 
 		 *   <code>rect</code> when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.BevelFilter;
@@ -295,7 +295,7 @@ package flash.filters
 		 * .25 sets a transparency value of 25%. The default value is 1.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>highlightAlpha</code> property on the existing MovieClip 
+		 * @example	The following example changes the <code>highlightAlpha</code> property on the existing MovieClip 
 		 *   <code>rect</code> when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.BevelFilter;
@@ -339,7 +339,7 @@ package flash.filters
 		 * 0xRRGGBB. The default is 0xFFFFFF.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>highlightColor</code> property on the existing MovieClip 
+		 * @example	The following example changes the <code>highlightColor</code> property on the existing MovieClip 
 		 *   <code>rect</code> when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.BevelFilter;
@@ -384,7 +384,7 @@ package flash.filters
 		 * default value is false (no knockout).
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>knockout</code> property on the existing MovieClip 
+		 * @example	The following example changes the <code>knockout</code> property on the existing MovieClip 
 		 *   <code>rect</code> when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.BevelFilter;
@@ -437,7 +437,7 @@ package flash.filters
 		 * BitmapFilterQuality.LOWBitmapFilterQuality.MEDIUMBitmapFilterQuality.HIGH
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>quality</code> property on the existing MovieClip 
+		 * @example	The following example changes the <code>quality</code> property on the existing MovieClip 
 		 *   <code>rect</code> when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.BevelFilter;
@@ -482,7 +482,7 @@ package flash.filters
 		 * .25 sets a transparency value of 25%. The default is 1.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>shadowAlpha</code> property on the existing MovieClip 
+		 * @example	The following example changes the <code>shadowAlpha</code> property on the existing MovieClip 
 		 *   <code>rect</code> when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.BevelFilter;
@@ -526,7 +526,7 @@ package flash.filters
 		 * is 0x000000.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>shadowColor</code> property on the existing MovieClip 
+		 * @example	The following example changes the <code>shadowColor</code> property on the existing MovieClip 
 		 *   <code>rect</code> when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.BevelFilter;
@@ -571,7 +571,7 @@ package flash.filters
 		 * The default value is 1.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>strength</code> property on the existing MovieClip 
+		 * @example	The following example changes the <code>strength</code> property on the existing MovieClip 
 		 *   <code>rect</code> when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.BevelFilter;
@@ -618,7 +618,7 @@ package flash.filters
 		 *   BitmapFilterType.INNERBitmapFilterType.OUTERBitmapFilterType.FULL
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example changes the <code>type</code> property on the existing MovieClip 
+		 * @example	The following example changes the <code>type</code> property on the existing MovieClip 
 		 *   <code>rect</code> when a user clicks on it.
 		 *   <listing version="2.0">
 		 *   import flash.filters.BevelFilter;
@@ -683,7 +683,7 @@ package flash.filters
 		 *   makes the object's fill transparent and reveals the background color of the document.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following code creates a new BevelFilter instance. The values given 
+		 * @example	The following code creates a new BevelFilter instance. The values given 
 		 *   are the default values; you could call the constructor without any values and get the same result.
 		 *   <listing> filter = new flash.filters.BevelFilter (4, 45, 0xFFFFFF, 1, 0x000000, 1, 4, 4, 1, 
 		 *   1, "inner", false) 
@@ -733,7 +733,7 @@ package flash.filters
 		 *   the original BevelFilter instance.
 		 * @langversion	3.0
 		 * @playerversion	Flash 9
-		 * @maelexample	The following example creates three BevelFilter objects and compares them.  <code>filter_1</code>
+		 * @example	The following example creates three BevelFilter objects and compares them.  <code>filter_1</code>
 		 *   is created using the BevelFilter construtor.  <code>filter_2</code> is created by setting it equal to 
 		 *   <code>filter_1</code>.  And, <code>clonedFilter</code> is created by cloning <code>filter_1</code>.  Notice
 		 *   that while <code>filter_2</code> evaluates as being equal to <code>filter_1</code>, <code>clonedFilter</code>,

@@ -13,6 +13,7 @@ package
 	import flash.geom.Matrix;
 	import flash.net.URLRequest;
 	import flash.text.TextField;
+	import flash.display.StageScaleMode;
 	/**
 	 * ...
 	 * @author lizhi
@@ -24,12 +25,28 @@ package
 		private var tf:TextField;
 		public function TestGraphics() 
 		{
-			CONFIG::js_only{
+			/*CONFIG::js_only{
 				SpriteFlexjs.wmode = "gpu batch";
 				SpriteFlexjs.renderer = new WebGLRenderer;
-			}
+			}*/
 			
-			var s:Sprite = new Sprite;
+			SpriteFlexjs.autoSize = true;
+			
+			stage.canvas.style.backgroundColor = "#000000";
+			
+			this.name = "TestGraphics";
+			
+			var triangle:Sprite = new Sprite();
+			triangle.graphics.lineStyle(3);
+			triangle.graphics.beginFill(0xFFFFFF);
+			triangle.graphics.lineTo(50, 100);
+			triangle.graphics.lineTo(-50, 100);
+			triangle.graphics.lineTo(0, 0);
+			triangle.name = "triangle";
+			triangle.x = 400;
+			addChild(triangle);
+			
+			var s:Sprite = new Sprite();
 			addChild(s);
 			
 			//s.graphics.lineStyle(0, 0xff00);
@@ -61,7 +78,7 @@ package
 			var loader:Loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loader_complete);
 			loader.load(new URLRequest("../../assets/wood.jpg"));
-			
+			//stage.scaleX = .5;
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, stage_mouseMove);
 		}
 		
@@ -71,7 +88,7 @@ package
 			for (var i:int = 0; i < numChildren;i++ ) {
 				var c:DisplayObject = getChildAt(i);
 				if (c.hitTestPoint(e.localX,e.localY)) {
-					tf.appendText("hittest,")
+					tf.appendText("hittest,");
 				}
 			}
 		}
@@ -94,11 +111,14 @@ package
 			s3.graphics.curveTo(200, 0, 200, 100);
 			addChild(bmp);
 			bmp.y = 300;
+			
+			this.graphics.beginFill(0x00FF00);
+			this.graphics.drawRect(0, 0, 800, 600);
 		}
 		
 		private function enterFrame(e:Event):void 
 		{
-			matr.rotate(1/180*Math.PI);
+			matr.rotate(1 / 180 * Math.PI);
 		}
 		
 		public function start():void {

@@ -1,5 +1,6 @@
 package flash.display
 {
+	import flash.__native.BaseRenderer;
 	import flash.__native.GLCanvasRenderingContext2D;
 	import flash.__native.WebGLRenderer;
 	import flash.display.InteractiveObject;
@@ -7,7 +8,6 @@ package flash.display
 	//import flash.media.StageVideo;
 	import flash.display.Stage3D;
 	import flash.display.DisplayObject;
-	import flash.geom.Transform;
 	import flash.accessibility.AccessibilityProperties;
 	import flash.accessibility.AccessibilityImplementation;
 	import flash.events.Event;
@@ -20,6 +20,7 @@ package flash.display
 	import flash.events.Event;
 	import flash.events.TouchEvent;
 	import flash.events.KeyboardEvent;
+	import flash.geom.Transform;
 	
 	/**
 	 * Dispatched by the Stage object when the state of the stageVideos property changes.
@@ -140,14 +141,16 @@ package flash.display
 		public var __htmlWrapper:Element;
 		
 		private var _canvas:HTMLCanvasElement;
-		private var _ctx:CanvasRenderingContext2D
-		private var _ctx2d:CanvasRenderingContext2D
+		private var _ctx:CanvasRenderingContext2D;
+		private var _ctx2d:CanvasRenderingContext2D;
 		
 		//private var intervalID:Number;
 		private var needSendMouseMove:Object;
 		private var needSendTouchMove:Object = false;
 		private var lastUpdateTime:int = -1000;
 		//private var requestAnimationFrameHander:Number;
+		private var origWidth:int = -1;
+		private var origHeight:int = -1;
 		
 		private var _align:String = StageAlign.TOP_LEFT;
 		private var _allowsFullScreen:Boolean = true;
@@ -202,7 +205,6 @@ package flash.display
 		private var _tabIndex:int = 0;
 		private var _tabEnabled:Boolean = true;
 		private var _textSnapshot:TextSnapshot;
-		private var _transform:Transform;
 		private var _visible:Boolean = true;
 		private var _width:Number;
 		private var _wmodeGPU:Boolean = true;
@@ -222,8 +224,18 @@ package flash.display
 			
 			trace("power by SpriteFlexJS");
 			
-			__rootHtmlElement = document.createElement("div");
-			document.body.appendChild(__rootHtmlElement);
+			transform = new Transform(this);
+			
+			if (SpriteFlexjs.rootHTMLElement)
+			{
+				__rootHtmlElement = SpriteFlexjs.rootHTMLElement;
+				__rootHtmlElement.innerHTML = '';
+			}
+			else
+			{
+				__rootHtmlElement = document.createElement("div");
+				document.body.appendChild(__rootHtmlElement);
+			}
 			
 			__htmlWrapper = document.createElement("div");
 			__htmlWrapper.style.position = "absolute";
@@ -245,9 +257,10 @@ package flash.display
 			
 			window.addEventListener("resize", window_resize, false);
 			window.addEventListener("orientationchange", window_resize, false);
-			setTimeout(__update);
+			setTimeout(updateStage);
 			
 			_instance = this;
+			_instance.name = "Stage";
 		}
 		
 		public static function get instance():Stage
@@ -264,10 +277,13 @@ package flash.display
 		
 		private function window_resize(e:Object = null):void
 		{
+			if (origWidth == -1) origWidth = SpriteFlexjs.stageWidth;
+			if (origHeight == -1) origHeight = SpriteFlexjs.stageHeight;
+			
 			SpriteFlexjs.dirtyGraphics = true;
 			if (SpriteFlexjs.autoSize){
-				SpriteFlexjs.stageWidth = window.innerWidth;
-				SpriteFlexjs.stageHeight = window.innerHeight;
+				SpriteFlexjs.stageWidth = (SpriteFlexjs.rootHTMLElement) ? SpriteFlexjs.rootHTMLElement.clientWidth : window.innerWidth;
+				SpriteFlexjs.stageHeight = (SpriteFlexjs.rootHTMLElement) ? SpriteFlexjs.rootHTMLElement.clientHeight : window.innerHeight;
 			}
 			_stageWidth = SpriteFlexjs.stageWidth;
 			_stageHeight = SpriteFlexjs.stageHeight;
@@ -275,17 +291,35 @@ package flash.display
 			canvas.height = _stageHeight;
 			canvas.style.width = _stageWidth + "px";
 			canvas.style.height = _stageHeight + "px";
+			if (_instance && _instance.root)
+			{
+				if (_instance.scaleMode == StageScaleMode.SHOW_ALL)
+				{
+					_instance.root.scaleX = SpriteFlexjs.stageWidth / origWidth;
+					_instance.root.scaleY = _instance.root.scaleX;
+					if (_instance.root.scaleY * origHeight > _stageHeight)
+					{
+						_instance.root.scaleY = SpriteFlexjs.stageHeight / origHeight;
+						_instance.root.scaleX = _instance.root.scaleY;
+					}
+				}
+				else if (_instance.scaleMode == StageScaleMode.EXACT_FIT)
+				{
+					_instance.root.scaleX = SpriteFlexjs.stageWidth / origWidth;
+					_instance.root.scaleY = SpriteFlexjs.stageHeight / origHeight;
+				}
+			}
 			dispatchEvent(new Event(Event.RESIZE));
 		}
 		
-		private function __update():void {
+		private function updateStage():void {
 			if(_stageWidth != SpriteFlexjs.stageWidth||
 			_stageHeight != SpriteFlexjs.stageHeight){
 				window_resize(null);
 			}
 			
 			//http://codetheory.in/controlling-the-frame-rate-with-requestanimationframe/	
-			/*requestAnimationFrameHander = */SpriteFlexjs.requestAnimationFrame.call(window,__update);
+			/*requestAnimationFrameHander = */SpriteFlexjs.requestAnimationFrame.call(window, updateStage);
 			//var now:Number = getTimer();
 			//var interval:Number = Math.ceil(1000/frameRate);
 			//var delta:Number = now - lastUpdateTime;
@@ -406,9 +440,10 @@ package flash.display
 		 * @playerversion	AIR 1.5
 		 */
 		public function get colorCorrectionSupport ():String { return _colorCorrectionSupport; }
-
-		public function get constructor ():* { return _constructor; }
-		public function set constructor (c:*):void { _constructor = c; }
+		
+		// constructor is already a property of Object class.
+		//public function get constructor ():* { return _constructor; }
+		//public function set constructor (c:*):void { _constructor = c; }
 
 		public function get contentsScaleFactor ():Number { return _contentsScaleFactor; }
 
@@ -1020,8 +1055,6 @@ package flash.display
 		 */
 		public function get textSnapshot ():flash.text.TextSnapshot { return _textSnapshot; }
 
-		public function set transform (value:Transform):void { _transform = value; }
-
 		override public function set visible(value:Boolean):void 
 		{
 			_visible = value;
@@ -1436,7 +1469,7 @@ package flash.display
 					_canvas.style.position = "absolute";
 					_canvas.style.left = "0px";
 					_canvas.style.top = "0px";
-					_canvas.style.zIndex = -10;
+					//_canvas.style.zIndex = -10;
 					__rootHtmlElement.appendChild(_canvas as HTMLCanvasElement);
 				}
 				
@@ -1491,9 +1524,10 @@ package flash.display
 			}
 			if (flashType) {
 				if (e.targetTouches.length) {
-					_mouseX = e.targetTouches[0].pageX - canvas.offsetLeft;
-					_mouseY = e.targetTouches[0].pageY - canvas.offsetTop;
+					_mouseX = e.targetTouches[0].pageX - canvas.offsetLeft - (SpriteFlexjs.rootHTMLElement ?  SpriteFlexjs.rootHTMLElement.offsetLeft : 0);
+					_mouseY = e.targetTouches[0].pageY - canvas.offsetTop - (SpriteFlexjs.rootHTMLElement ?  SpriteFlexjs.rootHTMLElement.offsetTop : 0);
 				}
+				
 				if (hasEventListener(flashType)) {
 					if(flashType!=TouchEvent.TOUCH_MOVE){
 						dispatchEvent(new TouchEvent(flashType, true, false, 0, true, _mouseX, _mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,(e.buttons!=null)?(e.buttons>0):isButtonDown));
@@ -1501,6 +1535,7 @@ package flash.display
 						needSendTouchMove = true;
 					}
 				}
+				
 				if (hasEventListener(flashType2)) {
 					if(flashType2!=MouseEvent.MOUSE_MOVE){
 						dispatchEvent(new MouseEvent(flashType2, true, false, _mouseX, _mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,(e.buttons!=null)?(e.buttons>0):isButtonDown));
@@ -1508,6 +1543,7 @@ package flash.display
 						needSendMouseMove = e;
 					}
 				}
+				
 				if (flashType===TouchEvent.TOUCH_END&&hasEventListener(MouseEvent.CLICK)) {
 					dispatchEvent(new MouseEvent(MouseEvent.CLICK, true, false, _mouseX, _mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,(e.buttons!=null)?(e.buttons>0):isButtonDown));
 				}
@@ -1572,9 +1608,9 @@ package flash.display
 					break;
 					
 			}
-			if(flashType){
-				_mouseX = e.pageX - canvas.offsetLeft;
-				_mouseY = e.pageY - canvas.offsetTop;
+			if (flashType){
+				_mouseX = e.pageX - canvas.offsetLeft - (SpriteFlexjs.rootHTMLElement ?  SpriteFlexjs.rootHTMLElement.offsetLeft : 0);
+				_mouseY = e.pageY - canvas.offsetTop - (SpriteFlexjs.rootHTMLElement ?  SpriteFlexjs.rootHTMLElement.offsetTop : 0);
 				if (hasEventListener(flashType)) {
 					if (flashType != MouseEvent.MOUSE_MOVE){
 						dispatchEvent(new MouseEvent(flashType,true,false,_mouseX,_mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,(e.buttons!=null)?(e.buttons>0):isButtonDown,e.wheelDelta));
@@ -1600,6 +1636,7 @@ package flash.display
 					SpriteFlexjs.renderer = new WebGLRenderer;
 				}else{
 					_ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+					SpriteFlexjs.renderer = new BaseRenderer();
 				}
 			}
 			return _ctx;
@@ -1614,6 +1651,11 @@ package flash.display
 			return _ctx2d;
 		}
 		
+		
+		public function setRoot(value:DisplayObject):void 
+		{
+			_root = value;
+		}
 		/************************ </Non Flash API Helper Methods> *****************************************/
 	}
 }

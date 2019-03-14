@@ -16,7 +16,8 @@ package
 		public static var batDrawCounter:int;
 		public static var debug:Boolean = false;
 		public static var wmode:String = "direct";//direct,gpu
-		public static var renderer:IRenderer = new BaseRenderer;
+		public static var rootHTMLElement:HTMLElement;
+		public static var renderer:IRenderer = new BaseRenderer();
 		public static var dirtyGraphics:Boolean = true;
 		public static var requestAnimationFrame:Function =
 			window["requestAnimationFrame"]       ||
@@ -24,7 +25,7 @@ package
 			window["mozRequestAnimationFrame"]    ||
 			window["oRequestAnimationFrame"] ||
 			window["msRequestAnimationFrame"] ||
-			function(callback):void {
+			function(callback:Function):void {
 				window["setTimeout"](callback, 1000 / 60);
 			};
 

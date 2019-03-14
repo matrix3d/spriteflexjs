@@ -23,6 +23,7 @@ package flash.display
 		private static var _globalStage:Stage;
 		private var _stage:Stage;
 		private var _inited:Boolean = false;
+		protected var _root:DisplayObject;
 		
 		private static var ID:int = 0;
 		public var innerID:int;
@@ -61,6 +62,8 @@ package flash.display
 				
 				if (innerID === 0)
 				{
+					//_globalStage.addChild(this);
+					_globalStage.setRoot(this); 
 					_stage = _globalStage;
 					_stage.addEventListener(Event.ENTER_FRAME, __enterFrame);
 					_stage.addEventListener(MouseEvent.CLICK, __mouseevent);
@@ -95,7 +98,7 @@ package flash.display
 		/************************ <Non Flash API Helper Methods> *****************************************/
 		public function get loaderInfo():LoaderInfo  { return _loaderInfo; }
 		
-		public function get root():DisplayObject  { return null }
+		public function get root():DisplayObject  { return _root }
 		
 		public function get name():String  { return _name; }
 		
@@ -373,8 +376,8 @@ package flash.display
 		
 		public function hitTestPoint(x:Number, y:Number, shapeFlag:Boolean = false):Boolean
 		{
-			var rect:Rectangle = __getRect();
-			if(rect)return rect.containsPoint(globalToLocal(new Point(x,y)));
+			//var rect:Rectangle = __getRect();
+			//if (rect) return rect.containsPoint(globalToLocal(new Point(x,y)));
 			return false;
 		}
 		
@@ -455,8 +458,10 @@ package flash.display
 			//如果找到向上遍历父级，抛出事件
 			var time:Number = getTimer();
 			var obj:DisplayObject = __doMouse(e);
+			
 			time = getTimer();
-			if (e.type===MouseEvent.MOUSE_MOVE) {
+			if (e.type === MouseEvent.MOUSE_MOVE)
+			{
 				//如果类型是mousemove 处理mouseover 和 mouseout事件
 				//如果上次鼠标经过obj不在obj上层节点
 				//递归抛出mouseout事件直到为null或当前节点
@@ -480,12 +485,10 @@ package flash.display
 				}
 				lastMouseOverObj = obj;
 			}
-			if(obj){
-				obj.dispatchEvent(e);
-			}
-			if(SpriteFlexjs.debug){
-				trace("__dispatchmouseevent", getTimer() - time);
-			}
+			
+			if (obj) obj.dispatchEvent(e);
+			
+			if (SpriteFlexjs.debug) trace("__dispatchmouseevent", getTimer() - time);
 		}
 		
 		protected function __doMouse(e:flash.events.MouseEvent):DisplayObject {

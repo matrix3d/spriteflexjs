@@ -161,12 +161,9 @@ package flash.display
 		override protected function __doMouse(e:flash.events.MouseEvent):DisplayObject 
 		{
 			Stage.instance.canvas.style.cursor = "default";
-			
 			if (mouseEnabled && visible) {
 				var obj:DisplayObject = super.__doMouse(e);
-				if (obj) {
-					return obj;
-				}
+				if (obj) return obj;
 				
 				if (hitTestPoint(stage.mouseX, stage.mouseY)) {
 					if (_buttonMode) Stage.instance.canvas.style.cursor = "pointer";

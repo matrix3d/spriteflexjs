@@ -17,6 +17,10 @@ Quick Links
   * [Showcase](http://matrix3d.github.io/assets/html5/flexjsstage3d/bin/js-release/)
   * [jsmin](https://codepen.io/matrix3d/pen/mAZmVy)
 
+Roadmap
+-----------
+[Roadmap](https://github.com/matrix3d/spriteflexjs/wiki/Roadmap)
+
 微信小游戏适配
 -----------
 更改game.js

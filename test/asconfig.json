@@ -1,5 +1,5 @@
 {
-    "config": "flex",
+    "config": "royale",
     "compilerOptions": {
         "debug": true,
         "targets": ["JS"],
@@ -26,6 +26,6 @@
     
     "files":
     [
-        "src/TestMouseEvent.as"
+        "../examples/src/TestBox2D.as"
     ]
 }

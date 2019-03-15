@@ -16,6 +16,7 @@ Quick Links
 * [spriteflexjs Wiki](https://github.com/matrix3d/spriteflexjs/wiki)
   * [Showcase](http://matrix3d.github.io/assets/html5/flexjsstage3d/bin/js-release/)
   * [jsmin](https://codepen.io/matrix3d/pen/mAZmVy)
+* [Roadmap](https://github.com/matrix3d/spriteflexjs/wiki/Roadmap)
 
 微信小游戏适配
 -----------

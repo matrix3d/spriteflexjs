@@ -319,7 +319,7 @@ package flash.display
 			}
 			
 			//http://codetheory.in/controlling-the-frame-rate-with-requestanimationframe/	
-			/*requestAnimationFrameHander = */SpriteFlexjs.requestAnimationFrame.call(window, updateStage);
+			/*requestAnimationFrameHander = */SpriteFlexjs.requestAnimationFrame.call(window, _updateStage);
 			//var now:Number = getTimer();
 			//var interval:Number = Math.ceil(1000/frameRate);
 			//var delta:Number = now - lastUpdateTime;

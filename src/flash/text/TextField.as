@@ -539,17 +539,21 @@ package flash.text
 			super.__update(ctx);
 			if (_text != null && visible)
 			{
-				if (filters.length && !cacheAsBitmap && !parent.cacheAsBitmap) cacheAsBitmap = true;
-				
-				if (cacheAsBitmap && !parent.cacheAsBitmap && _type != TextFieldType.INPUT)
-				{
-					SpriteFlexjs.renderer.renderImage(ctx, _cacheImage, transform.concatenatedMatrix, blendMode, transform.concatenatedColorTransform, -this.x - _cacheOffsetX, -this.y - _cacheOffsetY);
-				}
-				else
-				{
-					__draw(ctx, transform.concatenatedMatrix);
-				}
+				SpriteFlexjs.renderer.renderRichText(ctx, this);
 				SpriteFlexjs.drawCounter++;
+			}
+		}
+		
+		public function __updateCanvas(ctx:CanvasRenderingContext2D):void{
+			if (filters.length && !cacheAsBitmap && !parent.cacheAsBitmap) cacheAsBitmap = true;
+				
+			if (cacheAsBitmap && !parent.cacheAsBitmap && _type != TextFieldType.INPUT)
+			{
+				SpriteFlexjs.renderer.renderImage(ctx, _cacheImage, transform.concatenatedMatrix, blendMode, transform.concatenatedColorTransform, -this.x - _cacheOffsetX, -this.y - _cacheOffsetY);
+			}
+			else
+			{
+				__draw(ctx, transform.concatenatedMatrix);
 			}
 		}
 		

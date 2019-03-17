@@ -124,9 +124,9 @@ package flash.__native
 			glctx.drawImageInternal(null, null, null, null, true, null, true, true);
 		}
 		
-		override public function renderRichText(ctx:CanvasRenderingContext2D, txt:TextField, m:Matrix, blendMode:String, colorTransform:ColorTransform, x:Number, y:Number):void{
+		/*override public function renderRichText(ctx:CanvasRenderingContext2D, txt:TextField):void{
 			
-		}
+		}*/
 		
 		override public function start(ctx:CanvasRenderingContext2D):void 
 		{

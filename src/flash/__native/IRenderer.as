@@ -43,7 +43,7 @@ package flash.__native
 			
 		}
 		
-		public function renderRichText(ctx:CanvasRenderingContext2D,txt:TextField, m:Matrix, blendMode:String, colorTransform:ColorTransform,x:Number,y:Number):void{
+		public function renderRichText(ctx:CanvasRenderingContext2D,txt:TextField):void{
 		}
 		
 		public function finish(ctx:CanvasRenderingContext2D):void{

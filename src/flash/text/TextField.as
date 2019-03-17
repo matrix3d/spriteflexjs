@@ -226,7 +226,6 @@ package flash.text
 							var c:Char = chars[i];
 						}
 					}
-					WebGLRenderer.textCharSet.rebuild();
 					//draw vbuff ibuff
 				}
 			}

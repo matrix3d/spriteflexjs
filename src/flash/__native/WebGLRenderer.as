@@ -1,11 +1,13 @@
 package flash.__native 
 {
+	import flash.__native.te.CharSet;
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.display.GraphicsPath;
 	import flash.display.IGraphicsData;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
+	import flash.text.TextField;
 	import flash.text.TextFormat;
 	/**
 	 * ...
@@ -14,6 +16,7 @@ package flash.__native
 	public class WebGLRenderer extends BaseRenderer
 	{
 		//private var path2glpath:ObjectMap = new ObjectMap;
+		public var textCharSet:CharSet = new CharSet;
 		public function WebGLRenderer() 
 		{
 			
@@ -119,6 +122,15 @@ package flash.__native
 		override public function finish(ctx:CanvasRenderingContext2D):void{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
 			glctx.drawImageInternal(null, null, null, null, true, null, true, true);
+		}
+		
+		override public function renderRichText(ctx:CanvasRenderingContext2D, txt:TextField, m:Matrix, blendMode:String, colorTransform:ColorTransform, x:Number, y:Number):void{
+			
+		}
+		
+		override public function start(ctx:CanvasRenderingContext2D):void 
+		{
+			textCharSet.rebuild();
 		}
 	}
 

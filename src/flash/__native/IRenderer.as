@@ -5,6 +5,7 @@ package flash.__native
 	import flash.display.GraphicsPath;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
+	import flash.text.TextField;
 	import flash.text.TextFormat;
 	/**
 	 * ...
@@ -40,6 +41,9 @@ package flash.__native
 		
 		public function renderText(ctx:CanvasRenderingContext2D,txt:String,textFormat:TextFormat, m:Matrix, blendMode:String, colorTransform:ColorTransform,x:Number,y:Number):void{
 			
+		}
+		
+		public function renderRichText(ctx:CanvasRenderingContext2D,txt:TextField, m:Matrix, blendMode:String, colorTransform:ColorTransform,x:Number,y:Number):void{
 		}
 		
 		public function finish(ctx:CanvasRenderingContext2D):void{

@@ -16,7 +16,7 @@ package flash.__native
 	public class WebGLRenderer extends BaseRenderer
 	{
 		//private var path2glpath:ObjectMap = new ObjectMap;
-		public var textCharSet:CharSet = new CharSet;
+		public static var textCharSet:CharSet = new CharSet;
 		public function WebGLRenderer() 
 		{
 			

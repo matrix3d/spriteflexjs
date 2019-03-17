@@ -1,5 +1,7 @@
 package flash.text
 {
+	import flash.__native.WebGLRenderer;
+	import flash.__native.te.Char;
 	import flash.display.BitmapData;
 	import flash.display.BlendMode;
 	import flash.display.Graphics;
@@ -37,6 +39,9 @@ package flash.text
 		private var _cacheOffsetY:Number = 0;
 		private var _filterOffsetX:Number = 0;
 		private var _filterOffsetY:Number = 0;
+		
+		//for webgl
+		private var chars:Array; 
 		
 		
 		public function TextField()
@@ -196,6 +201,30 @@ package flash.text
 			lines = txt.split("\n");
 			SpriteFlexjs.dirtyGraphics = true;
 			graphicsDirty = true;
+			
+			if (txt&&txt.length>0&&SpriteFlexjs.renderer is WebGLRenderer){
+				chars = [];
+				var l:int = txt.length;
+				for (var i:int = 0; i < l;i++ ){
+					var c:Char = new Char(txt.charAt(i),_textFormat.size as int,_textFormat.font);//color font size etc
+					chars.push(c);
+					WebGLRenderer.textCharSet.add(c);
+				}
+			}
+		}
+		
+		public function __updateGL():void{
+			var l:int = chars.length;
+			if(chars&&l>0){
+				if (graphicsDirty){
+					graphicsDirty = false;
+					//构建vbuff ibuff
+					for (var i:int = 0; i < l;i++ ){
+						var c:Char = chars[i];
+					}
+				}
+				//draw vbuff ibuff
+			}
 		}
 		
 		public function get textColor():uint  { return int(_textFormat.color); }

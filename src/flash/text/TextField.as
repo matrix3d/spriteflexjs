@@ -17,6 +17,7 @@ package flash.text
 		private var _type:String = TextFieldType.DYNAMIC;
 		private var graphics:Graphics = new Graphics;
 		private var graphicsDirty:Boolean = true;
+		private var glDirty:Boolean = false;
 		private static var richTextFields:Array = ["font", "size", "color", "bold", "italic", "underline", "url", "target", "align", "leftMargin", "rightMargin", "indent", "leading", "blockIndent", "kerning", "letterSpacing", "display"];
 		private var _text:String="";
 		private var lines:Array = [];
@@ -202,7 +203,8 @@ package flash.text
 			SpriteFlexjs.dirtyGraphics = true;
 			graphicsDirty = true;
 			
-			if (txt&&txt.length>0&&SpriteFlexjs.renderer is WebGLRenderer){
+			if (txt && txt.length > 0 && SpriteFlexjs.renderer is WebGLRenderer){
+				glDirty = true;
 				chars = [];
 				var l:int = txt.length;
 				for (var i:int = 0; i < l;i++ ){
@@ -214,16 +216,19 @@ package flash.text
 		}
 		
 		public function __updateGL():void{
-			var l:int = chars.length;
-			if(chars&&l>0){
-				if (graphicsDirty){
-					graphicsDirty = false;
-					//构建vbuff ibuff
-					for (var i:int = 0; i < l;i++ ){
-						var c:Char = chars[i];
+			if(chars){
+				var l:int = chars.length;
+				if(l>0){
+					if (glDirty){
+						glDirty = false;
+						//构建vbuff ibuff
+						for (var i:int = 0; i < l;i++ ){
+							var c:Char = chars[i];
+						}
 					}
+					WebGLRenderer.textCharSet.rebuild();
+					//draw vbuff ibuff
 				}
-				//draw vbuff ibuff
 			}
 		}
 		

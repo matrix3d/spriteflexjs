@@ -1,5 +1,8 @@
 package flash.text
 {
+	import flash.__native.GLCanvasRenderingContext2D;
+	import flash.__native.GLDrawable;
+	import flash.__native.GLIndexBufferSet;
 	import flash.__native.WebGLRenderer;
 	import flash.__native.te.Char;
 	import flash.display.BitmapData;
@@ -43,6 +46,11 @@ package flash.text
 		
 		//for webgl
 		private var chars:Array; 
+		private static var indexPool:Object = {};
+		private static var DRAWABLE_POOL:Object = {};
+		private var da:GLDrawable;
+		private var indexBufferSet:GLIndexBufferSet;
+		private var nowKey:int = 0;
 		
 		
 		public function TextField()
@@ -215,19 +223,94 @@ package flash.text
 			}
 		}
 		
-		public function __updateGL():void{
-			if(chars){
-				var l:int = chars.length;
-				if(l>0){
-					if (glDirty){
-						glDirty = false;
-						//构建vbuff ibuff
-						for (var i:int = 0; i < l;i++ ){
-							var c:Char = chars[i];
+		private static function PUSH_POOL(key:int,da:GLDrawable):void{
+			var arr:Array = DRAWABLE_POOL[key];
+			if (arr==null){
+				arr = DRAWABLE_POOL[key] = [];
+			}
+			arr.push(da);
+		}
+		
+		private static function POP_POOL(pow2num:int):GLDrawable{
+			var arr:Array = DRAWABLE_POOL[pow2num];
+			if (arr==null){
+				arr = DRAWABLE_POOL[pow2num] = [];
+			}
+			if (arr.length==0){
+				var da:GLDrawable  = new GLDrawable(new Float32Array(pow2num * 8),new Float32Array(pow2num*8),null,WebGLRenderingContext.STATIC_DRAW);
+				/*da.pos = new VertexBufferSet(3,new Vector.<Number>(pow2num * 12),"dynamicDraw");
+				da.uv = new VertexBufferSet(2, new Vector.<Number>(pow2num * 8), "dynamicDraw");*/
+				/*var colord:ByteArray = new ByteArray;
+				colord.endian = Endian.LITTLE_ENDIAN;
+				colord.length = pow2num * 32;
+				da.color = new BytesVertexBufferSet(colord, 2, "dynamicDraw");*/
+				return da;
+			}
+			return arr.pop();
+		}
+		
+		private function __updateBuff():void{
+			var num:int = chars.length;
+			if(num>0){
+				if (glDirty){
+					glDirty = false;
+					//构建vbuff ibuff
+
+					var pow2num:int = getNextPow2(num);
+					if (da==null){
+						nowKey = pow2num;
+						da = POP_POOL(pow2num);
+					}else if(nowKey!=pow2num){
+						PUSH_POOL(nowKey, da);
+						da = POP_POOL(pow2num);
+						nowKey = pow2num;
+					}
+					
+					indexBufferSet= indexPool[pow2num];
+					var needNew:Boolean = indexBufferSet == null;
+					if (needNew){
+						indexBufferSet = indexPool[pow2num] = new GLIndexBufferSet(new Uint16Array(pow2num*6),WebGLRenderingContext.STATIC_DRAW);
+						var indexd:Uint16Array = indexBufferSet.data;
+						for (var i:int = 0; i < pow2num;i++ ){
+							indexd[i * 6]  = i * 4;
+							indexd[i * 6+1]  =indexd[i * 6+3] =i * 4+2;
+							indexd[i * 6+2] = indexd[i * 6+4] =i * 4+1;
+							indexd[i * 6+5] = i * 4+3;
 						}
 					}
-					//draw vbuff ibuff
+					var pos:Float32Array = da.pos.data as Float32Array;
+					da.pos.dirty = true;
+					
+					//var posmatr:Matrix = transform.concatenatedMatrix;
+					var x0:Number = 0/*posmatr.a * x + posmatr.c * y +*/// posmatr.tx;
+					var y0:Number = 0/*posmatr.d * y + posmatr.b * x +*/// posmatr.ty;
+						
+					for ( i = 0; i < num;i++ ){
+						var c:Char = chars[i];//0, 0, 1, 0, 0, 1, 1, 1
+						pos[i * 8] = i * 10+x0;
+						pos[i * 8+1] = y0;
+						pos[i * 8+2] = i*10+9+x0;
+						pos[i * 8+3] = y0;
+						pos[i * 8+4] = i*10+x0;
+						pos[i * 8+5] = 10+y0;
+						pos[i * 8+6] = i*10+9+x0;
+						pos[i * 8+7] = 10+y0;
+					}
+					var color:Uint32Array = da.color.data as Uint32Array;
+					for (i = 0; i < color.length;i++ ){
+						color[i] = 0xff0000ff;
+					}
+					da.color.dirty = true;
 				}
+			}
+		}
+		
+		public function __updateGL(ctx:GLCanvasRenderingContext2D):void{
+			if(chars&&chars.length>0){
+				__updateBuff();
+				//draw vbuff ibuff
+				da.index = indexBufferSet;
+				ctx.renderImage(null, da, transform.concatenatedMatrix,null, false, false, false);
 			}
 		}
 		
@@ -651,6 +734,14 @@ package flash.text
 				return boundHelpRect;
 			}
 			return null;
+		}
+		
+		private function getNextPow2(v:int):int {
+			var r:int = 1;
+			while (r < v) {
+				r *= 2;
+			}
+			return r;
 		}
 	}
 }

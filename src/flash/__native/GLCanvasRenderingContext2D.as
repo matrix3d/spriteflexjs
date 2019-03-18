@@ -280,7 +280,7 @@ package flash.__native
 			}
 		}
 		
-		private function renderImage(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean,scaleWithImageUV:Boolean,isImage:Boolean):void{
+		public function renderImage(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean,scaleWithImageUV:Boolean,isImage:Boolean):void{
 			SpriteFlexjs.batDrawCounter++;
 			if (!isImage){
 				ctx.setProgram(colorProg);

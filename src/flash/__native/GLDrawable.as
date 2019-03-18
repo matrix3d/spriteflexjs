@@ -15,9 +15,15 @@ package flash.__native
 		public function GLDrawable(posData:Float32Array,uvData:Float32Array,iData:Uint16Array,usage:Number) 
 		{
 			this.usage = usage;
-			pos = new GLVertexBufferSet(posData, 2,usage);
-			uv = new GLVertexBufferSet(uvData, 2,usage);
-			index = new GLIndexBufferSet(iData,usage);
+			if (posData){
+				pos = new GLVertexBufferSet(posData, 2,usage);
+			}
+			if(uvData){
+				uv = new GLVertexBufferSet(uvData, 2, usage);
+			}
+			if(iData){
+				index = new GLIndexBufferSet(iData, usage);
+			}
 		}
 		
 		public function get color():GLVertexBufferSet 

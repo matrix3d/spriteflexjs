@@ -124,10 +124,13 @@ package flash.__native
 			glctx.drawImageInternal(null, null, null, null, true, null, true, true);
 		}
 		
+		/**
+		 * @royaleignorecoercion flash.__native.GLCanvasRenderingContext2D
+		 */
 		override public function renderRichText(ctx:CanvasRenderingContext2D, t:TextField):void 
 		{
 			t.__updateCanvas(ctx);
-			t.__updateGL();
+			//t.__updateGL(ctx as GLCanvasRenderingContext2D);
 		}
 		
 		override public function start(ctx:CanvasRenderingContext2D):void 

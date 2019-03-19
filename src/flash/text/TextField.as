@@ -30,7 +30,7 @@ package flash.text
 		private var _textFormat:TextFormat=new TextFormat;
 		private var _width:Number = 100;
 		private var _height:Number = 100;
-		private var _autoSize:String;
+		private var _autoSize:String=TextFieldAutoSize.NONE;
 		private var _background:Boolean = false;
 		private var _backgroundColor:uint = 0xFFFFFF;
 		private var _border:Boolean = false;
@@ -59,6 +59,7 @@ package flash.text
 		public var disWrapper:Sprite;
 		public var _textWidth:int = -1;
 		public var _textHeight:int = -1;
+		private var _wordWrap:Boolean = false;
 		private static var lineInfos:Array = [];
 		
 		
@@ -225,7 +226,7 @@ package flash.text
 				chars = [];
 				var l:int = txt.length;
 				for (var i:int = 0; i < l;i++ ){
-					var c:Char = new Char(txt.charAt(i),_textFormat.size as int,_textFormat.font);//color font size etc
+					var c:Char = new Char(txt.charAt(i),_textFormat.size as int,_textFormat.font,_textFormat.color as uint);//color font size etc
 					chars.push(c);
 					WebGLRenderer.textCharSet.add(c);
 				}
@@ -435,34 +436,15 @@ package flash.text
 							var maxFontSize:int = txt.lineInfo.maxFontSize + offsetY;
 							var offsetX:int = txt.lineInfo.offsetX;
 							
-							posd[k * 8] = txt.x0 + offsetX;
-							posd[k * 8 + 1] = txt.y0 + maxFontSize;
-							posd[k * 8 + 2] = txt.x1 + offsetX;
-							posd[k * 8 + 3] = txt.y0 + maxFontSize;
-							posd[k * 8 + 4] = txt.x0 + offsetX;
-							posd[k * 8 + 5] = txt.y1 + maxFontSize;
-							posd[k * 8 + 6] = txt.x1 + offsetX;
-							posd[k * 8 + 7] = txt.y1 + maxFontSize;
+							posd[k * 8] = posd[k * 8 + 4] =txt.x0 + offsetX;
+							posd[k * 8 + 1] = posd[k * 8 + 3] =txt.y0 + maxFontSize;
+							posd[k * 8 + 2] =posd[k * 8 + 6] = txt.x1 + offsetX;
+							posd[k * 8 + 5] =posd[k * 8 + 7] = txt.y1 + maxFontSize;
 							
-							/*posd[k * 12] = pout[0] + (txt.x0 +offsetX)*pout[3]+(txt.y0+maxFontSize) * pout[6];
-							posd[k * 12 + 1] = pout[1] +(txt.x0+offsetX)* pout[4]+(txt.y0+maxFontSize) * pout[7];
-							posd[k * 12 + 2] = pout[2] + (txt.x0+offsetX) * pout[5]+(txt.y0+maxFontSize) * pout[8];
-							
-							posd[k * 12 + 3] = pout[0] + (txt.x1+offsetX) * pout[3]+(txt.y0+maxFontSize) * pout[6];
-							posd[k * 12 + 4] = pout[1] + (txt.x1+offsetX) * pout[4]+(txt.y0+maxFontSize) * pout[7];
-							posd[k * 12 + 5] = pout[2] + (txt.x1+offsetX) * pout[5]+(txt.y0+maxFontSize) * pout[8];
-							
-							posd[k * 12 + 6] = pout[0]  + (txt.x1+offsetX) * pout[3]+(txt.y1+maxFontSize) * pout[6];
-							posd[k * 12 + 7] = pout[1] + (txt.x1+offsetX) * pout[4]+(txt.y1+maxFontSize) * pout[7];
-							posd[k * 12 + 8] = pout[2] + (txt.x1+offsetX) * pout[5]+(txt.y1+maxFontSize) * pout[8];
-							
-							posd[k * 12 + 9] = pout[0] + (txt.x0+offsetX) * pout[3]+(txt.y1+maxFontSize) * pout[6];
-							posd[k * 12 + 10] = pout[1] + (txt.x0+offsetX) * pout[4]+(txt.y1+maxFontSize) * pout[7];
-							posd[k * 12 + 11] = pout[2] + (txt.x0+offsetX) * pout[5]+(txt.y1+maxFontSize) * pout[8];*/
-							
-							uvd[k * 8] = uvd[k * 8 + 6] = char.u0;
+
+							uvd[k * 8] = uvd[k * 8 + 4] = char.u0;
 							uvd[k * 8 + 1] = uvd[k * 8 + 3] = char.v0;
-							uvd[k * 8 + 2] = uvd[k * 8 + 4] = char.u1;
+							uvd[k * 8 + 2] = uvd[k * 8 + 6] = char.u1;
 							uvd[k * 8 + 5] = uvd[k * 8 + 7] = char.v1;
 							
 							/*var abgr:uint = alpha|txt.bgr;
@@ -492,10 +474,11 @@ package flash.text
 							colord.writeUnsignedInt(channel);
 							colord.writeUnsignedInt(abgr);
 							colord.writeUnsignedInt(channel);*/
-							colord[k * 4] = 0xff0000ff;
-							colord[k * 4+1] = 0xff0000ff;
-							colord[k * 4+2] = 0xff0000ff;
-							colord[k * 4+3] = 0xff0000ff;
+							var color:uint = 0xff000000|txt.bgr;
+							colord[k * 4] = color;
+							colord[k * 4+1] = color;
+							colord[k * 4+2] = color;
+							colord[k * 4+3] = color;
 							
 							k++;
 							
@@ -536,24 +519,6 @@ package flash.text
 						}
 					}
 				}
-				
-				/*var x0:Number = 0
-				var y0:Number = 0
-					
-				for ( i = 0; i < num;i++ ){
-					var c:Char = chars[i];//0, 0, 1, 0, 0, 1, 1, 1
-					pos[i * 8] = i * 10+x0;
-					pos[i * 8+1] = y0;
-					pos[i * 8+2] = i*10+9+x0;
-					pos[i * 8+3] = y0;
-					pos[i * 8+4] = i*10+x0;
-					pos[i * 8+5] = 10+y0;
-					pos[i * 8+6] = i*10+9+x0;
-					pos[i * 8+7] = 10+y0;
-				}*/
-				/*for (i = 0; i < color.length;i++ ){
-					color[i] = 0xff0000ff;
-				}*/
 			}
 		}
 		
@@ -561,8 +526,11 @@ package flash.text
 			if(chars&&chars.length>0){
 				__updateBuff();
 				//draw vbuff ibuff
-				da.index = indexBufferSet;
-				ctx.renderImage(WebGLRenderer.textCharSet.image, da, transform.concatenatedMatrix,null, false, false, true);
+				if(num>0){
+					da.index = indexBufferSet;
+					da.numTriangles = num * 2;
+					ctx.renderImage(WebGLRenderer.textCharSet.image, da, transform.concatenatedMatrix, null, false, false, true);
+				}
 			}
 		}
 		
@@ -576,13 +544,15 @@ package flash.text
 		}
 		
 		public function get textHeight():Number  {
-			if(_textHeight!=-1){
+			__updateBuff();
+			if (_textHeight !=-1){
 				return _textHeight;
 			}
 			return lines?int(defaultTextFormat.size) * lines.length : 0; 
 		}
 		
 		public function get textWidth():Number  {
+			__updateBuff();
 			if(_textWidth!=-1){
 				return _textWidth;
 			}
@@ -627,9 +597,9 @@ package flash.text
 			text = input.value;
 		}
 		
-		public function get wordWrap():Boolean  { return false; }
+		public function get wordWrap():Boolean  { return _wordWrap; }
 		
-		public function set wordWrap(param1:Boolean):void  {/**/ }
+		public function set wordWrap(param1:Boolean):void  {_wordWrap = param1; }
 		
 		public function appendText(newText:String):void
 		{

@@ -25,12 +25,12 @@ package flash.__native.te
 		public var y1:Number;
 		public var charVersion:int = 0;
 		public var lineInfo:LineInfo;
-		public function Char(v:String,size:int,font:String) 
+		public function Char(v:String,size:int,font:String,color:uint) 
 		{
 			this.font = font;
 			this.size = size;
 			this.v = v;
-			
+			this.color = color;
 		}
 		
 		public function get color():uint 

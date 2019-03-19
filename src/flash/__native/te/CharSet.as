@@ -14,6 +14,9 @@ package flash.__native.te
 		private var newChars:Array = [];
 		public var image:Object;
 		private var ctx:CanvasRenderingContext2D;
+		private var gx:int = 0;
+		private var gy:int = 0;
+		private var chars:Object = {};
 		public function CharSet() 
 		{
 			
@@ -23,14 +26,17 @@ package flash.__native.te
 			var t:UVTexture=getTexture(c)
 			if (t==null){//找不到材质，创建新材质
 				t = new UVTexture;
+				t.fontSize = c.size;
+				t.v = c.v;
 				newChars.push(t);
 				dirty = true;
+				chars[c.v +":"+c.font+":"+ c.size] = t;
 			}
 			c.texture = t;
 		}
 		
 		public function getTexture(c:Char):UVTexture{
-			return null;
+			return chars[c.v +":"+c.font+":"+ c.size];
 		}
 		
 		public function rebuild():void{
@@ -38,18 +44,31 @@ package flash.__native.te
 				if (image == null){
 					image = document.createElement("canvas") as HTMLCanvasElement;
 					ctx = image.getContext("2d") as CanvasRenderingContext2D;
-					image.width = 128;
-					image.height = 128;
+					image.width = 2048;
+					image.height = 2048;
 				}
 				
 				for each(var t:UVTexture in newChars){
 					ctx.font = t.fontSize+"px " +"font";
-					var measure:TextMetrics = ctx.measureText("fdsafdsafds");
+					var measure:TextMetrics = ctx.measureText(t.v);
 					//image.width = measure.width;
 					//image.height = int(font.substr(0, font.indexOf("px")));
 					ctx.textBaseline = "top";
-					ctx.fillStyle = "#ff0000"/*fillStyle*/;
-					ctx.fillText("fdsafdsafds", 0, 0);
+					ctx.fillStyle = "#ffffff"/*fillStyle*/;
+					ctx.fillText(t.v, gx, gy);
+					t.width = measure.width;
+					t.height = t.fontSize;
+					t.xadvance = t.width;
+					t.u0 = gx;
+					t.v0 = gy;
+					t.u1 = gx + t.width;
+					t.v1 = gy + t.height;
+					
+					gx += 32;
+					if ((gx+32)>2048){
+						gx = 0;
+						gy += 32;
+					}
 				}
 				
 				//宽高改变

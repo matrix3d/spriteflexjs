@@ -679,17 +679,21 @@ package flash.__native
 				btexture.width = w;
 				btexture.height = h;
 				img._texture = btexture;
-				img.dirty = true;
+				btexture.bmd.image["dirty"] = true;
 				//bmd2texture.set(img, btexture);
 			}
 			if (btexture.dirty){
 				btexture.texture = ctx.createTexture(w, h, Context3DTextureFormat.BGRA, false);
-				btexture.bmd.fromImage(img);
+				if (img.width==getNextPow2(img.width)&&img.height==getNextPow2(img.height)){
+					btexture.bmd["image"] = img;
+				}else{
+					btexture.bmd.fromImage(img);
+				}
 				btexture.dirty = false;
-				img.dirty = true;
+				btexture.bmd.image["dirty"] = true;
 			}
-			if (img.dirty){
-				img.dirty = false;
+			if (btexture.bmd.image["dirty"]){
+				btexture.bmd.image["dirty"] = false;
 				btexture.texture.uploadFromBitmapData(btexture.bmd, 1);
 			}
 			return btexture;

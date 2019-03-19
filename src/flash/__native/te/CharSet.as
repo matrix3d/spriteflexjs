@@ -12,6 +12,8 @@ package flash.__native.te
 	{
 		private var dirty:Boolean = false;//脏了，重新渲染
 		private var newChars:Array = [];
+		public var image:Object;
+		private var ctx:CanvasRenderingContext2D;
 		public function CharSet() 
 		{
 			
@@ -33,9 +35,31 @@ package flash.__native.te
 		
 		public function rebuild():void{
 			if (dirty){
-				for each(var t:UVTexture in newChars){
-					
+				if (image == null){
+					image = document.createElement("canvas") as HTMLCanvasElement;
+					ctx = image.getContext("2d") as CanvasRenderingContext2D;
+					image.width = 128;
+					image.height = 128;
 				}
+				
+				for each(var t:UVTexture in newChars){
+					ctx.font = t.fontSize+"px " +"font";
+					var measure:TextMetrics = ctx.measureText("fdsafdsafds");
+					//image.width = measure.width;
+					//image.height = int(font.substr(0, font.indexOf("px")));
+					ctx.textBaseline = "top";
+					ctx.fillStyle = "#ff0000"/*fillStyle*/;
+					ctx.fillText("fdsafdsafds", 0, 0);
+				}
+				
+				//宽高改变
+				if (false){
+					if (image._texture){
+						image._texture.dirty = true;
+					}
+				}
+				
+				image.dirty = true;
 				newChars = [];
 				dirty = false;
 			}

@@ -7,20 +7,17 @@ package flash.__native.te
 	 */
 	public class UVTexture 
 	{
-		private var _bmd:BitmapData;
+		public var width:int=10;
+		public var height:int=10;
+		public var fontSize:int=10;
+		public var xadvance:int=10;
+		public var u0:Number=0;
+		public var v0:Number=0;
+		public var u1:Number=1;
+		public var v1:Number=1;
 		public function UVTexture() 
 		{
-			
 		}
-		
-		
-		public function get bmd():BitmapData{
-			if (_bmd==null){
-				//gen bmd
-			}
-			return _bmd;
-		}
-		
 	}
 
 }

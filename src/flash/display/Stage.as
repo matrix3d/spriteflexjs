@@ -212,6 +212,7 @@ package flash.display
 		private var _y:Number = 0;
 		private var _z:Number = 0;
 		private var isButtonDown:Boolean = false;
+		public var __enterframeSprites:Array = [];
 		
 		/**
 		 * Stage is a singular instance per window and cannot be instantiated twice.
@@ -318,6 +319,11 @@ package flash.display
 				window_resize(null);
 			}
 			
+			for each(var es:Sprite in __enterframeSprites){
+				es.dispatchEvent(new Event(Event.ENTER_FRAME));
+			}
+			
+			
 			//http://codetheory.in/controlling-the-frame-rate-with-requestanimationframe/	
 			/*requestAnimationFrameHander = */SpriteFlexjs.requestAnimationFrame.call(window, _updateStage);
 			//var now:Number = getTimer();
@@ -333,7 +339,7 @@ package flash.display
 					dispatchEvent(new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, 0, true, _mouseX, _mouseY,null,needSendTouchMove.ctrlKey,needSendTouchMove.altKey,needSendTouchMove.shiftKey,(needSendTouchMove.buttons!=null)?(needSendTouchMove.buttons>0):isButtonDown));
 					needSendTouchMove = null;
 				}
-				dispatchEvent(new Event(Event.ENTER_FRAME));
+				dispatchEvent(new Event(Event.ENTER_FRAME,true));
 			//}
 		}
 		

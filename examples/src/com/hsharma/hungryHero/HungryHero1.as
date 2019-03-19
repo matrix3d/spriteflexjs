@@ -83,6 +83,7 @@ package com.hsharma.hungryHero
 			addChild(loadingTf);
 			loadNext();
 			
+			stage_resize(null);
 			stage.addEventListener(Event.RESIZE, stage_resize);
 		}
 		

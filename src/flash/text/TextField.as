@@ -254,7 +254,7 @@ package flash.text
 		}
 		
 		private function __updateBuff():void{
-			if(chars.length>0&&glDirty){
+			if(glDirty&&chars&&chars.length>0){
 				glDirty = false;
 				var currentLineNum:int = -1;
 				num = 0;
@@ -286,6 +286,7 @@ package flash.text
 							var txt:Char = cs[j];
 							txt.lineInfo = lineInfo;
 							var char:UVTexture = txt.texture;
+							var tscale:Number = txt.size / char.fontSize;
 							if (txt.v=="\n"){
 								tx = 2;
 								ty += lineInfo.maxFontSize+txt.leading;
@@ -313,7 +314,7 @@ package flash.text
 							
 							//tx为文字起始点 ts为文字末尾点
 							if (line.wordWrap){
-								if ((tx + char.width) > line.width){
+								if ((tx + char.width*tscale) > line.width){
 									tx = 2;
 									ty += lineInfo.maxFontSize+txt.leading;
 									currentLineNum++;
@@ -327,7 +328,7 @@ package flash.text
 								}
 							}else{
 								if(line.autoSize==TextFieldAutoSize.NONE){
-									if ((tx+char.width)>line.width){
+									if ((tx+char.width*tscale)>line.width){
 										//找下一个\n
 										continue;
 									}
@@ -341,10 +342,10 @@ package flash.text
 							txt.charVersion = charVersion;
 							txt.lineInfo = lineInfo;
 							txt.x0 = tx;
-							lineInfo.width = txt.x1 = tx+char.width;
-							txt.y0 = ty - char.fontSize;
-							txt.y1 = txt.y0 + char.height;
-							tx += char.xadvance;
+							lineInfo.width = txt.x1 = tx+char.width*tscale;
+							txt.y0 = ty - txt.size;
+							txt.y1 = txt.y0 + char.height*tscale;
+							tx += char.xadvance*tscale;
 							num++;
 							if (txt.underline){
 								num++;

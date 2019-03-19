@@ -30,13 +30,17 @@ package flash.__native.te
 				t.v = c.v;
 				newChars.push(t);
 				dirty = true;
-				chars[c.v +":"+c.font+":"+ c.size] = t;
+				chars[c.v +c.font] = t;
 			}
 			c.texture = t;
 		}
 		
 		public function getTexture(c:Char):UVTexture{
-			return chars[c.v +":"+c.font+":"+ c.size];
+			var t:UVTexture = chars[c.v +c.font]
+			if (t&&t.fontSize>=c.size){
+				return t;
+			}
+			return null;
 		}
 		
 		public function rebuild():void{

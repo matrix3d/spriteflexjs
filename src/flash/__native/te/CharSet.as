@@ -1,5 +1,8 @@
 package flash.__native.te 
 {
+	import flash.display.Stage;
+	import flash.geom.Rectangle;
+	import org.villekoskela.utils.RectanglePacker;
 	/**
 	 * 想得到实际宽高 就要新建bmd，把虚拟bmd添加到charset
 	 * 
@@ -14,9 +17,12 @@ package flash.__native.te
 		private var newChars:Array = [];
 		public var image:Object;
 		private var ctx:CanvasRenderingContext2D;
-		private var gx:int = 0;
-		private var gy:int = 0;
 		private var chars:Object = {};
+		
+		private var tsizew:int = 2048;
+		private var tsizeh:int = 2048;
+		private var rp:RectanglePacker;
+		private var helpRect:Rectangle = new Rectangle;
 		public function CharSet() 
 		{
 			
@@ -44,35 +50,44 @@ package flash.__native.te
 		}
 		
 		public function rebuild():void{
+			//只保留透明通道，其它通道设置值为255
 			if (dirty){
 				if (image == null){
 					image = document.createElement("canvas") as HTMLCanvasElement;
+					
+					var div:HTMLDivElement = document.createElement("div") as HTMLDivElement;
+					div.appendChild(image  as HTMLCanvasElement);
+					document.body.appendChild(div);
 					ctx = image.getContext("2d") as CanvasRenderingContext2D;
-					image.width = 2048;
-					image.height = 2048;
+					image.width = tsizew;
+					image.height = tsizeh;
+					ctx.fillStyle = "rgba(255, 255, 255, 1)"// "#ffffff"/*fillStyle*/;
+					ctx.textBaseline = "top";
+					
+					rp = new RectanglePacker(tsizew, tsizeh,1);
 				}
 				
-				for each(var t:UVTexture in newChars){
+				var befnum:int = rp.rectangleCount;
+				var len:int = newChars.length;
+				for (var i:int = 0; i < len;i++ ){
+					var t:UVTexture = newChars[i];
 					ctx.font = t.fontSize+"px " +"font";
 					var measure:TextMetrics = ctx.measureText(t.v);
-					//image.width = measure.width;
-					//image.height = int(font.substr(0, font.indexOf("px")));
-					ctx.textBaseline = "top";
-					ctx.fillStyle = "#ffffff"/*fillStyle*/;
-					ctx.fillText(t.v, gx, gy);
 					t.width = measure.width;
 					t.height = t.fontSize;
 					t.xadvance = t.width;
-					t.u0 = gx;
-					t.v0 = gy;
-					t.u1 = gx + t.width;
-					t.v1 = gy + t.height;
-					
-					gx += 32;
-					if ((gx+32)>2048){
-						gx = 0;
-						gy += 32;
-					}
+					rp.insertRectangle(t.width, t.height, befnum+i);//插入字符
+				}
+				rp.packRectangles(false);
+				for (i = 0; i < len;i++ ){
+					t = newChars[i];
+					rp.getRectangle(befnum + len-i-1, helpRect);
+					ctx.font = t.fontSize+"px " +"font";
+					ctx.fillText(t.v, helpRect.x, helpRect.y);
+					t.u0 = helpRect.x;
+					t.v0 = helpRect.y;
+					t.u1 = helpRect.x+helpRect.width;
+					t.v1 = helpRect.y + helpRect.height;
 				}
 				
 				//宽高改变

@@ -58,7 +58,7 @@ package org.villekoskela
         private static const RECTANGLE_COUNT:int = 500;
         private static const SIZE_MULTIPLIER:Number = 2;
 
-        private var mBitmapData:BitmapData = new BitmapData(WIDTH, HEIGHT, true, 0xFFFFFFFF);
+      //  private var mBitmapData:BitmapData = new BitmapData(WIDTH, HEIGHT, true, 0xFFFFFFFF);
         private var mCopyRight:TextField = new TextField();
         private var mText:TextField = new TextField();
 
@@ -66,14 +66,16 @@ package org.villekoskela
         private var mScalingBox:ScalingBox;
 
         private var mRectangles:Vector.<Rectangle> = new Vector.<Rectangle>();
-
+		private var bitmap:Sprite = new Sprite;
         public function RectanglePackerDemo()
         {
             addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
             addEventListener(Event.ENTER_FRAME, onEnterFrame);
 
-            var bitmap:Bitmap = new Bitmap(mBitmapData);
-            addChild(bitmap);
+			addChild(bitmap);
+			
+           // var bitmap:Bitmap = new Bitmap(mBitmapData);
+            //addChild(bitmap);
             bitmap.x = BOX_MARGIN;
             bitmap.y = Y_MARGIN;
 
@@ -103,8 +105,8 @@ package org.villekoskela
             var height:int;
             for (var i:int = 0; i < 10; i++)
             {
-                width = 20 * SIZE_MULTIPLIER + Math.floor(Math.random() * 8) * SIZE_MULTIPLIER * SIZE_MULTIPLIER;
-                height = 20 * SIZE_MULTIPLIER + Math.floor(Math.random() * 8) * SIZE_MULTIPLIER * SIZE_MULTIPLIER;
+                width = int(20 * SIZE_MULTIPLIER + Math.floor(Math.random() * 8) * SIZE_MULTIPLIER * SIZE_MULTIPLIER);
+                height = int(20 * SIZE_MULTIPLIER + Math.floor(Math.random() * 8) * SIZE_MULTIPLIER * SIZE_MULTIPLIER);
                 mRectangles.push(new Rectangle(0, 0, width, height));
             }
 
@@ -159,15 +161,19 @@ package org.villekoskela
                 mText.text = mPacker.rectangleCount + " rectangles packed in " + (end - start) + "ms";
 
                 mScalingBox.updateBox(mScalingBox.newBoxWidth, mScalingBox.newBoxHeight);
-                mBitmapData.fillRect(mBitmapData.rect, 0xFFFFFFFF);
-                var rect:Rectangle = new Rectangle();
+                //mBitmapData.fillRect(mBitmapData.rect, 0xFFFFFFFF);
+               bitmap.graphics.clear();
+				var rect:Rectangle = new Rectangle();
                 for (var j:int = 0; j < mPacker.rectangleCount; j++)
                 {
                     rect = mPacker.getRectangle(j, rect);
-                    mBitmapData.fillRect(new Rectangle(rect.x, rect.y, rect.width, rect.height), 0xFF000000);
+					bitmap.graphics.beginFill(0xff000000);
+                   bitmap.graphics.drawRect(rect.x, rect.y, rect.width, rect.height);
+					// mBitmapData.fillRect(new Rectangle(rect.x, rect.y, rect.width, rect.height), 0xFF000000);
                     var index:int = mPacker.getRectangleId(j);
                     var color:uint = 0xFF171703 + (((18 * ((index + 4) % 13)) << 16) + ((31 * ((index * 3) % 8)) << 8) + 63 * (((index + 1) * 3) % 5));
-                    mBitmapData.fillRect(new Rectangle(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2), color);
+                   bitmap.graphics.beginFill(color);
+					bitmap.graphics.drawRect(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2);
                 }
             }
         }

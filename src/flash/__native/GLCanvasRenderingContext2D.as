@@ -706,5 +706,15 @@ package flash.__native
 			}
 			return r;
 		}
+		
+		public function flush():void{
+			if (numPos > 0){
+				batchFinish();
+			}
+			numPos = 0;
+			numIndex = 0;
+			lastImage = null;
+			lastImageIsImage = null;
+		}
 	}
 }

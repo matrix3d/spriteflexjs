@@ -255,7 +255,6 @@ package flash.text
 		
 		private function __updateBuff():void{
 			if(glDirty&&chars&&chars.length>0){
-				glDirty = false;
 				var currentLineNum:int = -1;
 				num = 0;
 				charVersion++;
@@ -286,12 +285,15 @@ package flash.text
 							var txt:Char = cs[j];
 							txt.lineInfo = lineInfo;
 							var char:UVTexture = txt.texture;
+							if (char.u0==-1){
+								return;
+							}
 							var tscale:Number = txt.size / char.fontSize;
 							if (txt.v=="\n"){
 								tx = 2;
 								ty += lineInfo.maxFontSize+txt.leading;
 								currentLineNum++;
-								if(lineInfo&&line.textWidth<lineInfo.width){
+								if(lineInfo&&line._textWidth<lineInfo.width){
 									line._textWidth = lineInfo.width;
 								}
 								lineInfo = lineInfos[currentLineNum] = lineInfos[currentLineNum] || new LineInfo;
@@ -314,11 +316,11 @@ package flash.text
 							
 							//tx为文字起始点 ts为文字末尾点
 							if (line.wordWrap){
-								if ((tx + char.width*tscale) > line.width){
+								if ((tx + char.width*tscale) > line._width){
 									tx = 2;
 									ty += lineInfo.maxFontSize+txt.leading;
 									currentLineNum++;
-									if(lineInfo&&line.textWidth<lineInfo.width){
+									if(lineInfo&&line._textWidth<lineInfo.width){
 										line._textWidth = lineInfo.width;
 									}
 									lineInfo = lineInfos[currentLineNum] = lineInfos[currentLineNum] || new LineInfo;
@@ -328,7 +330,7 @@ package flash.text
 								}
 							}else{
 								if(line.autoSize==TextFieldAutoSize.NONE){
-									if ((tx+char.width*tscale)>line.width){
+									if ((tx+char.width*tscale)>line._width){
 										//找下一个\n
 										continue;
 									}
@@ -353,27 +355,27 @@ package flash.text
 						}
 						
 						line._textHeight = ty + lineInfo.maxFontSize;
-						if(lineInfo&&line.textWidth<lineInfo.width){
+						if(lineInfo&&line._textWidth<lineInfo.width){
 							line._textWidth = lineInfo.width;
 						}
 						for (j = startLineNum; j <= currentLineNum;j++ ){
 							lineInfo = lineInfos[j];
 							if (line.autoSize==TextFieldAutoSize.CENTER){
-								lineInfo.offsetX = line.width / 2 - lineInfo.width / 2;
+								lineInfo.offsetX = line._width / 2 - lineInfo.width / 2;
 							}else if (line.autoSize==TextFieldAutoSize.RIGHT){
-								lineInfo.offsetX = line.width - lineInfo.width;
+								lineInfo.offsetX = line._width - lineInfo.width;
 							}else{
 								lineInfo.offsetX = 0;
 							}
 						}
 						//查找隐藏的txt
-						if (line.autoSize==TextFieldAutoSize.NONE&&line.textHeight>line.height){
-							var offsetY:Number = (line.height - line.textHeight) * line.scrollV;
+						if (line.autoSize==TextFieldAutoSize.NONE&&line._textHeight>line._height){
+							var offsetY:Number = (line._height - line._textHeight) * line.scrollV;
 							for (j = 0; j < tlen; j++ ){
 								txt = cs[j];
 								lineInfo = txt.lineInfo;
 								if (txt.charVersion==charVersion){
-									if ((txt.y0 + offsetY+lineInfo.maxFontSize) < 0 || (txt.y0 + offsetY+lineInfo.maxFontSize) > line.height){
+									if ((txt.y0 + offsetY+lineInfo.maxFontSize) < 0 || (txt.y0 + offsetY+lineInfo.maxFontSize) > line._height){
 										num--;
 										if (txt.underline){
 											num--;
@@ -424,7 +426,7 @@ package flash.text
 					cs = line.chars;
 					if (cs && cs.length){
 						tlen = cs.length;
-						offsetY = (line.height - line.textHeight) * line.scrollV;
+						offsetY = (line._height - line._textHeight) * line.scrollV;
 						if (offsetY>0){
 							offsetY = 0;
 						}
@@ -520,6 +522,7 @@ package flash.text
 						}
 					}
 				}
+				glDirty = false;
 			}
 		}
 		

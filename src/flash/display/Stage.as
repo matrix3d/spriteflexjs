@@ -314,6 +314,7 @@ package flash.display
 		}
 		
 		private function _updateStage():void {
+			SpriteFlexjs.requestAnimationFrame.call(window, _updateStage);
 			if(_stageWidth != SpriteFlexjs.stageWidth||
 			_stageHeight != SpriteFlexjs.stageHeight){
 				window_resize(null);
@@ -325,7 +326,7 @@ package flash.display
 			
 			
 			//http://codetheory.in/controlling-the-frame-rate-with-requestanimationframe/	
-			/*requestAnimationFrameHander = */SpriteFlexjs.requestAnimationFrame.call(window, _updateStage);
+			/*requestAnimationFrameHander = */
 			//var now:Number = getTimer();
 			//var interval:Number = Math.ceil(1000/frameRate);
 			//var delta:Number = now - lastUpdateTime;

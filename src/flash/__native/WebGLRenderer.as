@@ -129,6 +129,8 @@ package flash.__native
 		 */
 		override public function renderRichText(ctx:CanvasRenderingContext2D, t:TextField):void 
 		{
+			var ctx2:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
+			ctx2.flush();
 			//t.__updateCanvas(ctx);
 			t.__updateGL(ctx as GLCanvasRenderingContext2D);
 		}

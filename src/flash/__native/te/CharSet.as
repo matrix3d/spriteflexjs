@@ -25,7 +25,14 @@ package flash.__native.te
 		private var helpRect:Rectangle = new Rectangle;
 		public function CharSet() 
 		{
+			image = document.createElement("canvas") as HTMLCanvasElement;
+			ctx = image.getContext("2d") as CanvasRenderingContext2D;
+			image.width = tsizew;
+			image.height = tsizeh;
+			ctx.fillStyle = "rgba(255, 255, 255, 1)"// "#ffffff"/*fillStyle*/;
+			ctx.textBaseline = "top";
 			
+			rp = new RectanglePacker(tsizew, tsizeh,1);
 		}
 		
 		public function add(c:Char):void{
@@ -53,18 +60,6 @@ package flash.__native.te
 			//只保留透明通道，其它通道设置值为255
 			if (dirty){
 				if (image == null){
-					image = document.createElement("canvas") as HTMLCanvasElement;
-					
-					var div:HTMLDivElement = document.createElement("div") as HTMLDivElement;
-					div.appendChild(image  as HTMLCanvasElement);
-					document.body.appendChild(div);
-					ctx = image.getContext("2d") as CanvasRenderingContext2D;
-					image.width = tsizew;
-					image.height = tsizeh;
-					ctx.fillStyle = "rgba(255, 255, 255, 1)"// "#ffffff"/*fillStyle*/;
-					ctx.textBaseline = "top";
-					
-					rp = new RectanglePacker(tsizew, tsizeh,1);
 				}
 				
 				var befnum:int = rp.rectangleCount;

@@ -39,6 +39,7 @@ package flash.__native.te
 			var t:UVTexture=getTexture(c)
 			if (t==null){//找不到材质，创建新材质
 				t = new UVTexture;
+				
 				t.fontSize = c.size;
 				t.v = c.v;
 				newChars.push(t);

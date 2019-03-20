@@ -61,6 +61,10 @@ package flash.text
 		public var _textHeight:int = -1;
 		private var _wordWrap:Boolean = false;
 		private static var lineInfos:Array = [];
+		public var hasATag:Boolean = false;//有a标签
+		public var tagas:Array = [];
+		private var href:String;
+		private var _htmlText:String;
 		
 		
 		public function TextField()
@@ -150,9 +154,6 @@ package flash.text
 		
 		public function set gridFitType(param1:String):void  {/**/ }
 		
-		public function get htmlText():String  { return null; }
-		
-		public function set htmlText(param1:String):void  {/**/ }
 		
 		public function get length():int  { return 0; }
 		
@@ -213,11 +214,96 @@ package flash.text
 		
 		public function set styleSheet(param1:StyleSheet):void  {/**/ }
 		
+		
+		public function get htmlText():String  { return null; }
+		
+		public function set htmlText(value:String):void  {
+			hasATag = false;
+			glDirty = true;
+			if (value != null){
+				tagas = [];
+				//charsLength = 0;
+				_text = "";
+				value = value.replace(/\\n/g, "<br/>")
+				.replace(/\n/g, "<br/>")
+				.replace(/<br>/g, "<br/>");
+				_htmlText = value;
+				try{
+					var xmllist:DOMParser = new DOMParser();
+					var hd:HTMLDocument= xmllist.parseFromString(value, "text/html") as HTMLDocument;
+					//for each(var xml:XML in xmllist){
+						//doXML(xml, _defFont, _defSize, _defColor,null,_indent,_defUnderline);
+					//}
+				}catch (err:Error){
+					text = value;
+				}
+			}
+		}
+		
+		/*private function doXML(xml:XML, font:String, fontSize:int, color:uint, href:String,indent:int,underline:int):void {
+			this.href = href;
+			if (xml==null){
+				return;
+			}
+			var l:String = xml.localName();
+			if (l == "br"){
+				var txt:String = "\n";
+			}else if(xml.nodeKind()=="text"){
+				txt = xml.toString().replace(/&nbsp;/g," ");
+				txt = txt.replace(/ﾠ/g," ");
+			}
+			if(l=="font"){
+				if ((xml.@face).length()){
+					font = xml.@face+"";
+				}
+				if ((xml.@size).length()){
+					fontSize = Number(xml.@size);
+				}
+				if ((xml.@color).length()){
+					color = parseInt((xml.@color+"").replace("#",""),16);
+				}
+			}else if (l=="a"){
+				if ((xml.@href).length()){
+					hasATag = true;
+					href = xml.@href + "";
+					this.href = href;
+				}
+			}else if (l=="img"){
+				var imgsrc:String = xml.@src+"";
+				var imgwidth:Number = parseFloat(xml.@width+"");
+			}else if (l=="textformat"){
+				if ((xml.@indent).length()){
+					indent = Number(xml.@indent);
+				}
+			}else if (l=="u"){
+				underline = 1;
+			}
+			_font = font?font.toLowerCase():font;
+			_fontSize = fontSize;
+			_color = color;
+			_indent = indent;
+			_underline = underline;
+			
+			if (imgsrc){
+				appendImg(id2img[imgsrc],imgwidth);
+			}
+			
+			if (txt && txt.length > 0){
+				appendText(txt);
+			}
+			
+			var cs:XMLList = xml.children();
+			if (cs.length()) {
+				for each(var c:XML in cs) {
+					doXML(c,font,fontSize,color,href,indent,underline);
+				}
+			}
+		}*/
+		
 		public function get text():String  { return _text; }
 		
 		public function set text(txt:String):void  {
 			_text = txt; 
-			lines = txt.split("\n");
 			SpriteFlexjs.dirtyGraphics = true;
 			graphicsDirty = true;
 			
@@ -230,6 +316,8 @@ package flash.text
 					chars.push(c);
 					WebGLRenderer.textCharSet.add(c);
 				}
+			}else{
+				lines = txt.split("\n");
 			}
 		}
 		

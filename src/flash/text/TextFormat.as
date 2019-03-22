@@ -7,7 +7,7 @@ package flash.text
 		private var dirty:Boolean = true;
 		private var _font:String;
 		private var _size:Object=12;
-		private var _color:Object;
+		private var _color:Object=0;
 		public function TextFormat(font:String = null, size:Object = null, color:Object = null, bold:Object = null, italic:Object = null, underline:Object = null, url:String = null, target:String = null, align:String = null, leftMargin:Object = null, rightMargin:Object = null, indent:Object = null, leading:Object = null)
 		{
 			super();

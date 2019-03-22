@@ -280,7 +280,7 @@ package flash.__native
 			}
 		}
 		
-		private function renderImage(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean,scaleWithImageUV:Boolean,isImage:Boolean):void{
+		public function renderImage(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean,scaleWithImageUV:Boolean,isImage:Boolean):void{
 			SpriteFlexjs.batDrawCounter++;
 			if (!isImage){
 				ctx.setProgram(colorProg);
@@ -679,13 +679,22 @@ package flash.__native
 				btexture.width = w;
 				btexture.height = h;
 				img._texture = btexture;
+				btexture.bmd.image["dirty"] = true;
 				//bmd2texture.set(img, btexture);
 			}
 			if (btexture.dirty){
 				btexture.texture = ctx.createTexture(w, h, Context3DTextureFormat.BGRA, false);
-				btexture.bmd.fromImage(img);
-				btexture.texture.uploadFromBitmapData(btexture.bmd, 1);
+				if (img.width==getNextPow2(img.width)&&img.height==getNextPow2(img.height)){
+					btexture.bmd["image"] = img;
+				}else{
+					btexture.bmd.fromImage(img);
+				}
 				btexture.dirty = false;
+				btexture.bmd.image["dirty"] = true;
+			}
+			if (btexture.bmd.image["dirty"]){
+				btexture.bmd.image["dirty"] = false;
+				btexture.texture.uploadFromBitmapData(btexture.bmd, 1);
 			}
 			return btexture;
 		}
@@ -696,6 +705,16 @@ package flash.__native
 				r *= 2;
 			}
 			return r;
+		}
+		
+		public function flush():void{
+			if (numPos > 0){
+				batchFinish();
+			}
+			numPos = 0;
+			numIndex = 0;
+			lastImage = null;
+			lastImageIsImage = null;
 		}
 	}
 }

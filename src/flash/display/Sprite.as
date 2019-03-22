@@ -153,8 +153,8 @@ package flash.display
 				}
 			}
 			
-			if (hasEventListener(Event.ENTER_FRAME))
-				dispatchEvent(new Event(Event.ENTER_FRAME));
+			/*if (hasEventListener(Event.ENTER_FRAME))
+				dispatchEvent(new Event(Event.ENTER_FRAME));*/
 			if (!cacheAsBitmap) super.__update(ctx);
 		}
 		
@@ -171,6 +171,14 @@ package flash.display
 				}
 			}
 			return null;
+		}
+		
+		override public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void 
+		{
+			if (type==Event.ENTER_FRAME){
+				Stage.instance.__enterframeSprites.push(this);
+			}
+			super.addEventListener(type, listener, useCapture, priority, useWeakReference);
 		}
 	}
 }

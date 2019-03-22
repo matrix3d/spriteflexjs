@@ -7,6 +7,8 @@ package flash.__native
 	import flash.display.IGraphicsData;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
+	import flash.text.TextField;
+	import flash.text.TextFieldType;
 	import flash.text.TextFormat;
 	/**
 	 * ...
@@ -76,6 +78,11 @@ package flash.__native
 			ctx.fillStyle = textFormat.csscolor;
 			ctx.textBaseline = "top";
 			ctx.fillText(txt, x, y);
+		}
+		
+		override public function renderRichText(ctx:CanvasRenderingContext2D, t:TextField):void 
+		{
+			t.__updateCanvas(ctx);
 		}
 	}
 

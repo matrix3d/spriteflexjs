@@ -8,6 +8,7 @@ package flash.display3D.textures
 		public var gl:WebGLRenderingContext;
 		public var texture:WebGLTexture;
 		public var repeat:Boolean = true;
+		public var up:Boolean = false;
 		public function Texture()
 		{
 			super();
@@ -20,6 +21,7 @@ package flash.display3D.textures
 		
 		public function uploadFromImg(img:Object, maplevel:uint = 0):void
 		{
+			up = true;
 			gl.bindTexture(gl.TEXTURE_2D, texture);
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
 			if (repeat){

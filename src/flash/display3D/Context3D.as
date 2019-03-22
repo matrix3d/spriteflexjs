@@ -333,10 +333,11 @@ package flash.display3D
 		}
 		
 		public function setTextureAtGL(name:String, sampler:int, texture:Texture):void {
-			if (currentTextures[name] != texture) {
+			if (currentTextures[name] != texture||(texture&&texture.up)) {
 				currentTextures[name] = texture;
 				if (texture)
 				{
+					texture.up = false;
 					gl.activeTexture(gl["TEXTURE"+sampler]);
 					gl.bindTexture(gl.TEXTURE_2D, texture.texture);
 					gl.uniform1i(currentProgram.getUniformLocation(name), sampler);

@@ -42,7 +42,7 @@ package flash.display
 			SpriteFlexjs.dirtyGraphics = true;
 		}
 		
-		override public function __getRect():Rectangle 
+		override public function getRect(v:DisplayObject):Rectangle 
 		{
 			if (bitmapData) return bitmapData.rect;
 			return null;

@@ -1,11 +1,13 @@
 package flash.__native 
 {
+	import flash.__native.te.CharSet;
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.display.GraphicsPath;
 	import flash.display.IGraphicsData;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
+	import flash.text.TextField;
 	import flash.text.TextFormat;
 	/**
 	 * ...
@@ -14,6 +16,7 @@ package flash.__native
 	public class WebGLRenderer extends BaseRenderer
 	{
 		//private var path2glpath:ObjectMap = new ObjectMap;
+		public static var textCharSet:CharSet = new CharSet;
 		public function WebGLRenderer() 
 		{
 			
@@ -119,6 +122,22 @@ package flash.__native
 		override public function finish(ctx:CanvasRenderingContext2D):void{
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
 			glctx.drawImageInternal(null, null, null, null, true, null, true, true);
+		}
+		
+		/**
+		 * @royaleignorecoercion flash.__native.GLCanvasRenderingContext2D
+		 */
+		override public function renderRichText(ctx:CanvasRenderingContext2D, t:TextField):void 
+		{
+			var ctx2:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
+			ctx2.flush();
+			//t.__updateCanvas(ctx);
+			t.__updateGL(ctx as GLCanvasRenderingContext2D);
+		}
+		
+		override public function start(ctx:CanvasRenderingContext2D):void 
+		{
+			textCharSet.rebuild();
 		}
 	}
 

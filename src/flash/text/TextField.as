@@ -1,9 +1,17 @@
 package flash.text
 {
+	import flash.__native.GLCanvasRenderingContext2D;
+	import flash.__native.GLDrawable;
+	import flash.__native.GLIndexBufferSet;
+	import flash.__native.WebGLRenderer;
+	import flash.__native.te.Char;
+	import flash.__native.te.LineInfo;
+	import flash.__native.te.UVTexture;
 	import flash.display.BitmapData;
 	import flash.display.BlendMode;
 	import flash.display.Graphics;
 	import flash.display.InteractiveObject;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
@@ -15,13 +23,14 @@ package flash.text
 		private var _type:String = TextFieldType.DYNAMIC;
 		private var graphics:Graphics = new Graphics;
 		private var graphicsDirty:Boolean = true;
+		private var glDirty:Boolean = false;
 		private static var richTextFields:Array = ["font", "size", "color", "bold", "italic", "underline", "url", "target", "align", "leftMargin", "rightMargin", "indent", "leading", "blockIndent", "kerning", "letterSpacing", "display"];
 		private var _text:String="";
 		private var lines:Array = [];
 		private var _textFormat:TextFormat=new TextFormat;
 		private var _width:Number = 100;
 		private var _height:Number = 100;
-		private var _autoSize:String;
+		private var _autoSize:String=TextFieldAutoSize.NONE;
 		private var _background:Boolean = false;
 		private var _backgroundColor:uint = 0xFFFFFF;
 		private var _border:Boolean = false;
@@ -37,6 +46,25 @@ package flash.text
 		private var _cacheOffsetY:Number = 0;
 		private var _filterOffsetX:Number = 0;
 		private var _filterOffsetY:Number = 0;
+		
+		//for webgl
+		public var chars:Array; 
+		private static var indexPool:Object = {};
+		private static var DRAWABLE_POOL:Object = {};
+		private var da:GLDrawable;
+		private var indexBufferSet:GLIndexBufferSet;
+		private var nowKey:int = 0;
+		private var num:int = 0;
+		private var charVersion:int = 1;
+		public var disWrapper:Sprite;
+		public var _textWidth:int = -1;
+		public var _textHeight:int = -1;
+		private var _wordWrap:Boolean = false;
+		private static var lineInfos:Array = [];
+		public var hasATag:Boolean = false;//有a标签
+		public var tagas:Array = [];
+		private var href:String;
+		private var _htmlText:String;
 		
 		
 		public function TextField()
@@ -126,9 +154,6 @@ package flash.text
 		
 		public function set gridFitType(param1:String):void  {/**/ }
 		
-		public function get htmlText():String  { return null; }
-		
-		public function set htmlText(param1:String):void  {/**/ }
 		
 		public function get length():int  { return 0; }
 		
@@ -189,13 +214,416 @@ package flash.text
 		
 		public function set styleSheet(param1:StyleSheet):void  {/**/ }
 		
+		
+		public function get htmlText():String  { return null; }
+		
+		public function set htmlText(value:String):void  {
+			hasATag = false;
+			glDirty = true;
+			if (value != null){
+				tagas = [];
+				//charsLength = 0;
+				_text = "";
+				value = value.replace(/\\n/g, "<br/>")
+				.replace(/\n/g, "<br/>")
+				.replace(/<br>/g, "<br/>");
+				_htmlText = value;
+				try{
+					var xmllist:DOMParser = new DOMParser();
+					var hd:HTMLDocument= xmllist.parseFromString(value, "text/html") as HTMLDocument;
+					//for each(var xml:XML in xmllist){
+						//doXML(xml, _defFont, _defSize, _defColor,null,_indent,_defUnderline);
+					//}
+				}catch (err:Error){
+					text = value;
+				}
+			}
+		}
+		
+		/*private function doXML(xml:XML, font:String, fontSize:int, color:uint, href:String,indent:int,underline:int):void {
+			this.href = href;
+			if (xml==null){
+				return;
+			}
+			var l:String = xml.localName();
+			if (l == "br"){
+				var txt:String = "\n";
+			}else if(xml.nodeKind()=="text"){
+				txt = xml.toString().replace(/&nbsp;/g," ");
+				txt = txt.replace(/ﾠ/g," ");
+			}
+			if(l=="font"){
+				if ((xml.@face).length()){
+					font = xml.@face+"";
+				}
+				if ((xml.@size).length()){
+					fontSize = Number(xml.@size);
+				}
+				if ((xml.@color).length()){
+					color = parseInt((xml.@color+"").replace("#",""),16);
+				}
+			}else if (l=="a"){
+				if ((xml.@href).length()){
+					hasATag = true;
+					href = xml.@href + "";
+					this.href = href;
+				}
+			}else if (l=="img"){
+				var imgsrc:String = xml.@src+"";
+				var imgwidth:Number = parseFloat(xml.@width+"");
+			}else if (l=="textformat"){
+				if ((xml.@indent).length()){
+					indent = Number(xml.@indent);
+				}
+			}else if (l=="u"){
+				underline = 1;
+			}
+			_font = font?font.toLowerCase():font;
+			_fontSize = fontSize;
+			_color = color;
+			_indent = indent;
+			_underline = underline;
+			
+			if (imgsrc){
+				appendImg(id2img[imgsrc],imgwidth);
+			}
+			
+			if (txt && txt.length > 0){
+				appendText(txt);
+			}
+			
+			var cs:XMLList = xml.children();
+			if (cs.length()) {
+				for each(var c:XML in cs) {
+					doXML(c,font,fontSize,color,href,indent,underline);
+				}
+			}
+		}*/
+		
 		public function get text():String  { return _text; }
 		
 		public function set text(txt:String):void  {
 			_text = txt; 
-			lines = txt.split("\n");
 			SpriteFlexjs.dirtyGraphics = true;
 			graphicsDirty = true;
+			
+			if (txt && txt.length > 0 && SpriteFlexjs.renderer is WebGLRenderer){
+				glDirty = true;
+				chars = [];
+				var l:int = txt.length;
+				for (var i:int = 0; i < l;i++ ){
+					var c:Char = new Char(txt.charAt(i),_textFormat.size as int,_textFormat.font,_textFormat.color as uint);//color font size etc
+					chars.push(c);
+					WebGLRenderer.textCharSet.add(c);
+				}
+			}else{
+				lines = txt.split("\n");
+			}
+		}
+		
+		private static function PUSH_POOL(key:int,da:GLDrawable):void{
+			var arr:Array = DRAWABLE_POOL[key];
+			if (arr==null){
+				arr = DRAWABLE_POOL[key] = [];
+			}
+			arr.push(da);
+		}
+		
+		private static function POP_POOL(pow2num:int):GLDrawable{
+			var arr:Array = DRAWABLE_POOL[pow2num];
+			if (arr==null){
+				arr = DRAWABLE_POOL[pow2num] = [];
+			}
+			if (arr.length==0){
+				var da:GLDrawable  = new GLDrawable(new Float32Array(pow2num * 8),new Float32Array(pow2num*8),null,WebGLRenderingContext.DYNAMIC_DRAW);
+				return da;
+			}
+			return arr.pop();
+		}
+		
+		private function __updateBuff():void{
+			if(glDirty&&chars&&chars.length>0){
+				var currentLineNum:int = -1;
+				num = 0;
+				charVersion++;
+				//更新char相对位置
+				var clen:int = 1;//todo  多个动态文本一起渲染
+				for (i = 0; i < clen;i++ ){
+					var line:TextField = this;
+					
+					if(line.disWrapper){
+						while(line.disWrapper.numChildren>0){
+							line.disWrapper.removeChildAt(0);
+						}
+					}
+					
+					line._textWidth = 0;
+					//line.textMatrixVer = line.worldVersion;
+					var startLineNum:int = currentLineNum+1;
+					var cs:Array = line.chars;
+					if (cs && line.chars.length){
+						currentLineNum++;
+						var lineInfo:LineInfo = lineInfos[currentLineNum] = lineInfos[currentLineNum] || new LineInfo;
+						lineInfo.maxFontSize = 0;
+						var tx:int = 2;
+						var ty:int = 2;
+						lineInfo.offsetY = ty;
+						var tlen:int = line.chars.length;
+						for (var j:int = 0; j < tlen; j++ ){
+							var txt:Char = cs[j];
+							txt.lineInfo = lineInfo;
+							var char:UVTexture = txt.texture;
+							if (char.u0==-1){
+								return;
+							}
+							var tscale:Number = txt.size / char.fontSize;
+							if (txt.v=="\n"){
+								tx = 2;
+								ty += lineInfo.maxFontSize+txt.leading;
+								currentLineNum++;
+								if(lineInfo&&line._textWidth<lineInfo.width){
+									line._textWidth = lineInfo.width;
+								}
+								lineInfo = lineInfos[currentLineNum] = lineInfos[currentLineNum] || new LineInfo;
+								lineInfo.maxFontSize = 0;
+								lineInfo.width = 0;
+								lineInfo.offsetY = ty;
+								continue;
+							}else if (txt.v==""){
+								trace("img");
+								/*if (char.dis){
+									if (line.disWrapper==null){
+										line.disWrapper = new Sprite;
+										line.add(line.disWrapper);
+									}
+									line.disWrapper.addChild(char.dis);
+									char.dis.x = tx;
+									char.dis.y = ty;
+								}*/
+							}
+							
+							//tx为文字起始点 ts为文字末尾点
+							if (line.wordWrap){
+								if ((tx + char.width*tscale) > line._width){
+									tx = 2;
+									ty += lineInfo.maxFontSize+txt.leading;
+									currentLineNum++;
+									if(lineInfo&&line._textWidth<lineInfo.width){
+										line._textWidth = lineInfo.width;
+									}
+									lineInfo = lineInfos[currentLineNum] = lineInfos[currentLineNum] || new LineInfo;
+									lineInfo.maxFontSize = 0;
+									lineInfo.width = 0;
+									lineInfo.offsetY = ty;
+								}
+							}else{
+								if(line.autoSize==TextFieldAutoSize.NONE){
+									if ((tx+char.width*tscale)>line._width){
+										//找下一个\n
+										continue;
+									}
+								}
+							}
+							
+							if (lineInfo.maxFontSize < txt.size) {
+								lineInfo.maxFontSize = txt.size;
+							}
+							
+							txt.charVersion = charVersion;
+							txt.lineInfo = lineInfo;
+							txt.x0 = tx;
+							lineInfo.width = txt.x1 = tx+char.width*tscale;
+							txt.y0 = ty - txt.size;
+							txt.y1 = txt.y0 + char.height*tscale;
+							tx += char.xadvance*tscale;
+							num++;
+							if (txt.underline){
+								num++;
+							}
+						}
+						
+						line._textHeight = ty + lineInfo.maxFontSize;
+						if(lineInfo&&line._textWidth<lineInfo.width){
+							line._textWidth = lineInfo.width;
+						}
+						for (j = startLineNum; j <= currentLineNum;j++ ){
+							lineInfo = lineInfos[j];
+							if (line.autoSize==TextFieldAutoSize.CENTER){
+								lineInfo.offsetX = line._width / 2 - lineInfo.width / 2;
+							}else if (line.autoSize==TextFieldAutoSize.RIGHT){
+								lineInfo.offsetX = line._width - lineInfo.width;
+							}else{
+								lineInfo.offsetX = 0;
+							}
+						}
+						//查找隐藏的txt
+						if (line.autoSize==TextFieldAutoSize.NONE&&line._textHeight>line._height){
+							var offsetY:Number = (line._height - line._textHeight) * line.scrollV;
+							for (j = 0; j < tlen; j++ ){
+								txt = cs[j];
+								lineInfo = txt.lineInfo;
+								if (txt.charVersion==charVersion){
+									if ((txt.y0 + offsetY+lineInfo.maxFontSize) < 0 || (txt.y0 + offsetY+lineInfo.maxFontSize) > line._height){
+										num--;
+										if (txt.underline){
+											num--;
+										}
+										txt.charVersion--;
+									}
+								}
+							}
+						}
+					}
+				}
+			
+				//构建vbuff ibuff
+
+				var pow2num:int = getNextPow2(num);
+				if (da==null){
+					nowKey = pow2num;
+					da = POP_POOL(pow2num);
+				}else if(nowKey!=pow2num){
+					PUSH_POOL(nowKey, da);
+					da = POP_POOL(pow2num);
+					nowKey = pow2num;
+				}
+				
+				indexBufferSet= indexPool[pow2num];
+				var needNew:Boolean = indexBufferSet == null;
+				if (needNew){
+					indexBufferSet = indexPool[pow2num] = new GLIndexBufferSet(new Uint16Array(pow2num*6),WebGLRenderingContext.STATIC_DRAW);
+					var indexd:Uint16Array = indexBufferSet.data;
+					for (var i:int = 0; i < pow2num;i++ ){
+						indexd[i * 6]  = i * 4;
+						indexd[i * 6+1]  =indexd[i * 6+3] =i * 4+2;
+						indexd[i * 6+2] = indexd[i * 6+4] =i * 4+1;
+						indexd[i * 6+5] = i * 4+3;
+					}
+				}
+				da.pos.dirty = true;
+				da.color.dirty = true;
+				da.uv.dirty = true;
+				var posd:Float32Array = da.pos.data as Float32Array;
+				var colord:Uint32Array = da.color.data as Uint32Array;
+				var uvd:Float32Array = da.uv.data as Float32Array;
+				
+				var k:int = 0;
+				for (i = 0; i < clen;i++ ){
+					line = this;
+					var alpha:uint = 1;// (line.a*0xff) << 24;
+					cs = line.chars;
+					if (cs && cs.length){
+						tlen = cs.length;
+						offsetY = (line._height - line._textHeight) * line.scrollV;
+						if (offsetY>0){
+							offsetY = 0;
+						}
+						for (j = 0; j < tlen; j++ ){
+							txt = cs[j];
+							if (txt.charVersion != charVersion){
+								continue;
+							}
+							char = txt.texture;
+							var maxFontSize:int = txt.lineInfo.maxFontSize + offsetY;
+							var offsetX:int = txt.lineInfo.offsetX;
+							
+							posd[k * 8] = posd[k * 8 + 4] =txt.x0 + offsetX;
+							posd[k * 8 + 1] = posd[k * 8 + 3] =txt.y0 + maxFontSize;
+							posd[k * 8 + 2] =posd[k * 8 + 6] = txt.x1 + offsetX;
+							posd[k * 8 + 5] =posd[k * 8 + 7] = txt.y1 + maxFontSize;
+							
+
+							uvd[k * 8] = uvd[k * 8 + 4] = char.u0;
+							uvd[k * 8 + 1] = uvd[k * 8 + 3] = char.v0;
+							uvd[k * 8 + 2] = uvd[k * 8 + 6] = char.u1;
+							uvd[k * 8 + 5] = uvd[k * 8 + 7] = char.v1;
+							
+							/*var abgr:uint = alpha|txt.bgr;
+							if (char.channel==0){
+								var channel:uint = 
+								0xffff00;
+							}else{
+								channel = 
+								0xff0000ff;
+							}*/
+							
+							/*fastmem.fastSetI32(abgr, k * 32);
+							fastmem.fastSetI32(channel, k * 32+4);
+							fastmem.fastSetI32(abgr, k * 32+8);
+							fastmem.fastSetI32(channel, k * 32+12);
+							fastmem.fastSetI32(abgr, k * 32+16);
+							fastmem.fastSetI32(channel, k * 32+20);
+							fastmem.fastSetI32(abgr, k * 32 + 24);
+							fastmem.fastSetI32(channel, k * 32+28);*/
+							
+							/*colord.position = k * 32;
+							colord.writeUnsignedInt(abgr);
+							colord.writeUnsignedInt(channel);
+							colord.writeUnsignedInt(abgr);
+							colord.writeUnsignedInt(channel);
+							colord.writeUnsignedInt(abgr);
+							colord.writeUnsignedInt(channel);
+							colord.writeUnsignedInt(abgr);
+							colord.writeUnsignedInt(channel);*/
+							var color:uint = 0xff000000|txt.bgr;
+							colord[k * 4] = color;
+							colord[k * 4+1] = color;
+							colord[k * 4+2] = color;
+							colord[k * 4+3] = color;
+							
+							k++;
+							
+							/*if (txt.underline){//下划线
+								posd[k * 12] = pout[0] + (txt.x0 +offsetX)*pout[3]+(txt.lineInfo.offsetY+maxFontSize) * pout[6];
+								posd[k * 12 + 1] = pout[1] +(txt.x0+offsetX)* pout[4]+(txt.lineInfo.offsetY+maxFontSize) * pout[7];
+								posd[k * 12 + 2] = pout[2] + (txt.x0+offsetX) * pout[5]+(txt.lineInfo.offsetY+maxFontSize) * pout[8];
+								
+								posd[k * 12 + 3] = pout[0] + (txt.x1+offsetX) * pout[3]+(txt.lineInfo.offsetY+maxFontSize) * pout[6];
+								posd[k * 12 + 4] = pout[1] + (txt.x1+offsetX) * pout[4]+(txt.lineInfo.offsetY+maxFontSize) * pout[7];
+								posd[k * 12 + 5] = pout[2] + (txt.x1+offsetX) * pout[5]+(txt.lineInfo.offsetY+maxFontSize) * pout[8];
+								
+								posd[k * 12 + 6] = pout[0]  + (txt.x1+offsetX) * pout[3]+(txt.lineInfo.offsetY+txt.underline+maxFontSize) * pout[6];
+								posd[k * 12 + 7] = pout[1] + (txt.x1+offsetX) * pout[4]+(txt.lineInfo.offsetY+txt.underline+maxFontSize) * pout[7];
+								posd[k * 12 + 8] = pout[2] + (txt.x1+offsetX) * pout[5]+(txt.lineInfo.offsetY+txt.underline+maxFontSize) * pout[8];
+								
+								posd[k * 12 + 9] = pout[0] + (txt.x0+offsetX) * pout[3]+(txt.lineInfo.offsetY+txt.underline+maxFontSize) * pout[6];
+								posd[k * 12 + 10] = pout[1] + (txt.x0+offsetX) * pout[4]+(txt.lineInfo.offsetY+txt.underline+maxFontSize) * pout[7];
+								posd[k * 12 + 11] = pout[2] + (txt.x0+offsetX) * pout[5]+(txt.lineInfo.offsetY+txt.underline+maxFontSize) * pout[8];
+								
+								uvd[k * 8] = uvd[k * 8 + 6] = 1-1/2048//char.u0;最后一像素为黑色
+								uvd[k * 8 + 1] = uvd[k * 8 + 3] = 1//char.v0;
+								uvd[k * 8 + 2] = uvd[k * 8 + 4] = 1-1/2048//char.u1;
+								uvd[k * 8 + 5] = uvd[k * 8 + 7] = 1////char.v1;
+								
+								colord.position = k * 32;
+								colord.writeUnsignedInt(abgr);
+								colord.writeUnsignedInt(channel);
+								colord.writeUnsignedInt(abgr);
+								colord.writeUnsignedInt(channel);
+								colord.writeUnsignedInt(abgr);
+								colord.writeUnsignedInt(channel);
+								colord.writeUnsignedInt(abgr);
+								colord.writeUnsignedInt(channel);
+								
+								k++;
+							}*/
+						}
+					}
+				}
+				glDirty = false;
+			}
+		}
+		
+		public function __updateGL(ctx:GLCanvasRenderingContext2D):void{
+			if(chars&&chars.length>0){
+				__updateBuff();
+				//draw vbuff ibuff
+				if(num>0){
+					da.index = indexBufferSet;
+					da.numTriangles = num * 2;
+					ctx.renderImage(WebGLRenderer.textCharSet.image, da, transform.concatenatedMatrix, null, false, false, true);
+				}
+			}
 		}
 		
 		public function get textColor():uint  { return int(_textFormat.color); }
@@ -207,11 +635,19 @@ package flash.text
 			SpriteFlexjs.dirtyGraphics = true;
 		}
 		
-		public function get textHeight():Number  { 
+		public function get textHeight():Number  {
+			__updateBuff();
+			if (_textHeight !=-1){
+				return _textHeight;
+			}
 			return lines?int(defaultTextFormat.size) * lines.length : 0; 
 		}
 		
-		public function get textWidth():Number  { 
+		public function get textWidth():Number  {
+			__updateBuff();
+			if(_textWidth!=-1){
+				return _textWidth;
+			}
 			if (stage && lines)
 			{
 				var ctx:CanvasRenderingContext2D = stage.ctx2d;
@@ -253,9 +689,9 @@ package flash.text
 			text = input.value;
 		}
 		
-		public function get wordWrap():Boolean  { return false; }
+		public function get wordWrap():Boolean  { return _wordWrap; }
 		
-		public function set wordWrap(param1:Boolean):void  {/**/ }
+		public function set wordWrap(param1:Boolean):void  {_wordWrap = param1; }
 		
 		public function appendText(newText:String):void
 		{
@@ -539,17 +975,21 @@ package flash.text
 			super.__update(ctx);
 			if (_text != null && visible)
 			{
-				if (filters.length && !cacheAsBitmap && !parent.cacheAsBitmap) cacheAsBitmap = true;
-				
-				if (cacheAsBitmap && !parent.cacheAsBitmap && _type != TextFieldType.INPUT)
-				{
-					SpriteFlexjs.renderer.renderImage(ctx, _cacheImage, transform.concatenatedMatrix, blendMode, transform.concatenatedColorTransform, -this.x - _cacheOffsetX, -this.y - _cacheOffsetY);
-				}
-				else
-				{
-					__draw(ctx, transform.concatenatedMatrix);
-				}
+				SpriteFlexjs.renderer.renderRichText(ctx, this);
 				SpriteFlexjs.drawCounter++;
+			}
+		}
+		
+		public function __updateCanvas(ctx:CanvasRenderingContext2D):void{
+			if (filters.length && !cacheAsBitmap && !parent.cacheAsBitmap) cacheAsBitmap = true;
+				
+			if (cacheAsBitmap && !parent.cacheAsBitmap && _type != TextFieldType.INPUT)
+			{
+				SpriteFlexjs.renderer.renderImage(ctx, _cacheImage, transform.concatenatedMatrix, blendMode, transform.concatenatedColorTransform, -this.x - _cacheOffsetX, -this.y - _cacheOffsetY);
+			}
+			else
+			{
+				__draw(ctx, transform.concatenatedMatrix);
 			}
 		}
 		
@@ -614,6 +1054,14 @@ package flash.text
 				return boundHelpRect;
 			}
 			return null;
+		}
+		
+		private function getNextPow2(v:int):int {
+			var r:int = 1;
+			while (r < v) {
+				r *= 2;
+			}
+			return r;
 		}
 	}
 }

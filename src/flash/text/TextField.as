@@ -230,8 +230,13 @@ package flash.text
 				_htmlText = value;
 				try{
 					var xmllist:DOMParser = new DOMParser();
-					var hd:HTMLDocument= xmllist.parseFromString(value, "text/html") as HTMLDocument;
-					//for each(var xml:XML in xmllist){
+					var hd:HTMLDocument = parseFromString(value);
+					
+					for(var i:int=0;i<hd.body.childNodes.length;i++){
+						doXML(hd.body.childNodes[i],_textFormat.font, int(_textFormat.size),int(_textFormat.color),null,int(_textFormat.indent),int(_textFormat.underline));
+					}
+					
+					//for e(var xml:XML in xmllist){
 						//doXML(xml, _defFont, _defSize, _defColor,null,_indent,_defUnderline);
 					//}
 				}catch (err:Error){
@@ -240,15 +245,15 @@ package flash.text
 			}
 		}
 		
-		/*private function doXML(xml:XML, font:String, fontSize:int, color:uint, href:String,indent:int,underline:int):void {
-			this.href = href;
-			if (xml==null){
+		private function doXML(xml:Node, font:String, fontSize:int, color:uint, href:String,indent:int,underline:int):void {
+			//this.href = href;
+			/*if (xml==null){
 				return;
 			}
-			var l:String = xml.localName();
+			var l:String = xml.nodeName;
 			if (l == "br"){
 				var txt:String = "\n";
-			}else if(xml.nodeKind()=="text"){
+			}else if(l=="#text"){
 				txt = xml.toString().replace(/&nbsp;/g," ");
 				txt = txt.replace(/ﾠ/g," ");
 			}
@@ -297,8 +302,8 @@ package flash.text
 				for each(var c:XML in cs) {
 					doXML(c,font,fontSize,color,href,indent,underline);
 				}
-			}
-		}*/
+			}*/
+		}
 		
 		public function get text():String  { return _text; }
 		
@@ -1062,6 +1067,33 @@ package flash.text
 				r *= 2;
 			}
 			return r;
+		}
+		
+		private function parseFromString(markup:String):HTMLDocument {
+			return (new DOMParser()).parseFromString(markup, "text/html") as HTMLDocument;
+			// Firefox/Opera/IE throw errors on unsupported types
+			/*try {
+				// WebKit returns null on unsupported types
+				if ((new DOMParser()).parseFromString("", "text/html")) {
+					// text/html parsing is natively supported
+					
+				}
+			} catch (ex) {}
+			
+			if (/^\s*text\/html\s*(?:;|$)/i.test(type)) {
+				var
+				  doc = document.implementation.createHTMLDocument("")
+				;
+					if (markup.toLowerCase().indexOf('<!doctype') > -1) {
+						doc.documentElement.innerHTML = markup;
+					}
+					else {
+						doc.body.innerHTML = markup;
+					}
+				return doc;
+			} else {
+				return nativeParse.apply(this, arguments);
+			}*/
 		}
 	}
 }

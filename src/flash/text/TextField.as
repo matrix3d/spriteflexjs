@@ -245,70 +245,76 @@ package flash.text
 			}
 		}
 		
-		private function doXML(xml:Node, font:String, fontSize:int, color:uint, href:String,indent:int,underline:int):void {
-			//this.href = href;
-			/*if (xml==null){
+		private function doXML(xml:Node, font:String, size:int, color:uint, href:String, indent:int, underline:int):void {
+			this.href = href;
+			if (xml==null){
 				return;
 			}
-			var l:String = xml.nodeName;
-			if (l == "br"){
+			var l:String = xml.localName;
+			if (l === "br"){
 				var txt:String = "\n";
-			}else if(l=="#text"){
-				txt = xml.toString().replace(/&nbsp;/g," ");
+			}else if(xml.nodeType===3){
+				txt = xml.nodeValue.replace(/&nbsp;/g," ");
 				txt = txt.replace(/ﾠ/g," ");
+			}if(xml.attributes){
+				if (l === "font"){
+					if (xml.attributes.getNamedItem("face")){
+						font = xml.attributes.getNamedItem("face").nodeValue;
+					}
+					if (xml.attributes.getNamedItem("size")){
+						size = Number(xml.attributes.getNamedItem("size").nodeValue);
+					}
+					if (xml.attributes.getNamedItem("color")){
+						color = parseInt(xml.attributes.getNamedItem("color").nodeValue.replace("#",""),16);
+					}
+				}else if (l === "a"){
+					if (xml.attributes.getNamedItem("href")){
+						hasATag = true;
+						href = xml.attributes.getNamedItem("href").nodeValue;
+						this.href = href;
+					}
+				}else if (l === "img"){
+					if (xml.attributes.getNamedItem("src")){
+						var imgsrc:String = xml.attributes.getNamedItem("src").nodeValue;
+						if (xml.attributes.getNamedItem("width")){
+							var imgwidth:Number = parseFloat(xml.attributes.getNamedItem("width").nodeValue);
+						}
+					}
+				}else if (l === "textformat"){
+					if (xml.attributes.getNamedItem("indent")){
+						indent= Number(xml.attributes.getNamedItem("@indent").nodeValue);
+					}
+				}
 			}
-			if(l=="font"){
-				if ((xml.@face).length()){
-					font = xml.@face+"";
-				}
-				if ((xml.@size).length()){
-					fontSize = Number(xml.@size);
-				}
-				if ((xml.@color).length()){
-					color = parseInt((xml.@color+"").replace("#",""),16);
-				}
-			}else if (l=="a"){
-				if ((xml.@href).length()){
-					hasATag = true;
-					href = xml.@href + "";
-					this.href = href;
-				}
-			}else if (l=="img"){
-				var imgsrc:String = xml.@src+"";
-				var imgwidth:Number = parseFloat(xml.@width+"");
-			}else if (l=="textformat"){
-				if ((xml.@indent).length()){
-					indent = Number(xml.@indent);
-				}
-			}else if (l=="u"){
+			if (l==="u"){
 				underline = 1;
 			}
-			_font = font?font.toLowerCase():font;
-			_fontSize = fontSize;
-			_color = color;
-			_indent = indent;
-			_underline = underline;
+			_textFormat.font = font?font.toLowerCase():font;
+			_textFormat.size = size;
+			_textFormat.color = color;
+			_textFormat.indent = indent;
+			_textFormat.underline = underline;
 			
 			if (imgsrc){
-				appendImg(id2img[imgsrc],imgwidth);
+				//appendImg(id2img[imgsrc],imgwidth);
 			}
 			
 			if (txt && txt.length > 0){
 				appendText(txt);
 			}
 			
-			var cs:XMLList = xml.children();
-			if (cs.length()) {
-				for each(var c:XML in cs) {
-					doXML(c,font,fontSize,color,href,indent,underline);
+			
+			if (xml.childNodes) {
+				for(var i:int=0;i<xml.childNodes.length;i++){
+					doXML(xml.childNodes[i],font,size,color,href,indent,underline);
 				}
-			}*/
+			}
 		}
 		
 		public function get text():String  { return _text; }
 		
-		public function set text(txt:String):void  {
-			_text = txt; 
+		public function set text(value:String):void  {
+			/*_text = txt; 
 			SpriteFlexjs.dirtyGraphics = true;
 			graphicsDirty = true;
 			
@@ -323,7 +329,41 @@ package flash.text
 				}
 			}else{
 				lines = txt.split("\n");
+			}*/
+			if (value === null){
+				value = "";
 			}
+			if (_text===value){
+				return;
+			}
+			hasATag = false;
+			chars = null;
+			appendText(value);
+		}
+		
+		public function appendText(value:String):void{
+			SpriteFlexjs.dirtyGraphics = true;
+			graphicsDirty = true;
+			if(_text!=null){
+				_text += value;
+			}else{
+				_text = value;
+			}
+			if (_text && _text.length > 0 && SpriteFlexjs.renderer is WebGLRenderer){
+				glDirty = true;
+				var tl:int = value.length;
+				chars = chars||[];
+				for (var i:int = 0; i < tl;i++ ){
+					var c:Char = new Char(value.charAt(i),_textFormat.size as int,_textFormat.font,_textFormat.color as uint);//color font size etc
+					chars.push(c);
+					WebGLRenderer.textCharSet.add(c);
+				}
+			}else{
+				lines = lines || [];
+				lines = lines.concat(value.split("\n"));
+			}
+			
+			
 		}
 		
 		private static function PUSH_POOL(key:int,da:GLDrawable):void{
@@ -698,10 +738,10 @@ package flash.text
 		
 		public function set wordWrap(param1:Boolean):void  {_wordWrap = param1; }
 		
-		public function appendText(newText:String):void
+		/*public function appendText(newText:String):void
 		{
 			this.replaceText(this.text.length, this.text.length, newText);
-		}
+		}*/
 		
 		override public function get width():Number 
 		{

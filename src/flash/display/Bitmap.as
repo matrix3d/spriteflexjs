@@ -88,5 +88,13 @@ package flash.display
 			}
 			return null;
 		}
+		
+		override public function hitTestPoint(x:Number, y:Number, shapeFlag:Boolean = false):Boolean
+		{
+			
+			var rect:Rectangle = getBounds(this);
+			if (rect) return rect.containsPoint(globalToLocal(new Point(x,y)));
+			return false;
+		}
 	}
 }

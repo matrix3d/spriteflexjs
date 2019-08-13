@@ -14,6 +14,7 @@ package flash.text
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.display.DisplayObject;
 	
@@ -1089,6 +1090,14 @@ package flash.text
 				}
 			}
 			return null;
+		}
+		
+		override public function hitTestPoint(x:Number, y:Number, shapeFlag:Boolean = false):Boolean
+		{
+			
+			var rect:Rectangle = __getRect();
+			if (rect) return rect.containsPoint(globalToLocal(new Point(x,y)));
+			return false;
 		}
 		
 		override public function __getRect():Rectangle 

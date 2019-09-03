@@ -339,6 +339,7 @@ package flash.text
 			}
 			hasATag = false;
 			chars = null;
+			lines = null;
 			appendText(value);
 		}
 		

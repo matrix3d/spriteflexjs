@@ -116,7 +116,7 @@ package flash.__native
 				"uniform sampler2D fs0;"+
 			   "void main(void) {" +
 					"vec4 c=texture2D(fs0,vUV);" + 
-					"c.xyz*=vColor.a;" + 
+					//"c.xyz*=vColor.a;" + 
 					"gl_FragColor = c*vColor;"+
 				"}";
 			bitmapProg = ctx.createProgram();

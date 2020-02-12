@@ -32,6 +32,7 @@ package flash.__native.te
 			var t:UVTexture=getTexture(c)
 			if (t==null){//找不到材质，创建新材质
 				t = new UVTexture;
+				t.font = c.font;
 				t.fontSize = c.size;
 				t.v = c.v;
 				newChars.push(t);
@@ -67,7 +68,7 @@ package flash.__native.te
 				var len:int = newChars.length;
 				for (var i:int = 0; i < len;i++ ){
 					var t:UVTexture = newChars[i];
-					ctx.font = t.fontSize+"px " +"font";
+					ctx.font = t.fontSize+"px " +t.font;
 					var measure:TextMetrics = ctx.measureText(t.v);
 					t.width = measure.width;
 					t.height = t.fontSize;
@@ -78,7 +79,7 @@ package flash.__native.te
 				for (i = 0; i < len;i++ ){
 					t = newChars[i];
 					rp.getRectangle(befnum + len-i-1, helpRect);
-					ctx.font = t.fontSize+"px " +"font";
+					ctx.font = t.fontSize+"px " +t.font;
 					ctx.fillText(t.v, helpRect.x, helpRect.y);
 					t.u0 = helpRect.x;
 					t.v0 = helpRect.y;

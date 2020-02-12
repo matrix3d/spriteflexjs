@@ -10,6 +10,7 @@ package flash.__native.te
 		public var width:int;
 		public var height:int;
 		public var fontSize:int;
+		public var font:String;
 		public var xadvance:int;
 		public var u0:Number=-1;
 		public var v0:Number;

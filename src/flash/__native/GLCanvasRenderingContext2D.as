@@ -90,7 +90,7 @@ package flash.__native
 			ctx.gl = (canvas.getContext("webgl", {alpha:false,antialias:false}) || canvas.getContext("experimental-webgl", {alpha:false,antialias:false})) as WebGLRenderingContext;
 			newDrawable = new GLDrawable(null, null, null,ctx.gl.DYNAMIC_DRAW);
 			stage_resize(null);
-			ctx.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+			ctx.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			ctx.setCulling(Context3DTriangleFace.NONE);
 			
 			var posData:Float32Array = new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]);
@@ -115,7 +115,9 @@ package flash.__native
 				"varying vec2 vUV;"+
 				"uniform sampler2D fs0;"+
 			   "void main(void) {" +
-					"gl_FragColor = texture2D(fs0,vUV)*vColor;"+
+					"vec4 c=texture2D(fs0,vUV);" + 
+					//"c.xyz*=vColor.a;" + 
+					"gl_FragColor = c*vColor;"+
 				"}";
 			bitmapProg = ctx.createProgram();
 			var vb:ByteArray = new ByteArray;
@@ -136,7 +138,7 @@ package flash.__native
 			fcode = "precision lowp float;" +
 				"varying vec4 vColor;"+
 			   "void main(void) {" +
-					"gl_FragColor = vColor;"+
+					"gl_FragColor = vec4(vColor.xyz*vColor.a,vColor.a);"+
 				"}";
 			colorProg = ctx.createProgram();
 			vb = new ByteArray;
@@ -373,7 +375,7 @@ package flash.__native
 					destinationFactor = Context3DBlendFactor.SOURCE_ALPHA;
 					break;
 				default:
-					sourceFactor = Context3DBlendFactor.SOURCE_ALPHA;
+					sourceFactor = Context3DBlendFactor.ONE;
 					destinationFactor = Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA;
 					break;
 					

@@ -144,7 +144,7 @@ package flash.display
 		private var _ctx:CanvasRenderingContext2D;
 		private var _ctx2d:CanvasRenderingContext2D;
 		
-		//private var intervalID:Number;
+		private var prevTime:Number;
 		private var needSendMouseMove:Object;
 		private var needSendTouchMove:Object = false;
 		private var lastUpdateTime:int = -1000;
@@ -223,9 +223,10 @@ package flash.display
 			
 			if (_instance && !_instantiate) throw new Error("Stage is a singular instance and can't be instantiated twice. Access using instance.");
 			
-			trace("power by SpriteFlexJS");
+			trace("powered by SpriteFlexJS");
 			
 			transform = new Transform(this);
+			prevTime = window.performance.now();
 			
 			if (SpriteFlexjs.rootHTMLElement)
 			{
@@ -313,35 +314,35 @@ package flash.display
 			dispatchEvent(new Event(Event.RESIZE));
 		}
 		
-		private function _updateStage():void {
+		private function _updateStage():void 
+		{
 			SpriteFlexjs.requestAnimationFrame.call(window, _updateStage);
-			if(_stageWidth != SpriteFlexjs.stageWidth||
-			_stageHeight != SpriteFlexjs.stageHeight){
+			
+			if(_stageWidth != SpriteFlexjs.stageWidth || _stageHeight != SpriteFlexjs.stageHeight){
 				window_resize(null);
 			}
 			
-			for each(var es:Sprite in __enterframeSprites){
-				es.dispatchEvent(new Event(Event.ENTER_FRAME));
+			if (needSendMouseMove) {
+				dispatchEvent(new MouseEvent(MouseEvent.MOUSE_MOVE, true, false, _mouseX, _mouseY,null,needSendMouseMove.ctrlKey,needSendMouseMove.altKey,needSendMouseMove.shiftKey,(needSendMouseMove.buttons!=null)?(needSendMouseMove.buttons>0):isButtonDown));
+				needSendMouseMove = null;
+			}
+			if (needSendTouchMove) {
+				dispatchEvent(new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, 0, true, _mouseX, _mouseY,null,needSendTouchMove.ctrlKey,needSendTouchMove.altKey,needSendTouchMove.shiftKey,(needSendTouchMove.buttons!=null)?(needSendTouchMove.buttons>0):isButtonDown));
+				needSendTouchMove = null;
 			}
 			
-			
-			//http://codetheory.in/controlling-the-frame-rate-with-requestanimationframe/	
-			/*requestAnimationFrameHander = */
-			//var now:Number = getTimer();
-			//var interval:Number = Math.ceil(1000/frameRate);
-			//var delta:Number = now - lastUpdateTime;
-			//if (delta >= interval) {
-			//	lastUpdateTime = now - (delta % interval);
-				if (needSendMouseMove) {
-					dispatchEvent(new MouseEvent(MouseEvent.MOUSE_MOVE, true, false, _mouseX, _mouseY,null,needSendMouseMove.ctrlKey,needSendMouseMove.altKey,needSendMouseMove.shiftKey,(needSendMouseMove.buttons!=null)?(needSendMouseMove.buttons>0):isButtonDown));
-					needSendMouseMove = null;
+			var fpsInterval:Number = 1000 / _frameRate;
+			var now:Number = window.performance.now();
+			var elapsed:Number = now - prevTime;
+			if (elapsed > fpsInterval)
+			{
+				for each(var es:Sprite in __enterframeSprites){
+					es.dispatchEvent(new Event(Event.ENTER_FRAME));
 				}
-				if (needSendTouchMove) {
-					dispatchEvent(new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, 0, true, _mouseX, _mouseY,null,needSendTouchMove.ctrlKey,needSendTouchMove.altKey,needSendTouchMove.shiftKey,(needSendTouchMove.buttons!=null)?(needSendTouchMove.buttons>0):isButtonDown));
-					needSendTouchMove = null;
-				}
-				dispatchEvent(new Event(Event.ENTER_FRAME,true));
-			//}
+				
+				prevTime = now - (elapsed % fpsInterval);
+				dispatchEvent(new Event(Event.ENTER_FRAME, true));
+			}
 		}
 		
 		public function set accessibilityImplementation (value:AccessibilityImplementation):void

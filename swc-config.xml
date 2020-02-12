@@ -1,6 +1,7 @@
 <royale-config>
 	<output>build-swc/SpriteFlexjs.swc</output>
 	<warn-public-vars>false</warn-public-vars>
+	<source-map>true</source-map>
     <compiler>
         <accessible>false</accessible>
 

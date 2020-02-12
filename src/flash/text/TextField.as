@@ -348,7 +348,7 @@ package flash.text
 				charVersion++;
 				//更新char相对位置
 				var clen:int = 1;//todo  多个动态文本一起渲染
-				for (i = 0; i < clen;i++ ){
+				for (var i:int = 0; i < clen; i++){
 					var line:TextField = this;
 					
 					if(line.disWrapper){
@@ -493,7 +493,7 @@ package flash.text
 				if (needNew){
 					indexBufferSet = indexPool[pow2num] = new GLIndexBufferSet(new Uint16Array(pow2num*6),WebGLRenderingContext.STATIC_DRAW);
 					var indexd:Uint16Array = indexBufferSet.data;
-					for (var i:int = 0; i < pow2num;i++ ){
+					for (i = 0; i < pow2num;i++ ){
 						indexd[i * 6]  = i * 4;
 						indexd[i * 6+1]  =indexd[i * 6+3] =i * 4+2;
 						indexd[i * 6+2] = indexd[i * 6+4] =i * 4+1;

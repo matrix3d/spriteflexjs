@@ -21,7 +21,7 @@ package flash.display
 		
 		override public function __update(ctx:CanvasRenderingContext2D):void
 		{
-			if (visible && graphics.graphicsData.length)
+			if (!_off && visible && graphics.graphicsData.length)
 			{
 				if (filters.length && !cacheAsBitmap && !parent.cacheAsBitmap) cacheAsBitmap = true;
 				

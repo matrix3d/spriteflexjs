@@ -23,9 +23,7 @@ package flash.display
 		
 		public function addChildAt(child:DisplayObject, index:int):DisplayObject  {
 			var i:int = children.indexOf(child);
-			if (i!=-1){
-				children.splice(i, 1);
-			}
+			if (i != -1) children.splice(i, 1);
 			children.splice(index,0,child);
 			child.stage = stage;
 			child._parent = this;
@@ -34,9 +32,7 @@ package flash.display
 		
 		public function removeChild(child:DisplayObject):DisplayObject  { 
 			var i:int = children.indexOf(child);
-			if (i!=-1) {
-				return removeChildAt(i);
-			}
+			if (i !=-1 ) return removeChildAt(i);
 			return child;
 		}
 		
@@ -117,7 +113,7 @@ package flash.display
 		
 		override public function __update(ctx:CanvasRenderingContext2D):void
 		{
-			if (/*stage && */visible){
+			if (!_off && visible){
 				var len:int = children.length
 				for (var i:int = 0; i < len;i++ ){
 					var c:DisplayObject = children[i];
@@ -210,7 +206,6 @@ package flash.display
 		
 		override public function hitTestPoint(x:Number, y:Number, shapeFlag:Boolean = false):Boolean
 		{
-			
 			var rect:Rectangle = getBounds(this);
 			if (rect) return rect.containsPoint(globalToLocal(new Point(x,y)));
 			return false;

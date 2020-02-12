@@ -24,6 +24,7 @@ package flash.display
 		private var _stage:Stage;
 		private var _inited:Boolean = false;
 		protected var _root:DisplayObject;
+		public var _off:Boolean = false;
 		
 		private static var ID:int = 0;
 		public var innerID:int;
@@ -467,9 +468,10 @@ package flash.display
 				//递归抛出mouseout事件直到为null或当前节点
 				var t:DisplayObject = lastMouseOverObj;
 				while (t) {
-					if (t==obj) {
+					if (t == obj) {
 						break;
 					}else{
+						//trace("Mouse Out: " + t.name + ", New Mouse Obj: " + obj.name);
 						t.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT,false,false,e.localX,e.localY,null,e.ctrlKey,e.altKey,e.shiftKey,e.buttonDown));
 						t.dispatchEvent(new MouseEvent(MouseEvent.ROLL_OUT,false,false,e.localX,e.localY,null,e.ctrlKey,e.altKey,e.shiftKey,e.buttonDown));
 					}
@@ -477,12 +479,13 @@ package flash.display
 				}
 				
 				//mouse over
-				var over:MouseEvent = new MouseEvent(MouseEvent.MOUSE_OVER,true,false,e.localX,e.localY,null,e.ctrlKey,e.altKey,e.shiftKey,e.buttonDown);
-				var rollover:MouseEvent = new MouseEvent(MouseEvent.ROLL_OVER,true,false,e.localX,e.localY,null,e.ctrlKey,e.altKey,e.shiftKey,e.buttonDown);
-				if(obj&&obj!=t){
+				if(obj && obj != t) {
+					var over:MouseEvent = new MouseEvent(MouseEvent.MOUSE_OVER,true,false,e.localX,e.localY,null,e.ctrlKey,e.altKey,e.shiftKey,e.buttonDown);
+					var rollover:MouseEvent = new MouseEvent(MouseEvent.ROLL_OVER,true,false,e.localX,e.localY,null,e.ctrlKey,e.altKey,e.shiftKey,e.buttonDown);
 					obj.dispatchEvent(over);
 					obj.dispatchEvent(rollover);
 				}
+				
 				lastMouseOverObj = obj;
 			}
 			

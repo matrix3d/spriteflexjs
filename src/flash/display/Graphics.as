@@ -269,8 +269,9 @@ package flash.display
 				
 				pathPoolPos++;
 				graphicsData.push(lastPath);
-				SpriteFlexjs.dirtyGraphics = true;
 			}
+			
+			SpriteFlexjs.dirtyGraphics = true;
 		}
 		
 		public function endFill():void

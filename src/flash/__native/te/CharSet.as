@@ -87,11 +87,11 @@ package flash.__native.te
 				}
 				
 				//宽高改变
-				if (false){
+				//if (false){
 					if (image._texture){
 						image._texture.dirty = true;
 					}
-				}
+				//}
 				
 				image.dirty = true;
 				newChars = [];

@@ -54,41 +54,7 @@ package flash.display
 				_convertedRatios.push(ratios[i] / 255);
 			}
 			
-			// prepare start and end points from matrix
-			if (matrix)
-			{
-				//trace("bounds: " + _bounds);
-				_startPoint = new Point(-(_bounds.width *2), _bounds.height);
-				_endPoint = new Point(_bounds.width * 2, _bounds.height);
-				
-				if (type == GradientType.RADIAL)
-				{
-					_startPoint = new Point(0, 0);
-					_endPoint = new Point(0, 0);
-				}
-				
-				_startPoint = matrix.transformPoint(_startPoint);
-				_endPoint = matrix.transformPoint(_endPoint);
-				//trace("startPoint: " + _startPoint + ", endPoint: " + _endPoint);
-			}
-			else
-			{
-				_startPoint = new Point(_bounds.x, _bounds.y);
-				_endPoint = new Point(_bounds.width, _bounds.y);
-			}
-			
-		/*if(this._type != GradientType.LINEAR && this._type != GradientType.RADIAL)
-		   {
-		   Error.throwError(null,2008,"type");
-		   }
-		   if(this._spreadMethod != "none" && this._spreadMethod != SpreadMethod.PAD && this._spreadMethod != SpreadMethod.REFLECT && this._spreadMethod != SpreadMethod.REPEAT)
-		   {
-		   Error.throwError(null,2008,"spreadMethod");
-		   }
-		   if(this._interpolationMethod != InterpolationMethod.LINEAR_RGB && this._interpolationMethod != InterpolationMethod.RGB)
-		   {
-		   Error.throwError(null,2008,"interpolationMethod");
-		   }*/
+			transformGradient();
 		}
 		
 		private function prepareColors():void 
@@ -98,6 +64,81 @@ package flash.display
 			{
 				_convertedColors.push(SpriteFlexjs.renderer.getCssColor(colors[i], alphas[i], _colorTransform, null) as String);
 			}
+		}
+		
+		private function transformGradient():void 
+		{
+			if (matrix)
+			{
+				if (type == GradientType.LINEAR)
+				{
+					var rotation:Number;
+					var pi:Number = 3.14159265358979323846;
+					var degree:Number = 180 / pi;
+					var radian:Number = pi / 180;
+					
+					var scaleX:Number = Math.sqrt((matrix.a * matrix.a) + (matrix.c * matrix.c));
+					var scaleY:Number = Math.sqrt((matrix.b * matrix.b) + (matrix.d * matrix.d));
+					var sign:Number = Math.atan(-(matrix.c) / matrix.a);
+					var rad:Number = Math.acos(matrix.a / scaleX);
+					
+					var deg:Number = rad * degree;
+					
+					if ((deg > 90 && sign > 0) || (deg < 90 && sign < 0))
+					{
+						rotation = (360 - deg) * radian;
+					}
+					else
+					{
+						rotation = rad;
+					}
+					var rotationInDegree:Number = rotation * degree;
+					
+					// apply scale to rectangle
+					var bnds:Rectangle = _bounds.clone();
+					bnds.inflatePoint(new Point(_bounds.width * scaleX, _bounds.height * scaleY));
+					
+					// new scaled coordinates
+					_startPoint = new Point(bnds.topLeft.x, bnds.bottomRight.y / 2);
+					_endPoint = new Point(bnds.bottomRight.x/2, bnds.bottomRight.y / 2);
+					
+					// apply rotation on rectangle
+					var rotationPoint:Point = new Point((bnds.left  + bnds.width) / 2, (bnds.top + bnds.height) / 2);
+					_startPoint = getRotatedRectPoint(rotationInDegree, _startPoint, rotationPoint);
+					_endPoint = getRotatedRectPoint(rotationInDegree, _endPoint, rotationPoint);
+				}
+				else // radial
+				{
+					_startPoint = new Point(matrix.tx, matrix.ty);
+					_endPoint = new Point(matrix.tx, matrix.ty);
+				}
+				
+				//trace("ScaleX: " + scaleX + ", ScaleY: " + scaleY + ", rotation: " + rotationInDegree);
+				//trace("Transformed: startPoint: " + _startPoint + ", endPoint: " + _endPoint + ", bounds: " + _bounds);
+			}
+			else
+			{
+				if (type == GradientType.LINEAR)
+				{
+					_startPoint = new Point(_bounds.topLeft.x, _bounds.bottomRight.y / 2);
+					_endPoint = new Point(_bounds.bottomRight.x, _bounds.bottomRight.y / 2);
+				}
+				else
+				{
+					_startPoint = _endPoint = new Point(bounds.x + (bounds.width/2), bounds.y + (bounds.height /2));
+				}
+			}
+			
+		}
+		
+		private function getRotatedRectPoint( angle:Number, point:Point, rotationPoint:Point = null):Point
+		{
+			var ix:Number = (rotationPoint) ? rotationPoint.x : 0;
+			var iy:Number = (rotationPoint) ? rotationPoint.y : 0;
+			
+			var m:Matrix = new Matrix( 1,0,0,1, point.x - ix, point.y - iy);
+			m.rotate(angle);
+			return new Point( m.tx + ix, m.ty + iy);
 		}
 		
 		public function get type():String
@@ -151,27 +192,7 @@ package flash.display
 		{
 			_bounds = value;
 			
-			if (matrix)
-			{
-				_startPoint = new Point(-(_bounds.width *2), _bounds.height);
-				_endPoint = new Point(_bounds.width * 2, _bounds.height);
-				
-				if (type == GradientType.RADIAL)
-				{
-					_startPoint = new Point(0, 0);
-					_endPoint = new Point(0, 0);
-					//trace("startPoint: " + _startPoint + ", endPoint: " + _endPoint);
-				}
-				
-				_startPoint = matrix.transformPoint(_startPoint);
-				_endPoint = matrix.transformPoint(_endPoint);
-				//trace("Transformed: startPoint: " + _startPoint + ", endPoint: " + _endPoint);
-			}
-			else
-			{
-				_startPoint = new Point(_bounds.x, _bounds.y);
-				_endPoint = new Point(_bounds.width, _bounds.y);
-			}
+			transformGradient();
 		}
 		
 		public function get gradient():CanvasGradient 
@@ -199,7 +220,7 @@ package flash.display
 				if (type === GradientType.LINEAR) {
 					_gradient = ctx.createLinearGradient(_startPoint.x, _startPoint.y, _endPoint.x, _endPoint.y);
 				}else {
-					_gradient = ctx.createRadialGradient(_startPoint.x, _startPoint.y, 0, _endPoint.x, _endPoint.y, bounds.width / 2);
+					_gradient = ctx.createRadialGradient(_startPoint.x, _startPoint.y, 0, _endPoint.x, _endPoint.y, bounds.width / 1.5);
 				}
 				
 				if (!_colorTransform || _colorTransform != colorTransform)

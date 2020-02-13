@@ -845,9 +845,15 @@ package flash.net
 				if (_playbackTarget)
 				{
 					_playbackTarget.src = _url;
-					HTMLMediaElement(_playbackTarget).play().catch(function(e:Error):void{
+					try
+					{
+						HTMLMediaElement(_playbackTarget).play();
+					}
+					catch (e:Error)
+					{
 						trace("Playback Error: " + e.message);
-					});
+					}
+					
 					_playbackTarget.loop = _loop;
 				}
 			}
@@ -1195,7 +1201,7 @@ package flash.net
 		
 		private function handleUpdateEnd(e:Event):void 
 		{
-			//trace("NetStream.handleUpdateEnd() readyState: " + _mediaSource.readyState + ", duration: " + _mediaSource.duration);
+			trace("NetStream.handleUpdateEnd() readyState: " + _mediaSource.readyState + ", duration: " + _mediaSource.duration);
 			if (_mimeCodec == VideoCodec.VP8) _mediaSource.endOfStream(); // throws error on IE using MP4
 			if (_isNewBytes)
 			{
@@ -1204,16 +1210,21 @@ package flash.net
 				var currentDuration:Number = _duration;
 				_duration = _mediaSource.duration;
 				_isNewBytes = false;
-				_playbackTarget.currentTime = _duration - .25;
+				_playbackTarget.currentTime = _duration - .0005;
 			}
 			else
 			{
 				_duration = _mediaSource.duration;
 				if (_playbackTarget.paused)
 				{
-					HTMLMediaElement(_playbackTarget).play().catch(function(e:Error):void{
-						trace("NetStream.handleUpdateEnd() " + e.message);
-					});
+					try
+					{
+						HTMLMediaElement(_playbackTarget).play();
+					}
+					catch (e:Error)
+					{
+						trace("NetStream.handleUpdateEnd() Playback Error: " + e.message);
+					}
 				}
 			}
 			
@@ -1224,9 +1235,15 @@ package flash.net
 			}
 			
 			_looped = false;
-			HTMLMediaElement(_playbackTarget).play().catch(function(e:Error):void{
-				trace("NetStream.handleUpdateEnd() " + e.message);
-			});
+			
+			try
+			{
+				HTMLMediaElement(_playbackTarget).play();
+			}
+			catch (e:Error)
+			{
+				trace("NetStream.handleUpdateEnd() Playback Error: " + e.message);
+			}
 		}
 		
 		
@@ -1242,7 +1259,7 @@ package flash.net
 			if (_bytes && _playbackTarget.currentTime != 0 && _playbackTarget.currentTime >= _duration - 1 && !_looped)
 			{
 				_looped = true;
-				_sourceBuffer.timestampOffset = _duration;
+				_sourceBuffer.timestampOffset = _duration - .0005;
 				_sourceBuffer.appendBuffer(_bytes.slice(0));
 				//trace("NetStream.handleTime() APPEND LOOP!");
 			}

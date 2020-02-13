@@ -36,7 +36,7 @@ package
 			{
 				var	degrees:int = 0;
 				var radians:Number = Math.PI / 180 * degrees;
-				mat.createGradientBox(200, 200, radians, -100, -100);
+				mat.createGradientBox(300, 300, radians, -100, -100);
 				
 				var spinBox:Sprite = new Sprite();
 				spinBox.graphics.lineStyle(10);

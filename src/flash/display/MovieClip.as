@@ -1,7 +1,10 @@
 package flash.display
 {
 	import flash.display.Scene;
-
+	import flash.events.Event;
+	import caurina.transitions.Tweener;
+	import caurina.transitions.Equations;
+	
 	/**
 	 * The MovieClip class inherits from the following classes: Sprite, DisplayObjectContainer, 
 	 * InteractiveObject, DisplayObject, and EventDispatcher.
@@ -81,6 +84,82 @@ package flash.display
 		private var _scenes:Array = [];
 		private var _totalFrames:int = 1;
 		private var _trackAsMenu:Boolean = false;
+		
+		private var _keyframes:Object = {};
+		private var _tweens:Object = {};
+		private var _frame:int = 0;
+		private var _keyList:Array = [];
+		private var _prevKeyframe:int = 0;
+		
+		/**
+		 * Animate Mathod Only
+		 * [{layer:int, obj:DisplayObject},...]
+		 */
+		public function addFrameObjects(frame:int, frameObjects:Array):void 
+		{
+			if (_keyList.indexOf(frame) == -1) _keyList.push(frame);
+			
+			_keyList.sort(function(a:*, b:*):* {return a-b});
+			_totalFrames = _keyList[_keyList.length - 1] + 1;
+			_keyframes[frame] = (_keyframes[frame] != undefined) ? _keyframes[frame].concat(frameObjects) : frameObjects;
+		}
+		
+		public function addFrameTween(start:int, end:int, obj:DisplayObject, props:Object):void 
+		{
+			if (_tweens[start] == undefined) _tweens[start] = [];
+			_tweens[start].push({start:start, end:end, obj:obj, props:props});
+		}
+		
+		private function navigate(frame:int):void 
+		{
+			_currentFrame = (frame + 1 > _totalFrames) ? 1 : frame + 1;
+			_frame = (frame > _totalFrames - 1) ? 0 : frame;
+			
+			var prevLength:int = _keyframes[_prevKeyframe] != undefined ? _keyframes[_prevKeyframe].length : 0;
+			var frameLength:int = _keyframes[_frame] != undefined ? _keyframes[_frame].length : 0;
+			
+			var len:int = Math.max(prevLength, frameLength);
+			var on:Object = {};
+			
+			if (_keyframes[_frame] != undefined)
+			{
+				for (var i:int = 0; i < len; i++) 
+				{
+					if (_prevKeyframe != _frame && i < prevLength)
+					{
+						if (on[_keyframes[_prevKeyframe][i]] == undefined)
+						{
+							_keyframes[_prevKeyframe][i]._off = true;
+						}
+					}
+					
+					if (i < frameLength)
+					{
+						_keyframes[_frame][i]._off = false;
+						on[_keyframes[_frame][i]] = true;
+					}
+				}
+				_prevKeyframe = _frame;
+				updateTweens();
+				SpriteFlexjs.dirtyGraphics = true;
+			}
+		}
+		
+		private function updateTweens():void 
+		{
+			var twArr:Array = _tweens[_frame];
+			if (twArr)
+			{
+				for (var i:int = 0; i < twArr.length; i++) 
+				{
+					var tw:Object = twArr[i];
+					tw.props.transition = Equations.easeNone;
+					var t:Number = (tw.end - tw.start) / stage.frameRate;
+					tw.props.time = t;
+					Tweener.addTween(tw.obj, tw.props);
+				}
+			}
+		}
 		
 		/**
 		 * Specifies the number of the frame in which the playhead is located in the timeline of 
@@ -225,7 +304,8 @@ package flash.display
 		 */
 		public function gotoAndPlay (frame:Object, scene:String = null):void
 		{
-			
+			_isPlaying = true;
+			navigate(int(frame) - 1);
 		}
 
 		/**
@@ -245,7 +325,8 @@ package flash.display
 		 */
 		public function gotoAndStop (frame:Object, scene:String = null):void
 		{
-			
+			_isPlaying = false;
+			navigate(int(frame) - 1);
 		}
 
 		/**
@@ -259,6 +340,8 @@ package flash.display
 		public function MovieClip()
 		{
 			super();
+			
+			addEventListener(Event.ENTER_FRAME, onFrameEvent);
 		}
 
 		/**
@@ -329,6 +412,11 @@ package flash.display
 		public function stop():void
 		{
 			
+		}
+		
+		private function onFrameEvent(e:Event):void 
+		{
+			if (_isPlaying) navigate(_frame + 1);
 		}
 	}
 }

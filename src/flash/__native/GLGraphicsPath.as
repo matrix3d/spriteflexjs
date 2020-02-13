@@ -1,6 +1,8 @@
 package flash.__native 
 {
 	import flash.display.GraphicsPath;
+	//import net.richardlord.coral.Matrix3d;
+	import flash.geom.Vector3D;
 	/**
 	 * ...
 	 * @author lizhi
@@ -44,27 +46,19 @@ package flash.__native
 		
 		override public function curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void
 		{
-			if (poly==null){
-				makePoly();
-			}
-			//poly.push(controlX);
-			//poly.push(controlY);
-			//poly.push(anchorX);
-			//poly.push(anchorY);
-			//poly.push(controlX, controlY, anchorX, anchorY);
+			if (poly==null) makePoly();
 			
-			if (poly.length>=2){
+			if (poly.length >= 2)
+			{
 				var x0:Number = poly.array[poly.length - 2];
 				var y0:Number = poly.array[poly.length - 1];
 				var d:Number = Math.abs(x0 - anchorX) + Math.abs(y0 - anchorY);
 				var step:Number = 5 / d;
-				if (step>.5){
-					step = .5;
-				}
-				if (step<0.01){
-					step = 0.01;
-				}
-				for (var t1:Number = step; t1 <= 1; t1 += step ){
+				if (step > .5) step = .5;
+				if (step < 0.01) step = 0.01;
+				
+				for (var t1:Number = step; t1 <= 1; t1 += step)
+				{
 					var t0:Number = 1 - t1;
 					var q0x:Number = t0 * x0 + t1 * controlX;
 					var q0y:Number = t0 * y0 + t1 * controlY;
@@ -88,16 +82,51 @@ package flash.__native
 		
 		override public function cubicCurveTo(controlX1:Number, controlY1:Number, controlX2:Number, controlY2:Number, anchorX:Number, anchorY:Number):void
 		{
-			if (poly==null){
-				makePoly();
-			}
-			poly.push(controlX1);
+			// TODO implement GLGraphicsPath.cubicCurveTo() Needed for elipse drawing
+			if (poly == null) makePoly();
+			
+			/*poly.push(controlX1);
 			poly.push(controlY1);
 			poly.push(controlX2);
 			poly.push(controlY2);
 			poly.push(anchorX);
-			poly.push(anchorY);
-			//poly.push(controlX1, controlY1,controlX2, controlY2, anchorX, anchorY);
+			poly.push(anchorY);*/
+			
+			
+			/*
+			trace("controlX1: " + controlX1 + ", controlX2: " + controlX2 + ", controlY1: " + controlY1 + ", controlY2: " + controlY2);
+			
+			var x0:Number = poly.array[poly.length - 2];
+			var y0:Number = poly.array[poly.length - 1];
+			var left:Matrix3d = new Matrix3d(x0 * x0 * x0, x0 * x0, x0, 1,
+											 controlX1 * controlX1 * controlX1, controlX1 * controlX1, 	controlX1, 1,
+											 controlX2 * controlX2 * controlX2, controlX2 * controlX2, 	controlX2, 1,
+											 anchorX * anchorX * anchorX, 	anchorX * anchorX, 	anchorX , 1);
+			left.invert();
+			var right:Matrix3d = new Matrix3d(		y0, 0, 0, 0,
+											 controlY1, 0, 0, 0,
+											 controlY2, 0, 0, 0,
+											   anchorY, 0, 0, 0);
+			
+			right.append(left);
+			
+			trace("n11: " + right.n11 + ", n21: " + right.n21 + ", n31: " + right.n31 + ", n41: " + right.n41);
+			trace("right: " + right.toString());
+			
+			for (var i:int = 0; i < 200; i++)
+			{
+				var x:Number = i * 2;
+				var y:Number = right.n11 * x * x * x + 
+							   right.n21 * x * x + 
+							   right.n31 * x +
+							   right.n41;
+				
+				poly.push(x);
+				poly.push(y);
+				
+				trace("x: " + x + ", y: " + y);
+			}
+			*/
 		}
 		
 		override public function wideLineTo(x:Number, y:Number):void

@@ -2,6 +2,8 @@ package flash.__native.te
 {
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
+	import flash.net.URLRequest;
+	import flash.net.navigateToURL;
 	import org.villekoskela.utils.RectanglePacker;
 	/**
 	 * 想得到实际宽高 就要新建bmd，把虚拟bmd添加到charset
@@ -26,6 +28,12 @@ package flash.__native.te
 		public function CharSet() 
 		{
 			
+		}
+		
+		public function debug():void{
+			var img = new Image(); 
+			img.src = image.toDataURL();
+			document.body.appendChild(img);
 		}
 		
 		public function add(c:Char):void{
@@ -70,7 +78,7 @@ package flash.__native.te
 					var t:UVTexture = newChars[i];
 					ctx.font = t.fontSize+"px " +t.font;
 					var measure:TextMetrics = ctx.measureText(t.v);
-					t.width = measure.width;
+					t.width = measure.width+1;
 					t.height = t.fontSize;
 					t.xadvance = t.width;
 					rp.insertRectangle(t.width, t.height, befnum+i);//插入字符
@@ -85,6 +93,9 @@ package flash.__native.te
 					t.v0 = helpRect.y;
 					t.u1 = helpRect.x+helpRect.width;
 					t.v1 = helpRect.y + helpRect.height;
+					
+					//trace(t.v, helpRect.x, helpRect.width, t.u0, t.u1, t.width);
+					//trace(helpRect.y,helpRect.height,t.v0,t.v1,t.height);
 				}
 				
 				//宽高改变

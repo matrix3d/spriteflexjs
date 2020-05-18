@@ -87,7 +87,7 @@ package flash.__native
 			this.canvas = stage.canvas;
 			ctx = new Context3D;
 			ctx.canvas = canvas;
-			ctx.gl = (canvas.getContext("webgl", {alpha:false,antialias:false}) || canvas.getContext("experimental-webgl", {alpha:false,antialias:false})) as WebGLRenderingContext;
+			ctx.gl = (canvas.getContext("webgl", {alpha:false,antialias:true}) || canvas.getContext("experimental-webgl", {alpha:false,antialias:true})) as WebGLRenderingContext;
 			newDrawable = new GLDrawable(null, null, null,ctx.gl.DYNAMIC_DRAW);
 			stage_resize(null);
 			ctx.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);

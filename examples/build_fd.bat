@@ -1,5 +1,5 @@
 @echo off
-
+::set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8 -Xmx1024m
 set "foundLibrary="
 set "foundExternalLibrary="
 
@@ -15,14 +15,16 @@ for /F tokens^=2^,3^,5delims^=^<^"^= %%a in (%2) do (
 
 set ARGS=-js-output-optimization=skipAsCoercions !libraries! !externalLibraries! !sources! -warn-public-vars=false -remove-circulars=true
 
+	::set ARGS=%ARGS% -js-compiler-option+="--compilation_level WHITESPACE_ONLY"
+	::set ARGS=%ARGS% -js-compiler-option+="--compilation_level ADVANCED_OPTIMIZATIONS"
 if %3==release (
 	set ARGS=%ARGS% -js-compiler-option+="--compilation_level SIMPLE_OPTIMIZATIONS"
 )
  
 if %3==debug (
-	set ARGS=%ARGS% -debug=true -source-map=true
+	set ARGS=%ARGS% -debug=true -source-map=false
 )
 set FLEX_HOME=%1
 @echo on
 
-%FLEX_HOME%/js/bin/asjsc.bat %main% %ARGS% -external-library-path+="%FLEX_HOME%\js\libs\js.swc" -targets=JSRoyale -define=CONFIG::as_only,false -define=CONFIG::js_only,true
+%FLEX_HOME%/js/bin/asjsc.bat %main% %ARGS% -external-library-path+="%FLEX_HOME%\js\libs\js.swc" -targets=JSRoyale -define=CONFIG::as_only,false -define=CONFIG::js_only,true -warnings=false

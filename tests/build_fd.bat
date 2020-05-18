@@ -12,4 +12,4 @@ if %3==debug (
 )
 
 echo on
-%FLEX_HOME%/js/bin/asjsc.bat %main% %ARGS% -external-library-path+="%FLEX_HOME%\js\libs\js.swc" -external-library-path+="%FLEX_HOME%\js\libs\jasmine.swc" -targets=JSFlex
+%FLEX_HOME%/js/bin/asjsc.bat %main% %ARGS% -external-library-path+="%FLEX_HOME%\js\libs\js.swc" -external-library-path+="%FLEX_HOME%\js\libs\jasmine.swc" -targets=JSRoyale

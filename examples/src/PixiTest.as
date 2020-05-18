@@ -1,6 +1,7 @@
 package 
 {
 	import PIXI.Container;
+	import PIXI.Graphics;
 	import PIXI.Sprite;
 	import PIXI.SystemRenderer;
 	import PIXI.Texture;
@@ -41,6 +42,12 @@ package
 			stage.addChild(tt);
 			
 			animate();
+			
+			var gr:Graphics = new Graphics;
+			gr.lineColor = 0xffffffff;
+			gr.moveTo(0, 0);
+			gr.lineTo(100, 100);
+			stage.addChild(gr);
 		}
 		
 		private function animate():void{

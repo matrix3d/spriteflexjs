@@ -95,7 +95,7 @@ package flash.accessibility
 		
 		public function isLabeledBy (labelBounds:Rectangle):Boolean
 		{
-			return null;
+			return false;
 		}
 	}
 }

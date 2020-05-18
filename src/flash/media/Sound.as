@@ -137,11 +137,13 @@ package flash.media
 		
 		static public function get ctx():AudioContext 
 		{
-			if (_ctx==null) {
-				if (typeof(AudioContext)!="undefined") {
-					_ctx = new AudioContext;
-				}else if(typeof(webkitAudioContext)!="undefined"){
-					_ctx =new webkitAudioContext;
+			if (_ctx == null) 
+			{
+				trace("AudioContext: " + typeof(AudioContext));
+				if (typeof(AudioContext) != "undefined") {
+					_ctx = new AudioContext();
+				}else if(typeof(webkitAudioContext) != "undefined"){
+					_ctx = new webkitAudioContext();
 				}else {
 					//throw ("can not find AudioContext");
 				}

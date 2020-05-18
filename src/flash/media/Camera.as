@@ -506,6 +506,8 @@ package flash.media
 				_diffContext = _diffCanvas.getContext("2d") as CanvasRenderingContext2D;
 				
 				_motionCanvas = document.createElement("canvas") as HTMLCanvasElement;
+				_motionCanvas.style.position = "absolute";
+				_motionCanvas.style.zIndex = "999";
 				_motionCanvas.width = _diffWidth;
 				_motionCanvas.height = _diffHeight;
 				_motionContext = _motionCanvas.getContext("2d") as CanvasRenderingContext2D;

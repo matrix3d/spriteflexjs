@@ -138,7 +138,7 @@ package flash.display
 		
 		override public function __update(ctx:CanvasRenderingContext2D):void
 		{
-			if (visible && (graphics.graphicsData.length || numChildren))
+			if (!_off && visible && (graphics.graphicsData.length || numChildren))
 			{
 				if (filters.length && !cacheAsBitmap && !parent.cacheAsBitmap) cacheAsBitmap = true;
 				
@@ -155,7 +155,7 @@ package flash.display
 			
 			/*if (hasEventListener(Event.ENTER_FRAME))
 				dispatchEvent(new Event(Event.ENTER_FRAME));*/
-			if (!cacheAsBitmap) super.__update(ctx);
+			if (!cacheAsBitmap && !_off) super.__update(ctx);
 		}
 		
 		override protected function __doMouse(e:flash.events.MouseEvent):DisplayObject 

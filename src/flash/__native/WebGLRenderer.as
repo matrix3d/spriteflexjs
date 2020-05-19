@@ -63,6 +63,10 @@ package flash.__native
 			var glctx:GLCanvasRenderingContext2D = ctx as GLCanvasRenderingContext2D;
 			//glctx.setTransform2(m);
 			//inline
+			/*if(g.lastStroke){
+				glctx.flush();
+			}*/
+			
 			glctx.matr = m;
 			if (!glctx.isBatch){
 				ctx.globalCompositeOperation = blendMode;
@@ -85,7 +89,7 @@ package flash.__native
 				endFillInstance.gldraw(glctx,colorTransform);
 			}
 			
-			if (g.lastStroke)
+			if (g.lastStroke)//draw fill and line
 			{
 				ctx.stroke();
 			}

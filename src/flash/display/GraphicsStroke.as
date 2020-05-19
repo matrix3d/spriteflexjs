@@ -125,20 +125,20 @@ package flash.display
 		 * @royaleignorecoercion flash.display.GraphicsSolidFill
 		 */
 		public function gldraw(ctx:GLCanvasRenderingContext2D, colorTransform:ColorTransform):void{
-			if (isNaN(thickness))
-			{
-				ctx.stroke();
-			}
-			else
-			{
+			//if (isNaN(thickness))
+			//{
+				//ctx.stroke();
+			//}
+			//else
+			//{
 				ctx.lineWidth = thickness;
 				if (fill is GraphicsSolidFill)
 				{
 					var sf:GraphicsSolidFill = fill as GraphicsSolidFill;
-					SpriteFlexjs.renderer.getCssColor(sf.color, sf.alpha,colorTransform,sf._glcolor);
-					ctx.strokeStyle = sf._glcolor as String; //sf.getCssColor(colorTransform);
+					ctx.strokeStyle=SpriteFlexjs.renderer.getCssColor(sf.color, sf.alpha,colorTransform,null) as String;
+					//ctx.strokeStyle = sf._glcolor as String; //sf.getCssColor(colorTransform);
 				}
-			}
+			//}
 		}
 	}
 }

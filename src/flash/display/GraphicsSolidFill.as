@@ -10,7 +10,7 @@ package flash.display
 		
 		public var alpha:Number = 1.0;
 		private var cssColor:String;
-		public var _glcolor:Array = [];
+		//public var _glcolor:Array = [];
 		public function GraphicsSolidFill(color:uint = 0, alpha:Number = 1.0)
 		{
 			super();
@@ -36,7 +36,7 @@ package flash.display
 		 */
 		public function gldraw(ctx:GLCanvasRenderingContext2D, colorTransform:ColorTransform):void{
 			//SpriteFlexjs.renderer.getCssColor(color, alpha, colorTransform, _glcolor);
-			ctx.fillStyle = SpriteFlexjs.renderer.getCssColor(color, alpha, colorTransform, _glcolor) as String//_glcolor as String; 
+			ctx.fillStyle = SpriteFlexjs.renderer.getCssColor(color, alpha, colorTransform, null) as String//_glcolor as String; 
 			ctx.fillStyleIsImage = false;
 		}
 	}

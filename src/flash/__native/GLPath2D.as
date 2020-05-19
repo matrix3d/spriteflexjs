@@ -23,7 +23,7 @@ package flash.__native
 			
 		}
 		
-		public function get drawable():GLDrawable{
+		public function getDrawable(gl:GLCanvasRenderingContext2D):GLDrawable{
 			if (path.gpuPath2DDirty){
 				path.gpuPath2DDirty = false;
 				
@@ -97,8 +97,13 @@ package flash.__native
 					}
 					offset += vsdata.length / 2;
 				}
+				
+				if (gl.strokeStyle!=null){
+					// todo : 添加stroke
+				}
+				
 				if(_drawable==null){
-					_drawable = new GLDrawable(pos, pos, index,ctx.gl.STATIC_DRAW);
+					_drawable = new GLDrawable(pos, pos, index, ctx.gl.STATIC_DRAW);
 				}else{
 					_drawable.pos.data = pos;
 					_drawable.uv.data = diffuv?uv:pos;
@@ -106,6 +111,11 @@ package flash.__native
 					_drawable.pos.dirty = true;
 					_drawable.uv.dirty = true;
 					_drawable.index.dirty = true;
+				}
+				_drawable.color.dirty = true;
+				var cd:Uint32Array = _drawable.color.data as Uint32Array;
+				for (i = 0; i < cd.length;i++ ){
+					cd[i] = gl.fillStyle;
 				}
 			}
 			return _drawable;

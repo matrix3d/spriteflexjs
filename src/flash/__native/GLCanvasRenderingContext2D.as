@@ -381,7 +381,14 @@ package flash.__native
 					
 			}
 			ctx.setBlendFactors(sourceFactor, destinationFactor);
-			ctx.drawTriangles(drawable.index.getBuff(ctx),0,drawable.numTriangles);
+			
+			/*if (strokeStyle){
+				var gl:WebGLRenderingContext = ctx.gl;
+				gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, drawable.index.getBuff(ctx).buff);
+				gl.drawElements(gl.LINES, drawable.numTriangles * 3, gl.UNSIGNED_SHORT, 0);
+			}else{*/
+				ctx.drawTriangles(drawable.index.getBuff(ctx), 0, drawable.numTriangles);
+			//}
 		}
 		
 		/**
@@ -452,6 +459,8 @@ package flash.__native
 				var data:Float32Array = drawable2.pos.data as Float32Array;
 				if(lastImageIsImage){
 					var uvdata:Float32Array = drawable2.uv.data as Float32Array;
+				}else{
+					var colordata:Uint32Array = drawable2.color.data as Uint32Array;
 				}
 				var len2:int = data.length/2 ;
 				for (var j:int = 0; j < len2; j++ ){
@@ -482,8 +491,13 @@ package flash.__native
 							newuvdata[(si + j)*2 + 1] = y;
 						}
 					}
-					if(updateColor){
-						newcolordata[(si + j)] = color;//0xff0000ff// color[0];
+					if (updateColor){
+						if (lastImageIsImage){
+							newcolordata[si + j] = color;
+						}else{
+							newcolordata[si + j] = colordata[j];
+							//newcolordata[(si + j)] = 0xff0000ff;//0xff0000ff// color[0];图形渲染 color放到glpath2d里执行
+						}
 						//newcolordata[(si + j)*4+1] = color[1];
 						//newcolordata[(si + j)*4+2] = color[2];
 						//newcolordata[(si + j)*4+3] = color[3];
@@ -517,9 +531,9 @@ package flash.__native
 		public function fill (/*opt_fillRule:String = ""*/) : Object {
 			if (fillStyleIsImage) {
 				var glcp:GLCanvasPattern = fillStyle as GLCanvasPattern;
-				drawImageInternal(glcp.image, currentPath.drawable,currentPath.matr,matr,false,colorTransform.tint,currentPath.path.tris.length>0,true);
+				drawImageInternal(glcp.image, currentPath.getDrawable(this),currentPath.matr,matr,false,colorTransform.tint,currentPath.path.tris.length>0,true);
 			}else if(currentPath){
-				drawImageInternal(fillStyle, currentPath.drawable,currentPath.matr,null,false,fillStyle as uint,false,false);
+				drawImageInternal(fillStyle, currentPath.getDrawable(this),currentPath.matr,null,false,fillStyle as uint,false,false);
 			}
 			return null;
 		}
@@ -627,6 +641,7 @@ package flash.__native
 			return null;
 		}
 		public function stroke () : Object {
+			//flush();
 			return null;
 		}
 

@@ -14,6 +14,7 @@ package flash.__native
 		public var _drawable:GLDrawable;
 		private var pos:Float32Array;
 		private var uv:Float32Array;
+		private var color:Uint32Array;
 		private var index:Uint16Array;
 		private var ctx:Context3D;
 		public var path:GLGraphicsPath;
@@ -23,6 +24,9 @@ package flash.__native
 			
 		}
 		
+		/**
+		 * @royaleignorecoercion uint
+		 */
 		public function getDrawable(gl:GLCanvasRenderingContext2D):GLDrawable{
 			if (path.gpuPath2DDirty){
 				path.gpuPath2DDirty = false;
@@ -58,8 +62,13 @@ package flash.__native
 				if(diffuv&&(uv==null||uv.length!=nump)){
 					uv = new Float32Array(nump);
 				}
+				if(color==null||color.length!=nump/2){
+					color = new Uint32Array(nump/2);
+				}
+				var colorv:Object = gl.fillStyle;
 				var offset:int = 0;
 				var pi:int = 0;
+				var ci:int = 0;
 				var ii:int = 0;
 				for (i = 0; i < len; i++ ){
 					var poly:MemArray = polys.array[i];
@@ -70,6 +79,7 @@ package flash.__native
 						var y:Number = poly.array[2 * j + 1] as Number;
 						pos[pi++] = x;
 						pos[pi++] = y;
+						color[ci++] = colorv;
 						if (j>=2){
 							index[ii++] = offset;
 							index[ii++] = offset+j-1;
@@ -89,6 +99,9 @@ package flash.__native
 						pos[pi] = vsdata[j];
 						if(uvdata)
 						uv[pi] = uvdata[j];
+						if (j%2==0){
+							color[pi / 2] = colorv;
+						}
 						pi++;
 					}
 					len2 = idata.length as Number;
@@ -112,11 +125,8 @@ package flash.__native
 					_drawable.uv.dirty = true;
 					_drawable.index.dirty = true;
 				}
+				_drawable.color.data = color;
 				_drawable.color.dirty = true;
-				var cd:Uint32Array = _drawable.color.data as Uint32Array;
-				for (i = 0; i < cd.length;i++ ){
-					cd[i] = gl.fillStyle;
-				}
 			}
 			return _drawable;
 		}

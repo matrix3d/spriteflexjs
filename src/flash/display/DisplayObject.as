@@ -243,7 +243,7 @@ package flash.display
 			return transform.colorTransform.alphaMultiplier;
 		}
 		
-		public function set alpha(v:Number):void  { 
+		public function set alpha(v:Number):void  {
 			transform.colorTransform.alphaMultiplier = v;
 			transform.updateColorTransforms();
 		}

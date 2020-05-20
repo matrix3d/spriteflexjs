@@ -235,7 +235,7 @@ package flash.__native
 		/**
 		 * @royaleignorecoercion Uint32Array
 		 */
-		public function drawImageInternal(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean,color:uint,scaleWithImageUV:Boolean,isImage:Boolean):void{
+		public function drawImageInternal(image:Object, drawable:GLDrawable, posmatr:Matrix, uvmatr:Matrix, scaleWithImage:Boolean,color:Object,scaleWithImageUV:Boolean,isImage:Boolean):void{
 			if (!isBatch){
 				if(image){
 					var colorb:GLVertexBufferSet = drawable.color;
@@ -443,7 +443,7 @@ package flash.__native
 				var posmatr:Matrix = batch[2];
 				var scaleWithImage:Boolean = batch[4];
 				var scaleWithImageUV:Boolean = batch[6];
-				var color:uint = batch[5] as Number;
+				var color:Object = batch[5];
 				if(lastImageIsImage){
 					var uvmatr:Matrix = batch[3];
 					if(uvmatr){
@@ -495,7 +495,18 @@ package flash.__native
 						if (lastImageIsImage){
 							newcolordata[si + j] = color;
 						}else{
-							newcolordata[si + j] = colordata[j];
+							// todo : 优化
+							var newcolordata8:Uint8Array=new Uint8Array(newcolordata.buffer);
+							var colordata8:Uint8Array=new Uint8Array(colordata.buffer);
+							newcolordata8[4 * (si + j) + 0] = colordata8[4 * j + 0]*color.redMultiplier;
+							newcolordata8[4 * (si + j) + 1] = colordata8[4 * j + 1]*color.greenMultiplier;
+							newcolordata8[4 * (si + j) + 2] = colordata8[4 * j + 2]*color.blueMultiplier;
+							newcolordata8[4 * (si + j) + 3] = colordata8[4 * j + 3]*color.alphaMultiplier;
+							
+							//newcolordata.
+							//((_redMultiplier*0xff) << 0)|((_greenMultiplier*0xff) << 8)|((_blueMultiplier*0xff) << 16) | ((_alphaMultiplier*0xff) << 24)
+							
+							//newcolordata[si + j] = colordata[j];
 							//newcolordata[(si + j)] = 0xff0000ff;//0xff0000ff// color[0];图形渲染 color放到glpath2d里执行
 						}
 						//newcolordata[(si + j)*4+1] = color[1];
@@ -533,7 +544,7 @@ package flash.__native
 				var glcp:GLCanvasPattern = fillStyle as GLCanvasPattern;
 				drawImageInternal(glcp.image, currentPath.getDrawable(this),currentPath.matr,matr,false,colorTransform.tint,currentPath.path.tris.length>0,true);
 			}else if(currentPath){
-				drawImageInternal(fillStyle, currentPath.getDrawable(this),currentPath.matr,null,false,fillStyle as uint,false,false);
+				drawImageInternal(fillStyle, currentPath.getDrawable(this),currentPath.matr,null,false,colorTransform,false,false);
 			}
 			return null;
 		}

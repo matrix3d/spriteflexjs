@@ -10,6 +10,7 @@ package flash.__native
 	public class GLGraphicsPath extends GraphicsPath
 	{
 		public var polys:MemArray = new MemArray;
+		public var closePathIndex:Object = {};
 		private var poly:MemArray;
 		public function GLGraphicsPath() 
 		{
@@ -23,6 +24,7 @@ package flash.__native
 			}
 			polys.length = 0;
 			tris.length = 0;
+			closePathIndex = {};
 		}
 		
 		override public function moveTo(x:Number, y:Number):void
@@ -167,6 +169,7 @@ package flash.__native
 			lineTo(x + w, y);
 			lineTo(x + w, y + h);
 			lineTo(x, y + h);
+			closePath();
 		}
 		
 		private function makePoly():void {
@@ -175,6 +178,14 @@ package flash.__native
 				poly = polys.array[polys.length] = new MemArray;
 			}
 			polys.length++;
+		}
+		
+		override public function closePath():void 
+		{
+			//initData();
+			//this.commands.push(GraphicsPathCommand.CLOSE_PATH);
+			closePathIndex[polys.length-1] = true;
+			//makePoly();
 		}
 	}
 

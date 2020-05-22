@@ -49,10 +49,11 @@ package flash.__native
 					var pathplen:int = plen / 2;
 					//line
 					if (isDrawline&&pathplen>=2){
-						nump += pathplen * 4;
 						if (isClosePath){
+							nump += pathplen * 8;
 							numi += pathplen * 6;
 						}else{
+							nump += (pathplen-1) * 8;
 							numi += (pathplen-1) * 6;
 						}
 					}
@@ -129,7 +130,7 @@ package flash.__native
 					if (hw<=0){
 						hw = .5;
 					}
-					// todo : 添加stroke
+					// todo : 1pixel width line no need JointStyle
 					var lcolorv = gl.strokeStyle;
 					for (i = 0; i < len; i++ ){
 						var poly:MemArray = polys.array[i];
@@ -139,33 +140,48 @@ package flash.__native
 						var plendiv2:int = plen / 2;
 						if(plendiv2>=2){
 							for (var j:int = 0; j < plendiv2; j++ ){
-								var x0:Number = poly.array[2 * j] as Number;
-								var y0:Number = poly.array[2 * j + 1] as Number;
-								if (j==0){
-									var x1:Number = poly.array[plen - 2];
-									var y1:Number = poly.array[plen - 1];
-								}else{
-									x1 = poly.array[2 * j - 2];
-									y1 = poly.array[2 * j - 1];
-								}
-								
-								color[pi/2] = lcolorv;
-								pos[pi++] = x0+hw;
-								pos[pi++] = y0+hw;
-								color[pi/2] = lcolorv;
-								pos[pi++] = x0-hw;
-								pos[pi++] = y0 - hw;
-								
 								if (j != 0 || isClosePath){
-									var a:int = offset + 2 * j;
-									var b:int = offset + 2 * j + 1;
+									var x0:Number = poly.array[2 * j] as Number;
+									var y0:Number = poly.array[2 * j + 1] as Number;
 									if (j==0){
-										var c:int = offset + plen - 2;
-										var d:int = offset + plen - 1;
+										var x1:Number = poly.array[plen - 2];
+										var y1:Number = poly.array[plen - 1];
 									}else{
-										c = offset + 2 * j - 2;
-										d = offset + 2 * j - 1;
+										x1 = poly.array[2 * j - 2];
+										y1 = poly.array[2 * j - 1];
 									}
+									
+									/////////////////////
+									var dy:Number = x1 - x0;
+									var dx:Number = y1 - y0;
+									var distance:Number = Math.sqrt(dx * dx + dy * dy);
+									dx *= hw/distance;
+									dy *= -hw/distance;
+									
+									/////////////////////
+									
+									color[pi/2] = lcolorv;
+									pos[pi++] = x0+dx;
+									pos[pi++] = y0+dy;
+									color[pi/2] = lcolorv;
+									pos[pi++] = x0-dx;
+									pos[pi++] = y0 - dy;
+									color[pi/2] = lcolorv;
+									pos[pi++] = x1+dx;
+									pos[pi++] = y1+dy;
+									color[pi/2] = lcolorv;
+									pos[pi++] = x1-dx;
+									pos[pi++] = y1 - dy;
+									
+									var a:int = offset;
+									var b:int = offset + 1;
+									//if (j==0){
+									//	var c:int = offset + plen - 2;
+									//	var d:int = offset + plen - 1;
+									//}else{
+										var c:int = offset + 2;
+										var d:int = offset+ 3;
+									//}
 									
 									
 									index[ii++] = a;
@@ -174,9 +190,10 @@ package flash.__native
 									index[ii++] = b;
 									index[ii++] = d;
 									index[ii++] = c;
+									offset += 4;
 								}
 							}
-							offset += j * 4;
+							//offset += j * 8;
 						}
 					}
 					

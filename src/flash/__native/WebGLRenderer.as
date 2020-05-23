@@ -82,17 +82,17 @@ package flash.__native
 				var igd:IGraphicsData = g.graphicsData[i];
 				igd.gldraw(glctx, colorTransform);
 			}
-			if (g.lastFill)
+			if (g.lastFill||g.lastStroke)
 			{
 				endFillInstance.fill = g.lastFill;
 				endFillInstance._worldMatrix = g._worldMatrix;
 				endFillInstance.gldraw(glctx,colorTransform);
 			}
 			
-			if (g.lastStroke)//draw fill and line
+			/*if (g.lastStroke)//draw fill and line
 			{
 				ctx.stroke();
-			}
+			}*/
 			ctx.fillStyle = null;
 			ctx.strokeStyle = null;
 			if (glctx.isBatch){

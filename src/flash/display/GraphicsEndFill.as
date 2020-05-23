@@ -39,7 +39,7 @@ package flash.display
 		 * @royaleignorecoercion flash.display.GraphicsBitmapFill
 		 */
 		public function gldraw(ctx:GLCanvasRenderingContext2D, colorTransform:ColorTransform):void{
-			if (fill) {
+			//if (fill||stroke) {
 				/*if(fill is GraphicsBitmapFill){
 					var bfill:GraphicsBitmapFill = fill as GraphicsBitmapFill;
 					if (bfill.matrix) {
@@ -49,7 +49,9 @@ package flash.display
 				}else{
 					ctx.globalAlpha = 1;
 				}*/
-				var m:Matrix = fill["matrix"];
+				if(fill&&fill["matrix"]){
+					var m:Matrix = fill["matrix"];
+				}
 				if(m){
 					//ctx.save();
 					_worldMatrix.copyFrom(m);
@@ -63,7 +65,7 @@ package flash.display
 				//if (m) {
 					//ctx.restore();
 				//}
-			}
+			//}
 		}
 	}
 }

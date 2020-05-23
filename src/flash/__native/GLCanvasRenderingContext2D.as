@@ -543,7 +543,7 @@ package flash.__native
 			if (fillStyleIsImage) {
 				var glcp:GLCanvasPattern = fillStyle as GLCanvasPattern;
 				drawImageInternal(glcp.image, currentPath.getDrawable(this),currentPath.matr,matr,false,colorTransform.tint,currentPath.path.tris.length>0,true);
-			}else if(currentPath){
+			}else if(currentPath&&currentPath.path.polys){
 				drawImageInternal(fillStyle, currentPath.getDrawable(this),currentPath.matr,null,false,colorTransform,false,false);
 			}
 			return null;

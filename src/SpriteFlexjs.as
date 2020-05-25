@@ -19,6 +19,7 @@ package
 		public static var rootHTMLElement:HTMLElement;
 		public static var renderer:IRenderer = new BaseRenderer();
 		public static var dirtyGraphics:Boolean = true;
+		public static var useEarcut:Boolean = false;
 		public static var requestAnimationFrame:Function =
 			window["requestAnimationFrame"]       ||
 			window["webkitRequestAnimationFrame"] ||

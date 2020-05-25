@@ -1,5 +1,6 @@
 package flash.__native 
 {
+	import flash.__native.util.Earcut;
 	import flash.display.GraphicsPath;
 	import flash.display.GraphicsPathCommand;
 	import flash.display3D.Context3D;
@@ -86,21 +87,26 @@ package flash.__native
 				var ii:int = 0;
 				for (i = 0; i < len; i++ ){
 					var poly:MemArray = polys.array[i];
-					plen = poly.length;
-					var plendiv2:int = plen / 2;
-					for (var j:int = 0; j < plendiv2; j++ ){
-						var x:Number = poly.array[2 * j] as Number;
-						var y:Number = poly.array[2 * j + 1] as Number;
-						color[pi/2] = colorv;
-						pos[pi++] = x;
-						pos[pi++] = y;
-						if (j>=2){
-							index[ii++] = offset;
-							index[ii++] = offset+j-1;
-							index[ii++] = offset+j;
+					if (SpriteFlexjs.useEarcut){// todo : earcut
+						var ear:Earcut = new Earcut;
+						var ins:Array = ear.earcut(poly);
+					}else{
+						plen = poly.length;
+						var plendiv2:int = plen / 2;
+						for (var j:int = 0; j < plendiv2; j++ ){
+							var x:Number = poly.array[2 * j] as Number;
+							var y:Number = poly.array[2 * j + 1] as Number;
+							color[pi/2] = colorv;
+							pos[pi++] = x;
+							pos[pi++] = y;
+							if (j>=2){
+								index[ii++] = offset;
+								index[ii++] = offset+j-1;
+								index[ii++] = offset+j;
+							}
 						}
+						offset += j;
 					}
-					offset += j;
 				}
 				
 				for (i = 0; i < tlen;i++ ){

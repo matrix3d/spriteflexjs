@@ -1,5 +1,6 @@
 package{
 	
+	import flash.__native.WebGLRenderer;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -13,7 +14,10 @@ package{
 		
 		private var drawShape:Sprite;
 		public function TestBox2D(){
-			
+			CONFIG::js_only{
+				SpriteFlexjs.renderer = new WebGLRenderer;
+				SpriteFlexjs.wmode = "gpu batch";
+			}
 			
 			
 			// Add event for main loop

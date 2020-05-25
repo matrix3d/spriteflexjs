@@ -1,11 +1,13 @@
 package 
 {
+	import flash.__native.WebGLRenderer;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
 	import flash.text.TextField;
+	import spriteflexjs.Stats;
 	/**
 	 * ...
 	 * @author lizhi
@@ -16,12 +18,23 @@ package
 		private var moving:Sprite;
 		public function TestMouseEvent() 
 		{
-			for (var i:int = 0; i < 100;i++ ) {
+			CONFIG::js_only{
+			SpriteFlexjs.renderer = new WebGLRenderer;
+			SpriteFlexjs.wmode = "gpu batch";
+			}
+			for (var i:int = 0; i < 300;i++ ) {
 				var s:Sprite = new Sprite;
+				if(Math.random()<.5)
+				s.graphics.lineStyle(2);
 				s.graphics.beginFill(0xffffff * Math.random());
 				var w:Number = 50 + 50 * Math.random();
 				var h:Number = 50 + 50 * Math.random();
 				s.graphics.drawRect( -w / 2, -h / 2, w, h);
+				//s.graphics.moveTo((Math.random() - .5) * 100,(Math.random() - .5) * 100);
+				//s.graphics.lineTo((Math.random() - .5) * 100,(Math.random() - .5) * 100);
+				//s.graphics.lineTo((Math.random() - .5) * 100,(Math.random() - .5) * 100);
+				//s.graphics.moveTo(0, 0);
+				//s.graphics.lineTo(100, 0);
 				s.rotation = Math.random() * 360;
 				s.x = 400 * Math.random();
 				s.y = 400 * Math.random();
@@ -44,6 +57,9 @@ package
 			tf.y = 200;
 			tf.mouseEnabled = false;
 			addChild(tf);
+			
+			
+			addChild(new Stats);
 		}
 		
 		private function stage_mouseUp(e:MouseEvent):void 

@@ -73,8 +73,8 @@ import TestBed.*;
 			instructions_text_format.align = TextFormatAlign.RIGHT;
 			
 			instructions_text.defaultTextFormat = instructions_text_format
-			instructions_text.x = 140
-			instructions_text.y = 4.5
+			instructions_text.x = 140;
+			instructions_text.y = 4;
 			instructions_text.width = 495
 			instructions_text.height = 61
 			instructions_text.text = "Box2DFlashAS3 2.0.1\n'Left'/'Right' arrows to go to previous/next example. \n'R' to reset."

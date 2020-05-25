@@ -19,6 +19,8 @@
     <class path="..\src" />
     <class path="src" />
     <class path="D:\sdk\apache-royale-0.9.8-bin-js\royale-asjs\js\libs" />
+    <class path="MornUILib\src" />
+    <class path="D:\sdk\apache-royale-0.9.8-bin-js\royale-asjs\frameworks\js\libs" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -57,6 +59,8 @@
   <libraryPaths>
     <element path="D:\sdk\apache-royale-0.9.8-bin-js\royale-asjs\js\libs\js.swc" />
     <element path="lib\pixijs.swc" />
+    <element path="D:\sdk\apache-royale-0.9.8-bin-js\royale-asjs\frameworks\js\libs\CoreJS.swc" />
+    <element path="D:\sdk\apache-royale-0.9.8-bin-js\royale-asjs\frameworks\js\libs\XMLJS.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>
@@ -76,7 +80,7 @@
   </library>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <compile path="src\TestBedMain.as" />
+    <compile path="src\TestMornui.as" />
   </compileTargets>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>

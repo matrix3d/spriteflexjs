@@ -4,6 +4,7 @@ package
 	import PIXI.Graphics;
 	import PIXI.Sprite;
 	import PIXI.SystemRenderer;
+	import PIXI.Text;
 	import PIXI.Texture;
 	import PIXI.WebGLRenderer;
 	import bunnymark.TileTestPixi;
@@ -48,6 +49,9 @@ package
 			gr.moveTo(0, 0);
 			gr.lineTo(100, 100);
 			stage.addChild(gr);
+			
+			var pt:Text = new Text("fdsfds");
+			stage.addChild(pt);
 		}
 		
 		private function animate():void{

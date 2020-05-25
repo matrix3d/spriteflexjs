@@ -689,6 +689,7 @@ package com.hsharma.hungryHero.screens
 		 */
 		private function onGameTick(event:Event):void
 		{
+			trace("tick");
 			// If not paused, tick the game.
 			if (!gamePaused)
 			{

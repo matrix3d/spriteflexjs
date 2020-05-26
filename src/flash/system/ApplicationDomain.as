@@ -3,12 +3,12 @@ package flash.system {
     
     public final class ApplicationDomain {
          
-        
+        private static var _currentDomain:ApplicationDomain = new ApplicationDomain;
         public function ApplicationDomain(parentDomain:ApplicationDomain = null) {
         }
         
          public static function get currentDomain() : ApplicationDomain{
-			 return null;
+			 return _currentDomain;
 		 }
         
          public static function get MIN_DOMAIN_MEMORY_LENGTH() : uint{

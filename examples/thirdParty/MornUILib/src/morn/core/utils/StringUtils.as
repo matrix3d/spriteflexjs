@@ -10,7 +10,10 @@ package morn.core.utils {
 		
 		/**用字符串填充数组，并返回数组副本*/
 		public static function fillArray(arr:Array, str:String, type:Class = null):Array {
-			var temp:Array = ObjectUtils.clone(arr);
+			var temp:Array = [];// ObjectUtils.clone(arr);
+			for each(var o:Object in arr){
+				temp.push(o);
+			}
 			if (Boolean(str)) {
 				var a:Array = str.split(",");
 				for (var i:int = 0, n:int = Math.min(temp.length, a.length); i < n; i++) {

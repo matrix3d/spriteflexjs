@@ -88,15 +88,21 @@ package morn.core.components {
 		}
 		
 		private static function setCompValue(comp:Component, prop:String, value:String, view:View = null):void {
-			if (comp.hasOwnProperty(prop)) {
+			//if (comp.hasOwnProperty(prop)) {
 				/*[IF-SCRIPT-BEGIN]
 				   if (prop=="width" || prop=="height" || comp[prop] is Number) {
 				   comp[prop]=Number(value);
 				   }else
 				 [IF-SCRIPT-END]*/
-				comp[prop] = (value == "true" ? true : (value == "false" ? false : value))
-			} else if (prop == "var" && view && view.hasOwnProperty(value)) {
+			//	comp[prop] = (value == "true" ? true : (value == "false" ? false : value))
+			//} else if (prop == "var" && view && view.hasOwnProperty(value)) {
+			//	view[value] = comp;
+			//}
+			
+			if (prop == "var" && view /*&& view.hasOwnProperty(value)*/) {
 				view[value] = comp;
+			}else{
+				comp[prop] = (value == "true" ? true : (value == "false" ? false : value))
 			}
 		}
 		

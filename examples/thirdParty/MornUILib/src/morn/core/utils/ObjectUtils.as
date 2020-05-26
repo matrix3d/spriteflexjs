@@ -40,12 +40,12 @@ package morn.core.utils {
 		}
 		
 		/**clone副本*/
-		public static function clone(source:*):* {
+		/*public static function clone(source:*):* {
 			var bytes:ByteArray = new ByteArray();
 			bytes.writeObject(source);
 			bytes.position = 0;
 			return bytes.readObject();
-		}
+		}*/
 		
 		/**创建位图*/
 		public static function createBitmap(width:int, height:int, color:uint = 0, alpha:Number = 1):Bitmap {

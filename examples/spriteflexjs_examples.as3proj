@@ -19,8 +19,13 @@
     <class path="..\src" />
     <class path="src" />
     <class path="D:\sdk\apache-royale-0.9.8-bin-js\royale-asjs\js\libs" />
-    <class path="MornUILib\src" />
     <class path="D:\sdk\apache-royale-0.9.8-bin-js\royale-asjs\frameworks\js\libs" />
+    <class path="thirdParty\adobe" />
+    <class path="thirdParty\box2dflash" />
+    <class path="thirdParty\MornUILib\src" />
+    <class path="thirdParty\protebuff" />
+    <class path="thirdParty\utils" />
+    <class path="thirdParty\MornUIDemo\src" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -57,10 +62,10 @@
   </includeLibraries>
   <!-- SWC Libraries -->
   <libraryPaths>
-    <element path="D:\sdk\apache-royale-0.9.8-bin-js\royale-asjs\js\libs\js.swc" />
     <element path="lib\pixijs.swc" />
     <element path="D:\sdk\apache-royale-0.9.8-bin-js\royale-asjs\frameworks\js\libs\CoreJS.swc" />
     <element path="D:\sdk\apache-royale-0.9.8-bin-js\royale-asjs\frameworks\js\libs\XMLJS.swc" />
+    <element path="D:\sdk\apache-royale-0.9.8-bin-js\royale-asjs\js\libs\js.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

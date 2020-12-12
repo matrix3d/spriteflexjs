@@ -8,7 +8,11 @@ package flash.geom
          super();
       }
       
-     public static function projectVector(param1:Matrix3D, param2:Vector3D) : Vector3D{return null}
+     public static function projectVector(param1:Matrix3D, param2:Vector3D) : Vector3D{
+		var ret:Vector3D = param1.transformVector(param2);
+		ret.scaleBy(1 / ret.z);
+		return ret;
+	 }
       
      public static function projectVectors(param1:Matrix3D, param2:Vector.<Number>, param3:Vector.<Number>, param4:Vector.<Number>) : void{}
       

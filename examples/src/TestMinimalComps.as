@@ -2,6 +2,7 @@
 package 
 {
 	import com.bit101.components.*;
+	import flash.__native.WebGLRenderer;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -38,6 +39,10 @@ package
 		 */
 		public function TestMinimalComps():void 
 		{
+			
+			
+			SpriteFlexjs.wmode = "gpu batch";
+			SpriteFlexjs.renderer = new WebGLRenderer;
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}
@@ -61,8 +66,22 @@ package
 			var panel = this;
 			
 			// チェックボックスの準備
-			checkBox = new CheckBox(this, 20, 20, "", onCheckBoxClick);
+			checkBox = new CheckBox(this, 80, 20, "", onCheckBoxClick);
 			checkBox.label = "チェックボックス";
+			
+			stage.addEventListener(flash.events.MouseEvent.CLICK, function():void{
+				trace(checkBox.x);
+				trace(checkBox.getChildAt(0).x);
+				for (var i:int = 0; i < checkBox.numChildren;i++ ){
+					trace(checkBox.getChildAt(i));
+					trace(checkBox.getChildAt(i).x);
+				}
+			});
+			//s.x = 20;
+			//s.y = 10;
+			
+			
+			
 			
 			// ラベルの準備
 			var label:Label = new Label(panel, 20, 40);
@@ -133,9 +152,9 @@ package
 		private function onCheckBoxClick(e:MouseEvent):void 
 		{
 			if (checkBox.selected == false) {
-				inputText.text = "チェックが消えました";
+				//inputText.text = "チェックが消えました";
 			} else {
-				inputText.text = "チェックが付きました";
+				//inputText.text = "チェックが付きました";
 			}
 		}
 		

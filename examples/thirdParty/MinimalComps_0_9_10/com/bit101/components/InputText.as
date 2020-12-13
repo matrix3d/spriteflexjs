@@ -50,8 +50,8 @@ package com.bit101.components
 		 */
 		public function InputText(parent:DisplayObjectContainer = null, xpos:Number = 0, ypos:Number =  0, text:String = "", defaultHandler:Function = null)
 		{
-			this.text = text;
 			super(parent, xpos, ypos);
+			this.text = text;
 			if(defaultHandler != null)
 			{
 				addEventListener(Event.CHANGE, defaultHandler);

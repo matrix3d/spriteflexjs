@@ -293,10 +293,11 @@ package flash.display
 		public function set filters(v:Array):void
 		{
 			_filters = v;
+			_filterOffsetX = _filterOffsetY = 0;
 			for each (var f:BitmapFilter in _filters) 
 			{
-				_filterOffsetX += Math.max(f.offsetX, _filterOffsetX);
-				_filterOffsetY += Math.max(f.offsetY, _filterOffsetY);
+				_filterOffsetX = Math.max(f.offsetX, _filterOffsetX);
+				_filterOffsetY = Math.max(f.offsetY, _filterOffsetY);
 			}
 		}
 		

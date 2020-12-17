@@ -6,6 +6,7 @@
 
 // forked from saharan's 3D水面 / Water 3D
 package {
+	import flash.__native.WebGLRenderer;
     import flash.system.LoaderContext;
     import flash.display.*;
     import flash.events.*;
@@ -59,6 +60,11 @@ package {
         private var m00:Number, m01:Number, m02:Number, m10:Number, m11:Number, m12:Number, m20:Number, m21:Number, m22:Number;
         
         function Water3D() : void {
+			CONFIG::js_only{
+				SpriteFlexjs.wmode = "gpu batch";
+				SpriteFlexjs.renderer = new WebGLRenderer;
+			}
+			
             if (stage) init();
             else addEventListener(Event.ADDED_TO_STAGE, init);
         }

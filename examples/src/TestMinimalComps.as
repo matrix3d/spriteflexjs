@@ -41,8 +41,8 @@ package
 		{
 			
 			
-			SpriteFlexjs.wmode = "gpu batch";
-			SpriteFlexjs.renderer = new WebGLRenderer;
+			//SpriteFlexjs.wmode = "gpu batch";
+			//SpriteFlexjs.renderer = new WebGLRenderer;
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}

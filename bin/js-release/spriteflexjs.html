@@ -7,7 +7,23 @@
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 </head>
 <body>
-	<a href="index.html">back</a><br/>
+	<div class="btn-group">
+	  <a href="index.html" target="_blank" class="btn btn-sm btn-outline-secondary">View</a>
+	  <a id="spsrc" href="https://github.com/matrix3d/spriteflexjs/tree/master/examples/src/" target="_blank" class="btn btn-sm btn-outline-secondary">Src</a>
+	</div>
+	<script>
+	
+	function getParameter(param) {
+		var reg = new RegExp(".*[?,&]"+param+"=(.*?)((&.*)|$)");
+		var obj = reg.exec(window.location.search);
+		if(obj)return obj[1];
+		else return "";
+	}
+	var cname=getParameter("mainjs");
+	
+	document.getElementById("spsrc").href = "https://github.com/matrix3d/spriteflexjs/tree/master/examples/src/"+cname+".as";</script>
+	
+	
 	<div>
 		<canvas id="spriteflexjsstage"></canvas>
 	</div>
@@ -25,13 +41,6 @@
 </html>
 
 <script>
-	function getParameter(param) {
-		var reg = new RegExp(".*[?,&]"+param+"=(.*?)((&.*)|$)");
-		var obj = reg.exec(window.location.search);
-		if(obj)return obj[1];
-		else return "";
-	}
-	var cname=getParameter("mainjs");
 	function loadJS(url, success) {
 		var domScript = document.createElement('script');
 		domScript.src = url;

@@ -1545,9 +1545,10 @@ package flash.display
 				}
 				
 				if (hasEventListener(flashType2)) {
-					if(flashType2!=MouseEvent.MOUSE_MOVE){
+					if (flashType2 != MouseEvent.MOUSE_MOVE){
 						dispatchEvent(new MouseEvent(flashType2, true, false, _mouseX, _mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,(e.buttons!=null)?(e.buttons>0):isButtonDown));
 					}else {
+						updateDragSprite();
 						needSendMouseMove = e;
 					}
 				}
@@ -1623,9 +1624,58 @@ package flash.display
 					if (flashType != MouseEvent.MOUSE_MOVE){
 						dispatchEvent(new MouseEvent(flashType,true,false,_mouseX,_mouseY,null,e.ctrlKey,e.altKey,e.shiftKey,(e.buttons!=null)?(e.buttons>0):isButtonDown,e.wheelDelta));
 					}else {
+						updateDragSprite();
 						needSendMouseMove = e;
 					}
 				}
+			}
+		}
+		
+		private var currentDragSprite:DisplayObject;
+		private  var currentDragLockCenter:Boolean;
+		private var currentDragBounds:Rectangle;
+		private var currentDragSX:Number;
+		private var currentDragSY:Number;
+		private var currentDragMX:Number;
+		private var currentDragMY:Number;
+		public function setDragSprite(s:DisplayObject,lockCenter:Boolean=false, bounds:Rectangle=null):void{
+			currentDragSprite = s;
+			currentDragLockCenter = lockCenter;
+			currentDragBounds = bounds;
+			if (s){
+				currentDragSX = s.x;
+				currentDragSY = s.y;
+				currentDragMX = _mouseX;
+				currentDragMY = _mouseY;
+			}
+		}
+		
+		private  function updateDragSprite():void{
+			if (currentDragSprite){
+				if (currentDragLockCenter){
+					var dx:Number = _mouseX;
+					var dy:Number = _mouseY;
+				}else{
+					var dx:Number =currentDragSX+ _mouseX - currentDragMX;
+					var dy:Number =currentDragSY+ _mouseY - currentDragMY;
+				}
+				if (currentDragBounds){
+					if (dx<currentDragBounds.left){
+						dx = currentDragBounds.left;
+					}
+					if (dy<currentDragBounds.top){
+						dy = currentDragBounds.top;
+					}
+					if (dx>currentDragBounds.right){
+						dx = currentDragBounds.right;
+					}
+					if (dy>currentDragBounds.bottom){
+						dy = currentDragBounds.bottom;
+					}
+				}
+			
+				currentDragSprite.x = dx;
+				currentDragSprite.y = dy;
 			}
 		}
 		

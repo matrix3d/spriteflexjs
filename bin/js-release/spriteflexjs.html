@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+	<script type="text/javascript" id="spriteflexjsscript">
+	</script>
+</body>
+</html>
+
+<script>
+	function getParameter(param) {
+		var reg = new RegExp(".*[?,&]"+param+"=(.*?)((&.*)|$)");
+		var obj = reg.exec(window.location.search);
+		if(obj)return obj[1];
+		else return "";
+	}
+	var cname=getParameter("mainjs");
+	function loadJS(url, success) {
+		var domScript = document.createElement('script');
+		domScript.src = url;
+		success = success || function () {};
+		domScript.onload = domScript.onreadystatechange = function () {
+			if (!this.readyState || 'loaded' === this.readyState || 'complete' === this.readyState) {
+				success();
+				this.onload = this.onreadystatechange = null;
+				this.parentNode.removeChild(this);
+			}
+		}
+		document.getElementsByTagName('head')[0].appendChild(domScript);
+	}
+	loadJS(cname+".js",function(){
+		(new (window[cname])()).start();
+	});
+</script>

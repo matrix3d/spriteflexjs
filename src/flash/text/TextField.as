@@ -683,6 +683,7 @@ package flash.text
 		}
 		
 		public function get textHeight():Number  {
+			return int(defaultTextFormat.size)
 			__updateBuff();
 			if (_textHeight !=-1){
 				return _textHeight;
@@ -691,6 +692,11 @@ package flash.text
 		}
 		
 		public function get textWidth():Number  {
+			if (text){
+				return text.length * int(defaultTextFormat.size)/2;
+			}
+			return 4;
+			
 			__updateBuff();
 			if(_textWidth!=-1){
 				return _textWidth;

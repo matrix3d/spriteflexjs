@@ -35,9 +35,13 @@ package flash.display
 			_buttonMode = value;
 		}
 		
-		public function startDrag(param1:Boolean = false, param2:Rectangle = null):void  {/**/ }
+		public function startDrag(lockCenter:Boolean=false, bounds:Rectangle=null):void  {
+			Stage.instance.setDragSprite(this, lockCenter, bounds);
+		}
 		
-		public function stopDrag():void  {/**/ }
+		public function stopDrag():void  {
+			Stage.instance.setDragSprite(null);
+		}
 		
 		public function startTouchDrag(param1:int, param2:Boolean = false, param3:Rectangle = null):void  {/**/ }
 		

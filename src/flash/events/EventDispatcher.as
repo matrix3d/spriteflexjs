@@ -6,7 +6,7 @@ package flash.events
 	[Event(name = "activate", type = "flash.events.Event")]
 	public class EventDispatcher extends Object implements IEventDispatcher
 	{
-		private var listeners:Object = {};
+		private var listeners:Object;
 		
 		public function EventDispatcher(target:IEventDispatcher = null)
 		{
@@ -49,6 +49,7 @@ package flash.events
 		
 		public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void
 		{
+			listeners ||= {};
 			var funcs:Array = listeners[type] = listeners[type] || [];
 			var i:Object = funcs.indexOf(listener);
 			if (i != -1)
@@ -60,6 +61,9 @@ package flash.events
 		
 		public function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void
 		{
+			if (listeners==null){
+				return ;
+			}
 			var funcs:Array = listeners[type];
 			if (funcs)
 			{
@@ -87,6 +91,9 @@ package flash.events
 		
 		public function hasEventListener(type:String):Boolean
 		{
+			if (listeners==null){
+				return false;
+			}
 			return listeners[type] != null;
 		}
 		
@@ -94,6 +101,9 @@ package flash.events
 		
 		private function dispatchEventFunction(event:Event):Boolean
 		{
+			if (listeners==null){
+				return false;
+			}
 			event.target = this;
 			event.currentTarget = this;
 			var funcs:Array = listeners[event.type];

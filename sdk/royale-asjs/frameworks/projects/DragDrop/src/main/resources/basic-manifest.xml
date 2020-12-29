@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-->
+
+
+<componentPackage>
+
+	<component id="MultiSelectionDragImageBead" class="org.apache.royale.html.beads.MultiSelectionDragImageBead" />
+	<component id="MultiSelectionDragSourceBead" class="org.apache.royale.html.beads.MultiSelectionDragSourceBead" />
+	<component id="MultiSelectionTreeDragSourceBead" class="org.apache.royale.html.beads.MultiSelectionTreeDragSourceBead" />
+	<component id="SingleSelectionDragImageBead" class="org.apache.royale.html.beads.SingleSelectionDragImageBead" />
+	<component id="SingleSelectionDragSourceBead" class="org.apache.royale.html.beads.SingleSelectionDragSourceBead" />
+	<component id="SingleSelectionDropIndicatorBead" class="org.apache.royale.html.beads.SingleSelectionDropIndicatorBead"/>
+	<component id="SingleSelectionDropTargetBead" class="org.apache.royale.html.beads.SingleSelectionDropTargetBead" />
+	<component id="SensitiveSingleSelectionDropTargetBead" class="org.apache.royale.html.beads.SensitiveSingleSelectionDropTargetBead" />
+	<component id="SensitiveMultiSelectionDropTargetBead" class="org.apache.royale.html.beads.SensitiveMultiSelectionDropTargetBead" />
+	<component id="OutOfApplicationDropTargetBead" class="org.apache.royale.html.beads.OutOfApplicationDropTargetBead" />
+	<component id="DragMouseController" class="org.apache.royale.html.beads.controllers.DragMouseController" />
+	<component id="DropMouseController" class="org.apache.royale.html.beads.controllers.DropMouseController" />
+	<component id="OutOfApplicationDropMouseController" class="org.apache.royale.html.beads.controllers.OutOfApplicationDropMouseController" />
+
+	<component id="DataGridDrawingLayerBead" class="org.apache.royale.html.beads.DataGridDrawingLayerBead" />
+	<component id="DataGridWithDrawingLayerLayout" class="org.apache.royale.html.beads.DataGridWithDrawingLayerLayout" />
+	<component id="DragDropListView" class="org.apache.royale.html.beads.DragDropListView" />
+	<component id="ListDrawingLayerBead" class="org.apache.royale.html.beads.ListDrawingLayerBead" />
+
+	<component id="DataGridButtonBarViewForMovableColumns" class="org.apache.royale.html.beads.DataGridButtonBarViewForMovableColumns" />
+	<component id="DataGridColumnReorderView" class="org.apache.royale.html.beads.DataGridColumnReorderView" />
+	<component id="ButtonBarReorderBead" class="org.apache.royale.html.beads.ButtonBarReorderBead" />
+
+	<component id="DataGridDragDropBead" class="org.apache.royale.html.beads.DataGridDragDropBead" />
+
+</componentPackage>

@@ -1,0 +1,289 @@
+<?xml version="1.0" ?>
+
+<!--
+
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-->
+
+<project name="node" default="main" basedir=".">
+    
+    <property name="ROYALE_HOME" value="${basedir}/.." />
+    
+    <condition property="ROYALE_COMPILER_HOME" value="${env.ROYALE_COMPILER_HOME}">
+        <and>
+            <not>
+                <isset property="ROYALE_COMPILER_HOME" />
+            </not>
+            <available file="${env.ROYALE_COMPILER_HOME}/lib/compiler-mxmlc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <condition property="ROYALE_COMPILER_HOME" value="${ROYALE_HOME}/../royale-compiler/compiler">
+        <and>
+            <not>
+                <isset property="ROYALE_COMPILER_HOME" />
+            </not>
+            <available file="${ROYALE_HOME}/../royale-compiler/compiler/lib/compiler-mxmlc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <condition property="ROYALE_COMPILER_HOME" value="${ROYALE_HOME}">
+        <and>
+            <not>
+                <isset property="ROYALE_COMPILER_HOME" />
+            </not>
+            <available file="${ROYALE_HOME}/lib/compiler-mxmlc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <condition property="ROYALE_TRANSPILER_HOME" value="${env.ROYALE_TRANSPILER_HOME}">
+        <and>
+            <not>
+                <isset property="ROYALE_TRANSPILER_HOME" />
+            </not>
+            <available file="${env.ROYALE_TRANSPILER_HOME}/lib/jsc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <condition property="ROYALE_TRANSPILER_HOME" value="${ROYALE_HOME}/js">
+        <and>
+            <not>
+                <isset property="ROYALE_TRANSPILER_HOME" />
+            </not>
+            <available file="${ROYALE_HOME}/js/lib/jsc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <condition property="ROYALE_TRANSPILER_HOME" value="${ROYALE_HOME}/../royale-compiler/compiler-jx">
+        <and>
+            <not>
+                <isset property="ROYALE_TRANSPILER_HOME" />
+            </not>
+            <available file="${ROYALE_HOME}/../royale-compiler/compiler-jx/lib/jsc.jar" type="file" />
+        </and>
+    </condition>
+        
+    <target name="main" depends="preprocess, externc, postprocess, compc" />
+
+    <property name="srcServer" value="https://raw.githubusercontent.com/royale-extras/closure-compiler/royale/contrib/nodejs" />
+    <property name="destDir" value="${basedir}/target/downloads/closure-compiler-master/contrib/nodejs" />
+    
+    <tstamp>
+        <format property="royale.swc-date" pattern="MM/dd/yy HH:mm Z"/>
+    </tstamp>
+    <echo>swc-date is ${royale.swc-date}</echo>
+    
+    <target name="getfile" >
+        <get src="${srcServer}/${srcFile}" dest="${destDir}/${destFile}" skipexisting="true" ignoreerrors="true"/>
+        <antcall target="get-from-cache-if-needed" >
+            <param name="srcFile" value="${srcFile}" />
+            <param name="destFile" value="${srcFile}" />
+            <param name="destDir" value="${destDir}" />
+        </antcall>
+        <antcall target="fail-if-not-found" >
+            <param name="destFile" value="${srcFile}" />
+            <param name="destDir" value="${destDir}" />
+        </antcall>
+    </target>
+    
+    <target name="preprocess">
+        <mkdir dir="${basedir}/target/downloads/closure-compiler-master/contrib/nodejs" />
+        <antcall target="getfile">
+            <param name="srcFile" value="assert.js" />
+            <param name="destFile" value="assert.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="buffer.js" />
+            <param name="destFile" value="buffer.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="child_process.js" />
+            <param name="destFile" value="child_process.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="cluster.js" />
+            <param name="destFile" value="cluster.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="crypto.js" />
+            <param name="destFile" value="crypto.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="dgram.js" />
+            <param name="destFile" value="dgram.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="dns.js" />
+            <param name="destFile" value="dns.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="domain.js" />
+            <param name="destFile" value="domain.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="events.js" />
+            <param name="destFile" value="events.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="fs.js" />
+            <param name="destFile" value="fs.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="globals.js" />
+            <param name="destFile" value="globals.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="http.js" />
+            <param name="destFile" value="http.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="https.js" />
+            <param name="destFile" value="https.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="net.js" />
+            <param name="destFile" value="net.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="os.js" />
+            <param name="destFile" value="os.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="path.js" />
+            <param name="destFile" value="path.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="punycode.js" />
+            <param name="destFile" value="punycode.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="querystring.js" />
+            <param name="destFile" value="querystring.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="readline.js" />
+            <param name="destFile" value="readline.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="repl.js" />
+            <param name="destFile" value="repl.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="stream.js" />
+            <param name="destFile" value="stream.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="string_decoder.js" />
+            <param name="destFile" value="string_decoder.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="tls.js" />
+            <param name="destFile" value="tls.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="tty.js" />
+            <param name="destFile" value="tty.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="url.js" />
+            <param name="destFile" value="url.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="util.js" />
+            <param name="destFile" value="util.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="vm.js" />
+            <param name="destFile" value="vm.js"/>
+        </antcall>
+        <antcall target="getfile">
+            <param name="srcFile" value="zlib.js" />
+            <param name="destFile" value="zlib.js"/>
+        </antcall>
+    </target>
+    
+    <target name="externc" >
+        <java jar="${ROYALE_TRANSPILER_HOME}/lib/externc.jar" fork="true"
+            failonerror="true">
+            <arg value="+royalelib=externs" />
+            <arg value="-debug" />
+            <arg value="-load-config=${basedir}/src/main/config/externc-config.xml" />
+        </java>
+    </target>
+    
+    <target name="postprocess" >
+    </target>
+    
+    <target name="compc" >
+        <copy file="${basedir}/src/main/config/compile-as-config.xml"
+        todir="${basedir}/target" />
+        <java jar="${ROYALE_TRANSPILER_HOME}/lib/compc.jar" fork="true"
+            failonerror="true">
+            <arg value="+royalelib=externs/frameworks" />
+            <arg value="-targets=SWF" />
+            <arg value="-external-library-path+=${basedir}/../js/target/js.swc" />
+            <arg value="-load-config=${basedir}/target/compile-as-config.xml" />
+            <arg line="-metadata.date=&quot;${royale.swc-date}&quot;" />
+            <arg line="-metadata.dateFormat=&quot;MM/dd/yy HH:mm Z&quot;" />
+            <arg value="-output=${basedir}/target/node.swc" />
+        </java>
+    </target>
+    
+    <target name="clean">
+        <delete failonerror="false" includeEmptyDirs="true" >
+            <fileset dir="${basedir}/target">
+                <include name="**/**"/>
+                <exclude name="downloads/**"/>
+            </fileset>
+        </delete>
+    </target>
+    
+    <target name="wipe">
+        <delete failonerror="false" includeEmptyDirs="true" >
+            <fileset dir="${basedir}/target">
+                <include name="**/**"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <target name="fail-if-not-found">
+        <fail message="${destDir}/${destFile} could not be downloaded or found in cache">
+            <condition>
+                <not>
+                    <available file="${destDir}/${destFile}" />
+                </not>
+            </condition>
+        </fail>
+    </target>
+
+    <target name="double-check-file" >
+        <echo>${env.ROYALE_DOWNLOAD_CACHE}</echo>
+        <condition property="still-no-file" value="true">
+            <and>
+                <not>
+                    <available file="${destDir}/${destFile}" />
+                </not>
+                <isset property="env.ROYALE_DOWNLOAD_CACHE" />
+            </and>
+        </condition>
+        <echo>Need file: ${still_no_file}</echo>
+    </target>
+    <target name="get-from-cache-if-needed" depends="double-check-file" if="still-no-file">
+        <copy file="${env.ROYALE_DOWNLOAD_CACHE}/${srcFile}" tofile="${destDir}/${destFile}" />
+    </target>
+
+</project>

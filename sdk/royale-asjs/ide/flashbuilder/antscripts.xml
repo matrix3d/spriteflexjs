@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<!--
+
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-->
+
+<project name="flashbuilder_antscripts" default="convert_project" basedir=".">
+
+	<property environment="env"/>
+    
+    <!-- get absolute path to SDK folder -->
+    <pathconvert property="sdk" dirsep="/">
+        <path location="${basedir}/../.."/>
+    </pathconvert>
+    
+    <condition property="isWindows" value="windows">
+        <os family="windows" />
+    </condition>
+
+    <condition property="COMPC" value="compc.bat">
+        <os family="windows" />
+    </condition>
+    <property name="COMPC" value="compc" />
+    <condition property="MXMLC" value="mxmlc.bat">
+        <os family="windows" />
+    </condition>
+    <property name="MXMLC" value="mxmlc" />
+    <condition property="ASJSC" value="asjsc.bat">
+        <os family="windows" />
+    </condition>
+    <property name="ASJSC" value="asjsc" />
+    <property file="src.properties" />
+    
+    <condition property="java.home" value="${env.JAVA_HOME}" >
+        <and>
+            <available file="${env.JAVA_HOME}" type="dir" />
+            <not>
+                <equals arg1="" arg2="${env.JAVA_HOME}" />
+            </not>
+        </and>
+    </condition>
+
+    <target name="check_params" >
+        <fail unless="projectDir"
+            message="projectDir parameter not set" />
+        <fail message="projectDir ${projectDir} does not exist">
+            <condition>
+                <not>
+                    <available file="${projectDir}" />
+                </not>
+            </condition>
+        </fail>
+    </target>
+    
+    <target name="convert_project" depends="check_params, cutpath"  description="Replaces the files in a new Royale project folder with a basic Royale project">
+        <copy file="${basedir}/../../examples/royale/HelloWorld/src/main/royale/HelloWorld.mxml" tofile="${projectDir}/src/${projectName}.mxml" overwrite="true" />
+        <antcall target="makeAIRvisible" />
+        <antcall target="addSourceAttachments" />
+    </target>
+
+    <target name="convert_project_mvc" depends="check_params, cutpath"  description="Replaces the files in a new Royale project folder with a basic Royale MVC project">
+        <copy file="${basedir}/../../examples/royale/DataBindingExample/src/main/royale/DataBindingExample.mxml" tofile="${projectDir}/src/${projectName}.mxml" overwrite="true" />
+        <copy file="${basedir}/../../examples/royale/DataBindingExample/src/main/royale/MyInitialView.mxml" tofile="${projectDir}/src/MyInitialView.mxml" overwrite="true" />
+        <mkdir dir="${projectDir}/src/models" />
+        <mkdir dir="${projectDir}/src/controllers" />
+        <copy file="${basedir}/../../examples/royale/DataBindingExample/src/main/royale/StockDataJSONItemConverter.as" tofile="${projectDir}/src/StockDataJSONItemConverter.as" overwrite="true" />
+        <copy file="${basedir}/../../examples/royale/DataBindingExample/src/main/royale/models/MyModel.as" tofile="${projectDir}/src/models/MyModel.as" overwrite="true" />
+        <copy file="${basedir}/../../examples/royale/DataBindingExample/src/main/royale/controllers/MyController.as" tofile="${projectDir}/src/controllers/MyController.as" overwrite="true" />
+        <replace file="${projectDir}/src/controllers/MyController.as" token="DataBindingExample" value="${projectName}" />
+        <antcall target="makeAIRvisible" />
+        <antcall target="addSourceAttachments" />
+    </target>
+
+    <target name="cutpath" >
+        <basename file="${projectDir}" property="projectName" />
+        <echo>projectDir: ${projectDir}</echo>
+        <echo>projectName: ${projectName}</echo>
+    </target>
+    
+    <target name="makeAIRvisible">
+        <echo>Checking for ${projectDir}/src/${projectName}-app.xml</echo>
+        <condition property="isAIR" value="true">
+            <available file="${projectDir}/src/${projectName}-app.xml" />
+        </condition>
+        <antcall target="replaceVisibleInAppXML" />
+    </target>
+    <target name="replaceVisibleInAppXML" if="isAIR">
+        <replace file="${projectDir}/src/${projectName}-app.xml" token="&lt;visible&gt;false&lt;/visible&gt;" value="&lt;visible&gt;true&lt;/visible&gt;" />
+    </target>
+    
+    <target name="addSourceAttachments">
+        <available file="${basedir}/../../frameworks/libs/Core.swc"
+            property="hasSWCSupport" />
+        <antcall target="addSWFSourceAttachments" />
+        <antcall target="addJSSourceAttachments" />
+    </target>
+    
+    <target name="addSWFSourceAttachments" if="hasSWCSupport">
+        <replace file="${projectDir}/.actionScriptProperties" token="&lt;sourceAttachmentPath/&gt;"
+            value="${SWFSourceAttachments}" />
+    </target>
+    <target name="addJSSourceAttachments" unless="hasSWCSupport">
+        <replace file="${projectDir}/.actionScriptProperties" token="&lt;sourceAttachmentPath/&gt;"
+            value="${JSSourceAttachments}" />
+    </target>
+    
+    <target name="setup" depends="setup-windows" description="Custom Flash Builder launch configurations">
+        <replace>
+            <fileset dir="${basedir}" includes="**/*.launch"/>
+            <replacefilter
+            token="$MXMLC"
+            value="${MXMLC}"/>
+            <replacefilter
+            token="$COMPC"
+            value="${COMPC}"/>
+            <replacefilter
+            token="$ASJSC"
+            value="${ASJSC}"/>
+            <replacefilter
+            token="$ROYALE_HOME"
+            value="${sdk}"/>
+        </replace>
+    </target>
+    
+    <target name="setup-windows" description="Custom Flash Builder launch configurations for Windows" if="isWindows">
+        <replace>
+            <fileset dir="${basedir}" includes="**/*.launch"/>
+            <replacefilter
+            token="PATH"
+            value="UNIX_PATH" />
+        </replace>
+    </target>
+
+</project>

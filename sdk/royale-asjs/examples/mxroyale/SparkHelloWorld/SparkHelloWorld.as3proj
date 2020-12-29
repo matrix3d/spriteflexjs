@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+<project>
+  <output>
+    <movie version="32"/>
+    <movie path="bin-debug/HelloWorld.swf"/>
+    <movie disabled="False"/>
+    <movie fps="60"/>
+    <movie height="600"/>
+    <movie background="#FFFFFF"/>
+    <movie width="800"/>
+    <movie platform="Flash Player"/>
+    <movie input=""/>
+  </output>
+  &lt;!-- Other classes to be compiled into your SWF --&gt;
+  <jsOutput>
+    <option path=""/>
+  </jsOutput>
+  <classpaths>
+    <class path="src/main/royale"/>
+  </classpaths>
+  <moonshineResourcePaths></moonshineResourcePaths>
+  <moonshineNativeExtensionPaths></moonshineNativeExtensionPaths>
+  <build>
+    <option allowSourcePathOverlap="False"/>
+    <option showActionScriptWarnings="True"/>
+    <option strict="True"/>
+    <option warnings="True"/>
+    <option loadConfig=""/>
+    <option showDeprecationWarnings="True"/>
+    <option linkReport=""/>
+    <option antBuildPath="build/build.xml"/>
+    <option showUnusedTypeSelectorWarnings="True"/>
+    <option additional="+configname=flex"/>
+    <option showBindingWarnings="True"/>
+    <option accessible="False"/>
+    <option useNetwork="True"/>
+    <option useResourceBundleMetadata="True"/>
+    <option optimize="False"/>
+    <option compilerConstants=""/>
+    <option customSDK=""/>
+    <option benchmark="False"/>
+    <option verboseStackTraces="False"/>
+    <option es="False"/>
+    <option staticLinkRSL="False"/>
+    <option locale=""/>
+  </build>
+  <mavenBuild>
+    <option mavenBuildPath=""/>
+    <option commandLine=""/>
+    <option settingsFilePath=""/>
+    <actions>
+      <action action="install" actionName="Build"/>
+      <action action="clean package" actionName="Clean and package"/>
+      <action action="clean" actionName="Clean"/>
+      <action action="clean install" actionName="Clean and Build"/>
+      <action action="war:exploded" actionName="Exploded"/>
+    </actions>
+  </mavenBuild>
+  <includeLibraries></includeLibraries>
+  <libraryPaths></libraryPaths>
+  <externalLibraryPaths></externalLibraryPaths>
+  <rslPaths></rslPaths>
+  <intrinsics>
+    <element path="Library/AS3/frameworks/Flex4"/>
+    <element path="Library\AS3\frameworks\Flex4"/>
+  </intrinsics>
+  <library></library>
+  <compileTargets>
+    <compile path="src/main/royale/HelloWorld.mxml"/>
+  </compileTargets>
+  <hiddenPaths></hiddenPaths>
+  <preBuildCommand>null</preBuildCommand>
+  <postBuildCommand alwaysRun="False">null</postBuildCommand>
+  <trustSVNCertificate>False</trustSVNCertificate>
+  <options>
+    <option isPrimeFacesVisualEditor="False"/>
+    <option isExportedToExistingSource="False"/>
+    <option testMovie=""/>
+    <option showHiddenPaths="False"/>
+    <option defaultBuildTargets=""/>
+    <option visualEditorExportPath=""/>
+    <option isRoyale="True"/>
+    <option testMovieCommand=""/>
+  </options>
+  <moonshineRunCustomization>
+    <option launchMethod="Simulator"/>
+    <option customUrlToLaunch=""/>
+    <option deviceSimulator="null"/>
+    <option urlToLaunch=""/>
+    <option projectType="2"/>
+    <option targetPlatform="2"/>
+    <deviceSimulator>null</deviceSimulator>
+    <certAndroid>null</certAndroid>
+    <certIos>null</certIos>
+    <certIosProvisioning>null</certIosProvisioning>
+  </moonshineRunCustomization>
+</project>

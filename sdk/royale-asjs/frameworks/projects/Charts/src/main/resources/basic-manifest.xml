@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--
+
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-->
+<!-- the MXML components in the Charts SWC -->
+
+<componentPackage>
+    <component id="BarChart" class="org.apache.royale.charts.BarChart" />
+    <component id="BarSeries" class="org.apache.royale.charts.supportClasses.BarSeries" />
+    <component id="ColumnChart" class="org.apache.royale.charts.ColumnChart" />
+    <component id="ColumnSeries" class="org.apache.royale.charts.supportClasses.ColumnSeries" />
+    <component id="LineChart" class="org.apache.royale.charts.LineChart" />
+    <component id="LineSeries" class="org.apache.royale.charts.supportClasses.LineSeries" />
+    <component id="PieChart" class="org.apache.royale.charts.PieChart" />
+    <component id="PieSeries" class="org.apache.royale.charts.supportClasses.PieSeries" />
+    <component id="StackedColumnChart" class="org.apache.royale.charts.StackedColumnChart" />
+    <component id="StackedBarChart" class="org.apache.royale.charts.StackedBarChart" />
+    <component id="DataTipBead" class="org.apache.royale.charts.beads.DataTipBead" />
+    <component id="HorizontalCategoryAxisBead" class="org.apache.royale.charts.beads.HorizontalCategoryAxisBead" />
+    <component id="HorizontalCategoryAxisForArrayListBead" class="org.apache.royale.charts.beads.HorizontalCategoryAxisForArrayListBead" />
+    <component id="HorizontalLinearAxisBead" class="org.apache.royale.charts.beads.HorizontalLinearAxisBead" />
+    <component id="HorizontalLinearAxisForArrayListBead" class="org.apache.royale.charts.beads.HorizontalLinearAxisForArrayListBead" />
+    <component id="VerticalCategoryAxisBead" class="org.apache.royale.charts.beads.VerticalCategoryAxisBead" />
+    <component id="VerticalCategoryAxisForArrayListBead" class="org.apache.royale.charts.beads.VerticalCategoryAxisForArrayListBead" />
+    <component id="VerticalLinearAxisBead" class="org.apache.royale.charts.beads.VerticalLinearAxisBead" />
+    <component id="VerticalLinearAxisForArrayListBead" class="org.apache.royale.charts.beads.VerticalLinearAxisForArrayListBead" />
+    
+    <component id="ChartArraySelectionModel" class="org.apache.royale.charts.beads.models.ChartArraySelectionModel" />
+    <component id="ChartArrayListSelectionModel" class="org.apache.royale.charts.beads.models.ChartArrayListSelectionModel" />
+    
+    <component id="BarChartLayout" class="org.apache.royale.charts.beads.layouts.BarChartLayout" />
+    <component id="BarChartLayoutForArrayList" class="org.apache.royale.charts.beads.layouts.BarChartLayoutForArrayList" />
+    <component id="ColumnChartLayout" class="org.apache.royale.charts.beads.layouts.ColumnChartLayout" />
+    <component id="ColumnChartLayoutForArrayList" class="org.apache.royale.charts.beads.layouts.ColumnChartLayoutForArrayList" />
+    <component id="PieChartLayout" class="org.apache.royale.charts.beads.layouts.PieChartLayout" />
+    <component id="PieChartLayoutForArrayList" class="org.apache.royale.charts.beads.layouts.PieChartLayoutForArrayList" />
+    <component id="StackedBarChartLayout" class="org.apache.royale.charts.beads.layouts.StackedBarChartLayout" />
+    <component id="StackedBarChartLayoutForArrayList" class="org.apache.royale.charts.beads.layouts.StackedBarChartLayoutForArrayList" />
+    <component id="StackedColumnChartLayout" class="org.apache.royale.charts.beads.layouts.StackedColumnChartLayout" />
+    <component id="StackedColumnChartLayoutForArrayList" class="org.apache.royale.charts.beads.layouts.StackedColumnChartLayoutForArrayList" />
+    
+    <component id="DataItemRendererFactoryForSeriesData" class="org.apache.royale.charts.beads.DataItemRendererFactoryForSeriesData" />
+    <component id="DataItemRendererFactoryForSeriesArrayListData" class="org.apache.royale.charts.beads.DataItemRendererFactoryForSeriesArrayListData" />
+    
+    <component id="BoxItemRenderer" class="org.apache.royale.charts.supportClasses.BoxItemRenderer" />
+    <component id="WedgeItemRenderer" class="org.apache.royale.charts.supportClasses.WedgeItemRenderer" />
+    <component id="LineSegmentItemRenderer" class="org.apache.royale.charts.supportClasses.LineSegmentItemRenderer" />
+    
+    <component id="LineChartCategoryVsLinearLayout" class="org.apache.royale.charts.beads.layouts.LineChartCategoryVsLinearLayout" />
+    <component id="LineChartLinearVsLinearLayout" class="org.apache.royale.charts.beads.layouts.LineChartLinearVsLinearLayout" />
+
+    <component id="SVGChartDataGroup" class="org.apache.royale.charts.optimized.SVGChartDataGroup"/>
+    <component id="SVGBoxItemRenderer" class="org.apache.royale.charts.optimized.SVGBoxItemRenderer"/>
+    <component id="SVGWedgeItemRenderer" class="org.apache.royale.charts.optimized.SVGWedgeItemRenderer"/>
+    <component id="SVGLineSegmentItemRenderer" class="org.apache.royale.charts.optimized.SVGLineSegmentItemRenderer"/>
+</componentPackage>

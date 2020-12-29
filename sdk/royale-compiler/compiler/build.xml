@@ -1,0 +1,756 @@
+<?xml version="1.0" ?>
+
+<!--
+
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-->
+
+<project name="compiler" default="main" basedir=".">
+
+    <!-- 
+
+        PROPERTIES
+
+    -->
+    
+    <!-- The 'compiler' property is the absolute path, with forward slashes, -->
+    <!-- to the 'compiler' directory that contains this file. -->
+    <!-- All input paths are expressed as absolute paths starting with ${compiler}. -->
+    <pathconvert property="compiler" dirsep="/">
+        <path location="${basedir}"/>
+    </pathconvert>
+
+    <!-- The 'env' property contains all the environment variables -->
+    <property environment="env"/>
+    
+    <!-- Properties can be overridden locally by loading a local.properties file -->
+    <!-- Java 8 users probably need javadoc.params=-Xdoclint:none -->
+    <property file="${compiler}/local.properties"/>
+    <property file="${compiler}/../build.properties"/>
+    <property name="javadoc.params" value="" />
+    
+    <!-- The 'sdk' property is the absolute path, with forward slashes, to the compiler/lib directory -->
+    <!-- where a Royale SDK is built -->
+    <!-- All output paths are expressed as absolute paths starting with ${sdk} -->
+    <property name="sdk" value="${compiler}/lib"/>
+
+    <property name="src.depend" value="true"/>
+
+    <!-- Options for <javac> tasks -->
+    <property name="javac.debug" value="true"/>
+    <property name="javac.deprecation" value="false"/>
+    <property name="javac.src" value="1.6"/>
+
+    <!-- JAR manifest entries -->
+    <property name="manifest.sealed" value="false"/>
+    <property name="manifest.Implementation-Title" value="Apache Royale Compiler"/>
+    <property name="manifest.Implementation-Version" value="${release.version}"/>
+    <property name="manifest.Implementation-Vendor" value="Apache Software Foundation"/>
+	
+    <property name="compiler.ant.binaries" value="org/apache/royale/compiler/ant/**/*.class"/>
+    <property name="compiler.font.binaries" value="org/apache/royale/fonts/**"/>
+            
+    <!-- env.BUILD_NUMBER is set by Jenkins CI -->
+    <condition property="build.number" value="nightly-${env.BUILD_NUMBER}">
+        <isset property="env.BUILD_NUMBER"/>
+    </condition>
+        
+    <!--
+
+        CLASSPATHS
+
+    -->
+
+    <path id="classpath">
+        <fileset dir="${compiler}/lib/external" includes="**/*.jar"/>
+        <fileset dir="${compiler}/lib" includes="compiler-common.jar"/>
+        <fileset dir="${compiler}/../compiler-build-tools/target/classes" includes="**/*.class"/>
+    </path>
+
+    <!-- 
+
+        MACROS
+
+    -->
+
+    <!-- 
+        Defines a <jflex input="..." skeleton="..." output="..."> macro
+        for using JFlex to generate a Java-based lexer from a .lex file.
+    -->
+    <macrodef name="jflex">
+        <attribute name="input"/>
+        <attribute name="skeleton" default="${compiler}/src/main/jflex/org/apache/royale/compiler/internal/parsing/as/skeleton.default"/>
+        <attribute name="output"/>
+        <sequential>
+            <java jar="${compiler}/lib/external/jflex.jar" fork="true">
+                <arg value="-d"/>
+                <arg value="@{output}"/>
+                <arg value="-q"/>
+                <arg value="@{input}"/>
+                <arg value="--skel"/>
+                <arg value="@{skeleton}"/>
+            </java>
+        </sequential>
+    </macrodef>
+
+    <!--
+        Defines an <antlr2 input="..." output="..."> macro
+        for using ANTLR 2 to generate a Java-based parser from a .g file.
+    -->
+    <macrodef name="antlr2">
+        <attribute name="input"/>
+        <attribute name="output"/>
+        <sequential>
+        	<mkdir dir="@{output}"/>
+            <dirname property="antlr2.dirname.@{input}" file="@{input}"/>
+            <antlr target="@{input}" outputdirectory="@{output}" dir="${antlr2.dirname.@{input}}">
+                <classpath>
+                    <pathelement path="${compiler}/lib/external/antlr.jar"/>
+                </classpath>
+            </antlr>
+        </sequential>
+    </macrodef>
+
+    <!--
+        Defines an <antlr3 input="..." output="..."> macro
+        for using ANTLR 3 to generate a Java-based parser from a .g file.
+    -->
+    <macrodef name="antlr3">
+        <attribute name="input"/>
+        <attribute name="output"/>
+        <sequential>
+            <mkdir dir="@{output}"/>
+            <!-- Call antlr3 on command-line because we can't update Ant library path. -->
+            <java jar="${compiler}/lib/external/antlr.jar" fork="yes" failonerror="yes">
+                <arg value="@{input}"/>
+                <arg value="-o"/>
+                <arg value="@{output}"/>
+            </java>
+        </sequential>
+    </macrodef>
+
+    <!--
+        Defines a <jburg input="..." output="..."> macro
+        for using JBurg to generate a Java-based BURM from a .jbg file.
+    -->
+    <macrodef name="jburg">
+        <attribute name="input"/>
+        <attribute name="output"/>
+        <sequential>
+            <dirname property="jburg.dirname.@{input}" file="@{input}"/>
+            <dirname property="jburg.dirname.@{output}" file="@{output}"/>
+            <basename property="jburg.basename.@{output}" file="@{output}"/>
+            <mkdir dir="${jburg.dirname.@{output}}"/>
+            <java classname="jburg.burg.JBurgMain"
+                  classpath="${compiler}/target/classes"
+                  fork="true" failonerror="true"
+                  dir="${jburg.dirname.@{input}}">
+                <arg value="@{input}"/>
+                <arg value="-outputdir"/>
+                <arg value="${jburg.dirname.@{output}}"/>
+                <arg value="-outputfile"/>
+                <arg value="${jburg.basename.@{output}}"/>
+                <arg value="-g"/>
+                <classpath>
+                    <pathelement path="${compiler}/target/classes"/>
+                    <pathelement path="${compiler}/../compiler-jburg-types/target/classes"/>
+                    <pathelement path="${compiler}/lib/external/antlr.jar"/>
+                    <pathelement path="${compiler}/lib/external/jburg.jar"/>
+                </classpath>
+            </java>
+        </sequential>
+    </macrodef>
+
+    <!--
+        Defines an <annotate.class file="..." annotation="..."> macro
+        used for inserting @SuppressWarnings(...) into generated Java classes,
+        in order to keep the build warning-free.
+        ANTLR and JBurg generate code that isn't warning-free in Eclipse.
+    -->
+    <macrodef name="annotate.class">
+        <attribute name="file"/>
+        <attribute name="annotation"/>
+        <attribute name="datestart"/>
+        <attribute name="dateend"/>
+        <sequential>
+            <java classname="org.apache.royale.compiler.tools.annotate.AnnotateClass" fork="false">
+                <classpath>
+                    <path refid="classpath"/>
+                    <pathelement location="${compiler}/../compiler-build-tools/target/classes"/>
+                    <pathelement location="${compiler}/target/classes"/>
+                </classpath>
+                <arg value="@{file}"/>
+                <arg value="@{annotation}"/>
+                <arg value="@{datestart}"/>
+                <arg value="@{dateend}"/>
+            </java>
+        </sequential>
+    </macrodef>
+
+    <!--
+        Defines an <order.switches file="..."> macro
+        used for ordering the switch statement generated by
+        JFlex in order to get reproducible builds.
+    -->
+    <macrodef name="order.switches">
+        <attribute name="file"/>
+        <sequential>
+            <java classname="org.apache.royale.compiler.tools.annotate.OrderSwitches" fork="false">
+                <classpath>
+                    <path refid="classpath"/>
+                    <pathelement location="${compiler}/../compiler-build-tools/target/classes"/>
+                    <pathelement location="${compiler}/target/classes"/>
+                </classpath>
+                <arg value="@{file}"/>
+            </java>
+        </sequential>
+    </macrodef>
+
+    <!--
+
+        SETUP
+
+    -->
+	
+    <target name="download" description="Downloads third-party JARs">
+        <ant antfile="${compiler}/src/main/resources/downloads.xml" dir="${compiler}/src/main/resources" inheritAll="false"/>
+    	<delete dir="${compiler}/in"/>
+    </target>
+	
+	<target name="setup" depends="download" description="Does prelimary build setup">
+	</target>
+
+	<!--
+	
+	    GENERATION OF JAVA CODE WITH JFLEX
+	    
+	-->
+	
+	<target name="set.raw.as.tokenizer.uptodate">
+		<uptodate property="raw.as.tokenizer.uptodate"
+       	          targetfile="${compiler}/target/generated-sources/jflex/org/apache/royale/compiler/internal/parsing/as/RawASTokenizer.java">
+            <srcfiles dir="${compiler}/src/main/jflex/org/apache/royale/compiler/internal/parsing/as">
+                <include name="RawASTokenizer.lex"/>
+                <include name="skeleton.royale"/>
+            </srcfiles>
+		</uptodate>
+	</target>
+	
+	<target name="raw.as.tokenizer" depends="set.raw.as.tokenizer.uptodate" unless="raw.as.tokenizer.uptodate"
+		    description="Generates RawASTokenizer.java">
+		<echo message="Generating RawASTokenizer"/>
+        <jflex input="${compiler}/src/main/jflex/org/apache/royale/compiler/internal/parsing/as/RawASTokenizer.lex"
+               skeleton="${compiler}/src/main/jflex/org/apache/royale/compiler/internal/parsing/as/skeleton.royale"
+               output="${compiler}/target/generated-sources/jflex/org/apache/royale/compiler/internal/parsing/as"/>
+        <order.switches file="${compiler}/target/generated-sources/jflex/org/apache/royale/compiler/internal/parsing/as/RawASTokenizer.java" />
+	</target>
+	
+    <target name="set.raw.asdoc.tokenizer.uptodate">
+        <uptodate property="raw.asdoc.tokenizer.uptodate"
+                  targetfile="${compiler}/target/generated-sources/jflex/org/apache/royale/compiler/internal/parsing/as/RawASDocTokenizer.java">
+			<srcfiles dir="${compiler}/src/main/jflex/org/apache/royale/compiler/internal/parsing/as">
+            	<include name="RawASDocTokenizer.lex"/>
+            	<include name="skeleton.default"/>
+        	</srcfiles>
+        </uptodate>
+    </target>
+    
+    <target name="raw.asdoc.tokenizer" depends="set.raw.asdoc.tokenizer.uptodate" unless="raw.asdoc.tokenizer.uptodate"
+            description="Generates RawASDocTokenizer.java">
+        <echo message="Generating RawASDocTokenizer"/>
+        <jflex input="${compiler}/src/main/jflex/org/apache/royale/compiler/internal/parsing/as/RawASDocTokenizer.lex"
+               output="${compiler}/target/generated-sources/jflex/org/apache/royale/compiler/internal/parsing/as"/>
+        <order.switches file="${compiler}/target/generated-sources/jflex/org/apache/royale/compiler/internal/parsing/as/RawASDocTokenizer.java" />
+    </target>
+
+    <target name="set.raw.mxml.tokenizer.uptodate">
+        <uptodate property="raw.mxml.tokenizer.uptodate"
+                 targetfile="${compiler}/target/generated-sources/jflex/org/apache/royale/compiler/internal/parsing/mxml/RawMXMLTokenizer.java">
+		    <srcfiles dir="${compiler}/src/main/jflex/org/apache/royale/compiler/internal/parsing/mxml">
+        	    <include name="RawMXMLTokenizer.lex"/>
+        	    <include name="skeleton.default"/>
+    	    </srcfiles>
+        </uptodate>
+    </target>
+    
+    <target name="raw.mxml.tokenizer" depends="set.raw.mxml.tokenizer.uptodate" unless="raw.mxml.tokenizer.uptodate"
+            description="Generates RawMXMLTokenizer.java">
+        <echo message="Generating RawMXMLTokenizer"/>
+        <jflex input="${compiler}/src/main/jflex/org/apache/royale/compiler/internal/parsing/mxml/RawMXMLTokenizer.lex"
+               output="${compiler}/target/generated-sources/jflex/org/apache/royale/compiler/internal/parsing/mxml"/>
+        <order.switches file="${compiler}/target/generated-sources/jflex/org/apache/royale/compiler/internal/parsing/mxml/RawMXMLTokenizer.java" />
+    </target>
+
+	<target name="jflex" depends="raw.as.tokenizer, raw.asdoc.tokenizer, raw.mxml.tokenizer"
+		    description="Generates Java code with JFlex"/>
+
+    <!--
+    
+        GENERATION OF JAVA CODE WITH ANTLR
+        
+    -->
+	
+	<target name="set.as.parser.uptodate">
+		<uptodate property="as.parser.uptodate"
+		          srcfile="${compiler}/src/main/antlr/org/apache/royale/compiler/internal/parsing/as/ASParser.g"
+		          targetfile="${compiler}/target/generated-sources/antlr/org/apache/royale/compiler/internal/parsing/as/ASParser.java"/>
+	</target>
+	
+    <target name="as.parser" depends="set.as.parser.uptodate" unless="as.parser.uptodate">
+    	<echo message="Generating ASParser and ASTokenTypes"/>
+        <antlr2 input="${compiler}/src/main/antlr/org/apache/royale/compiler/internal/parsing/as/ASParser.g"
+                output="${compiler}/target/generated-sources/antlr/org/apache/royale/compiler/internal/parsing/as"/>
+        <annotate.class file="${compiler}/target/generated-sources/antlr/org/apache/royale/compiler/internal/parsing/as/ASParser.java"
+                        annotation='@SuppressWarnings("unused")' datestart="" dateend=""/>
+        <annotate.class file="${compiler}/target/generated-sources/antlr/org/apache/royale/compiler/internal/parsing/as/ASTokenTypes.java"
+                        annotation='@SuppressWarnings("unused")' datestart="" dateend=""/>
+    </target>
+	
+	<target name="set.metadata.parser.uptodate">
+        <uptodate property="metadata.parser.uptodate"
+                  targetfile="${compiler}/target/generated-sources/antlr/org/apache/royale/compiler/internal/parsing/as/MetadataParser.java">
+	        <srcfiles dir="${compiler}/src/main/antlr/org/apache/royale/compiler/internal/parsing/as">
+    	        <include name="MetadataParser.g"/>
+    	        <include name="ImportMetadataTokenTypes.txt"/>
+	        </srcfiles>
+        </uptodate>
+	</target>
+    
+    <target name="metadata.parser" depends="set.metadata.parser.uptodate" unless="metadata.parser.uptodate">
+    	<echo message="Generating MetadataParser and MetadataTokenTypes"/>
+        <antlr2 input="${compiler}/src/main/antlr/org/apache/royale/compiler/internal/parsing/as/MetadataParser.g"
+                output="${compiler}/target/generated-sources/antlr/org/apache/royale/compiler/internal/parsing/as"/>
+        <annotate.class file="${compiler}/target/generated-sources/antlr/org/apache/royale/compiler/internal/parsing/as/MetadataParser.java"
+                         annotation='@SuppressWarnings("all")' datestart="" dateend=""/>
+        <annotate.class file="${compiler}/target/generated-sources/antlr/org/apache/royale/compiler/internal/parsing/as/MetadataTokenTypes.java"
+                         annotation='@SuppressWarnings("unused")' datestart="" dateend=""/>
+    </target>
+    
+    <target name="set.css.lexer.and.parser.uptodate">
+        <uptodate property="css.lexer.and.parser.uptodate"
+                  srcfile="${compiler}/src/main/antlr/org/apache/royale/compiler/internal/css/CSS.g"
+                  targetfile="${compiler}/target/generated-sources/java/org/apache/royale/compiler/internal/css/CSSParser.java"/>
+    </target>
+
+    <target name="css.lexer.and.parser" depends="set.css.lexer.and.parser.uptodate" unless="css.lexer.and.parser.uptodate">
+    	<echo message="Generating CSSLexer and CSSParser"/>
+        <antlr3 input="${compiler}/src/main/antlr3/org/apache/royale/compiler/internal/css/CSS.g"
+                output="${compiler}/target/generated-sources/antlr3/org/apache/royale/compiler/internal/css"/>
+        <annotate.class file="${compiler}/target/generated-sources/antlr3/org/apache/royale/compiler/internal/css/CSSLexer.java"
+                        annotation='@SuppressWarnings("all")' datestart="// $ANTLR 3.5.2 ***CSS.g" dateend=""/>
+        <annotate.class file="${compiler}/target/generated-sources/antlr3/org/apache/royale/compiler/internal/css/CSSParser.java"
+                        annotation='@SuppressWarnings("all")' datestart="// $ANTLR 3.5.2 ***CSS.g" dateend=""/>
+    </target>
+        
+    <target name="set.css.tree.uptodate">
+        <uptodate property="css.tree.uptodate"
+                  srcfile="${compiler}/src/main/antlr3/org/apache/royale/compiler/internal/css/CSSTree.g"
+                  targetfile="${compiler}/target/generated-sources/antlr3/org/apache/royale/compiler/internal/css/CSSTree.java"/>
+    </target>
+
+    <target name="css.tree" depends="set.css.tree.uptodate" unless="css.tree.uptodate">
+    	<echo message="Generating CSSTree"/>
+        <antlr3 input="${compiler}/src/main/antlr3/org/apache/royale/compiler/internal/css/CSSTree.g"
+                output="${compiler}/target/generated-sources/antlr3/org/apache/royale/compiler/internal/css"/>
+        <annotate.class file="${compiler}/target/generated-sources/antlr3/org/apache/royale/compiler/internal/css/CSSTree.java"
+                        annotation='@SuppressWarnings("all")'
+                        datestart="// $ANTLR 3.5.2 ***CSSTree.g" dateend=""/>
+    </target>
+        
+    <target name="antlr" depends="as.parser, metadata.parser, css.lexer.and.parser, css.tree"
+   	        description="Generates Java code with ANTLR"/>
+
+    <!--
+    
+        GENERATION OF JAVA CODE WITH JBURG
+        
+    -->
+ 
+	<target name="set.unknown.tree.handler.patterns.uptodate">
+        <uptodate property="unknown.tree.handler.patterns.uptodate"
+        srcfile="${compiler}/src/main/unknowntreehandler/org/apache/royale/compiler/internal/as/codegen/UnknownTreeHandlerPatterns.xml"
+        targetfile="${compiler}/target/generated-sources/unknowntreehandler/org/apache/royale/compiler/internal/as/codegen/UnknownTreeHandlerPatterns.java"/>
+    </target>
+    
+    <target name="unknown.tree.handler.patterns" depends="set.unknown.tree.handler.patterns.uptodate" unless="unknown.tree.handler.patterns.uptodate">
+        <mkdir dir="${compiler}/target/generated-sources/unknowntreehandler/org/apache/royale/compiler/internal/as/codegen"/>
+        <java classname="org.apache.royale.compiler.tools.unknowntreehandler.UnknownTreePatternInputOutput" fork="true" failonerror="true">
+            <arg value="${compiler}/src/main/unknowntreehandler/org/apache/royale/compiler/internal/as/codegen/UnknownTreeHandlerPatterns.xml"/>
+            <arg value="${compiler}/target/generated-sources/unknowntreehandler/org/apache/royale/compiler/internal/as/codegen/UnknownTreeHandlerPatterns.java"/>
+            <classpath>
+                <pathelement location="${compiler}/target/classes"/>
+                <pathelement location="${compiler}/../compiler-build-tools/target/classes"/>
+            </classpath>
+        </java>
+    </target>
+    
+	<target name="set.cmc.emitter.uptodate">
+        <uptodate property="cmc.emitter.uptodate"
+                  targetfile="${compiler}/target/generated-sources/jburg/org/apache/royale/compiler/internal/as/codegen/CmcEmitter.java">
+	        <srcfiles dir="${compiler}/src/main/jburg/org/apache/royale/compiler/internal/as/codegen">
+    	        <include name="*.jbg"/>
+	        </srcfiles>
+		</uptodate>
+	</target>
+	
+	<target name="cmc.emitter" depends="unknown.tree.handler.patterns, set.cmc.emitter.uptodate" unless="cmc.emitter.uptodate">
+		<echo message="Generating CmcEmitter"/>
+        <jburg input="${compiler}/src/main/jburg/org/apache/royale/compiler/internal/as/codegen/cmc.jbg"
+               output="${compiler}/target/generated-sources/jburg/org/apache/royale/compiler/internal/as/codegen/CmcEmitter.java"/>
+        <annotate.class file="${compiler}/target/generated-sources/jburg/org/apache/royale/compiler/internal/as/codegen/CmcEmitter.java"
+                        annotation='@SuppressWarnings({"rawtypes", "unchecked", "unused", "incomplete-switch"})' datestart="/*  Generated" dateend=" by JBurg"/>
+	</target>
+	
+	<target name="set.css.emitter.uptodate">
+        <uptodate property="css.emitter.uptodate"
+                  targetfile="${compiler}/target/generated-sources/jburg/org/apache/royale/compiler/internal/css/codegen/CSSEmitter.java">
+	        <srcfiles dir="${compiler}/src/main/jburg/org/apache/royale/compiler/internal/css/codegen">
+	            <include name="css.jbg"/>
+	            <include name="CSSPatterns.jbg"/>
+	            <include name="CSSRules.jbg"/>
+	        </srcfiles>
+        </uptodate>
+	</target>
+	
+	<target name="css.emitter" depends="set.css.emitter.uptodate" unless="css.emitter.uptodate">
+        <echo message="Generating CSSEmitter"/>
+        <jburg input="${compiler}/src/main/jburg/org/apache/royale/compiler/internal/css/codegen/css.jbg"
+               output="${compiler}/target/generated-sources/jburg/org/apache/royale/compiler/internal/css/codegen/CSSEmitter.java"/>
+        <annotate.class file="${compiler}/target/generated-sources/jburg/org/apache/royale/compiler/internal/css/codegen/CSSEmitter.java"
+                        annotation='@SuppressWarnings({"rawtypes", "unchecked", "unused", "incomplete-switch"})' datestart="/*  Generated" dateend=" by JBurg"/>
+	</target>
+	
+	<target name="jburg" depends="cmc.emitter, css.emitter"
+	        description="Generates Java code with JBurg"/>
+	
+	<!--
+	
+	   ECLIPSE SETUP
+	
+	-->
+	
+	<target name="eclipse" depends="setup, jflex, antlr, jburg"
+		    description="Prepares for building in Eclipse by generating Java code with JFlex, ANTLR, and JBurg"/>
+				
+    <!--
+
+        JAVADOC
+
+    -->
+	
+	<target name="set.javadoc.zip.uptodate">
+		<uptodate property="javadoc.zip.uptodate"
+		          targetfile="${compiler}/target/javadoc.zip">
+			<srcfiles dir="${compiler}/src">
+				<include name="**/*.java"/>
+			</srcfiles>
+			<srcfiles dir="${compiler}/target/generated-sources/jflex">
+				<include name="**/*.java"/>
+			</srcfiles>
+            <srcfiles dir="${compiler}/target/generated-sources/jburg">
+                <include name="**/*.java"/>
+            </srcfiles>
+            <srcfiles dir="${compiler}/target/generated-sources/antlr">
+                <include name="**/*.java"/>
+            </srcfiles>
+            <srcfiles dir="${compiler}/target/generated-sources/antlr3">
+                <include name="**/*.java"/>
+            </srcfiles>
+		</uptodate>
+	</target>
+
+    <target name="javadoc" depends="eclipse, set.javadoc.zip.uptodate" unless="javadoc.zip.uptodate"
+    	    description="Builds Javadoc">
+        <javadoc destdir="${compiler}/target/javadoc" useexternalfile="yes" overview="${compiler}/src/overview.html" failonerror="true" maxmemory="512m" additionalparam="${javadoc.params}">
+            <sourcefiles>
+                <fileset dir="${compiler}/src" includes="**/*.java"/>
+                <fileset dir="${compiler}/target/generated-sources/jflex" includes="**/*.java"/>
+                <fileset dir="${compiler}/target/generated-sources/jburg" includes="**/*.java"/>
+                <fileset dir="${compiler}/target/generated-sources/antlr" includes="**/*.java"/>
+                <fileset dir="${compiler}/target/generated-sources/antlr3" includes="**/*.java"/>
+            </sourcefiles>
+            <classpath>
+                <path refid="classpath"/>
+                <pathelement location="${ant.core.lib}"/> 
+            </classpath>
+            <tag name="note" description="Note:"/>
+            <tag name="post" description="Postcondition:"/>
+            <tag name="pre" description="Precondition:"/>
+        </javadoc>
+        <zip destfile="${compiler}/target/javadoc.zip">
+            <zipfileset dir="${compiler}/target/javadoc" prefix="javadoc"/>
+        </zip>
+    </target>
+
+    <!--
+
+        BUILDING
+
+    -->
+
+    <target name="src.depend" if="src.depend">
+        <depend srcdir="${compiler}/src/main/java;${compiler}/target/generated-sources/jburg;${compiler}/target/generated-sources/jflex;${compiler}/target/generated-sources/antlr;${compiler}/target/generated-sources/antlr3"
+                destdir="${compiler}/target/classes" cache="${compiler}/target/classes"/>
+    </target>
+
+    <target name="compile" depends="eclipse, src.depend" description="compile">
+        <javac debug="${javac.debug}" deprecation="${javac.deprecation}"
+        	   includes="**/*.java" destdir="${compiler}/target/classes" classpathref="classpath" includeAntRuntime="true"
+               source="${javac.src}" target="${javac.src}">
+            <src path="${compiler}/src/main/java"/>
+            <src path="${compiler}/target/generated-sources/jburg"/>
+            <src path="${compiler}/target/generated-sources/jflex"/>
+            <src path="${compiler}/target/generated-sources/antlr"/>
+            <src path="${compiler}/target/generated-sources/antlr3"/>
+            <src path="${compiler}/target/generated-sources/unknowntreehandler"/>
+            <compilerarg value="-Xlint:all,-path,-fallthrough,-cast"/>
+        </javac>
+        <copy todir="${compiler}/target/classes">
+            <fileset dir="${compiler}/src/main/resources" includes="**/*.properties"/>
+        </copy>
+        <!-- Copy the config file for the flex-tool-api. -->
+        <copy todir="${compiler}/target/classes/META-INF/services"
+              file="src/main/resources/META-INF/services/org.apache.flex.tools.FlexToolGroup"/>
+    </target>
+	
+	<target name="set.messages.en.uptodate">
+		<uptodate property="messages.en.uptodate"
+		          targetfile="${compiler}/target/classes/org/apache/royale/compiler/messages_en.properties">
+			<srcfiles dir="${compiler}/target/classes/org/apache/royale/compiler/problems">
+				<include name="*Problem.class"/>
+			</srcfiles>
+		</uptodate>
+	</target>
+
+    <target name="localization" depends="compile, set.messages.en.uptodate" unless="messages.en.uptodate"
+    	    description="Creates message_en.properties file">
+        <echo message="Creating messages_en.properties file for compiler problem localization"/>
+        <java classname="org.apache.royale.compiler.tools.ProblemLocalizer" fork="true">
+            <classpath>
+                <pathelement location="${compiler}/target/classes"/>
+                <fileset dir="${compiler}/lib" includes="**/*.jar"/>
+            </classpath>
+            <!-- arg0: location of directory to search for problem class files -->
+            <arg value="${compiler}/target/classes/org/apache/royale/compiler/problems"/>
+            <!-- arg1: location of where to write messages_en.properties -->
+            <arg value="${compiler}/target/classes/org/apache/royale/compiler"/>
+        </java>
+    </target>
+
+    <target name="version-info" unless="build.number">
+        <property name="build.number" value="0"/>
+    </target>
+	
+	<target name="set.compiler.jar.uptodate">
+		<uptodate property="compiler.jar.uptodate"
+		          targetfile="${sdk}/compiler.jar">
+			<srcfiles dir="${compiler}/target/classes">
+				<include name="**/*.class"/>
+				<include name="**/*.properties"/>
+			</srcfiles>
+		</uptodate>
+	</target>
+	
+    <!--<target name="compiler.jar" depends="compile, localization, version-info, set.compiler.jar.uptodate" unless="compiler.jar.uptodate"
+        description="Builds compiler.jar"> skip localization for now -->
+	<target name="compiler.jar" depends="compile, version-info, set.compiler.jar.uptodate" unless="compiler.jar.uptodate"
+		    description="Builds compiler.jar">
+        <mkdir dir="${sdk}"/>
+        <copy file="${basedir}/../LICENSE.base" tofile="${compiler}/target/classes/META-INF/LICENSE"/>
+        <copy file="${basedir}/../NOTICE.base" tofile="${compiler}/target/classes/META-INF/NOTICE"/>
+        <jar file="${sdk}/compiler.jar" basedir="${compiler}/target/classes" includes="**/*.properties,org/apache/**/*,META-INF/**/*" excludes="${compiler.ant.binaries},${compiler.font.binaries}">
+            <include name="META-INF/LICENSE"/>
+            <include name="META-INF/NOTICE"/>
+            <manifest>
+                <attribute name="Sealed" value="${manifest.sealed}"/>
+                <attribute name="Implementation-Title" value="${manifest.Implementation-Title}"/>
+                <attribute name="Implementation-Version" value="${manifest.Implementation-Version}.${build.number}"/>
+                <attribute name="Implementation-Vendor" value="${manifest.Implementation-Vendor}"/>
+                <attribute name="Class-Path" value="compiler-common.jar external/antlr.jar external/commons-cli.jar external/commons-io.jar external/guava.jar external/lzma-sdk.jar external/flex-tool-api.jar .."/>
+                <!-- The .. in the line above allows the compiler to load the env.properties file -->
+            </manifest>
+        </jar>
+	</target>
+	
+	<target name="set.royale.asc.jar.uptodate">
+		<uptodate property="royale.asc.jar.uptodate"
+		          targetfile="${sdk}/compiler-asc.jar">
+			<srcfiles dir="${compiler}/target/classes">
+				<include name="**/*.class"/>
+				<include name="**/*.properties"/>
+			</srcfiles>
+		</uptodate>
+	</target>
+	
+	<target name="royale.asc.jar" depends="compiler.jar, set.royale.asc.jar.uptodate" unless="royale.asc.jar.uptodate">
+        <mkdir dir="${sdk}"/>
+        <jar file="${sdk}/compiler-asc.jar" basedir="${compiler}/target/classes" whenmanifestonly="create">
+            <include name="META-INF/LICENSE"/>
+            <include name="META-INF/NOTICE"/>
+            <manifest>
+                <attribute name="Sealed" value="${manifest.sealed}"/>
+                <attribute name="Implementation-Title" value="${manifest.Implementation-Title} - ASC Command Line Compiler"/>
+                <attribute name="Implementation-Version" value="${manifest.Implementation-Version}.${build.number}"/>
+                <attribute name="Implementation-Vendor" value="${manifest.Implementation-Vendor}"/>
+                <attribute name="Main-Class" value="org.apache.royale.compiler.clients.ASC"/>
+                <attribute name="Class-Path" value="compiler-common.jar compiler.jar"/>
+            </manifest>
+        </jar>
+	</target>
+
+	<target name="set.royale.mxmlc.jar.uptodate">
+		<uptodate property="royale.mxmlc.jar.uptodate"
+		          targetfile="${sdk}/compiler-mxmlc.jar">
+			<srcfiles dir="${compiler}/target/classes">
+				<include name="**/*.class"/>
+				<include name="**/*.properties"/>
+			</srcfiles>
+		</uptodate>
+	</target>
+	
+	<target name="royale.mxmlc.jar" depends="compiler.jar, set.royale.mxmlc.jar.uptodate" unless="royale.mxmlc.jar.uptodate">
+        <mkdir dir="${sdk}"/>
+        <jar file="${sdk}/compiler-mxmlc.jar" basedir="${compiler}/target/classes" whenmanifestonly="create">
+            <include name="META-INF/LICENSE"/>
+            <include name="META-INF/NOTICE"/>
+            <manifest>
+                <attribute name="Sealed" value="${manifest.sealed}"/>
+                <attribute name="Implementation-Title" value="${manifest.Implementation-Title} - MXMLC Command Line Compiler"/>
+                <attribute name="Implementation-Version" value="${manifest.Implementation-Version}.${build.number}"/>
+                <attribute name="Implementation-Vendor" value="${manifest.Implementation-Vendor}"/>
+                <attribute name="Main-Class" value="org.apache.royale.compiler.clients.MXMLC"/>
+                <attribute name="Class-Path" value="compiler-common.jar compiler.jar"/>
+            </manifest>
+        </jar>
+	</target>
+
+	<target name="set.royale.compc.jar.uptodate">
+		<uptodate property="royale.compc.jar.uptodate"
+		          targetfile="${sdk}/compiler-compc.jar">
+			<srcfiles dir="${compiler}/target/classes">
+				<include name="**/*.class"/>
+				<include name="**/*.properties"/>
+			</srcfiles>
+		</uptodate>
+	</target>
+	
+	<target name="royale.compc.jar" depends="compiler.jar, set.royale.compc.jar.uptodate" unless="royale.compc.jar.uptodate">
+        <mkdir dir="${sdk}"/>
+        <jar file="${sdk}/compiler-compc.jar" basedir="${compiler}/target/classes" whenmanifestonly="create">
+            <include name="META-INF/LICENSE"/>
+            <include name="META-INF/NOTICE"/>
+            <manifest>
+                <attribute name="Sealed" value="${manifest.sealed}"/>
+                <attribute name="Implementation-Title" value="${manifest.Implementation-Title} - COMPC Command Line Compiler"/>
+                <attribute name="Implementation-Version" value="${manifest.Implementation-Version}.${build.number}"/>
+                <attribute name="Implementation-Vendor" value="${manifest.Implementation-Vendor}"/>
+                <attribute name="Main-Class" value="org.apache.royale.compiler.clients.COMPC"/>
+                <attribute name="Class-Path" value="compiler-common.jar compiler.jar"/>
+            </manifest>
+        </jar>
+	</target>
+
+	<target name="set.royale.optimizer.jar.uptodate">
+		<uptodate property="royale.optimizer.jar.uptodate"
+		          targetfile="${sdk}/compiler-optimizer.jar">
+			<srcfiles dir="${compiler}/target/classes">
+				<include name="**/*.class"/>
+				<include name="**/*.properties"/>
+			</srcfiles>
+		</uptodate>
+	</target>
+	
+	<target name="royale.optimizer.jar" depends="compiler.jar, set.royale.optimizer.jar.uptodate" unless="royale.optimizer.jar.uptodate">
+        <mkdir dir="${sdk}"/>
+        <jar file="${sdk}/compiler-optimizer.jar" basedir="${compiler}/target/classes" whenmanifestonly="create">
+            <include name="META-INF/LICENSE"/>
+            <include name="META-INF/NOTICE"/>
+            <manifest>
+                <attribute name="Sealed" value="${manifest.sealed}"/>
+                <attribute name="Implementation-Title" value="${manifest.Implementation-Title} - Apache SWF Optimizer"/>
+                <attribute name="Implementation-Version" value="${manifest.Implementation-Version}.${build.number}"/>
+                <attribute name="Implementation-Vendor" value="${manifest.Implementation-Vendor}"/>
+                <attribute name="Main-Class" value="org.apache.royale.compiler.clients.Optimizer"/>
+                <attribute name="Class-Path" value="compiler-common.jar compiler.jar"/>
+            </manifest>
+        </jar>
+	</target>
+
+	<target name="set.royale.swfdump.jar.uptodate">
+		<uptodate property="royale.swfdump.jar.uptodate"
+		          targetfile="${sdk}/compiler-swfdump.jar">
+			<srcfiles dir="${compiler}/target/classes">
+				<include name="**/*.class"/>
+				<include name="**/*.properties"/>
+			</srcfiles>
+		</uptodate>
+	</target>
+	
+	<target name="royale.swfdump.jar" depends="compiler.jar, set.royale.swfdump.jar.uptodate" unless="royale.swfdump.jar.uptodate">
+        <mkdir dir="${sdk}"/>
+        <jar file="${sdk}/compiler-swfdump.jar" basedir="${compiler}/target/classes" whenmanifestonly="create">
+            <include name="META-INF/LICENSE"/>
+            <include name="META-INF/NOTICE"/>
+            <manifest>
+                <attribute name="Sealed" value="${manifest.sealed}"/>
+                <attribute name="Implementation-Title" value="${manifest.Implementation-Title} - SWF Dump Command Line utility"/>
+                <attribute name="Implementation-Version" value="${manifest.Implementation-Version}.${build.number}"/>
+                <attribute name="Implementation-Vendor" value="${manifest.Implementation-Vendor}"/>
+                <attribute name="Main-Class" value="org.apache.royale.swf.io.SWFDump"/>
+                <attribute name="Class-Path" value="compiler-common.jar compiler.jar commons-io.jar"/>
+            </manifest>
+        </jar>
+	</target>
+
+    <target name="jar" depends="compiler.jar, royale.asc.jar, royale.mxmlc.jar, royale.compc.jar, royale.optimizer.jar, royale.swfdump.jar"
+    	    description="Creates JAR files"/>
+	    
+    <!--
+
+        SDK
+
+    -->
+	
+	<target name="sdk" depends="jar" description="Builds a Royale SDK"/>
+
+    <target name="main" depends="sdk" description="Default target - Builds a Royale SDK">
+        <tstamp>
+            <format property="build.datetime" pattern="MM/dd/yyyy hh:mm:ss aa"/>
+        </tstamp>
+        <echo>compiler main completed on ${build.datetime}</echo>
+    </target>
+
+    <target name="test" depends="sdk" description="Runs JUnit tests">
+        <ant dir="src/test" />
+    </target>
+    
+    <!--
+
+        CLEANUP
+
+    -->
+
+    <target name="clean" description="clean">
+        <delete dir="${compiler}/target"/>
+    </target>
+
+    <target name="wipe" depends="clean" description="Wipes everything that didn't come from Git.">
+        <delete dir="${compiler}/lib"/>
+        <delete dir="${compiler}/utils"/>
+    </target>
+
+ </project>

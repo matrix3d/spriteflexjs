@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+<!--
+
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-->
+
+<!-- Note:
+    If you modify this file you may have to make the same change in build_framework.xml.
+    build_framework.xml is renamed to build.xml when it is packaged.
+    It is used to build the frameworks directory from the zip file. 
+-->
+<project name="examples" default="main" basedir=".">
+
+    <property name="ROYALE_HOME" location=".."/>
+
+    <!-- Required for OSX 10.6 / Snow Leopard Performance. -->
+    <!-- Java 7 on Mac requires OSX 10.7.3 or higher and is 64-bit only -->
+    <!-- local.d32 is set/used in build.properties so this needs to be done first. -->
+    <condition property="local.d32" value="-d32">
+        <and>
+            <os family="mac"/>
+            <matches pattern="1.6.*" string="${java.version}"/>
+            <equals arg1="${sun.arch.data.model}" arg2="64"/>
+            <equals arg1="${os.arch}" arg2="x86_64"/>
+        </and>
+    </condition>
+
+    <!-- Property for the platform.  -->
+    <condition property="isMac">
+        <os family="mac"/>
+    </condition>
+    <condition property="isWindows">
+        <os family="windows" />
+    </condition>   
+    <condition property="isLinux">
+        <and>
+          <os family="unix"/>    
+          <not>
+            <os family="mac"/>    
+          </not>
+        </and>
+    </condition>  
+
+    <property file="${ROYALE_HOME}/env.properties"/>
+    <property environment="env"/>
+    <property file="${ROYALE_HOME}/build.properties"/>
+ 
+    <target name="main" depends="check-compile-env,clean,prepare,compile" 
+        description="Clean build of all examples"/>
+
+    <target name="check-compile-env" description="Check for the required environment variables">
+        <ant antfile="${ROYALE_HOME}/build.xml" target="check-compile-env" dir="${ROYALE_HOME}"/>
+    </target>
+
+    
+    <target name="prepare" depends="thirdparty-downloads"/>
+            
+    <target name="thirdparty-downloads" unless="no.thirdparty-downloads" description="Downloads all the required thirdparty code.">
+        <!--<ant antfile="${basedir}/downloads.xml" dir="${basedir}"/>-->
+    </target>
+    
+    <target name="compile" description="Compile Examples" >
+	    <ant dir="${basedir}/royale/Ace"/>
+        <ant dir="${basedir}/express/DataBindingExample"/>
+        <ant dir="${basedir}/express/DataGridExample"/>
+        <ant dir="${basedir}/express/GitHubCommitLogViewer"/>
+        <ant dir="${basedir}/jewel/todomvc"/>
+        <ant dir="${basedir}/crux/CruxQuickStart"/>
+        <ant dir="${basedir}/crux/CruxQuickStartBasic"/>
+        <ant dir="${basedir}/crux/CruxGitHubCommitLogViewer"/>
+        <ant dir="${basedir}/crux/todomvc-jewel-crux"/>
+        <ant dir="${basedir}/royale/AccordionExample"/>
+        <ant dir="${basedir}/royale/ASDoc"/>
+        <ant dir="${basedir}/royale/CordovaCameraExample"/>
+        <ant dir="${basedir}/royale/CreateJSExample"/>
+        <ant dir="${basedir}/royale/DataBindingExample"/>
+        <ant dir="${basedir}/royale/DataBindingExample_as"/>
+        <!--<ant dir="${basedir}/royale/DataBindingExample_Flat"/>-->
+        <ant dir="${basedir}/royale/DataBindingExampleWithFlexLayout"/>
+        <ant dir="${basedir}/royale/DataGridExample"/>
+        <ant dir="${basedir}/royale/DateControlsExample"/>
+        <ant dir="${basedir}/royale/DesktopMap"/>
+        <ant dir="${basedir}/royale/DividedContainerExample"/>
+        <ant dir="${basedir}/royale/DragAndDropExample"/>
+        <ant dir="${basedir}/royale/Flex2Royale"/>
+        <ant dir="${basedir}/royale/JSON2ASVO"/>
+        <ant dir="${basedir}/jewel/TourDeJewel"/>
+		<ant dir="${basedir}/royale/CreditCardValidatorExample"/>
+        <ant dir="${basedir}/royale/RoyaleTeamPage_MDL"/>
+        <ant dir="${basedir}/royale/RoyaleWebsite"/>
+        <ant dir="${basedir}/royale/RoyaleWebsiteStatsViewer"/>
+        <ant dir="${basedir}/royale/RoyaleStore"/>
+        <ant dir="${basedir}/royale/RoyaleStore_jquery"/>
+        <ant dir="${basedir}/royale/HelloWorld"/>
+        <ant dir="${basedir}/royale/ListExample"/>
+        <ant dir="${basedir}/royale/MapSearch"/>
+        <ant dir="${basedir}/royale/MenuExample"/>
+        <ant dir="${basedir}/royale/MobileMap"/>
+        <ant dir="${basedir}/royale/MobileStocks"/>
+        <ant dir="${basedir}/royale/MobileTrader"/>
+        <ant dir="${basedir}/royale/ModuleExample"/>
+        <ant dir="${basedir}/royale/ChartExample"/>
+        <ant dir="${basedir}/royale/RemoteObjectAMFTest"/>
+        <ant dir="${basedir}/royale/StorageExample"/>
+        <ant dir="${basedir}/royale/StyleExample"/>
+        <ant dir="${basedir}/royale/TableExample"/>
+        <ant dir="${basedir}/royale/TodoListSampleApp"/>
+        <ant dir="${basedir}/royale/TeamPage"/>
+        <ant dir="${basedir}/royale/TreeExample"/>
+        <ant dir="${basedir}/mxroyale/HelloWorld"/>
+        <ant dir="${basedir}/mxroyale/ControlsExample"/>
+        <ant dir="${basedir}/mxroyale/DataGridExample"/>
+        <ant dir="${basedir}/native/ButtonExample"/>
+        <ant dir="${basedir}/native/USStatesMap"/>
+    </target>
+    
+    <!--
+		Cleanup
+	-->
+
+    <target name="super-clean" depends="thirdparty-clean,clean" description="Cleans everything including thirdparty downloads."/>
+	
+    <target name="thirdparty-clean" unless="no.thirdparty-clean" description="Removes all thirdparty downloads.">
+        <!--<ant antfile="${basedir}/downloads.xml" target="clean" dir="${basedir}"/>-->
+    </target>
+    
+    <target name="clean" description="Cleans all SWCs and their resource bundles">
+        <ant dir="${basedir}/royale/Ace" target="clean"/>
+        <ant dir="${basedir}/express/DataBindingExample" target="clean"/>
+        <ant dir="${basedir}/express/DataGridExample" target="clean"/>
+        <ant dir="${basedir}/express/GitHubCommitLogViewer" target="clean"/>
+        <ant dir="${basedir}/crux/CruxQuickStart" target="clean"/>
+        <ant dir="${basedir}/crux/CruxQuickStartBasic" target="clean"/>
+        <ant dir="${basedir}/crux/CruxGitHubCommitLogViewer" target="clean"/>
+        <ant dir="${basedir}/royale/AccordionExample" target="clean"/>
+        <ant dir="${basedir}/royale/ASDoc" target="clean"/>
+        <ant dir="${basedir}/royale/CordovaCameraExample" target="clean"/>
+        <ant dir="${basedir}/royale/CreateJSExample" target="clean"/>
+        <ant dir="${basedir}/royale/DataBindingExample" target="clean"/>
+        <ant dir="${basedir}/royale/DataBindingExample_as" target="clean"/>
+        <ant dir="${basedir}/royale/DataBindingExample_Flat" target="clean"/>
+        <ant dir="${basedir}/royale/DataBindingExampleWithFlexLayout" target="clean"/>
+        <ant dir="${basedir}/royale/DataGridExample" target="clean"/>
+        <ant dir="${basedir}/royale/DateControlsExample" target="clean"/>
+        <ant dir="${basedir}/royale/DesktopMap" target="clean"/>
+        <ant dir="${basedir}/royale/DividedContainerExample" target="clean"/>
+        <ant dir="${basedir}/royale/DragAndDropExample" target="clean"/>
+        <ant dir="${basedir}/royale/Flex2Royale" target="clean"/>
+        <ant dir="${basedir}/royale/JSON2ASVO" target="clean"/>
+        <ant dir="${basedir}/jewel/TourDeJewel" target="clean"/>
+        <ant dir="${basedir}/royale/RoyaleTeamPage_MDL" target="clean"/>
+        <ant dir="${basedir}/royale/RoyaleWebsite" target="clean"/>
+        <ant dir="${basedir}/royale/RoyaleWebsiteStatsViewer" target="clean"/>
+        <ant dir="${basedir}/royale/RoyaleStore" target="clean"/>
+        <ant dir="${basedir}/royale/RoyaleStore_jquery" target="clean"/>
+        <ant dir="${basedir}/royale/HelloWorld" target="clean"/>
+        <ant dir="${basedir}/royale/ListExample" target="clean"/>
+        <ant dir="${basedir}/royale/MapSearch" target="clean"/>
+        <ant dir="${basedir}/royale/MenuExample" target="clean"/>
+        <ant dir="${basedir}/royale/MobileTrader" target="clean"/>
+        <ant dir="${basedir}/royale/MobileStocks" target="clean"/>
+        <ant dir="${basedir}/royale/MobileMap" target="clean"/>
+        <ant dir="${basedir}/royale/ModuleExample" target="clean"/>
+        <ant dir="${basedir}/royale/ChartExample" target="clean"/>
+        <ant dir="${basedir}/royale/RemoteObjectAMFTest" target="clean"/>
+        <ant dir="${basedir}/royale/StorageExample" target="clean"/>
+        <ant dir="${basedir}/royale/StyleExample" target="clean"/>
+        <ant dir="${basedir}/royale/TableExample" target="clean"/>
+        <ant dir="${basedir}/royale/TodoListSampleApp" target="clean"/>
+        <ant dir="${basedir}/royale/TeamPage" target="clean"/>
+        <ant dir="${basedir}/royale/TreeExample" target="clean"/>
+        <ant dir="${basedir}/mxroyale/HelloWorld" target="clean"/>
+        <ant dir="${basedir}/mxroyale/ControlsExample" target="clean"/>
+        <ant dir="${basedir}/mxroyale/DataGridExample" target="clean"/>
+        <ant dir="${basedir}/native/ButtonExample" target="clean"/>
+        <ant dir="${basedir}/native/USStatesMap" target="clean"/>
+    </target>
+
+    <target name="examine" description="Cleans all SWCs and their resource bundles">
+        <ant dir="${basedir}/express/DataBindingExample" target="examine"/>
+        <ant dir="${basedir}/express/DataGridExample" target="examine"/>
+        <ant dir="${basedir}/crux/CruxQuickStart" target="examine"/>
+        <ant dir="${basedir}/crux/CruxQuickStartBasic" target="examine"/>
+        <ant dir="${basedir}/crux/CruxGitHubCommitLogViewer" target="examine"/>
+        <ant dir="${basedir}/royale/AccordionExample" target="examine"/>
+        <ant dir="${basedir}/royale/ASDoc" target="examine"/>
+        <ant dir="${basedir}/royale/CordovaCameraExample" target="examine"/>
+        <ant dir="${basedir}/royale/CreateJSExample" target="examine"/>
+        <ant dir="${basedir}/royale/DataBindingExample" target="examine"/>
+        <ant dir="${basedir}/royale/DataBindingExample_as" target="examine"/>
+        <ant dir="${basedir}/royale/DataBindingExample_Flat" target="examine"/>
+        <ant dir="${basedir}/royale/DataBindingExampleWithFlexLayout" target="examine"/>
+        <ant dir="${basedir}/royale/DataGridExample" target="examine"/>
+        <ant dir="${basedir}/royale/DateControlsExample" target="examine"/>
+        <ant dir="${basedir}/royale/DesktopMap" target="examine"/>
+        <ant dir="${basedir}/royale/DividedContainerExample" target="examine"/>
+        <ant dir="${basedir}/royale/DragAndDropExample" target="examine"/>
+        <ant dir="${basedir}/royale/RoyaleTeamPage_MDL" target="examine"/>
+        <ant dir="${basedir}/royale/RoyaleWebsiteStatsViewer" target="examine"/>
+        <ant dir="${basedir}/royale/RoyaleStore" target="examine"/>
+        <ant dir="${basedir}/royale/RoyaleStore_jquery" target="examine"/>
+        <ant dir="${basedir}/royale/HelloWorld" target="examine"/>
+        <ant dir="${basedir}/royale/ListExample" target="examine"/>
+        <ant dir="${basedir}/royale/MapSearch" target="examine"/>
+        <ant dir="${basedir}/royale/MenuExample" target="examine"/>
+        <ant dir="${basedir}/royale/MobileTrader" target="examine"/>
+        <ant dir="${basedir}/royale/MobileStocks" target="examine"/>
+        <ant dir="${basedir}/royale/MobileMap" target="examine"/>
+        <ant dir="${basedir}/royale/ModuleExample" target="examine"/>
+        <ant dir="${basedir}/royale/ChartExample" target="examine"/>
+        <ant dir="${basedir}/royale/RemoteObjectAMFTest" target="clean"/>
+        <ant dir="${basedir}/royale/StorageExample" target="examine"/>
+        <ant dir="${basedir}/royale/StyleExample" target="examine"/>
+        <ant dir="${basedir}/royale/TableExample" target="examine"/>
+        <ant dir="${basedir}/royale/TodoListSampleApp" target="examine"/>
+        <ant dir="${basedir}/royale/TeamPage" target="examine"/>
+        <ant dir="${basedir}/royale/TreeExample" target="examine"/>
+        <ant dir="${basedir}/native/ButtonExample" target="examine"/>
+        <ant dir="${basedir}/native/USStatesMap" target="examine"/>
+    </target>
+
+</project>

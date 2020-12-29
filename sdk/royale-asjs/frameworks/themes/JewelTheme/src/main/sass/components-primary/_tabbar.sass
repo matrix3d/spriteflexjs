@@ -1,0 +1,90 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+//  Licensed to the Apache Software Foundation (ASF) under one or more
+//  contributor license agreements.  See the NOTICE file distributed with
+//  this work for additional information regarding copyright ownership.
+//  The ASF licenses this file to You under the Apache License, Version 2.0
+//  (the "License"); you may not use this file except in compliance with
+//  the License.  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+////////////////////////////////////////////////////////////////////////////////
+
+// Jewel TabBar
+
+// TabBar variables
+
+.jewel
+    &.tabbar
+        &.sameWidths
+            > *
+                flex: 1 0 0% !important
+
+j|TabBar
+    itemsExpand: true
+
+
+// Jewel TabBarButtonItemRenderer
+
+// TabBarButtonItemRenderer variables
+.jewel
+    &.tabbarbutton
+        font:
+            // family: $font-stack
+            size: $font-size
+            weight: $font-weight-normal + 100
+        
+        border: none
+        background: transparent
+        outline: none
+        color: rgba(black, 0.6)
+
+        text-transform: uppercase
+        text-decoration: none
+        letter-spacing: .1em
+        font-weight: 600
+
+        transition: background-color .3s ease-in-out, color .3s ease-in-out
+        
+        > .content
+            // padding-top: 12px
+            // padding-bottom: 12px
+
+        .indicator
+            > .indicator-content
+                background-color: $primary-color
+        &.hovered
+            // color: $font-theme-color
+            background: rgba($primary-color, .2)
+
+        &.selected, &.selectable:active
+            // color: $font-theme-color
+            color: darken($primary-color, 15%)
+            background: rgba($primary-color, .4)
+
+.jewel
+    &.tabbar
+        &.layout
+            &.horizontal
+                .indicator
+                    > .indicator-content
+                        height: 2px
+                        // transform-origin: left
+                        // transition: transform .25s ease-in-out //cubic-bezier(.4,0,.2,1)
+                        // animation-duration: .3s
+                        // animation-timing-function: ease-in-out
+                        // animation-fill-mode: both
+            &.vertical
+                .indicator
+                    > .indicator-content
+                        width: 2px
+
+// j|TabBarButtonItemRenderer
+//     itemsHorizontalAlign: itemsCenter

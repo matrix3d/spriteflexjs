@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+<js:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:js="library://ns.apache.org/royale/basic"
+		 xmlns:gen="simple.*">
+		<fx:Style>
+		@namespace gen "simple.*";
+		@namespace js "library://ns.apache.org/royale/basic";
+		
+		js|StringItemRenderer {
+			height: 30px;
+		}
+		
+		.GenericList {
+			IBeadView: ClassReference("simple.GenericListView");
+			IBeadModel: ClassReference("org.apache.royale.html.beads.models.SingleSelectionCollectionViewModel");
+			IBeadLayout: ClassReference("org.apache.royale.html.beads.layouts.VerticalLayout");
+			IItemRendererClassFactory: ClassReference("org.apache.royale.core.SelectableItemRendererClassFactory");
+			IItemRenderer: ClassReference("org.apache.royale.html.supportClasses.StringItemRenderer");		
+            ISelectableItemRenderer: ClassReference("org.apache.royale.html.beads.SolidBackgroundSelectableItemRendererBead");		
+			IBeadController: ClassReference("org.apache.royale.html.beads.controllers.ListSingleSelectionMouseController");	
+			IViewport: ClassReference("org.apache.royale.html.supportClasses.ScrollingViewport");
+			IViewportModel: ClassReference("org.apache.royale.html.beads.models.ViewportModel");		
+			
+			overflow: auto;
+			border: 1px solid #CCCCCC;
+		}
+	</fx:Style>
+	
+	<fx:Script>
+		<![CDATA[
+			import models.ProductsModel;
+			import org.apache.royale.collections.ArrayList;
+			
+			private function addState():void
+			{
+				(applicationModel as ProductsModel).states.addItemAt("New Jersey", 2);
+			}
+			
+			private function removeState():void
+			{
+				(applicationModel as ProductsModel).states.removeItemAt(2);
+			}
+			
+			private function addProduct():void
+			{
+				(applicationModel as ProductsModel).productNames.addItemAt("Wing Bats", 2);
+			}
+			private function onScrollEnd():void{
+				addToInfiniteList();
+			}
+
+			private function infiniteListInitCompleteHandler():void
+			{
+				infiniteList.dataProvider = new ArrayList();
+				addToInfiniteList();
+			}
+
+			private function addToInfiniteList():void
+			{
+				var dp:ArrayList = infiniteList.dataProvider as ArrayList;
+				for (var i:int = 0; i < 100; i++)
+				{
+					dp.source.push("Item " + (dp.length + 1));
+				}
+				infiniteList.dataProvider = new ArrayList(dp.source);
+			}
+
+			private function assignDataProvider():void{
+				trace("assign new DataProvider");
+
+				dynamicList.dataProvider = new ArrayList(['one', 'two', 'three', 'four']);
+				//(applicationModel as ProductsModel).states = new ArrayList(['one', 'two', 'three', 'four']);  <-- this way the list doesn't notice the change
+			}
+		]]>
+	</fx:Script>
+	
+	<!-- Static list using an Array -->
+	
+	<js:Label x="20" y="20" text="A static List" />
+	
+	<js:List id="list" x="20" y="40" width="200" height="300">
+		<js:beads>
+			<js:ConstantBinding
+				sourceID="applicationModel"
+				sourcePropertyName="simple"
+				destinationPropertyName="dataProvider" />
+		</js:beads>
+	</js:List>
+	
+	<!-- Dynamic list using an ArrayList and responding to additions and
+	deletions. The DynamicList CSS style class is defined in the
+	Royale SDK.
+	-->
+	
+	<js:Label x="300" y="20" text="A dynamic List" />
+	
+	<js:List id="dynamicList" x="300" y="40" width="200" height="300" className="DynamicList">
+		<js:beads>
+			<js:ArrayListSelectionModel/>
+			<js:DataItemRendererFactoryForArrayList/>
+            <js:DynamicAddItemRendererForArrayListData/>
+            <js:DynamicRemoveItemRendererForArrayListData/>
+            <js:DynamicUpdateItemRendererForArrayListData/>
+			<js:ConstantBinding
+				sourceID="applicationModel"
+				sourcePropertyName="states"
+				destinationPropertyName="dataProvider" />
+		</js:beads>
+	</js:List>
+	
+	<js:TextButton text="Add New Jersey" x="300" y="350" click="addState()" />
+	<js:TextButton text="Remove New Jersey" x="300" y="380" click="removeState()" />
+	<js:TextButton text="Assign New Data" x="300" y="410" click="assignDataProvider()" />
+	
+	<!-- A custom list built from DataContainer.
+	-->
+	
+	<js:Label x="580" y="20" text="A custom List" />
+	
+	<gen:GenericList x="580" y="40" width="200" height="300" className="GenericList">
+		<gen:beads>
+			<js:ConstantBinding
+				sourceID="applicationModel"
+				sourcePropertyName="productNames"
+				destinationPropertyName="dataProvider" />
+			<!-- you also add this itemRendererFactory if your DataContainer list
+			is using an ArrayList as its dataProvider -->
+			<js:DynamicItemsRendererFactoryForArrayListData />
+		</gen:beads>
+	</gen:GenericList>
+	
+	<js:TextButton text="Add Wing Bats" x="580" y="350" click="addProduct()" />
+
+    <!-- A virtual list
+    -->
+    
+    <js:Label x="880" y="20" text="A virtual List" />
+    
+    <js:List x="880" y="40" width="200" height="300" >
+        <js:beads>
+            <js:ConstantBinding
+                sourceID="applicationModel"
+                sourcePropertyName="bigArray"
+                destinationPropertyName="dataProvider" />
+            <!-- you also add this itemRendererFactory if your DataContainer list
+            is using an ArrayList as its dataProvider -->
+            <js:VirtualDataItemRendererFactoryForArrayData />
+            <js:VirtualListVerticalLayout />
+            <js:VirtualListView />
+        </js:beads>
+    </js:List>
+    
+    <!-- An infinite List
+    -->
+    
+    <js:Label x="1180" y="20" text="An infinite List" />
+    
+    <js:List x="1180" y="40" width="200" height="300" initComplete="infiniteListInitCompleteHandler()" id="infiniteList">
+        <js:beads>
+	    <js:InfiniteVScroller scrollEnd="onScrollEnd()"/>
+	    <js:ArrayListSelectionModel/>
+	    <js:DataItemRendererFactoryForArrayList/>
+	    <js:EasyDataProviderChangeNotifier/>
+        </js:beads>
+    </js:List>
+    
+
+</js:View>

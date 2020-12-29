@@ -1,0 +1,49 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+//  Licensed to the Apache Software Foundation (ASF) under one or more
+//  contributor license agreements.  See the NOTICE file distributed with
+//  this work for additional information regarding copyright ownership.
+//  The ASF licenses this file to You under the Apache License, Version 2.0
+//  (the "License"); you may not use this file except in compliance with
+//  the License.  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void_expression = Pattern compoundAssignToName : 4
+JBurg.Reduction reducer.generateCompoundAssignment(__p, operand, expr, opcode, DISCARD_VALUE);
+
+expression = Pattern compoundAssignToName : 4
+JBurg.Reduction reducer.generateCompoundAssignment(__p, operand, expr, opcode, NEED_VALUE);
+
+void_expression = Pattern compoundAssignToMember : 4
+JBurg.Reduction reducer.generateCompoundMemberAssignment(__p, stem, member, expr, OP_getproperty, opcode, DISCARD_VALUE);
+
+expression = Pattern compoundAssignToMember : 4
+JBurg.Reduction reducer.generateCompoundMemberAssignment(__p, stem, member, expr, OP_getproperty, opcode, NEED_VALUE);
+
+expression = Pattern compoundAssignToBracket : 4
+JBurg.Reduction reducer.generateCompoundBracketAssignment(__p, stem, index, expr, opcode, NEED_VALUE);
+
+void_expression = Pattern compoundAssignToBracket : 4
+JBurg.Reduction reducer.generateCompoundBracketAssignment(__p, stem, index, expr, opcode, DISCARD_VALUE);
+
+void_expression = Pattern compoundAssignToDescendants : 4
+JBurg.Reduction reducer.generateCompoundMemberAssignment(__p, stem, member, expr, OP_getdescendants, opcode, DISCARD_VALUE);
+
+expression = Pattern compoundAssignToDescendants : 4
+JBurg.Reduction reducer.generateCompoundMemberAssignment(__p, stem, member, expr, OP_getdescendants, opcode, NEED_VALUE);
+
+void_expression = Pattern compoundAssignToRuntimeName : 4
+JBurg.Reduction reducer.generateCompoundAssignmentToRuntimeName(__p, name, expr, opcode, DISCARD_VALUE);
+
+expression = Pattern compoundAssignToRuntimeName : 4
+JBurg.Reduction reducer.generateCompoundAssignmentToRuntimeName(__p, name, expr, opcode, NEED_VALUE);
+

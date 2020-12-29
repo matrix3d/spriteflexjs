@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-->
+
+
+<componentPackage>
+	<component id="TransformBead" class="org.apache.royale.svg.TransformBead" />
+	<component id="ClipBead" class="org.apache.royale.svg.ClipBead" />
+	<component id="DropShadowFilter" class="org.apache.royale.svg.DropShadowFilter" />
+	<component id="BevelFilter" class="org.apache.royale.svg.BevelFilter" />
+	<component id="RetainColorBevelFilter" class="org.apache.royale.svg.RetainColorBevelFilter" />
+	<component id="Filter" class="org.apache.royale.svg.Filter" />
+	<component id="OffsetFilterElement" class="org.apache.royale.svg.OffsetFilterElement" />
+	<component id="TileFilterElement" class="org.apache.royale.svg.TileFilterElement" />
+	<component id="ColorMatrixFilterElement" class="org.apache.royale.svg.ColorMatrixFilterElement" />
+	<component id="DiffuseLightingFilterElement" class="org.apache.royale.svg.DiffuseLightingFilterElement" />
+	<component id="SpreadFilterElement" class="org.apache.royale.svg.SpreadFilterElement" />
+	<component id="AdjustBrightnessFilterElement" class="org.apache.royale.svg.AdjustBrightnessFilterElement" />
+	<component id="BlurFilterElement" class="org.apache.royale.svg.BlurFilterElement" />
+	<component id="InvertFilterElement" class="org.apache.royale.svg.InvertFilterElement" />
+	<component id="FullAlphaFilterElement" class="org.apache.royale.svg.FullAlphaFilterElement" />
+	<component id="CompositeFilterElement" class="org.apache.royale.svg.CompositeFilterElement" />
+	<component id="BlendFilterElement" class="org.apache.royale.svg.BlendFilterElement" />
+	<component id="MaskBead" class="org.apache.royale.svg.MaskBead" />
+	<component id="DisableClipBead" class="org.apache.royale.svg.DisableClipBead" />
+	<component id="LinearGradient" class="org.apache.royale.svg.LinearGradient" />
+	<component id="SuperimposeFilter" class="org.apache.royale.svg.SuperimposeFilter" />
+</componentPackage>

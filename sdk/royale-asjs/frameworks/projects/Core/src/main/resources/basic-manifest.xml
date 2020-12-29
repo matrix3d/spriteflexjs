@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!--
+
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-->
+
+
+<componentPackage>
+
+    <component id="SimpleCSSValuesImpl" class="org.apache.royale.core.SimpleCSSValuesImpl"/>
+    <component id="AllCSSValuesImpl" class="org.apache.royale.core.AllCSSValuesImpl"/>
+    <component id="CSSFontFaceBead" class="org.apache.royale.core.CSSFontFaceBead" />
+    <component id="EventLoggingBead" class="org.apache.royale.core.EventLoggingBead" />
+    <component id="BrowserScroller" class="org.apache.royale.core.BrowserScroller"/>
+    <component id="BrowserResizeApplicationListener" class="org.apache.royale.core.BrowserResizeApplicationListener"/>
+    <component id="BrowserOrientation" class="org.apache.royale.core.BrowserOrientation"/>
+    <component id="SimpleValuesImpl" class="org.apache.royale.core.SimpleValuesImpl"/>
+    <component id="SimpleStatesImpl" class="org.apache.royale.core.SimpleStatesImpl"/>
+    <component id="MXMLDragInitiator" class="org.apache.royale.core.MXMLDragInitiator" />
+    <component id="CallLaterBead" class="org.apache.royale.core.CallLaterBead" />
+    <component id="SimpleLocalizedValuesImpl" class="org.apache.royale.core.SimpleLocalizedValuesImpl"/>
+
+    <component id="BindableCSSStyles" class="org.apache.royale.core.BindableCSSStyles"/>
+    <component id="BindableCSSStylesWithFlex" class="org.apache.royale.core.BindableCSSStylesWithFlex"/>
+    <component id="SimpleCSSStyles" class="org.apache.royale.core.SimpleCSSStyles"/>
+    <component id="SimpleCSSStylesWithFlex" class="org.apache.royale.core.SimpleCSSStylesWithFlex"/>
+    <component id="AllCSSStyles" class="org.apache.royale.core.AllCSSStyles"/>
+    <component id="ParentDocumentBead" class="org.apache.royale.core.ParentDocumentBead"/>
+    <component id="MixinManager" class="org.apache.royale.utils.MixinManager" />
+    <component id="ViewSourceContextMenuOption" class="org.apache.royale.utils.ViewSourceContextMenuOption" />
+    <component id="TransformModel" class="org.apache.royale.core.TransformModel" />
+    <component id="TransformRotateModel" class="org.apache.royale.core.TransformRotateModel" />
+    <component id="TransformCompoundModel" class="org.apache.royale.core.TransformCompoundModel" />
+    <component id="TransformMoveXModel" class="org.apache.royale.core.TransformMoveXModel" />
+    <component id="TransformMoveYModel" class="org.apache.royale.core.TransformMoveYModel" />
+    <component id="TransformScaleModel" class="org.apache.royale.core.TransformScaleModel" />
+    
+    <component id="StyleChangeNotifier" class="org.apache.royale.core.StyleChangeNotifier"/>
+    
+    <component id="State" class="org.apache.royale.states.State"/>
+    
+    <component id="CompoundAsyncTask" class="org.apache.royale.utils.async.CompoundAsyncTask"/>
+    <component id="SequentialAsyncTask" class="org.apache.royale.utils.async.SequentialAsyncTask"/>
+    
+    <component id="OverridableSelectableItemRendererClassFactory" class="org.apache.royale.core.OverridableSelectableItemRendererClassFactory"/>
+</componentPackage>

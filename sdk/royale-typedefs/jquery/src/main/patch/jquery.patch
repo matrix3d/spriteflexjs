@@ -1,0 +1,13 @@
+Generated from Ant script and manually updated type
+diff --git a/jquery/target/downloads/jquery-1.9.js b/jquery/target/downloads/jquery-1.9.js
+index d00166a..1d85908 100644
+--- a/jquery/target/downloads/jquery-1.9.js
++++ b/jquery/target/downloads/jquery-1.9.js
+@@ -156,6 +156,7 @@ function jQuery(arg1, arg2) {}
+ 
+ /**
+  * @const
++ * @type {!jQuery}
+  */
+ var $ = jQuery;
+ 

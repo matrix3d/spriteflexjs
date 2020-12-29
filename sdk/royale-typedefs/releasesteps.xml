@@ -1,0 +1,344 @@
+<?xml version="1.0"?>
+<!--
+
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-->
+
+<project name="CreateTypedefsReleaseCandidate" default="main" basedir=".">
+
+    <!-- use -Dtag=<tag or commit hash> to build from other than the head -->
+
+    <!-- Required for OSX 10.6 / Snow Leopard Performance. -->
+    <!-- Java 7 on Mac requires OSX 10.7.3 or higher and is 64-bit only -->
+    <!-- local.d32 is set/used in build.properties so this needs to be done first. -->
+    <condition property="local.d32" value="-d32">
+        <and>
+            <os family="windows"/>
+            <equals arg1="${sun.arch.data.model}" arg2="64"/>
+            <equals arg1="${os.arch}" arg2="x86_64"/>
+            <equals arg1="${ant.java.version}" arg2="1.6"/>
+        </and>
+    </condition>
+
+    <condition property="isMac" value="mac">
+        <os family="mac" />
+    </condition>
+    <condition property="isWindows" value="windows">
+        <os family="windows" />
+    </condition>
+    <condition property="isLinux" value="linux">
+		<and>
+			<os family="unix" />
+			<not>
+				<isset property="isMac" />
+			</not>
+		</and>
+    </condition>
+	
+	<property name="rat.report" value="${basedir}/rat-report.txt"/>
+    <property name="apache.rat.jar" value="apache-rat-0.11.jar" />
+    <property name="apache.rat.tasks.jar" value="apache-rat-tasks-0.11.jar" />
+    <property name="apache.rat.url" value="https://search.maven.org/remotecontent?filepath=org/apache/rat/apache-rat/0.11" />
+    <property name="apache.rat.tasks.url" value="https://search.maven.org/remotecontent?filepath=org/apache/rat/apache-rat-tasks/0.11" />
+    
+	<property file="${basedir}/local.properties" />
+	<property file="${basedir}/build.properties" />
+	   
+    <property environment="env"/>
+    
+	<condition property="do.copy.downloads" >
+		<isset property="download.cache.dir" /> 
+	</condition>
+	
+    <condition property="CRLF" value="%0D%0A">
+        <isset property="isWindows" />
+    </condition>
+    <property name="CRLF" value="%0A" />
+    
+    <condition property="mvn" value="mvn.cmd">
+        <isset property="isWindows" />
+    </condition>
+    <property name="mvn" value="mvn" />
+
+    <available file="${env.ANT_HOME}/lib/${apache.rat.jar}"
+        type="file"
+        property="apache.rat.found"/>
+    <available file="${env.ANT_HOME}/lib/${apache.rat.tasks.jar}"
+        type="file"
+        property="apache.rat.tasks.found"/>
+		
+    <fail message="The release version number is not set.  Specify -Drelease.version=&lt;release version (e.g. 0.9.0, 1.0.0, etc)&gt;"
+        unless="release.version"/>
+        
+	<target name="install-rat" depends="install-rat.jar,install-rat.tasks.jar" />
+	<target name="install-rat.jar" unless="apache.rat.found">
+		<get src="${apache.rat.url}/${apache.rat.jar}" dest="${env.ANT_HOME}/lib/${apache.rat.jar}" />
+	</target>
+	<target name="install-rat.tasks.jar" unless="apache.rat.tasks.found">
+		<get src="${apache.rat.url}/${apache.rat.tasks.jar}" dest="${env.ANT_HOME}/lib/${apache.rat.tasks.jar}" />
+	</target>
+	
+    <target name="rat-taskdef" description="Rat taskdef">
+        <typedef resource="org/apache/rat/anttasks/antlib.xml"
+        uri="antlib:org.apache.rat.anttasks"
+        classpathref="anttask.classpath"/>
+    </target>
+    
+    <target name="checkout_tag" if="tag" >
+        <exec executable="${git}" dir="${basedir}" failonerror="true" >
+            <arg value="checkout" />
+            <arg value="${tag}" />
+        </exec>
+    </target>
+
+    <target name="Release_Step_007" depends="get-temp-folder,download-artifacts,unzip-artifacts,build-source,validate-bits">
+    </target>
+    <target name="get-temp-folder">
+        <input
+        message="Enter a temporary folder to store the downloaded artifacts:"
+        addproperty="artifactfolder"/>
+        <mkdir dir="${artifactfolder}" />
+        <available file="${artifactfolder}"
+        type="dir"
+        property="artifact.folder.found"/>
+        <fail message="Could not create artifact folder"
+        unless="artifact.folder.found"/>
+    </target>
+    <target name="download-artifacts" if="artifactfolder">
+        <get src="http://apacheroyaleci2.westus2.cloudapp.azure.com:8080/job/Royale_Release_Step_007/lastSuccessfulBuild/artifact/*zip*/archive.zip" dest="${artifactfolder}/archive.zip" />
+    </target>
+    <target name="unzip-artifacts" if="artifactfolder">
+        <mkdir dir="${artifactfolder}/artifacts" />
+        <unzip src="${artifactfolder}/archive.zip" dest="${artifactfolder}/artifacts"/>
+    </target>
+    <target name="build-source" >
+        <mkdir dir="${artifactfolder}/sources" />
+        <unzip src="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-parent/${release.version}/royale-typedefs-parent-${release.version}-source-release.zip" dest="${artifactfolder}/sources" >
+            <cutdirsmapper dirs="1" />
+        </unzip>
+        
+        <!-- build these modules -->
+        <exec executable="${mvn}" dir="${artifactfolder}/sources" failonerror="true" >
+            <arg value="clean" />
+            <arg value="install" />
+            <arg value="-Proyale-release,apache-release" />
+        </exec>
+    </target>
+    
+    <target name="get-artifact-folder" unless="artifactfolder">
+        <input
+            message="Enter the temporary folder to store the downloaded artifacts:"
+            addproperty="artifactfolder"/>
+        <available file="${artifactfolder}"
+            type="dir"
+            property="artifact.folder.found"/>
+        <fail message="Could not find artifact folder"
+            unless="artifact.folder.found"/>
+    </target>
+    
+    <target name="validate-bits" depends="get-artifact-folder,compare-swcs">
+    </target>
+    
+    <target name="write-out-maven-swcs-list" >
+        <delete file="${artifactfolder}/swcs.txt" />
+        <!-- this is a comma-delimited, no spaces, no-line-breaks list used to decide which swcs
+         to skip in the rat-check of the binaries and which swcs to examine before approval -->
+        <property name="swcs-list" value="cordova,createjs,gcl,google_maps,jasmine,jquery,js,node"/>
+        <echo file="${artifactfolder}/swcs.txt" message="${swcs-list}"/>
+    </target>
+    
+    <target name="compare-swcs" depends="write-out-maven-swcs-list">
+        <!-- comma delimited list, no spaces, not one file per line -->
+        <copy file="${artifactfolder}/swcs.txt" tofile="${artifactfolder}/loop.txt" />
+        <ant antfile="releasesteps.xml" target="loopOnce" inheritAll="false" >
+            <property name="artifactfolder" value="${artifactfolder}" />
+            <property name="release.version" value="${release.version}" />
+            <property name="utils.version" value="${utils.version}" />
+        </ant>
+    </target>
+    
+    <target name="loopOnce" >
+        <!-- make a copy of the list so we can munge it to
+         get the first item in the list -->
+        <delete file="${artifactfolder}/loop1.txt" />
+        <copy file="${artifactfolder}/loop.txt" tofile="${artifactfolder}/loop1.txt" />
+        <loadfile srcFile="${artifactfolder}/loop.txt" property="checkiflast" />
+        <condition property="islast" value="true">
+            <not>
+                <contains string="${checkiflast}" substring="," />
+            </not>
+        </condition>
+        <antcall target="notlast" />
+        <antcall target="lastone" />
+    </target>
+    <target name="notlast" unless="islast">
+        <loadfile srcFile="${artifactfolder}/loop1.txt" property="echoFile" />
+        <replaceregexp file="${artifactfolder}/loop1.txt" match="^(.*),(.*)" replace="\2" />
+        <loadfile srcFile="${artifactfolder}/loop1.txt" property="thisFile" />
+        <condition property="artifactid" value="googlemaps">
+            <equals arg1="${thisFile}" arg2="google_maps" />
+        </condition>
+        <property name="artifactid" value="${thisFile}" />
+        <antcall target="compare_files" />
+        <replaceregexp file="${artifactfolder}/loop.txt" match="^(.*),(.*)" replace="\1" />
+        <ant antfile="releasesteps.xml" target="loopOnce" inheritAll="false">
+            <property name="artifactfolder" value="${artifactfolder}" />
+            <property name="release.version" value="${release.version}" />
+            <property name="utils.version" value="${utils.version}" />
+        </ant>
+    </target>
+    <target name="lastone" if="islast">
+        <loadfile srcFile="${artifactfolder}/loop1.txt" property="thisFile" />
+        <property name="artifactid" value="${thisFile}" />
+        <antcall target="compare_files" />
+        <delete file="${artifactfolder}/loop.txt" />
+        <delete file="${artifactfolder}/loop1.txt" />
+    </target>
+    
+    <target name="compare_files">
+        <echo>comparing royale-typedefs-${artifactid}-${release.version}-typedefs.swc</echo>
+        <fail message="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-${artifactid}/${release.version}/royale-typedefs-${artifactid}-${release.version}-typedefs.swc does not exist" >
+            <condition>
+                <not>
+                    <resourceexists><file file="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-${artifactid}/${release.version}/royale-typedefs-${artifactid}-${release.version}-typedefs.swc"/></resourceexists>
+                </not>
+            </condition>
+        </fail>
+        <fail message="${artifactfolder}/sources/${thisFile}/target/royale-typedefs-${artifactid}-${release.version}-extern.swc does not exist" >
+            <condition>
+                <not>
+                    <resourceexists><file file="${artifactfolder}/sources/${thisFile}/target/royale-typedefs-${artifactid}-${release.version}-extern.swc"/></resourceexists>
+                </not>
+            </condition>
+        </fail>
+        <condition property="filesmatch" value="true">
+            <filesmatch file1="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-${artifactid}/${release.version}/royale-typedefs-${artifactid}-${release.version}-typedefs.swc"
+            file2="${artifactfolder}/sources/${thisFile}/target/royale-typedefs-${artifactid}-${release.version}-extern.swc" />
+        </condition>
+        <fail message="royale-typedefs-${artifactid}-${release.version}-typedefs.swc does not match" unless="filesmatch" />
+    </target>
+    
+    <target name="Release_Step_007_Sign" depends="get-artifact-folder">
+        <fail message="release.version not specified"
+            unless="release.version"/>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-parent/${release.version}/royale-typedefs-parent-${release.version}-source-release.zip" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-parent/${release.version}/royale-typedefs-parent-${release.version}.pom" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-cordova/${release.version}/royale-typedefs-cordova-${release.version}-sources.jar" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-cordova/${release.version}/royale-typedefs-cordova-${release.version}-typedefs.swc" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-cordova/${release.version}/royale-typedefs-cordova-${release.version}.pom" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-createjs/${release.version}/royale-typedefs-createjs-${release.version}-sources.jar" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-createjs/${release.version}/royale-typedefs-createjs-${release.version}-typedefs.swc" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-createjs/${release.version}/royale-typedefs-createjs-${release.version}.pom" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-gcl/${release.version}/royale-typedefs-gcl-${release.version}-sources.jar" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-gcl/${release.version}/royale-typedefs-gcl-${release.version}-typedefs.swc" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-gcl/${release.version}/royale-typedefs-gcl-${release.version}.pom" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-googlemaps/${release.version}/royale-typedefs-googlemaps-${release.version}-sources.jar" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-googlemaps/${release.version}/royale-typedefs-googlemaps-${release.version}-typedefs.swc" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-googlemaps/${release.version}/royale-typedefs-googlemaps-${release.version}.pom" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-jasmine/${release.version}/royale-typedefs-jasmine-${release.version}-sources.jar" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-jasmine/${release.version}/royale-typedefs-jasmine-${release.version}-typedefs.swc" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-jasmine/${release.version}/royale-typedefs-jasmine-${release.version}.pom" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-jquery/${release.version}/royale-typedefs-jquery-${release.version}-sources.jar" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-jquery/${release.version}/royale-typedefs-jquery-${release.version}-typedefs.swc" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-jquery/${release.version}/royale-typedefs-jquery-${release.version}.pom" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-js/${release.version}/royale-typedefs-js-${release.version}-sources.jar" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-js/${release.version}/royale-typedefs-js-${release.version}-typedefs.swc" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-js/${release.version}/royale-typedefs-js-${release.version}.pom" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-node/${release.version}/royale-typedefs-node-${release.version}-sources.jar" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-node/${release.version}/royale-typedefs-node-${release.version}-typedefs.swc" />
+        </antcall>
+        <antcall target="sign-file" >
+            <param name="file" value="${artifactfolder}/artifacts/archive/target/local-release-dir/org/apache/royale/typedefs/royale-typedefs-node/${release.version}/royale-typedefs-node-${release.version}.pom" />
+        </antcall>
+    </target>
+    
+    <target name="sign-file">
+        <exec executable="gpg">
+            <arg value="--armor" />
+            <arg value="--output" />
+            <arg value="${file}.asc" />
+            <arg value="--detach-sig" />
+            <arg value="${file}" />
+        </exec>
+    </target>
+    
+    <target name="Release_Step_007_Upload" depends="get-artifact-folder">
+        <fail message="release.version not specified"
+            unless="release.version"/>
+        <exec executable="${mvn}" dir="${artifactfolder}/sources" failonerror="true" >
+            <arg value="wagon:upload" />
+            <arg value="-X" />
+            <arg value="-Dwagon.fromDir=${artifactfolder}/artifacts/archive/target/local-release-dir" />
+            <arg value="-Dwagon.url=https://repository.apache.org/service/local/staging/deploy/maven2" />
+            <arg value="-Dwagon.serverId=apache.releases.https" />
+            <arg value="-Dwagon.includes=**" />
+	    <arg value="-N"/>
+        </exec>
+    </target>
+    
+    <target name="main" description="Perform required release approval steps">
+    </target>
+</project>

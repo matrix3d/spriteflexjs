@@ -1,0 +1,411 @@
+<?xml version="1.0"?>
+<!--
+
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-->
+
+<project name="downloads" default="main" basedir=".">
+	<property name="ROYALE_HOME" location="../.."/>
+
+	<!-- properties -->
+    <property file="${ROYALE_HOME}/env.properties"/>
+    <property environment="env"/>
+    <property file="${ROYALE_HOME}/local.properties"/>
+	<property file="${ROYALE_HOME}/build.properties"/>
+    <property name="ROYALE_HOME" value="${env.ROYALE_HOME}" />
+
+	<property name="download.dir" value="${ROYALE_HOME}/in"/>
+    <property name="pixelbender.url" value="https://www.apache.org/dyn/mirrors/mirrors.cgi" />
+    <property name="pixelbender.folder" value="flex/pixelbender/1.0/binaries" />
+    <property name="pixelbender.bin.zip" value="apache-flex-sdk-pixel-bender-1.0.0-bin.zip" />
+    <property name="flexunit.url" value="https://www.apache.org/dyn/mirrors/mirrors.cgi" />
+    <property name="flexunit.folder" value="flex/flexunit/4.2.0/binaries" />
+    <property name="flexunit.bin.zip" value="apache-flex-flexunit-4.2.0-4.12.0-bin.zip" />
+   
+    <!--
+       To clean these you must call thirdparty-clean or super-clean to clean everything.  
+       clean does not remove these since they don't change often and the downloads take time.
+    -->
+    <target name="main" 
+        depends="pixelbender-download,flexunit-download,swfobject-download,flat-ui-download,gcl-download"
+        description="Copies third-party software into place for build">
+        <echo message="Use thirdparty-clean or super-clean to remove these."/> 
+    </target>
+    
+    <target name="clean" depends="pixelbender-clean,swfobject-clean,flat-ui-clean,gcl-clean"
+        description="Cleans thirdparty downloaded files.">
+     </target>
+    
+	    <!-- pixelbender files (Version 1.0) -->
+    <!-- Because this requires a network connection it downloads only if it doesn't already exist. -->
+    <target name="pixelbender-check" description="Checks if PixelBender files have been downloaded.">
+        <available file="${ROYALE_HOME}/frameworks/projects/Graphics/src/main/royale/org/apache/royale/graphics/utils/shaderClasses/ColorBurn.pbj" property="pixelbender.pbj.present"/>
+    </target>
+    
+    <target name="pixelbender-download" depends="pixelbender-check" unless="pixelbender.pbj.present"
+        description="Downloads PixelBender from flex distribution server">
+        
+        <mkdir dir="${download.dir}"/>
+        <antcall target="get_from_mirror" >
+            <param name="server" value="${pixelbender.url}" />
+            <param name="folder" value="${pixelbender.folder}" />
+            <param name="file" value="${pixelbender.bin.zip}" />
+            <param name="dest" value="${download.dir}/${pixelbender.bin.zip}" />
+        </antcall>
+        <antcall target="get-from-cache-if-needed" >
+            <param name="filename" value="${pixelbender.bin.zip}" />
+        </antcall>
+        
+        <unzip src="${download.dir}/${pixelbender.bin.zip}" dest="${ROYALE_HOME}/frameworks/projects/Graphics/src/main/royale/org/apache/royale/graphics/utils/shaderClasses/">
+            <patternset>
+                <include name="frameworks/projects/framework/src/mx/graphics/shaderClasses/*.pbj"/>
+            </patternset>
+			<mapper>
+				<globmapper from="frameworks/projects/framework/src/mx/graphics/shaderClasses/*.pbj" to="*.pbj"/>
+			</mapper>
+        </unzip>
+    </target>
+
+    <target name="pixelbender-clean" description="Deletes pbj files.">
+	    <delete failonerror="false">
+            <fileset dir="${ROYALE_HOME}/frameworks/projects/Graphics/src/main/royale/org/apache/royale/graphics/utils/shaderClasses">
+                <include name="*.pbj"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <!-- Because this requires a network connection it downloads only if it doesn't already exist. -->
+    <target name="flexunit-check" description="Checks if FlexUnit files have been downloaded.">
+        <available file="${ROYALE_HOME}/in/flexunit" property="flexunit.present"/>
+    </target>
+
+    <target name="flexunit-download" depends="flexunit-check" unless="flexunit.present"
+        description="Downloads FlexUnit from flex distribution server">
+        
+        <mkdir dir="${download.dir}"/>
+        <antcall target="get_from_mirror" >
+            <param name="server" value="${flexunit.url}" />
+            <param name="folder" value="${flexunit.folder}" />
+            <param name="file" value="${flexunit.bin.zip}" />
+            <param name="dest" value="${download.dir}/${flexunit.bin.zip}" />
+        </antcall>
+        <antcall target="get-from-cache-if-needed" >
+            <param name="filename" value="${flexunit.bin.zip}" />
+        </antcall>
+        
+        <unzip src="${download.dir}/${flexunit.bin.zip}" dest="${ROYALE_HOME}/in/flexunit" />
+        <delete file="${ROYALE_HOME}/in/flexunit/flexunit/flexunit-4.2.0-20140410-flex_4.12.0.swc"/>
+    </target>
+
+    <target name="flexunit-clean" description="Deletes flexunit files.">
+        <delete dir="${ROYALE_HOME}/in/flexunit" failonerror="false" />
+    </target>
+
+    <!-- swfobject.js (Version 2.2) -->
+    <!-- Because this requires a network connection it downloads SWFObject only if it doesn't already exist. -->
+    <target name="swfobject-check" description="Checks if SWFObject has been downloaded.">
+        <available file="${ROYALE_HOME}/templates/swfobject/swfobject.js" property="swfobject.js.present"/>
+    </target>
+
+    <target name="swfobject-download" depends="swfobject-check" unless="swfobject.js.present" 
+        description="Copies SWFObject from code.google.com">
+        
+        <mkdir dir="${download.dir}"/>
+        <get src="https://codeload.github.com/swfobject/swfobject/zip/2.2"
+            dest="${download.dir}/swfobject_2_2.zip"
+            verbose="false" ignoreerrors="true"/>
+        
+        <antcall target="get-from-cache-if-needed" >
+            <param name="filename" value="swfobject_2_2.zip" />
+        </antcall>
+        <antcall target="fail-if-not-found" >
+            <param name="filename" value="swfobject_2_2.zip" />
+        </antcall>
+        
+        <unzip src="${download.dir}/swfobject_2_2.zip" dest="${ROYALE_HOME}/templates/swfobject">
+            <patternset>
+                <include name="swfobject-2.2/swfobject/expressInstall.swf"/>
+                <include name="swfobject-2.2/swfobject/swfobject.js"/>
+            </patternset>
+            <flattenmapper />
+        </unzip>
+        <antcall target="swfobject-double-check" />
+        <mkdir dir="${ROYALE_HOME}/templates/swfobject/history"/>
+        <copy toDir="${ROYALE_HOME}/templates/swfobject/history" >
+            <fileset dir="${ROYALE_HOME}/templates/swfobject/history">
+                <include name="**"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="swfobject-clean" description="Deletes templates swfobject code.">
+        <delete failonerror="false">
+            <fileset dir="${ROYALE_HOME}/templates/swfobject">
+                <include name="**/**"/>
+                <exclude name="index.template.html"/>
+                <exclude name="history/**"/>
+            </fileset>
+        </delete>
+    </target>
+        
+    <target name="have-swfobject" >
+        <condition property="still-no-swfobject">
+            <not>
+                <available file="${ROYALE_HOME}/templates/swfobject/swfobject.js" />
+            </not>
+        </condition>
+    </target>
+    
+    <target name="swfobject-double-check" depends="have-swfobject" if="still-no-swfobject" description="some SWFObject zips have a different folder structure so if the first unzip doesn't work, try this one">
+        <unzip src="${download.dir}/swfobject_2_2.zip" dest="${ROYALE_HOME}/templates/swfobject">
+            <patternset>
+                <include name="swfobject/expressInstall.swf"/>
+                <include name="swfobject/swfobject.js"/>
+            </patternset>
+            <flattenmapper />
+        </unzip>
+    </target>
+        
+    <!-- flat ui fonts  -->
+    <!-- Because this requires a network connection it downloads Flat UI fonts only if it doesn't already exist. -->
+    <target name="flat-ui-check" description="Checks if Flat UI fonts have been downloaded.">
+        <available file="${ROYALE_HOME}/frameworks/fonts/flat-ui-icons-regular.ttf" property="flat.donot.ask"/>
+        <condition property="flat.donot.ask">
+            <isset property="build.noprompt"/>
+        </condition>
+        <condition property="do.flat.install">
+            <isset property="build.noprompt"/>
+        </condition>
+    </target>
+    
+    <target name="ask-flat" unless="flat.donot.ask"
+        description="Prompt the user before downloading Flat fonts">
+        
+        <property name="flat.prompt.text"
+        value="Apache Royale includes an optional component set that
+        ${line.separator}uses fonts from designmodo.com.
+        ${line.separator}The font files are subject to and governed by the
+        ${line.separator}Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported license:
+        ${line.separator}http://creativecommons.org/licenses/by-nc-nd/3.0/
+        ${line.separator}This license is not compatible with the Apache v2 license.
+        ${line.separator}Do you want to install the designmodo fonts?"/>
+        <input
+        message="${flat.prompt.text}"
+        validargs="y,n"
+        defaultvalue="n"
+        addproperty="input.flat.download"/>
+        <condition property="do.flat.install">
+            <equals arg1="y" arg2="${input.flat.download}"/>
+        </condition>
+        <!-- Only ask once per ant run.  -->
+        <property name="flat.donot.ask" value="set"/>
+    </target>
+    
+    <target name="flat-ui-download" depends="flat-ui-check,get-flat-fonts"
+        description="Copies FlatUI from github" />
+        
+    <target name="get-flat-fonts" depends="ask-flat" if="do.flat.install" >
+        <mkdir dir="${download.dir}"/>
+        <get src="https://github.com/designmodo/Flat-UI/archive/2.2.2.zip"
+        dest="${download.dir}/flat-ui_2_2.zip"
+        verbose="false" ignoreerrors="true"/>
+        
+        <antcall target="get-from-cache-if-needed" >
+            <param name="filename" value="flat-ui_2_2.zip" />
+            <param name="destDir" value="${download.dir}" />
+        </antcall>
+        <antcall target="fail-if-not-found" >
+            <param name="filename" value="flat-ui_2_2.zip" />
+            <param name="destDir" value="${download.dir}" />
+        </antcall>
+        
+        <mkdir dir="${ROYALE_HOME}/frameworks/fonts"/>
+        <unzip src="${download.dir}/flat-ui_2_2.zip" dest="${ROYALE_HOME}/frameworks/fonts">
+            <patternset>
+                <include name="Flat-UI-2.2.2/fonts/glyphicons/flat-ui-icons-regular.eot"/>
+                <include name="Flat-UI-2.2.2/fonts/glyphicons/flat-ui-icons-regular.ttf"/>
+                <include name="Flat-UI-2.2.2/fonts/glyphicons/flat-ui-icons-regular.svg"/>
+                <include name="Flat-UI-2.2.2/fonts/glyphicons/flat-ui-icons-regular.woff"/>
+            </patternset>
+            <flattenmapper />
+        </unzip>
+        <unzip src="${download.dir}/flat-ui_2_2.zip" dest="${ROYALE_HOME}/frameworks/fonts">
+            <patternset>
+                <include name="Flat-UI-2.2.2/README.md"/>
+            </patternset>
+            <flattenmapper />
+        </unzip>
+    </target>
+    
+    <target name="flat-ui-clean" description="Deletes flat-ui fonts.">
+        <delete failonerror="false">
+            <fileset dir="${ROYALE_HOME}/frameworks/fonts">
+                <include name="**"/>
+            </fileset>
+        </delete>
+    </target>
+	
+	<!-- Google Closure Library -->
+    <target name="gcl-download" depends="check-goog-home" unless="GOOG_HOME" description="Downloads Google Closure Library">
+    	<mkdir dir="${download.dir}"/>
+    	<get src="https://github.com/google/closure-library/archive/v20180910.zip"
+    	        dest="${download.dir}/google-closure-library-master.zip"
+    	        verbose="false" ignoreerrors="true"/>
+    	
+        <antcall target="get-from-cache-if-needed" >
+            <param name="filename" value="google-closure-library-master.zip" />
+            <param name="destDir" value="${download.dir}" />
+        </antcall>
+        <antcall target="fail-if-not-found" >
+            <param name="filename" value="google-closure-library-master.zip" />
+            <param name="destDir" value="${download.dir}" />
+        </antcall>
+        
+    	<mkdir dir="${ROYALE_HOME}/js/lib/google/closure-library"/>
+    	<unzip src="${download.dir}/google-closure-library-master.zip" dest="${ROYALE_HOME}/js/lib/google/closure-library">
+    		<cutdirsmapper dirs="1" />
+    	</unzip>
+        <property name="GOOG_DIR" value="${ROYALE_HOME}/js/lib/google/closure-library" />
+        <antcall target="subset-goog" />
+    </target>
+	
+    <target name="subset-goog" >
+        <condition property="GOOG_HOME" value="${env.GOOG_HOME}">
+            <not>
+                <isset property="GOOG_HOME"/>
+            </not>
+        </condition>
+        <property name="GOOG_DIR" value="${GOOG_HOME}" />
+        <echo>Subsetting ${GOOG_DIR}</echo>
+        <delete failonerror="false">
+            <!-- we only need base.js, eventtarget.js and their dependencies -->
+            <fileset dir="${GOOG_DIR}">
+                <include name="**"/>
+                <exclude name="closure/goog/array/array.js"/>
+                <exclude name="closure/goog/asserts/asserts.js"/>
+                <exclude name="closure/goog/base.js"/>
+                <exclude name="closure/goog/deps.js"/>
+                <exclude name="closure/goog/debug/debug.js"/>
+                <exclude name="closure/goog/debug/entrypointregistry.js"/>
+                <exclude name="closure/goog/debug/error.js"/>
+                <exclude name="closure/goog/debug/errorcontext.js"/>
+                <exclude name="closure/goog/disposable/disposable.js"/>
+                <exclude name="closure/goog/disposable/idisposable.js"/>
+                <exclude name="closure/goog/dom/nodetype.js"/>
+                <exclude name="closure/goog/events/browserevent.js"/>
+                <exclude name="closure/goog/events/browserfeature.js"/>
+                <exclude name="closure/goog/events/event.js"/>
+                <exclude name="closure/goog/events/eventid.js"/>
+                <exclude name="closure/goog/events/events.js"/>
+                <exclude name="closure/goog/events/eventtarget.js"/>
+                <exclude name="closure/goog/events/eventtype.js"/>
+                <exclude name="closure/goog/events/listenable.js"/>
+                <exclude name="closure/goog/events/listener.js"/>
+                <exclude name="closure/goog/events/listenermap.js"/>
+                <exclude name="closure/goog/labs/useragent/browser.js"/>
+                <exclude name="closure/goog/labs/useragent/engine.js"/>
+                <exclude name="closure/goog/labs/useragent/platform.js"/>
+                <exclude name="closure/goog/labs/useragent/util.js"/>
+                <exclude name="closure/goog/object/object.js"/>
+                <exclude name="closure/goog/reflect/reflect.js"/>
+                <exclude name="closure/goog/string/string.js"/>
+                <exclude name="closure/goog/useragent/useragent.js"/>
+                <!-- needed for node.js support -->
+                <exclude name="closure/goog/bootstrap/nodejs.js"/>
+            </fileset>
+        </delete>
+    </target>
+    <target name="gcl-clean" description="Deletes Google Closure Library">
+    	<echo message="Deleting Google Closure Library"/>
+        <delete dir="${ROYALE_HOME}/js/lib" failonerror="false" />
+    </target>
+	
+    <target name="check-goog-home" description="Check that GOOG_HOME is a directory">
+        <echo message="GOOG_HOME is ${env.GOOG_HOME}"/>
+        <available file="${env.GOOG_HOME}" 
+            type="dir" 
+            property="GOOG_HOME"
+            value="${env.GOOG_HOME}" />
+    </target>
+        
+    <target name="fail-if-not-found">
+        <fail message="${filename} could not be downloaded or found in cache">
+            <condition>
+                <not>
+                    <available file="${download.dir}/${filename}" />
+                </not>
+            </condition>
+        </fail>
+    </target>
+    
+    <target name="double-check-file" >
+        <condition property="still-no-file" value="true">
+            <and>
+                <not>
+                    <available file="${download.dir}/${filename}" />
+                </not>
+                <isset property="env.ROYALE_DOWNLOAD_CACHE" />
+            </and>
+        </condition>
+        <echo>Need file: ${still_no_file}</echo>
+    </target>
+    <target name="get-from-cache-if-needed" depends="double-check-file" if="still-no-file">
+        <copy file="${env.ROYALE_DOWNLOAD_CACHE}/${filename}" tofile="${download.dir}/${filename}" />
+    </target>
+	<target name="get_from_mirror">
+        <condition property="usingmirror" value="true">
+            <contains string="${server}" substring="mirrors.cgi" />
+        </condition>
+        <antcall target="download_using_mirror">
+            <param name="server" value="${server}" />
+            <param name="folder" value="${folder}" />
+            <param name="file" value="${file}" />
+            <param name="dest" value="${dest}" />
+        </antcall>
+        <antcall target="download_using_get">
+            <param name="server" value="${server}" />
+            <param name="folder" value="${folder}" />
+            <param name="file" value="${file}" />
+            <param name="dest" value="${dest}" />
+        </antcall>
+    </target>
+    <target name="download_using_mirror" if="usingmirror">
+        <get src="${server}/${folder}/${file}?asjson=true" verbose="true" dest="${basedir}/mirror.json" ignoreerrors="true" />
+        <antcall target="use_mirror" />
+    </target>
+    <target name="download_using_get" unless="usingmirror">
+        <get src="${server}/${folder}/${file}" dest="${dest}" ignoreerrors="true" />
+    </target>
+    <target name="check_mirror_json">
+        <condition property="mirror.json.exists" value="true">
+            <available file="${basedir}/mirror.json" />
+        </condition>
+    </target>
+    <target name="use_mirror" depends="check_mirror_json" if="mirror.json.exists">
+        <replace file="${basedir}/mirror.json">
+            <replacefilter token="&quot;"
+            value="" />
+            <replacefilter token=": "
+            value="=" />
+        </replace>
+	<property file="${basedir}/mirror.json" />
+        <delete file="${basedir}/mirror.json" failonerror="false"/>
+        <echo>Using mirror: ${preferred}</echo>
+        <get src="${preferred}${folder}/${file}" dest="${dest}" ignoreerrors="true" />
+    </target>
+
+</project>

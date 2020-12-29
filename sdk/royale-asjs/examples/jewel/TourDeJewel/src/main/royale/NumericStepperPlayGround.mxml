@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+<c:ExampleAndSourceCodeTabbedSectionContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:j="library://ns.apache.org/royale/jewel" 
+	xmlns:html="library://ns.apache.org/royale/html" 
+	xmlns:js="library://ns.apache.org/royale/basic" 
+	xmlns:c="components.*" sourceCodeUrl="NumericStepperPlayGround.mxml">
+	
+	<fx:Script>
+		<![CDATA[      
+            private function valueChangeHandler(event:Event):void {
+                result.text = "Default NumericStepper: " + numericStepper.value;
+            }
+
+			[Bindable]
+            public var someBindableValue:Number = 5;
+		]]>
+	</fx:Script>
+
+	<c:beads>
+        <js:ContainerDataBinding />
+    </c:beads>
+
+	<j:Grid gap="true" itemsVerticalAlign="itemsSameHeight">
+		<j:beads>
+			<js:Paddings paddingTop="0" paddingLeft="50" paddingRight="50" paddingBottom="50"/>
+		</j:beads>
+
+		<c:ExampleHeader title="Jewel NumericStepper">
+			<c:description>
+				<![CDATA[<strong>Jewel NumericStepper</strong> examples.]]>
+			</c:description>
+		</c:ExampleHeader>
+
+		<j:GridCell desktopNumerator="1" desktopDenominator="1" tabletNumerator="1" tabletDenominator="1" phoneNumerator="1" phoneDenominator="1">
+            <j:Card>
+				<html:H3 text="Jewel NumericStepper"/>
+
+				<j:HGroup gap="3" itemsVerticalAlign="itemsCenter">
+					<j:NumericStepper localId="numericStepper" valueChange="valueChangeHandler(event)"/>
+					<j:Label localId="result" text="Default NumericStepper: "/>
+				</j:HGroup>
+
+				<j:HGroup gap="3" itemsVerticalAlign="itemsCenter">
+					<j:NumericStepper value="30"/>
+					<j:Label text="NumericStepper value='30'"/>
+				</j:HGroup>
+
+				<j:HGroup gap="3" itemsVerticalAlign="itemsCenter">
+					<j:NumericStepper minimum="10" maximum="100"/>
+					<j:Label text="NumericStepper minimum='10' and maximum='100'" multiline="true" width="300"/>
+				</j:HGroup>
+
+				<j:HGroup gap="3" itemsVerticalAlign="itemsCenter">
+					<j:NumericStepper stepSize="2"/>
+					<j:Label text="NumericStepper stepSize='2'"/>
+				</j:HGroup>
+				
+				<j:HGroup gap="3" itemsVerticalAlign="itemsCenter">
+					<j:NumericStepper stepSize="1"
+							minimum="0"
+							maximum="999"
+							value="{someBindableValue}" />
+					<j:Label text="NumericStepper value data binding"/>
+				</j:HGroup>
+
+			</j:Card>
+        </j:GridCell>
+
+		<j:GridCell desktopNumerator="1" desktopDenominator="2" tabletNumerator="1" tabletDenominator="2" phoneNumerator="1" phoneDenominator="1">
+			<j:Card>
+				<j:CardHeader>
+					<html:H3 text="Sizing" className="secondary-normal"/>
+				</j:CardHeader>
+				<j:CardPrimaryContent>
+					<j:Label multiline="true">
+						<j:html><![CDATA[<p>Following <b>NumericStepper</b> size is not set, so it defaults to 142px.</p>]]></j:html>
+					</j:Label>
+
+					<j:NumericStepper/>
+					
+					<html:Hr width="100%"/>
+
+					<j:Label multiline="true">
+						<j:html><![CDATA[<p>Following <b>NumericStepper</b> size is set to 100 pixels.</p>]]></j:html>
+					</j:Label>
+					<j:NumericStepper width="100"/>
+					
+					<html:Hr width="100%"/>
+
+					<j:Label multiline="true">
+						<j:html><![CDATA[<p>Following <b>NumericStepper</b> size is set to 100%.</p>]]></j:html>
+					</j:Label>
+					<j:NumericStepper width="100%"/>
+
+					<html:Hr width="100%"/>
+
+					<j:Label multiline="true">
+						<j:html><![CDATA[<p>Following <b>NumericStepper</b> size is set to 50%.</p>]]></j:html>
+					</j:Label>
+					<j:NumericStepper width="50%"/>
+
+				</j:CardPrimaryContent>
+			</j:Card>
+		</j:GridCell>
+
+		<j:GridCell desktopNumerator="1" desktopDenominator="2" tabletNumerator="1" tabletDenominator="2" phoneNumerator="1" phoneDenominator="1">
+			<j:Card>
+				<j:CardHeader>
+					<html:H3 text="Resizing" className="secondary-normal"/>
+				</j:CardHeader>
+				<j:CardPrimaryContent>
+					<j:Label multiline="true">
+						<j:html><![CDATA[<p>Following <b>NumericStepper</b> width size is managed by a slider.</p>]]></j:html>
+					</j:Label>
+
+					<j:NumericStepper localId="ns3"/>
+
+				</j:CardPrimaryContent>
+				<j:CardActions itemsVerticalAlign="itemsCenter">
+					<j:beads>
+						<j:VerticalLayout gap="3"/>
+					</j:beads>
+					<j:HGroup gap="3" itemsVerticalAlign="itemsCenter">
+						<j:Label text="width: {ns3.width}px"/>
+						<j:HSlider width="250" value="200" minimum="100" maximum="400" valueChange="ns3.width = event.target.value;"/>
+					</j:HGroup>
+				</j:CardActions>
+			</j:Card>
+		</j:GridCell>
+	</j:Grid>
+
+</c:ExampleAndSourceCodeTabbedSectionContent>

@@ -1,0 +1,137 @@
+Apache Royale Typedefs
+====================
+
+    These Apache Royale Typedefs are libraries that contain ActionScript class
+    definitions for popular JavaScript Libraries like Google Closure, JQuery 
+    and more.
+
+    Many of these libraries are created by starting with what the Google Closure
+    Compiler refers to as "externs" but are also referred to as "typedefs".  These
+    are custom JavaScript files that don't contain runnable code and instead contain
+    "JSDOc" and function and variable declarations for an API of a JavaScript library.
+
+    The Royale Compiler has a compiler called EXTERNC that compiles these externs
+    into ActionScript, then the Royale Compiler's COMPC compiler turns that into
+    ActionScript Libraries (SWCs).
+
+Getting the latest sources via git
+==================================
+
+    Getting the source code is the recommended way to get the Apache Royale Typedefs.  
+    The typedefs can also be installed by installing an Apache Royale SDK via NPM
+    or by unpacking Apache Royale binary distributions available from link on our 
+    website at http://royale.apache.org/.
+
+    You can always checkout the latest source via git using the following
+    command:
+
+	 git clone https://github.com/apache/royale-typedefs.git royale-typedefs
+	 cd royale-typedefs
+	 git checkout develop
+
+Building the Apache Royale Typedefs
+=================================
+
+    The Apache Royale Typedefs require the Apache Royale Compiler.
+
+    You can build the Apache Royale Typedefs with Apache Maven or Apache Ant.
+
+Building the Apache Royale Typedefs with Apache Maven
+-----------------------------------------------------
+
+    Before building the Apache Royale Typedefs with Apache Maven you must install 
+    the following software.
+
+    ==================================================================================
+    SOFTWARE                                
+    ==================================================================================
+
+    Java SDK 1.7 or greater (*1)            
+
+    Maven 3.3.9 or greater (*1)              
+
+    ==================================================================================
+
+    *1) The bin directories for Maven and Java should be added to your
+        PATH.
+
+    Then run
+
+        mvn clean install
+
+Building the Apache Royale Typedefs with Ant
+----------------------------------------------
+
+    Before building the Apache Royale Typedefs with Apache Ant you must install 
+    the following software and set the corresponding environment variables using 
+    absolute file paths.  Relative file paths will result in build errors.
+
+    ==================================================================================
+    SOFTWARE                                     ENVIRONMENT VARIABLE (absolute paths)
+    ==================================================================================
+
+    Java SDK 1.7 or greater (*1)                           JAVA_HOME
+        (for Java 1.7 see note at (*2))
+
+    Ant 1.7.1 or greater (*1)                              ANT_HOME
+        (for Java 1.7 see note at (*2))
+
+    ==================================================================================
+    
+    *1) The bin directories for ANT_HOME and JAVA_HOME should be added to your
+        PATH.
+
+        On Windows, set PATH to
+
+            PATH=%PATH%;%ANT_HOME%\bin;%JAVA_HOME%\bin
+
+        On the Mac (bash), set PATH to
+
+            export PATH="$PATH:$ANT_HOME/bin:$JAVA_HOME/bin"
+
+         On Linux make sure you path include ANT_HOME and JAVA_HOME.
+
+    *2)  If you are using Java SDK 1.7 or greater on a Mac you must use Ant 1.8
+         or greater. If you use Java 1.7 with Ant 1.7, ant reports the java
+         version as 1.6 so the JVM args for the data model (-d32/-d64) will not
+         be set correctly and you will get compile errors.
+
+    Once you've done that, use
+
+        ant main        (or just ant since the default target is main)
+
+    to download the third-party dependencies and build the source and run
+    some tests.  Since the third-party dependencies take a little while to 
+    download and they don't change very often, they are not cleaned with 
+     the regular clean target.
+
+    To clean the build of everything other than the downloaded third-party
+    dependencies use
+
+        ant clean
+
+    To clean the build, of everything, including the downloaded third-party
+    dependencies use
+
+        ant wipe (which is just thirdparty-clean followed by clean)
+
+    To get a brief listing of all the targets type
+
+        ant -projecthelp
+
+
+Using the Apache Royale Typedefs
+=================================
+
+Because the typedef libraries only contain classes, interfaces, constants, top-level
+variables and functions, and don't contain runnable code, they must be placed on the
+external-library-path when compiling a Royale application.
+
+The typedefs libraries are packaged into a Royale SDK and are set on the 
+external-library-path by various config.xml files in a Royale SDK.
+
+
+Thanks for using Apache Royale.  Enjoy!
+
+                                          The Apache Royale Project
+                                          <http://royale.apache.org>

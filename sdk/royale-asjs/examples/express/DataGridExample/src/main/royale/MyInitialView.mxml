@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+<js:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+				xmlns:js="library://ns.apache.org/royale/express">
+    <fx:Script>
+        <![CDATA[
+			import models.ProductsModel;
+			
+			import org.apache.royale.collections.ArrayList;
+			import org.apache.royale.express.DataGrid;
+			
+			import products.Product;
+			
+			override public function toString():String
+			{
+				return "MyInitialView";
+			}
+			
+			public function dataGridChange(grid:DataGrid) : void
+			{
+				output.text = "Clicked on row "+grid.selectedIndex;
+				trace("Click on row "+grid.selectedIndex);
+			}
+			
+			private function addNewValue():void {
+				var item:String = newValue.text;
+				if (item == "" || item == null) item = "New Value";
+				var num:Number = Number((Math.random()*100).toFixed());
+				var product:Product = new Product("abc123", item, 30, num, "assets/smallorangerect.jpg");
+				(applicationModel as ProductsModel).productList.addItem(product);
+				newValue.text = "";
+			}
+			
+			private function deleteRow():void {
+				var rowNumber:Number = rowToDelete.value;
+				if (rowNumber < (applicationModel as ProductsModel).productList.length) {
+					(applicationModel as ProductsModel).productList.removeItemAt(rowNumber);
+				}
+			}
+			
+			[Bindable]
+			private var nameList:Array = ["Bob", "Joe", "Frank", "Sally", "Mike", "Amy", "Karen", "Will", "Grace", "Jack"];
+		
+		]]>
+    </fx:Script>
+	
+	<fx:Style>
+		@namespace js "library://ns.apache.org/royale/basic";
+		
+		.DataGridColumnList .StringItemRenderer {
+			border-style: solid;
+			border-color: #CCCCCC;
+			border-width: 1px;
+			background-color: white;
+			line-height: 40px;
+			padding: 2px;
+		}
+		
+		.DataGridColumnList .DataItemRenderer {
+			border-style: solid;
+			border-color: #CCCCCC;
+			border-width: 1px;
+			background-color: white;
+			line-height: 40px;
+			padding: 2px;
+		}
+		
+		.DataGridDrawingLayer {
+			background-color: transparent;
+		}
+
+	</fx:Style>
+	
+	
+	<js:DataGrid id="dataGrid" x="20" y="30" width="400" height="350" dragEnabled="true" dropEnabled="true"
+	 change="dataGridChange(dataGrid)" rowHeight="40">
+		<js:beads>
+			<js:ConstantBinding
+				sourceID="applicationModel"
+				sourcePropertyName="productList"
+				destinationPropertyName="dataProvider" />
+		</js:beads>
+		<js:columns>
+			<js:DataGridColumn label="Image" dataField="image" columnWidth="50" itemRenderer="products.ProductItemRenderer" />
+			<js:DataGridColumn label="Name" dataField="title" columnWidth="100%" />
+			<js:DataGridColumn label="Sales" dataField="sales" columnWidth="80" />
+		</js:columns>
+	</js:DataGrid>
+	
+	<js:VContainer x="20" y="400">
+		<js:Label text="Drag rows to re-arrange them or drag to other DataGrid" />
+		<js:Spacer height="20" />
+		
+		<js:HContainer >
+			<js:Label text="New Value:" />
+			<js:TextInput id="newValue" text="" width="70" />
+			<js:Spacer width="3" />
+			<js:TextButton text="Add Row" click="addNewValue()" />
+		</js:HContainer>
+		<js:Spacer height="10" />
+		<js:HContainer>
+			<js:Label text="Row Number:" />
+			<js:NumericStepper minimum="0" maximum="10" id="rowToDelete" width="50" />
+			<js:Spacer width="3" />
+			<js:TextButton text="Delete Row" click="deleteRow()" />
+		</js:HContainer>
+		
+		<js:Spacer height="20" />
+		<js:Label id="output" x="450" y="30"/>
+	</js:VContainer>
+		
+	<js:DataGrid id="dataGrid2" x="450" y="30" width="400" height="350" dropEnabled="true"
+		change="dataGridChange(dataGrid2)" rowHeight="40">
+		<js:beads>
+			<js:ConstantBinding
+				sourceID="applicationModel"
+				sourcePropertyName="fruits"
+				destinationPropertyName="dataProvider" />
+		</js:beads>
+		<js:columns>
+			<js:DataGridColumn label="Image" dataField="image" columnWidth="50" itemRenderer="products.ProductItemRenderer" />
+			<js:DataGridColumn label="Name" dataField="title" columnWidth="100%" />
+			<js:DataGridColumn label="Sales" dataField="sales" columnWidth="80" />
+		</js:columns>
+	</js:DataGrid>
+
+</js:View>

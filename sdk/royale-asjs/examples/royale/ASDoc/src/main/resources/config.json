@@ -1,0 +1,17 @@
+{  "tagNames": { "see": "See also:",
+                 "langversion": "Language version:",
+                 "playerversion": "Runtime version:",
+                 "productversion": "Product version:",
+                 "flexdocurl": "Flex Documentation:",
+                 "flexcomponent": "Flex Equivalent:",
+                 "commentary": "Flex Migration Info:",
+                 "example": "MXML Usage:",
+                 "toplevel": "Top Level Component",
+                 "bead": "Bead",
+                 "viewbead": "View Bead",
+                 "controllerbead": "Controller Bead",
+                 "modelbead": "Model Bead",
+                 "layoutbead": "Layout Bead"
+
+  }
+}

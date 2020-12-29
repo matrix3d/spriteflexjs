@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache</groupId>
+    <artifactId>apache</artifactId>
+    <version>23</version>
+  </parent>
+
+  <groupId>org.apache.royale.typedefs</groupId>
+  <artifactId>royale-typedefs-parent</artifactId>
+  <version>0.9.8-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>Apache Royale: TypeDefs: Parent</name>
+
+  <scm>
+    <connection>scm:git:https://gitbox.apache.org/repos/asf/royale-typedefs.git</connection>
+    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/royale-typedefs.git</developerConnection>
+    <url>https://github.com/apache/royale-typedefs</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputencoding>UTF-8</project.reporting.outputencoding>
+    <maven.version>3.3.1</maven.version>
+
+    <royale.build-tools.version>1.1.0</royale.build-tools.version>
+    <royale.compiler.version>0.9.8-SNAPSHOT</royale.compiler.version>
+
+    <release-profiles>apache-release</release-profiles>
+
+    <!-- Dont't open multiple connections to one service to upload multiple artifacts at the same time -->
+    <maven.wagon.httpconnectionManager.maxPerRoute>1</maven.wagon.httpconnectionManager.maxPerRoute>
+    <!-- Dont't open multiple connections in total to upload multiple artifacts at the same time -->
+    <maven.wagon.httpconnectionManager.maxTotal>1</maven.wagon.httpconnectionManager.maxTotal>
+    <!-- Change the retry handler to a version that supports retries -->
+    <maven.wagon.http.retryHandler.class>standard</maven.wagon.http.retryHandler.class>
+    <!-- Try at most 6 times to deploy every artifact -->
+    <maven.wagon.http.retryHandler.count>6</maven.wagon.http.retryHandler.count>
+  </properties>
+
+  <!-- Only configure the site distribution as the rest is handled by the apache parent -->
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <!-- TODO: Set this to the correct url -->
+      <url>scp://www.mycompany.com/www/docs/project/</url>
+    </site>
+  </distributionManagement>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/apache/royale-asjs/issues</url>
+  </issueManagement>
+
+  <mailingLists>
+    <mailingList>
+      <name>Apache Royale User List</name>
+      <subscribe>users-subscribe@royale.apache.org</subscribe>
+      <unsubscribe>users-unsubscribe@royale.apache.org</unsubscribe>
+      <post>users@royale.apache.org</post>
+      <archive>http://mail-archives.apache.org/mod_mbox/royale-users/</archive>
+    </mailingList>
+    <mailingList>
+      <name>Apache Royale Developer List</name>
+      <subscribe>dev-subscribe@royale.apache.org</subscribe>
+      <unsubscribe>dev-unsubscribe@royale.apache.org</unsubscribe>
+      <post>dev@royale.apache.org</post>
+      <archive>http://mail-archives.apache.org/mod_mbox/royale-dev/</archive>
+    </mailingList>
+  </mailingLists>
+
+  <modules>
+    <module>cordova</module>
+    <module>createjs</module>
+    <module>GCL</module>
+    <module>google_maps</module>
+    <module>jasmine</module>
+    <module>jquery</module>
+    <module>js</module>
+    <module>node</module>
+  </modules>
+
+  <build>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-http</artifactId>
+        <version>3.4.0</version>
+      </extension>
+    </extensions>
+
+    <plugins>
+      <!-- Check if all source files have the required apache license headers -->
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <version>0.13</version>
+        <executions>
+          <execution>
+            <id>license-check</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <excludes>
+                <!-- Patch files aren't supposed to have headers -->
+                <exclude>**/*.patch</exclude>
+                <!--
+                 Exclude any eventually existing content of target directories.
+                 Some times when building with a bigger maven reactor and then
+                 with a smaller one, RAT will complain about stuff still in the
+                 target directories. We don't want that.
+                 -->
+                <exclude>**/target/**</exclude>
+                <exclude>**/release-dir/**</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <arguments combine.self="override">-P${release-profiles}</arguments>
+        </configuration>
+      </plugin>
+    </plugins>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.royale.compiler</groupId>
+          <artifactId>royale-maven-plugin</artifactId>
+          <version>${royale.compiler.version}</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.royale.compiler</groupId>
+              <artifactId>compiler-jx</artifactId>
+              <version>${royale.compiler.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.royale.compiler</groupId>
+          <artifactId>compiler-build-tools</artifactId>
+          <version>${royale.build-tools.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>com.googlecode.maven-download-plugin</groupId>
+          <artifactId>download-maven-plugin</artifactId>
+          <version>1.5.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+          <!-- If deploying fails due to repo or network problems, retry the given number of times (1-10) -->
+          <configuration>
+            <retryFailedDeploymentCount>6</retryFailedDeploymentCount>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.2.0</version>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>3.0.0-M1</version>
+        </plugin>
+        <plugin>
+          <groupId>com.theoryinpractise</groupId>
+          <artifactId>reproducible-maven-plugin</artifactId>
+          <version>1.0.1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <profiles>
+    <!--
+      This profile enables the changes required to do releases on the Royale CI server.
+      It should not be used otherwise.
+    -->
+    <profile>
+      <id>royale-release</id>
+      <properties>
+        <!-- Ensure the royale-release plugin is enabled when running release:perform -->
+        <release-profiles>apache-release,royale-release</release-profiles>
+      </properties>
+
+      <!-- Redirect the deployment to a local directory -->
+      <!-- Note: using the 'altReleaseDeploymentRepository' and alike were ignored in the release:perform phase -->
+      <distributionManagement>
+        <repository>
+          <id>apache.releases.https</id>
+          <name>Apache Release Distribution Repository</name>
+          <!--
+            'maven.multiModuleProjectDirectory' is a property introduced with maven 3.3.1 ...
+            don't worry if your IDE is complaining.
+            Also this will be set to the 'target/checkout' directory the output will be in
+            'target/local-release-dir'.
+          -->
+          <url>file://${maven.multiModuleProjectDirectory}/../local-release-dir</url>
+        </repository>
+      </distributionManagement>
+
+      <build>
+        <plugins>
+          <!-- Generate the effective poms for this build -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-help-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>generate-effective-pom</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>effective-pom</goal>
+                </goals>
+                <configuration>
+                  <output>${project.build.directory}/effective.pom</output>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+        <pluginManagement>
+          <plugins>
+            <!-- We require the release manager to manually login an sign using his credentials -->
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-gpg-plugin</artifactId>
+              <configuration>
+                <skip>true</skip>
+              </configuration>
+            </plugin>
+            <!-- We require the release manager to login and push the changes using his credentials -->
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-release-plugin</artifactId>
+              <configuration>
+                <pushChanges>false</pushChanges>
+                <providerImplementations>
+                  <git>jgit</git>
+                </providerImplementations>
+              </configuration>
+              <dependencies>
+                <dependency>
+                  <groupId>org.apache.maven.scm</groupId>
+                  <artifactId>maven-scm-provider-jgit</artifactId>
+                  <version>1.11.3-SNAPSHOT</version>
+                </dependency>
+              </dependencies>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+
+    <!-- Make the release-plugin use the new reproducible build plugin extension -->
+    <profile>
+      <id>apache-release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.theoryinpractise</groupId>
+            <artifactId>reproducible-maven-plugin</artifactId>
+          </plugin>
+          <!--
+            Configure the release plugin to add the ${project.build.outputTimestamp} in the release prepare
+            phase and to remove it again when preparing the next development iteration
+          -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-release-plugin</artifactId>
+            <configuration>
+              <preparationGoals>clean com.theoryinpractise:reproducible-maven-plugin:apply install</preparationGoals>
+              <completionGoals>com.theoryinpractise:reproducible-maven-plugin:clear</completionGoals>
+            </configuration>
+          </plugin>
+          <!-- Make the release build use the reproducible build feature -->
+          <plugin>
+            <groupId>org.apache.royale.compiler</groupId>
+            <artifactId>royale-maven-plugin</artifactId>
+            <version>${royale.compiler.version}</version>
+            <extensions>true</extensions>
+            <configuration>
+              <additionalCompilerOptions>
+                -metadata.date=${project.build.outputTimestamp};-metadata.dateFormat=yyyy-MM-dd'T'HH:mm:ss'Z'
+              </additionalCompilerOptions>
+            </configuration>
+          </plugin>
+          <!--
+            Create MD5 and SHA512 checksum files for the release artifacts.
+          -->
+          <plugin>
+            <groupId>net.nicoulaj.maven.plugins</groupId>
+            <artifactId>checksum-maven-plugin</artifactId>
+            <version>1.8</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>files</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <algorithms>
+                <algorithm>SHA-512</algorithm>
+              </algorithms>
+              <fileSets>
+                <fileSet>
+                  <directory>${project.build.directory}</directory>
+                  <includes>
+                    <include>royale-typedefs-parent-${project.version}-source-release.zip</include>
+                  </includes>
+                </fileSet>
+              </fileSets>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

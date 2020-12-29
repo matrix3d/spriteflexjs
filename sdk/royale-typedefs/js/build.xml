@@ -1,0 +1,284 @@
+<?xml version="1.0" ?>
+
+<!--
+
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-->
+
+<project name="js" default="main" basedir=".">
+    
+    <property name="ROYALE_HOME" value="${basedir}/.." />
+    
+    <condition property="ROYALE_COMPILER_HOME" value="${env.ROYALE_COMPILER_HOME}">
+        <and>
+            <not>
+                <isset property="ROYALE_COMPILER_HOME" />
+            </not>
+            <available file="${env.ROYALE_COMPILER_HOME}/lib/compiler-mxmlc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <condition property="ROYALE_COMPILER_HOME" value="${ROYALE_HOME}/../royale-compiler/compiler">
+        <and>
+            <not>
+                <isset property="ROYALE_COMPILER_HOME" />
+            </not>
+            <available file="${ROYALE_HOME}/../royale-compiler/compiler/lib/compiler-mxmlc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <condition property="ROYALE_COMPILER_HOME" value="${ROYALE_HOME}">
+        <and>
+            <not>
+                <isset property="ROYALE_COMPILER_HOME" />
+            </not>
+            <available file="${ROYALE_HOME}/lib/compiler-mxmlc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <condition property="ROYALE_TRANSPILER_HOME" value="${env.ROYALE_TRANSPILER_HOME}">
+        <and>
+            <not>
+                <isset property="ROYALE_TRANSPILER_HOME" />
+            </not>
+            <available file="${env.ROYALE_TRANSPILER_HOME}/lib/jsc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <condition property="ROYALE_TRANSPILER_HOME" value="${ROYALE_HOME}/js">
+        <and>
+            <not>
+                <isset property="ROYALE_TRANSPILER_HOME" />
+            </not>
+            <available file="${ROYALE_HOME}/js/lib/jsc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <condition property="ROYALE_TRANSPILER_HOME" value="${ROYALE_HOME}/../royale-compiler/compiler-jx">
+        <and>
+            <not>
+                <isset property="ROYALE_TRANSPILER_HOME" />
+            </not>
+            <available file="${ROYALE_HOME}/../royale-compiler/compiler-jx/lib/jsc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <tstamp>
+        <format property="royale.swc-date" pattern="MM/dd/yy HH:mm Z"/>
+    </tstamp>
+    <echo>swc-date is ${royale.swc-date}</echo>
+    
+    <target name="main" depends="preprocess, externc, postprocess, compc" />
+
+    <target name="download" >
+        <echo>${ROYALE_HOME}</echo>
+        <mkdir dir="${basedir}/target/temp/externs" />
+        <unjar src="${ROYALE_TRANSPILER_HOME}/lib/google/closure-compiler/compiler.jar"
+            dest="${basedir}/target/temp/externs">
+            <patternset>
+                <include name="externs.zip"/>
+            </patternset>
+        </unjar>
+        <mkdir dir="${basedir}/target/downloads" />
+        <unzip src="${basedir}/target/temp/externs/externs.zip" dest="${basedir}/target/downloads">
+            <patternset>
+                <include name="**/*.js"/>
+                <exclude name="**/es3.js"/>
+                <exclude name="**/es6.js"/>
+                <exclude name="**/w3c_css.js"/>
+                <exclude name="**/gecko_dom.js"/>
+                <exclude name="**/ie_dom.js"/>
+                <exclude name="**/w3c_dom2.js"/>
+                <exclude name="**/html5.js"/>
+            </patternset>
+        </unzip>
+        <get src="https://raw.githubusercontent.com/royale-extras/closure-compiler/royale/contrib/externs/svg.js" dest="${basedir}/target/downloads/svg.js" ignoreerrors="true" skipexisting="false"/>
+        <get src="https://raw.githubusercontent.com/royale-extras/closure-compiler/royale/externs/es3.js" dest="${basedir}/target/downloads/es3.js" ignoreerrors="true" skipexisting="false"/>
+        <get src="https://raw.githubusercontent.com/royale-extras/closure-compiler/royale/externs/es6.js" dest="${basedir}/target/downloads/es6.js" ignoreerrors="true" skipexisting="false"/>
+        <get src="https://raw.githubusercontent.com/royale-extras/closure-compiler/royale/externs/browser/w3c_composition_event.js" dest="${basedir}/target/downloads/browser/w3c_composition_event.js" ignoreerrors="true" skipexisting="false"/>
+        <get src="https://raw.githubusercontent.com/royale-extras/closure-compiler/royale/externs/browser/w3c_css.js" dest="${basedir}/target/downloads/browser/w3c_css.js" ignoreerrors="true" skipexisting="false"/>
+        <get src="https://raw.githubusercontent.com/royale-extras/closure-compiler/royale/externs/browser/gecko_dom.js" dest="${basedir}/target/downloads/browser/gecko_dom.js" ignoreerrors="true" skipexisting="false"/>
+        <get src="https://raw.githubusercontent.com/royale-extras/closure-compiler/royale/externs/browser/ie_dom.js" dest="${basedir}/target/downloads/browser/ie_dom.js" ignoreerrors="true" skipexisting="false"/>
+        <get src="https://raw.githubusercontent.com/royale-extras/closure-compiler/royale/externs/browser/w3c_dom2.js" dest="${basedir}/target/downloads/browser/w3c_dom2.js" ignoreerrors="true" skipexisting="false"/>
+        <get src="https://raw.githubusercontent.com/royale-extras/closure-compiler/royale/externs/browser/html5.js" dest="${basedir}/target/downloads/browser/html5.js" ignoreerrors="true" skipexisting="false"/>
+        <antcall target="get-from-cache-if-needed" >
+            <param name="srcFile" value="svg.js" />
+            <param name="destFile" value="svg.js" />
+            <param name="destDir" value="${basedir}/target/downloads" />
+        </antcall>
+        <antcall target="get-from-cache-if-needed" >
+            <param name="srcFile" value="es3.js" />
+            <param name="destFile" value="es3.js" />
+            <param name="destDir" value="${basedir}/target/downloads" />
+        </antcall>
+        <antcall target="get-from-cache-if-needed" >
+            <param name="srcFile" value="es6.js" />
+            <param name="destFile" value="es6.js" />
+            <param name="destDir" value="${basedir}/target/downloads" />
+        </antcall>
+        <antcall target="get-from-cache-if-needed" >
+            <param name="srcFile" value="w3c_composition_event.js" />
+            <param name="destFile" value="w3c_composition_event.js" />
+            <param name="destDir" value="${basedir}/target/downloads/browser" />
+        </antcall>
+        <antcall target="get-from-cache-if-needed" >
+            <param name="srcFile" value="w3c_css.js" />
+            <param name="destFile" value="w3c_css.js" />
+            <param name="destDir" value="${basedir}/target/downloads/browser" />
+        </antcall>
+        <antcall target="get-from-cache-if-needed" >
+            <param name="srcFile" value="gecko_dom.js" />
+            <param name="destFile" value="gecko_dom.js" />
+            <param name="destDir" value="${basedir}/target/downloads/browser" />
+        </antcall>
+        <antcall target="get-from-cache-if-needed" >
+            <param name="srcFile" value="ie_dom.js" />
+            <param name="destFile" value="ie_dom.js" />
+            <param name="destDir" value="${basedir}/target/downloads/browser" />
+        </antcall>
+        <antcall target="get-from-cache-if-needed" >
+            <param name="srcFile" value="w3c_dom2.js" />
+            <param name="destFile" value="w3c_dom2.js" />
+            <param name="destDir" value="${basedir}/target/downloads/browser" />
+        </antcall>
+        <antcall target="get-from-cache-if-needed" >
+            <param name="srcFile" value="html5.js" />
+            <param name="destFile" value="html5.js" />
+            <param name="destDir" value="${basedir}/target/downloads/browser" />
+        </antcall>
+        <antcall target="fail-if-not-found" >
+            <param name="destFile" value="svg.js" />
+            <param name="destDir" value="${basedir}/target/downloads" />
+        </antcall>
+    </target>
+    
+    <target name="make_patch" depends="download">
+        <mkdir dir="${basedir}/target/reference" />
+        <copy todir="${basedir}/target/reference">
+            <fileset dir="${basedir}/target/downloads/" />
+        </copy>
+        <!-- preprocessing .js files -->
+        <!-- <replaceregexp file="${basedir}/target/downloads/svg.js" match="@type \{function\(new:.*" replace="" flags="g" />
+        <replaceregexp file="${basedir}/target/downloads/svg.js" match="Window\.prototype\..*" replace="" flags="g" />
+        <replace file="${basedir}/target/downloads/svg.js" token="EventListener|(function(Event)" value="EventListener|(function(!Event)" /> -->
+        <!-- <replaceregexp file="${basedir}/target/downloads/es3.js" match="(The constructor of the current object(?:(?!\*/).)*?)@type \{Function\}((?:(?!\*/).)*?\*/[\r\n]+Object\.prototype\.constructor)([^;]*?);" replace="\1@type {Class}\2;" flags="s" />
+        <replaceregexp file="${basedir}/target/downloads/es3.js" match="(Transposes the elements of an array in place(?:(?!\*/).)*?[\r\n]+ \*)([\r\n]+)( \* @this)" replace="\1\2 * @return {!Array&lt;?&gt;}\2\3" flags="s" />
+        <replaceregexp file="${basedir}/target/downloads/es3.js" match="(Sorts the elements of an array in place(?:(?!\*/).)*?[\r\n]+ \*)([\r\n]+)( \* @param)" replace="\1\2 * @return {!Array&lt;?&gt;}\2\3" flags="s" />
+        <replace file="${basedir}/target/downloads/es3.js" >
+            <replacefilter token="function parseInt(num, base)" value="function parseInt(num, opt_base)" />
+        </replace>
+        <replace file="${basedir}/target/downloads/es3.js" >
+            <replacefilter token="param {number|undefined} base" value="param {number=} base" />
+        </replace>
+        <replaceregexp file="${basedir}/target/downloads/es6.js" match="@constructor(. \* @extends \{Array&lt;string&gt;\})" replace="@interface" flags="s" />
+        <antcall target="diff" /> -->
+    </target>
+
+    <target name="diff" >
+        <delete dir="${basedir}/src/main/patch" />
+        <mkdir dir="${basedir}/src/main/patch" />
+        <exec executable="git" output="${basedir}/src/main/patch/js.temp.patch" >
+            <arg value="diff"/>
+            <arg value="--no-index"/>
+            <arg value="--"/>
+            <arg value="${basedir}/target/reference"/>
+            <arg value="${basedir}/target/downloads"/>
+        </exec>
+        <replace file="${basedir}/src/main/patch/js.temp.patch" token="target/reference" value="target/downloads" />
+        <replace file="${basedir}/src/main/patch/js.temp.patch" token="${basedir}/target/downloads" value="/js/target/downloads" />
+        <concat destfile="${basedir}/src/main/patch/js.patch" >
+            <header filtering="no" trimleading="yes">
+                Generated from Ant script
+            </header>
+            <filelist dir="${basedir}/src/main/patch" files="js.temp.patch"/>
+        </concat>
+        <delete file="${basedir}/src/main/patch/js.temp.patch" />
+    </target>
+
+    <target name="preprocess" depends="download">
+    </target>
+
+    <target name="externc" >
+        <java jar="${ROYALE_TRANSPILER_HOME}/lib/externc.jar" fork="true"
+            failonerror="true">
+            <arg value="+royalelib=externs" />
+            <arg value="-debug" />
+            <arg value="-load-config=${basedir}/src/main/config/externc-config.xml" />
+        </java>
+    </target>
+    
+    <target name="postprocess" >
+    </target>
+    
+    <target name="compc" >
+        <copy file="${basedir}/src/main/config/compile-as-config.xml"
+            todir="${basedir}/target" />
+        <java jar="${ROYALE_TRANSPILER_HOME}/lib/compc.jar" fork="true"
+            failonerror="true">
+            <arg value="+royalelib=externs/frameworks" />
+            <arg value="-targets=SWF" />
+            <arg value="-load-config=${basedir}/target/compile-as-config.xml" />
+            <arg line="-metadata.date=&quot;${royale.swc-date}&quot;" />
+            <arg line="-metadata.dateFormat=&quot;MM/dd/yy HH:mm Z&quot;" />
+            <arg value="-output=${basedir}/target/js.swc" />
+        </java>
+    </target>
+    
+    <target name="clean">
+        <delete failonerror="false" includeEmptyDirs="true" >
+            <fileset dir="${basedir}/target">
+                <include name="**/**"/>
+                <exclude name="downloads/**"/>
+            </fileset>
+        </delete>
+    </target>
+    
+    <target name="wipe">
+        <delete failonerror="false" includeEmptyDirs="true" >
+            <fileset dir="${basedir}/target">
+                <include name="**/**"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <target name="fail-if-not-found">
+        <fail message="${destDir}/${destFile} could not be downloaded or found in cache">
+            <condition>
+                <not>
+                    <available file="${destDir}/${destFile}" />
+                </not>
+            </condition>
+        </fail>
+    </target>
+
+    <target name="double-check-file" >
+        <echo>${env.ROYALE_DOWNLOAD_CACHE}</echo>
+        <condition property="still-no-file" value="true">
+            <and>
+                <not>
+                    <available file="${destDir}/${destFile}" />
+                </not>
+                <isset property="env.ROYALE_DOWNLOAD_CACHE" />
+            </and>
+        </condition>
+        <echo>Need file: ${still_no_file}</echo>
+    </target>
+    <target name="get-from-cache-if-needed" depends="double-check-file" if="still-no-file">
+        <copy file="${env.ROYALE_DOWNLOAD_CACHE}/${srcFile}" tofile="${destDir}/${destFile}" />
+    </target>
+
+</project>

@@ -1,0 +1,73 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+//  Licensed to the Apache Software Foundation (ASF) under one or more
+//  contributor license agreements.  See the NOTICE file distributed with
+//  this work for additional information regarding copyright ownership.
+//  The ASF licenses this file to You under the Apache License, Version 2.0
+//  (the "License"); you may not use this file except in compliance with
+//  the License.  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+////////////////////////////////////////////////////////////////////////////////
+
+// Jewel DateChooser
+
+// DateChooser variables
+// $datechooser-button-size: 22px
+$datechooser-tableitem-size: 38px
+
+.jewel.datechooser
+
+    .jewel.table
+        min-width: 324px
+        min-height: 364px
+
+        .jewel.tableheadercell
+
+        .jewel.tableheadercell.buttonsRow
+            
+            & > .layout.horizontal //makes the HGroup that holds prev and next btns align to right
+                float: right
+            
+            .viewSelector::after, 
+                content: ' '
+            .previousButton::after, .nextButton::after
+                content: ' '
+                position: absolute
+            .viewSelector::after
+                
+            .previousButton::after, .nextButton::after
+                
+            .previousButton::after
+                
+            .nextButton::after
+            
+        .jewel.tableheadercell.buttonsRow
+
+        // td
+        .jewel.tableitem
+            // width: $datechooser-tableitem-size
+            // height: $datechooser-tableitem-size
+
+.calendar
+    &.item
+        
+        
+j|DateChooser
+    IBeadModel: ClassReference("org.apache.royale.jewel.beads.models.DateChooserModel")			
+    IBeadView: ClassReference("org.apache.royale.jewel.beads.views.DateChooserView")
+    IBeadLayout: ClassReference("org.apache.royale.jewel.beads.layouts.VerticalLayout")
+    IBeadController: ClassReference("org.apache.royale.jewel.beads.controllers.DateChooserMouseController")
+
+j|DateChooserTable
+    // IBeadController: ClassReference("org.apache.royale.jewel.beads.controllers.DateChooserTableCellSelectionMouseController")
+    // IItemRenderer: ClassReference("org.apache.royale.jewel.itemRenderers.ListItemRenderer")
+    // IBeadController: ClassReference("org.apache.royale.jewel.beads.controllers.ListSingleSelectionMouseController")
+

@@ -1,0 +1,119 @@
+<?xml version="1.0" ?>
+
+<!--
+
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-->
+
+<project name="GCL" default="main" basedir=".">
+    
+    <property name="ROYALE_HOME" value="${basedir}/.." />
+    
+    <condition property="ROYALE_COMPILER_HOME" value="${env.ROYALE_COMPILER_HOME}">
+        <and>
+            <not>
+                <isset property="ROYALE_COMPILER_HOME" />
+            </not>
+            <available file="${env.ROYALE_COMPILER_HOME}/lib/compiler-mxmlc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <condition property="ROYALE_COMPILER_HOME" value="${ROYALE_HOME}/../royale-compiler/compiler">
+        <and>
+            <not>
+                <isset property="ROYALE_COMPILER_HOME" />
+            </not>
+            <available file="${ROYALE_HOME}/../royale-compiler/compiler/lib/compiler-mxmlc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <condition property="ROYALE_COMPILER_HOME" value="${ROYALE_HOME}">
+        <and>
+            <not>
+                <isset property="ROYALE_COMPILER_HOME" />
+            </not>
+            <available file="${ROYALE_HOME}/lib/compiler-mxmlc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <condition property="ROYALE_TRANSPILER_HOME" value="${env.ROYALE_TRANSPILER_HOME}">
+        <and>
+            <not>
+                <isset property="ROYALE_TRANSPILER_HOME" />
+            </not>
+            <available file="${env.ROYALE_TRANSPILER_HOME}/lib/jsc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <condition property="ROYALE_TRANSPILER_HOME" value="${ROYALE_HOME}/js">
+        <and>
+            <not>
+                <isset property="ROYALE_TRANSPILER_HOME" />
+            </not>
+            <available file="${ROYALE_HOME}/js/lib/jsc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <condition property="ROYALE_TRANSPILER_HOME" value="${ROYALE_HOME}/../royale-compiler/compiler-jx">
+        <and>
+            <not>
+                <isset property="ROYALE_TRANSPILER_HOME" />
+            </not>
+            <available file="${ROYALE_HOME}/../royale-compiler/compiler-jx/lib/jsc.jar" type="file" />
+        </and>
+    </condition>
+    
+    <tstamp>
+        <format property="royale.swc-date" pattern="MM/dd/yy HH:mm Z"/>
+    </tstamp>
+    <echo>swc-date is ${royale.swc-date}</echo>
+
+    <target name="main" depends="preprocess, externc, postprocess, compc" />
+
+    <!-- we need to insert a line near the beginning of the file to make the
+         compiler happy. -->
+    <target name="preprocess">
+    </target>
+    
+    <target name="externc" >
+    </target>
+    
+    <target name="postprocess" >
+    </target>
+    
+    <target name="compc" >
+        <copy file="${basedir}/src/main/config/compile-as-config.xml"
+        todir="${basedir}/target" />
+        <java jar="${ROYALE_TRANSPILER_HOME}/lib/compc.jar" fork="true"
+            failonerror="true">
+            <arg value="+royalelib=externs/frameworks" />
+            <arg value="-targets=SWF" />
+            <arg value="-external-library-path+=${basedir}/../js/target/js.swc" />
+            <arg value="-load-config=${basedir}/target/compile-as-config.xml" />
+            <arg line="-metadata.date=&quot;${royale.swc-date}&quot;" />
+            <arg line="-metadata.dateFormat=&quot;MM/dd/yy HH:mm Z&quot;" />
+            <arg value="-output=${basedir}/target/GCL.swc" />
+        </java>
+    </target>
+    
+    <target name="clean">
+        <delete dir="${basedir}/target" failonerror="false" includeEmptyDirs="true"/>
+    </target>
+    
+    <target name="wipe" depends="clean">
+    </target>
+</project>

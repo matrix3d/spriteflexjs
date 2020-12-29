@@ -1,0 +1,166 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+//  Licensed to the Apache Software Foundation (ASF) under one or more
+//  contributor license agreements.  See the NOTICE file distributed with
+//  this work for additional information regarding copyright ownership.
+//  The ASF licenses this file to You under the Apache License, Version 2.0
+//  (the "License"); you may not use this file except in compliance with
+//  the License.  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+////////////////////////////////////////////////////////////////////////////////
+
+@namespace j "library://ns.apache.org/royale/jewel"
+@namespace "http://www.w3.org/1999/xhtml"
+
+//j|Application *, .royale *, .royale *:before, .royale *:after
+* , :after, :before
+	box-sizing: border-box
+
+html, body
+	height: 100%
+
+// Firefox
+// remove dotted outline
+::-moz-focus-inner, ::-moz-focus-outer
+	border: 0
+
+input:focus, textarea:focus, select:focus, div:focus, label:focus, nav:focus, li:focus
+	outline: none
+
+select::-ms-expand
+	display: none
+
+button::-moz-focus-inner
+	padding: 0
+	
+button, input, textarea
+	font-size: 100%
+
+.cursor-pointer
+	cursor: pointer !important
+	
+j|View
+	IBeadView: ClassReference("org.apache.royale.html.beads.GroupView")
+	IBeadLayout: ClassReference("org.apache.royale.jewel.beads.layouts.ViewLayout")
+
+j|ResponsiveView
+	// IBeadView: ClassReference("org.apache.royale.html.beads.GroupView")
+	// IBeadLayout: ClassReference("org.apache.royale.jewel.beads.layouts.NullLayout")
+
+.responsive-view
+	display: inline-flex
+	width: 100%
+	height: 100%
+
+// .responsive
+// 	width: 100%
+// 	height: 100%
+// 	display: flex
+// 	flex-direction: column
+// 	overflow-y: auto
+// 	overflow-x: hidden
+// 	position: relative
+// 	-webkit-overflow-scrolling: touch
+
+j|Group
+	IBeadLayout: ClassReference("org.apache.royale.jewel.beads.layouts.BasicLayout")
+	IBeadView: ClassReference("org.apache.royale.html.beads.GroupView")
+
+.jewel.group
+	overflow: visible // although overflow is visible by default enforce Group has no clipping
+
+j|HGroup
+	IBeadLayout: ClassReference("org.apache.royale.jewel.beads.layouts.HorizontalLayout")
+
+j|VGroup
+	IBeadLayout: ClassReference("org.apache.royale.jewel.beads.layouts.VerticalLayout")
+
+j|Grid
+	IBeadLayout: ClassReference("org.apache.royale.jewel.beads.layouts.GridLayout")
+
+j|ScrollableGrid
+	IViewport: ClassReference("org.apache.royale.jewel.supportClasses.scrollbar.ScrollingViewport")
+	// IViewportModel: ClassReference("org.apache.royale.html.beads.models.ViewportModel")
+
+j|GridCell
+	IBeadLayout: ClassReference("org.apache.royale.jewel.beads.layouts.GridCellLayout")
+
+j|Container
+	IBeadView: ClassReference("org.apache.royale.html.beads.ContainerView")
+	IBeadLayout: ClassReference("org.apache.royale.jewel.beads.layouts.BasicLayout")
+	IViewport: ClassReference("org.apache.royale.jewel.supportClasses.Viewport")
+	// IViewportModel: ClassReference("org.apache.royale.html.beads.models.ViewportModel")
+	//align-items: flex-start
+
+j|HContainer
+	IBeadLayout: ClassReference("org.apache.royale.jewel.beads.layouts.HorizontalLayout")
+
+j|VContainer
+	IBeadLayout: ClassReference("org.apache.royale.jewel.beads.layouts.VerticalLayout")
+
+j|Image
+	IBeadModel: ClassReference("org.apache.royale.jewel.beads.models.ImageModel")
+	IBeadView:  ClassReference("org.apache.royale.jewel.beads.views.ImageView")
+//vertical-align: top
+
+j|BinaryImage
+	IBeadModel: ClassReference("org.apache.royale.html.beads.models.BinaryImageModel")
+	IBeadView:  ClassReference("org.apache.royale.jewel.beads.views.ImageView")
+	IBinaryImageLoader:  ClassReference("org.apache.royale.html.beads.BinaryImageLoader")
+
+j|DataContainer
+	IBeadModel: ClassReference("org.apache.royale.jewel.beads.models.DataProviderModel")
+	IBeadView:  ClassReference("org.apache.royale.html.beads.DataContainerView")		
+	IBeadLayout: ClassReference("org.apache.royale.jewel.beads.layouts.VerticalLayout")
+	IDataProviderItemRendererMapper: ClassReference("org.apache.royale.html.beads.DataItemRendererFactoryForCollectionView")
+	IItemRendererClassFactory: ClassReference("org.apache.royale.core.ItemRendererClassFactory")
+	IItemRenderer: ClassReference("org.apache.royale.jewel.itemRenderers.StringItemRenderer")
+	IItemRendererInitializer: ClassReference("org.apache.royale.jewel.beads.itemRenderers.DataContainerItemRendererInitializer")
+	IViewport: ClassReference("org.apache.royale.jewel.supportClasses.Viewport")
+	// IViewportModel: ClassReference("org.apache.royale.html.beads.models.ViewportModel")
+
+j|Validator
+	ILocalizedValuesImpl: ClassReference("org.apache.royale.core.SimpleLocalizedValuesImpl")
+	
+j|Form
+	IBeadLayout: ClassReference("org.apache.royale.jewel.beads.layouts.FormLayout")
+
+@media -royale-swf
+	j|View
+		// --- IBackgroundBead: ClassReference("org.apache.royale.html.beads.SolidBackgroundBead")
+		// --- IBorderBead: ClassReference("org.apache.royale.html.beads.SingleLineBorderBead")
+
+	j|Container
+		// --- IBackgroundBead: ClassReference("org.apache.royale.html.beads.SolidBackgroundBead")
+		// --- IBorderBead: ClassReference("org.apache.royale.html.beads.SingleLineBorderBead")
+		IContentView: ClassReference("org.apache.royale.html.supportClasses.ContainerContentArea")
+
+	j|DataGroup
+		// IBeadLayout: ClassReference("org.apache.royale.jewel.beads.layouts.VerticalLayout")
+		// IItemRenderer: ClassReference("org.apache.royale.jewel.itemRenderers.StringItemRenderer")
+		// IViewport: ClassReference("org.apache.royale.jewel.supportClasses.Viewport")
+
+// -- Horizontal Rule (HR)
+hr
+	border: 0
+	height: 1px
+
+.responsiveSizeMonitor
+	background: rgba(0,0,0,0.8)
+	color: white
+	padding: 10px
+	position: fixed
+	bottom: 0
+	right: 0
+	width: 250px
+	
+	strong
+		color: yellow

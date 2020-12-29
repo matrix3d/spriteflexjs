@@ -1,0 +1,670 @@
+<?xml version="1.0"?>
+<!--
+
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-->
+
+<!-- Note:
+    If you modify this file you may have to make the same change in build_framework.xml.
+    build_framework.xml is renamed to build.xml when it is packaged.
+    It is used to build the frameworks directory from the zip file.
+-->
+<project name="frameworks" default="main" basedir=".">
+
+    <property name="ROYALE_HOME" location=".."/>
+
+    <!-- Required for OSX 10.6 / Snow Leopard Performance. -->
+    <!-- Java 7 on Mac requires OSX 10.7.3 or higher and is 64-bit only -->
+    <!-- local.d32 is set/used in build.properties so this needs to be done first. -->
+    <condition property="local.d32" value="-d32">
+        <and>
+            <os family="mac"/>
+            <matches pattern="1.6.*" string="${java.version}"/>
+            <equals arg1="${sun.arch.data.model}" arg2="64"/>
+            <equals arg1="${os.arch}" arg2="x86_64"/>
+        </and>
+    </condition>
+
+    <!-- Property for the platform.  -->
+    <condition property="isMac">
+        <os family="mac"/>
+    </condition>
+    <condition property="isWindows">
+        <os family="windows" />
+    </condition>
+    <condition property="isLinux">
+        <and>
+          <os family="unix"/>
+          <not>
+            <os family="mac"/>
+          </not>
+        </and>
+    </condition>
+
+    <property file="${ROYALE_HOME}/env.properties"/>
+    <property environment="env"/>
+    <property file="${ROYALE_HOME}/build.properties"/>
+    <property name="ROYALE_HOME" value="${ROYALE_HOME}" />
+
+    <target name="main" depends="check-compile-env,clean,prepare,compile,test,fonts"
+        description="Clean build of all SWCs"/>
+
+    <target name="check-compile-env" description="Check for the required environment variables">
+        <ant antfile="${ROYALE_HOME}/build.xml" target="check-compile-env" dir="${ROYALE_HOME}"/>
+    </target>
+
+    <target name="check-playerglobal" description="Check for the required environment variables">
+        <condition property="playerglobal.notneeded">
+            <available file="${basedir}/libs/player/${playerglobal.version}/playerglobal.swc" />
+        </condition>
+        <condition property="playerglobal.notneeded">
+            <isset property="env.PLAYERGLOBAL_HOME" />
+        </condition>
+    </target>
+
+    <target name="check-airglobal" description="Check for the required environment variables">
+        <condition property="airglobal.notneeded">
+            <available file="${basedir}/libs/air/airglobal.swc" />
+        </condition>
+        <condition property="airglobal.notneeded">
+            <isset property="env.AIR_HOME" />
+        </condition>
+    </target>
+
+    <target name="fake-playerglobal" description="copy js.swc as playerglobal.swc if needed" depends="check-playerglobal" unless="playerglobal.notneeded">
+        <mkdir dir="${basedir}/libs/player/${playerglobal.version}"/>
+        <copy file="${ROYALE_HOME}/js/libs/js.swc" tofile="${basedir}/libs/player/${playerglobal.version}/playerglobal.swc" />
+    </target>
+
+    <target name="fake-airglobal" description="copy js.swc as airglobal.swc if needed" depends="check-airglobal" unless="airglobal.notneeded">
+        <mkdir dir="${basedir}/libs/air"/>
+        <copy file="${ROYALE_HOME}/js/libs/js.swc" tofile="${basedir}/libs/air/airglobal.swc" />
+    </target>
+
+    <target name="prepare" depends="thirdparty-downloads">
+        <mkdir dir="${basedir}/js/libs" />
+        <mkdir dir="${basedir}/libs" />
+        <antcall target="fake-playerglobal" />
+        <antcall target="fake-airglobal" />
+    </target>
+
+    <target name="thirdparty-downloads" unless="no.thirdparty-downloads" description="Downloads all the required thirdparty code.">
+        <ant antfile="${basedir}/downloads.xml" dir="${basedir}"/>
+    </target>
+
+    <target name="compile" description="Builds all SWCs but not their resource bundles">
+        <!-- order may matter due to dependencies -->
+        <antcall target="Language"/>
+        <antcall target="Core"/>
+        <antcall target="Graphics"/>
+        <antcall target="Binding"/>
+        <antcall target="Reflection"/>
+        <antcall target="RoyaleUnit"/>
+        <antcall target="Collections"/>
+        <antcall target="Basic"/>
+        <antcall target="RoyaleUnitUI"/>
+
+        <antcall target="Ace"/>
+        <antcall target="HTML"/>
+        <antcall target="Effects"/>
+        <antcall target="Flat"/>
+        <antcall target="Charts"/>
+        <antcall target="DragDrop"/>
+        <antcall target="Formatters"/>
+        <antcall target="GoogleMaps"/>
+        <antcall target="CreateJS"/>
+        <antcall target="HTML5"/>
+        <antcall target="JQuery"/>
+        <antcall target="Mobile"/>
+        
+        <antcall target="XML"/>
+        <antcall target="Network"/>
+        <antcall target="Storage"/>
+
+        <antcall target="Text"/>
+        <antcall target="TLF"/>
+		<antcall target="MaterialDesignLite"/>
+		<antcall target="FontAwesome"/>
+		<antcall target="Express"/>
+        <antcall target="RoyaleSite"/>
+        <antcall target="MXRoyale"/>
+        <antcall target="SparkRoyale"/>
+        <antcall target="Crux"/>
+        <antcall target="Jewel"/>
+        <antcall target="JewelTheme"/>
+		<antcall target="Icons"/>
+    </target>
+
+    <target name="test" description="Tests all SWCs">
+        <antcall target="LanguageTest"/>
+        <antcall target="CoreTest"/>
+        <antcall target="GraphicsTest"/>
+        <antcall target="BindingTest"/>
+        <antcall target="ReflectionTest"/>
+        <antcall target="RoyaleUnitTest"/>
+        <antcall target="CollectionsTest"/>
+        <antcall target="BasicTest"/>
+        <antcall target="RoyaleUnitUITest"/>
+
+        <antcall target="AceTest"/>
+        <antcall target="HTMLTest"/>
+        <antcall target="EffectsTest"/>
+        <antcall target="FlatTest"/>
+        <antcall target="ChartsTest"/>
+        <antcall target="DragDropTest"/>
+        <antcall target="FormattersTest"/>
+        <antcall target="GoogleMapsTest"/>
+        <antcall target="CreateJSTest"/>
+        <antcall target="HTML5Test"/>
+        <antcall target="JQueryTest"/>
+        <antcall target="MobileTest"/>
+
+        <antcall target="StorageTest"/>
+        <antcall target="XMLTest"/>
+        <antcall target="NetworkTest"/>
+        <antcall target="TextTest"/>
+        <antcall target="TLFTest"/>
+        <antcall target="MaterialDesignLiteTest"/>
+        <antcall target="FontAwesomeTest"/>
+        <antcall target="ExpressTest"/>
+        <antcall target="RoyaleSiteTest"/>
+        <antcall target="MXRoyaleTest"/>
+        <antcall target="SparkRoyaleTest"/>
+        <antcall target="CruxTest"/>
+        <antcall target="JewelTest"/>
+        <antcall target="IconsTest"/>
+    </target>
+
+    <target name="fonts">
+        <ant dir="${basedir}/fontsrc" target="main"/>
+    </target>
+
+    <target name="other.locales" description ="Builds resource SWCs for all locales">
+        <!--<ant dir="${basedir}/projects/RoyaleUI" target="other.locales"/>-->
+    </target>
+
+    <target name="doc" >
+        <ant dir="${basedir}/projects/Core" target="doc" />
+    </target>
+
+    <!--
+		Cleanup
+	-->
+
+    <target name="super-clean" depends="thirdparty-clean,clean" description="Cleans everything including thirdparty downloads."/>
+
+    <target name="thirdparty-clean" unless="no.thirdparty-clean" description="Removes all thirdparty downloads.">
+        <ant antfile="${basedir}/downloads.xml" target="clean" dir="${basedir}"/>
+    </target>
+
+    <target name="clean" description="Cleans all SWCs and their resource bundles">
+        <!-- Delete output from SWC projects -->
+        <ant dir="${basedir}/projects/Binding" target="clean"/>
+        <ant dir="${basedir}/projects/Charts" target="clean"/>
+        <ant dir="${basedir}/projects/Collections" target="clean"/>
+        <ant dir="${basedir}/projects/Core" target="clean"/>
+        <ant dir="${basedir}/projects/DragDrop" target="clean"/>
+        <ant dir="${basedir}/projects/Effects" target="clean"/>
+        <ant dir="${basedir}/projects/Express" target="clean"/>
+        <ant dir="${basedir}/projects/Flat" target="clean"/>
+        <ant dir="${basedir}/projects/FontAwesome" target="clean"/>
+        <ant dir="${basedir}/projects/Formatters" target="clean"/>
+        <ant dir="${basedir}/projects/GoogleMaps" target="clean"/>
+        <ant dir="${basedir}/projects/CreateJS" target="clean"/>
+        <ant dir="${basedir}/projects/Graphics" target="clean"/>
+        <ant dir="${basedir}/projects/Basic" target="clean"/>
+        <ant dir="${basedir}/projects/HTML" target="clean"/>
+        <ant dir="${basedir}/projects/HTML5" target="clean"/>
+        <ant dir="${basedir}/projects/JQuery" target="clean"/>
+        <ant dir="${basedir}/projects/Language" target="clean"/>
+		<ant dir="${basedir}/projects/MaterialDesignLite" target="clean"/>
+        <ant dir="${basedir}/projects/Mobile" target="clean"/>
+        <ant dir="${basedir}/projects/Reflection" target="clean"/>
+        <ant dir="${basedir}/projects/RoyaleUnit" target="clean"/>
+        <ant dir="${basedir}/projects/RoyaleUnitUI" target="clean"/>
+        <ant dir="${basedir}/projects/Network" target="clean"/>
+        <ant dir="${basedir}/projects/Storage" target="clean"/>
+        <ant dir="${basedir}/projects/XML" target="clean"/>
+        <ant dir="${basedir}/projects/Text" target="clean"/>
+        <ant dir="${basedir}/projects/TLF" target="clean"/>
+        <ant dir="${basedir}/projects/RoyaleSite" target="clean"/>
+        <ant dir="${basedir}/projects/MXRoyale" target="clean"/>
+        <ant dir="${basedir}/projects/SparkRoyale" target="clean"/>
+        <ant dir="${basedir}/projects/Crux" target="clean"/>
+        <ant dir="${basedir}/projects/Jewel" target="clean"/>
+		<ant dir="${basedir}/projects/Icons" target="clean"/>
+        <ant dir="${basedir}/themes/JewelTheme" target="clean"/>
+        <ant dir="${basedir}/fontsrc" target="clean"/>
+
+        <!-- delete the FlashBuilder executable directories -->
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="${basedir}/projects">
+                <include name="*/bin/**"/>
+            </fileset>
+        </delete>
+        <!-- Delete empty folders -->
+        <delete dir="${basedir}/libs" failonerror="false">
+            <include name="*.swc"/>
+        </delete>
+        <!-- <delete dir="${basedir}/libs"/> -->
+        <delete dir="${basedir}/locale">
+            <exclude name="**/metadata.properties"/>
+        </delete>
+        <delete dir="${basedir}/libs/generated"/>
+        <!-- Delete only if it exists and it is empty.  air and swfobject put dirs here. -->
+        <delete dir="${ROYALE_HOME}/templates" includeemptydirs="true" failonerror="false">
+            <exclude name="swfobject/index.template.html" />
+            <exclude name="swfobject/expressInstall.swf" />
+            <exclude name="swfobject/swfobject.js" />
+            <exclude name="swfobject/history/**" />
+            <exclude name="js-index-template.html" />
+        </delete>
+    </target>
+
+    <target name="Binding" description="Clean build of Binding.swc">
+        <ant dir="${basedir}/projects/Binding"/>
+    </target>
+
+    <target name="BindingTest" description="Test of Binding.swc">
+        <ant dir="${basedir}/projects/Binding" target="test"/>
+    </target>
+
+    <target name="Charts" description="Clean build of Charts.swc">
+        <ant dir="${basedir}/projects/Charts"/>
+    </target>
+
+    <target name="ChartsTest" description="Test of Charts.swc">
+        <ant dir="${basedir}/projects/Charts" target="test"/>
+    </target>
+
+    <target name="Core" description="Clean build of Core.swc">
+        <ant dir="${basedir}/projects/Core"/>
+    </target>
+
+    <target name="CoreTest" description="Test of Core.swc">
+        <ant dir="${basedir}/projects/Core" target="test"/>
+    </target>
+
+    <target name="Collections" description="Clean build of Collections.swc">
+        <ant dir="${basedir}/projects/Collections"/>
+    </target>
+
+    <target name="CollectionsTest" description="Test of Collections.swc">
+        <ant dir="${basedir}/projects/Collections" target="test"/>
+    </target>
+
+    <target name="CreateJS" description="Clean build of CreateJS.swc">
+        <ant dir="${basedir}/projects/CreateJS"/>
+    </target>
+
+    <target name="CreateJSTest" description="Test of CreateJS.swc">
+        <ant dir="${basedir}/projects/CreateJS" target="test"/>
+    </target>
+
+    <target name="DragDrop" description="Clean build of DragDrop.swc">
+        <ant dir="${basedir}/projects/DragDrop"/>
+    </target>
+
+    <target name="DragDropTest" description="Test of DragDrop.swc">
+        <ant dir="${basedir}/projects/DragDrop" target="test"/>
+    </target>
+
+    <target name="Effects" description="Clean build of Effects.swc">
+        <ant dir="${basedir}/projects/Effects"/>
+    </target>
+
+    <target name="EffectsTest" description="Test of Effects.swc">
+        <ant dir="${basedir}/projects/Effects" target="test"/>
+    </target>
+
+    <target name="Express" description="Clean build of Express.swc">
+        <ant dir="${basedir}/projects/Express"/>
+    </target>
+
+    <target name="ExpressTest" description="Test of Express.swc">
+        <ant dir="${basedir}/projects/Express" target="test"/>
+    </target>
+
+    <target name="Flat" description="Clean build of Flat.swc">
+        <ant dir="${basedir}/projects/Flat"/>
+    </target>
+
+    <target name="FlatTest" description="Test of Flat.swc">
+        <ant dir="${basedir}/projects/Flat" target="test"/>
+    </target>
+
+    <target name="FontAwesome" description="Clean build of FontAwesome.swc">
+        <ant dir="${basedir}/projects/FontAwesome"/>
+    </target>
+
+    <target name="FontAwesomeTest" description="Test of FontAwesome.swc">
+        <ant dir="${basedir}/projects/FontAwesome" target="test"/>
+    </target>
+
+    <target name="Formatters" description="Clean build of Formatters.swc">
+        <ant dir="${basedir}/projects/Formatters"/>
+    </target>
+
+    <target name="FormattersTest" description="Test of Formatters.swc">
+        <ant dir="${basedir}/projects/Formatters" target="test"/>
+    </target>
+
+    <target name="GoogleMaps" description="Clean build of GoogleMaps.swc">
+        <ant dir="${basedir}/projects/GoogleMaps"/>
+    </target>
+
+    <target name="GoogleMapsTest" description="Test of GoogleMaps.swc">
+        <ant dir="${basedir}/projects/GoogleMaps" target="test"/>
+    </target>
+
+    <target name="Graphics" description="Clean build of Graphics.swc">
+        <ant dir="${basedir}/projects/Graphics"/>
+    </target>
+
+    <target name="GraphicsTest" description="Test of Graphics.swc">
+        <ant dir="${basedir}/projects/Graphics" target="test"/>
+    </target>
+
+    <target name="Basic" description="Clean build of Basic.swc">
+        <ant dir="${basedir}/projects/Basic"/>
+    </target>
+
+    <target name="BasicTest" description="Test of Basic.swc">
+        <ant dir="${basedir}/projects/Basic" target="test"/>
+    </target>
+
+    <target name="HTML" description="Clean build of HTML.swc">
+        <ant dir="${basedir}/projects/HTML"/>
+    </target>
+
+    <target name="HTMLTest" description="Test of HTML.swc">
+        <ant dir="${basedir}/projects/HTML" target="test"/>
+    </target>
+
+    <target name="HTML5" description="Clean build of HTML5.swc">
+        <ant dir="${basedir}/projects/HTML5"/>
+    </target>
+
+    <target name="HTML5Test" description="Test of HTML5.swc">
+        <ant dir="${basedir}/projects/HTML5" target="test"/>
+    </target>
+
+    <target name="Ace" description="Clean build of Ace.swc">
+	    <ant dir="${basedir}/projects/Ace"/>
+    </target>
+
+    <target name="AceTest" description="Test of Ace.swc">
+        <ant dir="${basedir}/projects/Ace" target="test"/>
+    </target>
+
+    <target name="JQuery" description="Clean build of JQuery.swc">
+        <ant dir="${basedir}/projects/JQuery"/>
+    </target>
+
+    <target name="JQueryTest" description="Test of JQuery.swc">
+        <ant dir="${basedir}/projects/JQuery" target="test"/>
+    </target>
+
+    <target name="Language" description="Clean build of Language.swc">
+        <ant dir="${basedir}/projects/Language"/>
+    </target>
+
+    <target name="LanguageTest" description="Test of Language.swc">
+        <ant dir="${basedir}/projects/Language" target="test"/>
+    </target>
+
+	<target name="MaterialDesignLite" description="Clean build of MaterialDesignLite.swc">
+        <ant dir="${basedir}/projects/MaterialDesignLite"/>
+    </target>
+
+    <target name="MaterialDesignLiteTest" description="Test of MaterialDesignLite.swc">
+        <ant dir="${basedir}/projects/MaterialDesignLite" target="test"/>
+    </target>
+
+    <target name="Mobile" description="Clean build of Mobile.swc">
+        <ant dir="${basedir}/projects/Mobile"/>
+    </target>
+
+    <target name="MobileTest" description="Test of Mobile.swc">
+        <ant dir="${basedir}/projects/Mobile" target="test"/>
+    </target>
+
+    <target name="Network" description="Clean build of Network.swc">
+        <ant dir="${basedir}/projects/Network"/>
+    </target>
+
+    <target name="NetworkTest" description="Test of Network.swc">
+        <ant dir="${basedir}/projects/Network" target="test"/>
+    </target>
+
+    <target name="Reflection" description="Clean build of Reflection.swc">
+        <ant dir="${basedir}/projects/Reflection"/>
+    </target>
+
+    <target name="ReflectionTest" description="Test of Reflection.swc">
+        <ant dir="${basedir}/projects/Reflection" target="test"/>
+    </target>
+
+    <target name="RoyaleUnit" description="Clean build of RoyaleUnit.swc">
+        <ant dir="${basedir}/projects/RoyaleUnit"/>
+    </target>
+
+    <target name="RoyaleUnitTest" description="Test of RoyaleUnit.swc">
+        <ant dir="${basedir}/projects/RoyaleUnit" target="test"/>
+    </target>
+
+    <target name="RoyaleUnitUI" description="Clean build of RoyaleUnitUI.swc">
+        <ant dir="${basedir}/projects/RoyaleUnitUI"/>
+    </target>
+
+    <target name="RoyaleUnitUITest" description="Test of RoyaleUnitUI.swc">
+        <ant dir="${basedir}/projects/RoyaleUnitUI" target="test"/>
+    </target>
+
+    <target name="Storage" description="Clean build of Storage.swc">
+        <ant dir="${basedir}/projects/Storage"/>
+    </target>
+
+    <target name="StorageTest" description="Test of Storage.swc">
+        <ant dir="${basedir}/projects/Storage" target="test"/>
+    </target>
+
+    <target name="XML" description="Clean build of XML.swc">
+        <ant dir="${basedir}/projects/XML"/>
+    </target>
+
+    <target name="XMLTest" description="Test of XML.swc">
+        <ant dir="${basedir}/projects/XML" target="test"/>
+    </target>
+
+    <target name="Text" description="Clean build of Text.swc">
+        <ant dir="${basedir}/projects/Text"/>
+    </target>
+
+    <target name="TextTest" description="Test of Text.swc">
+        <ant dir="${basedir}/projects/Text" target="test"/>
+    </target>
+
+    <target name="TLF" description="Clean build of TLF.swc">
+        <ant dir="${basedir}/projects/TLF"/>
+    </target>
+
+    <target name="TLFTest" description="Test of TLF.swc">
+        <ant dir="${basedir}/projects/TLF" target="test"/>
+    </target>
+
+    <target name="RoyaleSite" description="Clean build of RoyaleSite.swc">
+        <ant dir="${basedir}/projects/RoyaleSite"/>
+    </target>
+
+    <target name="RoyaleSiteTest" description="Test of RoyaleSite.swc">
+        <ant dir="${basedir}/projects/RoyaleSite" target="test"/>
+    </target>
+
+    <target name="MXRoyale" description="Clean build of MXRoyale.swc">
+        <ant dir="${basedir}/projects/MXRoyale"/>
+    </target>
+
+    <target name="MXRoyaleTest" description="Test of MXRoyale.swc">
+        <ant dir="${basedir}/projects/MXRoyale" target="test"/>
+    </target>
+
+    <target name="SparkRoyale" description="Clean build of SparkRoyale.swc">
+        <ant dir="${basedir}/projects/SparkRoyale"/>
+    </target>
+
+    <target name="SparkRoyaleTest" description="Test of SparkRoyale.swc">
+        <ant dir="${basedir}/projects/SparkRoyale" target="test"/>
+    </target>
+
+    <target name="Crux" description="Clean build of Crux.swc">
+        <ant dir="${basedir}/projects/Crux"/>
+    </target>
+
+    <target name="CruxTest" description="Test of Crux.swc">
+        <ant dir="${basedir}/projects/Crux" target="test"/>
+    </target>
+
+    <target name="Icons" description="Clean build of Icons.swc">
+        <ant dir="${basedir}/projects/Icons"/>
+    </target>
+
+    <target name="IconsTest" description="Test of Icons.swc">
+        <ant dir="${basedir}/projects/Icons" target="test"/>
+    </target>
+
+    <target name="Jewel" description="Clean build of Jewel.swc">
+        <ant dir="${basedir}/projects/Jewel"/>
+    </target>
+
+    <target name="JewelTest" description="Test of Jewel.swc">
+        <ant dir="${basedir}/projects/Jewel" target="test"/>
+    </target>
+
+    <target name="JewelTheme" description="Clean build of JewelTheme.swc">
+        <ant dir="${basedir}/themes/JewelTheme"/>
+    </target>
+    <target name="create-config" depends="playerglobal-setswfversion" description="Copy the config template and inject version numbers">
+        <copy file="${basedir}/${configname}-config-template.xml" tofile="${basedir}/${configname}-config.xml" overwrite="true">
+            <filterset>
+                <filter token="playerversion" value="${playerglobal.version}"/>
+                <filter token="swfversion" value="${playerglobal.swfversion}"/>
+                <filter token="locale" value="${locale}"/>
+            </filterset>
+        </copy>
+        <antcall target="tweak-for-jsonly" />
+    </target>
+
+    <target name="tweak-for-jsonly" unless="env.AIR_HOME">
+        <replace file="${basedir}/${configname}-config.xml"
+            token="{playerglobalHome}" value="libs/player" />
+        <replace file="${basedir}/${configname}-config.xml"
+            token="&lt;path-element&gt;libs&lt;/path-element&gt;"
+            value="&lt;path-element&gt;js/libs&lt;/path-element&gt;" />
+        <replace file="${basedir}/${configname}-config.xml"
+            token="&lt;target&gt;SWF&lt;/target&gt;"
+            value="" />
+    </target>
+
+	<target name="playerglobal-setswfversion" description="Set the swfversion to insert into the -config file">
+		<condition property="playerglobal.swfversion" value="11">
+			<equals arg1="${playerglobal.version}" arg2="10.2" />
+		</condition>
+		<condition property="playerglobal.swfversion" value="12">
+			<equals arg1="${playerglobal.version}" arg2="10.3" />
+		</condition>
+		<condition property="playerglobal.swfversion" value="13">
+			<equals arg1="${playerglobal.version}" arg2="11.0" />
+		</condition>
+		<condition property="playerglobal.swfversion" value="14">
+			<equals arg1="${playerglobal.version}" arg2="11.1" />
+		</condition>
+		<condition property="playerglobal.swfversion" value="15">
+			<equals arg1="${playerglobal.version}" arg2="11.2" />
+		</condition>
+		<condition property="playerglobal.swfversion" value="16">
+			<equals arg1="${playerglobal.version}" arg2="11.3" />
+		</condition>
+		<condition property="playerglobal.swfversion" value="17">
+			<equals arg1="${playerglobal.version}" arg2="11.4" />
+		</condition>
+		<condition property="playerglobal.swfversion" value="18">
+			<equals arg1="${playerglobal.version}" arg2="11.5" />
+		</condition>
+		<condition property="playerglobal.swfversion" value="19">
+			<equals arg1="${playerglobal.version}" arg2="11.6" />
+		</condition>
+		<condition property="playerglobal.swfversion" value="20">
+			<equals arg1="${playerglobal.version}" arg2="11.7" />
+		</condition>
+		<condition property="playerglobal.swfversion" value="21">
+			<equals arg1="${playerglobal.version}" arg2="11.8" />
+		</condition>
+		<condition property="playerglobal.swfversion" value="22">
+			<equals arg1="${playerglobal.version}" arg2="11.9" />
+		</condition>
+		<condition property="playerglobal.swfversion" value="23">
+			<equals arg1="${playerglobal.version}" arg2="12.0" />
+		</condition>
+		<condition property="playerglobal.swfversion" value="24">
+			<equals arg1="${playerglobal.version}" arg2="13.0" />
+		</condition>
+		<condition property="playerglobal.swfversion" value="25">
+			<equals arg1="${playerglobal.version}" arg2="14.0" />
+		</condition>
+		<condition property="playerglobal.swfversion" value="26">
+			<equals arg1="${playerglobal.version}" arg2="15.0" />
+		</condition>
+        <condition property="playerglobal.swfversion" value="27">
+            <equals arg1="${playerglobal.version}" arg2="16.0" />
+        </condition>
+        <condition property="playerglobal.swfversion" value="28">
+            <equals arg1="${playerglobal.version}" arg2="17.0" />
+        </condition>
+        <condition property="playerglobal.swfversion" value="29">
+            <equals arg1="${playerglobal.version}" arg2="18.0" />
+        </condition>
+        <condition property="playerglobal.swfversion" value="30">
+            <equals arg1="${playerglobal.version}" arg2="19.0" />
+        </condition>
+        <condition property="playerglobal.swfversion" value="31">
+            <equals arg1="${playerglobal.version}" arg2="20.0" />
+        </condition>
+        <condition property="playerglobal.swfversion" value="32">
+            <equals arg1="${playerglobal.version}" arg2="21.0" />
+        </condition>
+        <condition property="playerglobal.swfversion" value="33">
+            <equals arg1="${playerglobal.version}" arg2="22.0" />
+        </condition>
+        <condition property="playerglobal.swfversion" value="34">
+            <equals arg1="${playerglobal.version}" arg2="23.0" />
+        </condition>
+        <condition property="playerglobal.swfversion" value="35">
+            <equals arg1="${playerglobal.version}" arg2="24.0" />
+        </condition>
+        <condition property="playerglobal.swfversion" value="36">
+            <equals arg1="${playerglobal.version}" arg2="25.0" />
+        </condition>
+        <condition property="playerglobal.swfversion" value="37">
+            <equals arg1="${playerglobal.version}" arg2="26.0" />
+        </condition>
+        <condition property="playerglobal.swfversion" value="38">
+            <equals arg1="${playerglobal.version}" arg2="27.0" />
+        </condition>
+	</target>
+
+</project>

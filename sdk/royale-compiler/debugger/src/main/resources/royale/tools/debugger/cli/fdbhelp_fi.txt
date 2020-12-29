@@ -1,0 +1,1616 @@
+
+      Licensed to the Apache Software Foundation (ASF) under one or more
+      contributor license agreements.  See the NOTICE file distributed with
+      this work for additional information regarding copyright ownership.
+      The ASF licenses this file to You under the Apache License, Version 2.0
+      (the "License"); you may not use this file except in compliance with
+      the License.  You may obtain a copy of the License at
+    
+          http://www.apache.org/licenses/LICENSE-2.0
+    
+      Unless required by applicable law or agreed to in writing, software
+      distributed under the License is distributed on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+      See the License for the specific language governing permissions and
+      limitations under the License.
+
+This file contains the text displayed by the 'help' command in fdb.
+
+
+
+It is divided into "topics". For example, when an fdb user types
+
+'help break', the [break] topic below is displayed.
+
+
+
+The first and last lines of each topic should be blank.
+
+They don't get displayed in fdb; they are here only
+
+to make this file more easily readable.
+
+
+
+Help text should be formatted to not wrap
+
+when displayed on an 80-character-wide console.
+
+The following line is 80 characters wide.
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+[?]
+
+
+
+M��ritt�m�t�n komento. Sy�tt�m�ll� 'help' n�et luettelon kaikista 
+
+fdb-komennoista.
+
+
+
+[break]
+
+
+
+M��rit� keskeytyskohta tietyll� rivill� tai tietyss� toiminnossa.
+
+Esimerkkej�:
+
+  break 87
+
+    Asettaa keskeytyskohdan riville 87 nykyisess� tiedostossa.
+
+  break myapp.mxml:56
+
+    Asettaa keskeytyskohdan riville 56 tiedostossa myapp.mxml.
+
+  break #3:29
+
+    Asettaa keskeytyskohdan riville 29 tiedostossa #3.
+
+  break doThis
+
+    Asettaa keskeytyskohdan toimintoon doThis() nykyisess� tiedostossa.
+
+  break myapp.mxml:doThat
+
+    Asettaa keskeytyskohdan toimintoon doThat() tiedostossa myapp.mxml.
+
+  break #3:doOther
+
+    Asettaa keskeytyskohdan toimintoon doOther() tiedostossa #3.
+
+  break
+
+   Asettaa keskeytyskohdan nykyiseen suoritusosoitteeseen nykyisen pinon 
+
+   kehyksess�. T�m� on hy�dyllist�, kun keskeytys tapahtuu pinokehykseen 
+
+   palattaessa.
+
+Tiedostonimet ja -numerot n�et sy�tt�m�ll� 'info sources' tai 'info files'.
+
+Toimintojen nimet n�et sy�tt�m�ll� 'info functions'.
+
+Lyhennetyt tiedostojen ja toimintojen nimet hyv�ksyt��n, jos ne ovat selvi�.
+
+Jos m��ritet��n rivinumero, keskeytys tapahtuu koodin alussa sill� rivill�.
+
+Jos m��ritet��n toiminto, keskeytys tapahtuu koodin alussa siin� toiminnossa.
+
+Lis�tietoa keskeytyskohdista n�et komennoilla 'commands' ja 'condition'.
+
+
+
+[bt]
+
+
+
+Pinon backtrace.
+
+
+
+[catch]
+
+
+
+Keskeytys poikkeuksen sattuessa.  Vaikuttaa vain catch-lohkon k�sittelemiin 
+
+poikkeuksiin.  K�sittelem�tt�m�t poikkeukset keskeytt�v�t aina 
+
+virheenkorjauksen.
+
+
+
+Voit poistaa k�sittelypisteen Delete-komennolla.
+
+
+
+Esimerkkej�:
+
+  catch *
+
+    Keskeytys mink� tahansa poikkeuksen sattuessa.
+
+  catch ReferenceError
+
+    Keskeytys aina ReferenceError-virheen syntyess�, olipa se k�sitelty tai ei.
+
+
+
+[cf]
+
+
+
+N�ytt�� nykyisen tiedoston nimen ja numeron tai vaihtaa nykyist� tiedostoa.
+
+Esimerkkej�:
+
+  cf
+
+    N�ytt�� nykyisen tiedoston nimen ja numeron.
+
+  cf myapp.mxml
+
+    Vaihtaa nykyisen tiedoston tiedostoksi myapp.mxml.
+
+  cf #29
+
+    Vaihtaa nykyisen tiedoston tiedostoksi #29.
+
+Tiedostonimet ja -numerot n�et sy�tt�m�ll� 'info sources' tai 'info files'.
+
+Lyhennetyt tiedostonimet hyv�ksyt��n, jos ne ovat selvi�.
+
+Komennon 'list' k�ytt�minen tiedostoon tekee tiedostosta nykyisen tiedoston.
+
+
+
+[clear]
+
+
+
+Poistaa keskeytyskohdan tietylt� rivilt� tai tietyst� toiminnosta.
+
+Esimerkkej�:
+
+  clear 87
+
+    Poistaa keskeytyskohdan rivilt� 87 nykyisess� tiedostossa.
+
+  clear myapp.mxml:56
+
+    Poistaa keskeytyskohdan rivilt� 56 tiedostossa myapp.mxml.
+
+  clear #3:29
+
+    Poistaa keskeytyskohdan rivilt� 29 tiedostossa #3.
+
+  clear doThis
+
+    Poistaa keskeytyskohdan toiminnosta doThis() nykyisess� tiedostossa.
+
+  clear myapp.mxml:doThat
+
+    Poistaa keskeytyskohdan toiminnosta doThat() tiedostossa myapp.mxml.
+
+  clear #3:doOther
+
+    Poistaa keskeytyskohdan toiminnosta doOther() tiedostossa #3.
+
+  clear
+
+    Poistaa keskeytyskohdan nykyisen tiedoston nykyiselt� rivilt�. 
+
+Tiedostonimet ja -numerot n�et sy�tt�m�ll� 'info sources' tai 'info files'.
+
+Toimintojen nimet n�et sy�tt�m�ll� 'info functions'.
+
+Lyhennetyt tiedostojen ja toimintojen nimet hyv�ksyt��n, jos ne ovat selvi�.
+
+Jos m��ritet��n rivinumero, silt� rivilt� poistetaan kaikki keskeytyskohdat.
+
+Jos m��ritet��n toiminto, toiminnon alussa olevat keskeytyskohdat poistetaan.
+
+
+
+[continue]
+
+
+
+Jatka suorittamista keskeytyskohdassa pys�htymisen j�lkeen.
+
+T�m� komento ei hyv�ksy argumentteja.
+
+
+
+[condition]
+
+
+
+
+
+M��rit� keskeytyskohdan numero N. Keskeytys tapahtuu vain, jos COND toteutuu.
+
+K�ytt� on `condition N COND', jossa N on kokonaisluku ja COND on lauseke, joka 
+
+arvioidaan aina, kun keskeytyskohta N saavutetaan.
+
+
+
+[commands]
+
+
+
+M��rit� komennot, jotka suoritetaan, kun t�rm�t��n keskeytyskohtaan.
+
+Anna keskeytyskohdan numero argumenttina `commands`-komennon j�lkeen.
+
+Jos argumenttia ei anneta, kohteena oleva keskeytyskohta m��ritet��n viimeisen�.
+
+Komennot alkavat seuraavalta rivilt�.
+
+Kirjoita rivi, joka sis�lt� sanan "end", merkitsem��n kohtaa, miss� komennot 
+
+loppuvat.
+
+M��ritt�m�ll� ehdon "silent" ensimm�iseksi riviksi teet keskeytyskohdasta 
+
+hiljaisen. T�ll�in mit��n ei tulosteta, kun kohta saavutetaan, lukuun ottamatta 
+
+komennon tulostamaa tulostetta.
+
+Esimerkki:
+
+  (fdb) commands
+
+  Kirjoita komennot sit� varten, kun keskeytyskohta 1 tulee vastaan, yksi 
+
+  komento riville.
+
+  P��t� rivill�, jolla lukee vain 'end'.
+
+  >w
+
+  >end
+
+
+
+[delete]
+
+
+
+Poista yksi tai useampi keskeytyskohta.
+
+Esimerkkej�:
+
+  delete
+
+    Poistaa kaikki keskeytyskohdat.
+
+  delete 2 5
+
+    Poistaa keskeytyskohdat #2 ja #5.
+
+N�et keskeytyskohtien numerot sy�tt�m�ll� 'info breakpoints'.
+
+
+
+[directory]
+
+
+
+M��rit� luettelo hakemistoista, joista fdb etsii l�hdetiedostoja.
+
+
+
+Esimerkkej�:
+
+
+
+  directory
+
+    Palauttaa luettelon oletusasetuksiin. Luettelo sis�lt�� silloin hakemiston, 
+
+    jossa l�hdetiedosto koottiin objektikoodiksi, ja sen j�lkeen nykyisen 
+
+    hakemiston.
+
+
+
+  directory C:\MySource        (Windows)
+
+  directory /MySource          (Mac)
+
+    Lis�� m��ritetyn hakemiston sen hakemistoluettelon alkuun, josta l�hdett� 
+
+    haetaan.  Jos haetaan esimerkiksi luokan mypackage.MyClass l�hdett�, 
+
+    virheenkorjaustoiminto etsii l�hdett� sek� kansiosta 
+
+    C:\MySource\mypackage\MyClass.as ett� kansiosta C:\MySource\MyClass.as.
+
+
+
+  directory C:\Dir1;C:\Dir2    (Windows � k�yt� pilkkua ';' erottimena)
+
+  directory /Dir1:/Dir2        (Mac � k�yt� pistett� ':' erottimena)
+
+    Lis�� useita hakemistoja sen hakemistoluettelon alkuun, josta l�hdett� 
+
+    haetaan.
+
+
+
+Nykyisen luettelon n�et sy�tt�m�ll� 'show directories'.
+
+
+
+[disable]
+
+
+
+Poista k�yt�st� yksi tai useita keskeytyskohtia tai automaattisen n�yt�n 
+
+ilmaukset.
+
+Esimerkkej�:
+
+  disable
+
+  disable breakpoints
+
+    Poistaa k�yt�st� kaikki keskeytyskohdat.
+
+  disable 2 5
+
+  disable breakpoints 2 5
+
+    Poistaa k�yt�st� keskeytyskohdat #2 ja #5.
+
+  disable display
+
+    Poistaa k�yt�st� kaikki automaattisen n�yt�n ilmaukset.
+
+  disable display 1 3
+
+    Poistaa k�yt�st� automaattisen n�yt�n ilmaukset #1 ja #3.
+
+N�et keskeytyskohtien numerot sy�tt�m�ll� 'info breakpoints'.
+
+N�et automaattisen n�yt�n ilmausten numerot sy�tt�m�ll� 'info display'.
+
+
+
+[disassemble]
+
+
+
+(Vain ActionScript 2. Ei tukea ActionScript 3:n virheenkorjaukselle.)
+
+
+
+Pura jokin l�hdekoodin tietty osa.
+
+Oletus on aina nykyinen rivi.
+
+Samoja argumentteja tuetaan kuin list-komennossakin.
+
+Esimerkkej�:
+
+  disassemble 87
+
+    Purkaa nykyisen tiedoston rivin 87.
+
+  disassemble 87 102
+
+    Purkaa nykyisen tiedoston rivit 87�102.
+
+  disassemble doThis
+
+      Purkaa toiminnon doThis() nykyisess� tiedostossa.
+
+Sen lis�ksi, ett� k�yt�t yksinkertaisia rivinumeroita yll� olevan esimerkin 
+
+mukaisesti, voit m��ritt�� rivej� muillakin tavoilla:
+
+   myapp.mxml
+
+      Rivi 1 tiedostossa myapp.mxml.
+
+   myapp.mxml:doThat
+
+      Toiminnon doThat() ensimm�inen rivi tiedostossa myapp.mxml.
+
+   myapp.mxml:56
+
+      Rivi 56 tiedostossa myapp.mxml.
+
+   #3
+
+      Rivi 1 tiedostossa #3.
+
+   #3:doOther
+
+      Se tiedoston #3 rivi, jolla toiminto doOther() alkaa.
+
+   #3:29
+
+      Rivi 29 tiedostossa #3.
+
+
+
+[display]
+
+
+
+Lis�� ilmaus automaattisen n�yt�n ilmausten luetteloon.
+
+Esimerkki:
+
+  display employee.name
+
+    Lis�� 'employee.name' automaattisen n�yt�n ilmausten luetteloon.
+
+    Joka kerta, kun fdb pys�htyy, arvo employee.name tulee n�kyviin.
+
+T�m�n komennon argumentti on sama kuin komennolle 'print'.
+
+N�et automaattisen n�yt�n ilmaukset ja niiden numerot sy�tt�m�ll� 'info 
+
+display'.
+
+
+
+[down]
+
+
+
+Valitse ja tulosta t�m�n kutsuma pinokehys.
+
+Seuraavat 'info arguments'- ja 'info locals' -komennot n�ytt�v�t valitun 
+
+kehyksen argumentit ja paikalliset muuttujat.
+
+Katso komennot 'up' ja 'frame'. 
+
+
+
+[enable]
+
+
+
+Ota k�ytt��n yksi tai useita keskeytyskohtia tai automaattisen n�yt�n ilmaukset.
+
+Esimerkkej�:
+
+  enable
+
+  enable breakpoints
+
+    Ottaa k�ytt��n kaikki keskeytyskohdat.
+
+  enable 2 5
+
+  enable breakpoints 2 5
+
+    Ottaa k�ytt��n keskeytyskohdat #2 ja #5.
+
+  enable display
+
+    Ottaa k�ytt��n kaikki automaattisen n�yt�n ilmaukset.
+
+  enable display 1 3
+
+    Ottaa k�ytt��n automaattisen n�yt�n ilmaukset #1 ja #3.
+
+N�et keskeytyskohtien numerot sy�tt�m�ll� 'info breakpoints'.
+
+N�et automaattisen n�yt�n ilmausten numerot sy�tt�m�ll� 'info display'.
+
+
+
+[file]
+
+
+
+M��rit� sovellus, josta korjataan virheit�, k�ynnist�m�tt� sit�.
+
+Esimerkkej�:
+
+  file http://www.mysite.com/myapp.mxml
+
+    M��rit� MXML-sovellus, josta korjataan virheit�.
+
+  file myapp.swf
+
+    M��rit� nykyisest� hakemistosta paikallinen SWF-tiedosto, josta korjataan 
+
+    virheit�.
+
+    T�ss� tapauksessa (virheenkorjaustiedot sis�lt�v�n) tiedoston myapp.swd 
+
+    pit�� sijaita my�s nykyisess� hakemistossa.
+
+Komento ei k�ynnist� sovellusta. K�ynnist� sovelluksen virheenkorjaus 
+
+komennolla 'run' ilman argumentteja.
+
+Sen sijaan, ett� k�ytt�isit komentoa 'file <target>' ja sen j�lkeen komentoa 
+
+'run', voit yksinkertaisesti m��ritt�� korjattavan sovelluksen komennon 'run' 
+
+argumentiksi:
+
+  run http://mysite.com/myapp.mxml
+
+  run myapp.swf
+
+Voit my�s m��r�t� tiedoston virheenkorjauksen komentorivin argumentilla, kun 
+
+k�ynnist�t fdb:n:
+
+  fdb http://www.mysite.com/myapp.mxml
+
+  fdb myapp.swf
+
+T�ss� tapauksessa sinun ei tarvitse k�ytt�� komentoa 'file' eik� komentoa 'run'.
+
+Jos suoritat komennon 'run' m��ritt�m�tt� sovellusta virheenkorjausta varten, 
+
+fdb odottaa, kunnes jokin sovellus muodostaa siihen yhteyden.
+
+
+
+[finish]
+
+
+
+Suorita, kunnes nykyinen toiminto palaa.
+
+T�m� komento ei hyv�ksy argumentteja.
+
+
+
+[frame]
+
+
+
+Valitse ja tulosta jokin tietty pinokehys.
+
+T�m� komento hyv�ksyy valinnaisen argumentin: kehyksen numeron.
+
+Jos argumenttia ei m��ritet�, oletuksena palataan nykyiseen ylimp��n kehykseen 
+
+(kehykseen 0).
+
+Esimerkkej�:
+
+  frame 4
+
+  frame
+
+Seuraavat 'info arguments'- ja 'info locals' -komennot n�ytt�v�t valitun 
+
+kehyksen argumentit ja paikalliset muuttujat.
+
+Katso komennot 'up', 'down' ja 'bt'. 
+
+
+
+[handle]
+
+
+
+M��rit�, miten fdb k�sittelee Flash Playerin virheet.
+
+Esimerkkej�:
+
+  handle recursion_limit stop
+
+    N�yt� fdb:ss� ilmoitus virheest� recursion_limit ja pys�yt�, kuten 
+
+    keskeytyskohdassa.
+
+  handle all print nostop
+
+    N�yt� ilmoitus kaikista virheist� fdb:ss�, mutta �l� pys�yt�.
+
+Ensimm�inen argumentti on virheen nimi tai 'all'.
+
+Lis�argumentit ovat toimintoja, jotka koskevat virhett�.
+
+Virheiden nimet n�et sy�tt�m�ll� 'info handle'.
+
+Toiminnot ovat print/noprint ja stop/nostop.
+
+Toiminnolla 'print' sanoma tulostetaan t�m�n virheen sattuessa.
+
+Toiminnolla 'stop' palataan virheenkorjaustoimintoon t�m�n virheen sattuessa. 
+
+Toiminto 'print' suoritetaan samalla.
+
+
+
+[help]
+
+
+
+Onko fdb sinulle uusi? N�et sen perustiedot sy�tt�m�ll� 'tutorial'.
+
+Luettelo fdb:n komennoista:
+
+bt (bt)             Tulosta kaikkien pinokehysten backtrace-luettelot.
+
+break (b)           M��rit� keskeytyskohta tietyll� rivill� tai tietyss� 
+
+                    toiminnossa.
+
+catch (ca)          Keskeytys poikkeuksen sattuessa.
+
+cf (cf)             N�yt� nykyisen tiedoston nimi ja numero.
+
+clear (cl)          Poista keskeytyskohta tietylt� rivilt� tai tietyst� 
+
+                    toiminnosta.
+
+condition (cond)    K�yt� ehdollista ilmausta keskeytyspisteess� tai poista 
+
+                    ilmaus.
+
+continue (c)        Jatka suorittamista keskeytyskohdassa pys�htymisen j�lkeen.
+
+commands (com)      M��rit� komennot, jotka suoritetaan keskeytyspisteeseen 
+
+                    saavuttaessa.
+
+delete (d)          Poista keskeytyspisteet tai automaattisen n�yt�n ilmaukset.
+
+directory (dir)     Lis�� hakemisto l�hdetiedostojen hakupolkuun.
+
+disable (disab)     Poista keskeytyspisteet tai automaattisen n�yt�n ilmaukset 
+
+                    k�yt�st�.
+
+disassemble (disas) Pura l�hderivit tai -toiminnot.
+
+display (disp)      Lis�� automaattisen n�yt�n ilmaus.
+
+enable (e)          Ota keskeytyspisteet tai automaattisen n�yt�n ilmaukset 
+
+                    k�ytt��n.
+
+file (fil)          M��rit� sovelluksen virheenkorjaus.
+
+finish (f)          Suorita, kunnes nykyinen toiminto palaa.
+
+handle (han)        M��rit�, miten virhe k�sitell��n.
+
+help (h)            N�yt� fdb-komentojen ohje.
+
+home (ho)           M��rit� luettelosijainti paikkaan, miss� suorittaminen 
+
+                    keskeytet��n.
+
+info (i)            N�yt� tiedot ohjelmasta, josta korjataan virheit�.
+
+kill (k)            Lopeta sen ohjelman suorittaminen, josta korjataan virheit�.
+
+list (l)            Lis�� m��ritetty toiminto tai rivi luetteloon.
+
+next (n)            Askelluta ohjelma.
+
+print (p)           Tulosta EXP-muuttujan arvo.
+
+pwd (pw)            Tulosta ty�hakemisto.
+
+quit (q)            Sulje fdb.
+
+run (r)             K�ynnist� ohjelma, jonka virheet on korjattu.
+
+set (se)            Aseta muuttujan arvo.
+
+source (so)         Lue fdb-komennot tiedostosta.
+
+step (s)            Askelluta ohjelma, kunnes ohjelma saavuttaa eri l�hderivin.
+
+tutorial (t)        N�yt� opetusohjelma, jossa selitet��n fdb:n k�ytt�.
+
+undisplay (u)       Poista automaattisen n�yt�n ilmaus.
+
+viewswf (v)         M��rit� tai tyhjenn� suodatin tiedostoluettelolle swf:n 
+
+                    perusteella.
+
+watch (wa)          Lis�� katselukohta annettuun muuttujaan.
+
+what (wh)           N�ytt�� muuttujan sis�ll�n.
+
+where (w)           Sama kuin bt.
+
+Kirjoita 'help' ja sen j�lkeen komennon nimi, niin n�et t�ydet k�ytt�ohjeet.
+
+
+
+[home]
+
+
+
+M��rit� luettelosijainti paikkaan, miss� suorittaminen keskeytet��n.
+
+
+
+[info]
+
+
+
+Yleiskomento, jolla n�hd��n erilaisia tietoja ohjelmasta, josta korjataan 
+
+virheit�.
+
+Luettelo info-alikomennoista:
+
+info arguments (i a)    Nykyisen pinokehyksen argumenttimuuttujat.
+
+info breakpoints (i b)  K�ytt�j�n asetettavien keskeytyskohtien tilat.
+
+info display (i d)      N�yt� luettelo automaattisen n�yt�n ilmauksista.
+
+info files (i f)        Niiden kohteiden ja tiedostojen nimet, joista korjataan 
+
+                        virheit�.
+
+info functions (i fu)   Kaikki toimintojen nimet.
+
+info handle (i h)       Miten virhe k�sitell��n.
+
+info locals (i l)       Nykyisen pinokehyksen paikalliset muuttujat.
+
+info scopechain (i sc)  Nykyisen pinokehyksen vaikutusalueketju.
+
+info sources (i so)     L�hdetiedostot ohjelmassa.
+
+info stack (i s)        Pinon backtrace.
+
+info swfs (i sw)        T�m�n istunnon swf-luettelo.
+
+info targets(i t)       Sovellus, josta korjataan virheit�.
+
+info variables (i v)    Kaikki yleisten ja staattisten muuttujien nimet.
+
+Kirjoita 'help info' ja sen j�lkeen info-alikomennon nimi, niin n�et t�ydet 
+
+k�ytt�ohjeet.
+
+
+
+[info arguments]
+
+
+
+N�yt� nykyisen pinokehyksen argumentit.
+
+
+
+[info breakpoints]
+
+
+
+N�yt� kaikkien keskeytyskohtien ja katselukohtien tila.
+
+Type-sarakkeesta n�kyy jompikumpi n�ist�:
+
+   breakpoint   - tavallinen keskeytyskohta
+
+   watchpoint   - katselukohta
+
+Disp-sarake sis�lt�� jonkin seuraavista: 'keep', 'del', 'dis'. T�m� kertoo, 
+
+mit� keskeytyskohdassa tapahtuu. Vaihtoehto 'dis' tarkoittaa sit�, ett� 
+
+keskeytyskohta poistetaan k�yt�st�. Vaihtoehto 'del' tarkoittaa sit�, ett� 
+
+keskeytyskohta poistetaan.  
+
+'Address'-sarake kertoo osoitteen. 'What'-sarake kertoo tiedoston/rivinumeron. 
+
+
+
+[info display]
+
+
+
+N�yt� luettelo automaattisen n�yt�n ilmauksista ja niiden numeroista.
+
+
+
+[info files]
+
+
+
+N�yt� tiedostojen nimet ja numerot sovellukselle, josta korjataan virheit�, 
+
+mukaan luettuna l�hdetiedostot, kehystiedostot ja automaattisesti luodut 
+
+tiedostot.
+
+Esimerkkej�:
+
+  info files
+
+    N�ytt�� aakkosj�rjestyksess� kaikki tiedostot luokan mukaan.
+
+  info files my
+
+  info files my*
+
+    N�ytt�� aakkosj�rjestyksess� kaikki tiedostot, joiden nimi alkaa "my".
+
+  info files *.as
+
+    N�ytt�� aakkosj�rjestyksess� kaikki tiedostot, joiden nimi p��ttyy ".as".
+
+  info files *foo*
+
+    N�ytt�� aakkosj�rjestyksess� kaikki tiedostot, joiden nimeen sis�ltyy "foo".
+
+Tiedostot n�ytet��n muodossa name#N, jossa N on tiedoston numero.
+
+Monissa komennoissa tiedoston nimen voi korvata #N.
+
+
+
+[info functions]
+
+
+
+N�yt� toimintojen nimet.
+
+Esimerkkej�:
+
+  info functions .
+
+    N�yt� kaikki toiminnot nykyisess� tiedostossa.
+
+  info functions myapp.mxml
+
+    N�yt� kaikki toiminnot tiedostossa myapp.mxml.
+
+  info functions #3
+
+    N�yt� kaikki toiminnot tiedostossa #3.
+
+  info functions
+
+    N�yt� kaikki toiminnot kaikissa tiedostoissa.
+
+Tiedostonimet ja -numerot n�et sy�tt�m�ll� 'info sources' tai 'info files'.
+
+Lyhennetyt tiedostonimet hyv�ksyt��n, jos ne ovat selvi�.
+
+
+
+[info handle]
+
+
+
+N�yt�, mit� fdb tekee, kun Flash Playeriss� tapahtuu virhe.
+
+Esimerkkej�:
+
+  info handle
+
+    N�yt�, miten fdb k�sittelee kaikki virheet.
+
+  info handle recursion_limit
+
+    N�yt�, miten fdb k�sittelee virheen recursion_limit.
+
+
+
+[info locals]
+
+
+
+N�yt� nykyisen pinokehyksen paikalliset muuttujat.
+
+
+
+[info scopechain]
+
+
+
+N�yt� nykyisen pinokehyksen vaikutusalueketju.  Vaikutusalueketju on 
+
+objektiluettelo, jossa Flash Player suorittaa haun yritt�ess��n ratkaista 
+
+symbolin nimen.
+
+
+
+[info sources]
+
+
+
+N�yt� l�hdetiedostojen nimet ja numerot sovellukselle, josta korjataan virheit�.
+
+Ei sis�ll� kehystiedostoja ja automaattisesti luotuja tiedostoja.
+
+Tiedostot n�ytet��n muodossa name#N, jossa N on tiedoston numero.
+
+Monissa komennoissa tiedoston nimen voi korvata #N.
+
+
+
+[info stack]
+
+
+
+Pinon backtrace.
+
+
+
+[info swfs]
+
+
+
+N�yt� virheenkorjausistunnon tuntemat swf-tiedostot.  Komennolla 'viewswf' n�et 
+
+lis�tietoja siit�, miten tiedostoluettelo voidaan suodattaa swf-nimen 
+
+perusteella. 
+
+
+
+[info targets]
+
+
+
+N�yt� URL (http: tai tiedosto:) sovellukselle, josta korjataan virheit�.
+
+
+
+[info variables]
+
+
+
+N�yt� kaikki yleisten ja staattisten muuttujien nimet ja arvot.
+
+
+
+[info ?]
+
+
+
+M��ritt�m�t�n info-komento. Kokeile komentoa 'help info'.
+
+
+
+[kill]
+
+
+
+Lopeta sen ohjelman suorittaminen, josta korjataan virheit�.
+
+T�m� komento ei hyv�ksy argumentteja.
+
+
+
+[list]
+
+
+
+Luetteloi koodirivit l�hdetiedostossa.
+
+Esimerkkej�:
+
+  list
+
+    Luetteloi kymmenen lis�rivi� nykyisess� tiedostossa edellisen luettelon 
+
+    j�lkeen tai sen ymp�rille.
+
+  list -
+
+    Luetteloi kymmenen rivi� nykyisess� tiedostossa ennen edellist� luetteloa.
+
+  list 87
+
+    Luetteloi kymmenen rivi� nykyisess� tiedostossa rivin 87 ymp�rill�.
+
+  list 87 102
+
+    Luetteloi nykyisen tiedoston rivit 87�102.
+
+Sen lis�ksi, ett� k�yt�t yksinkertaisia rivinumeroita yll� olevan esimerkin 
+
+mukaisesti, voit m��ritt�� rivej� seitsem�ll� muulla tavalla:
+
+  doThis
+
+      Toiminnon doThis() ensimm�inen rivi nykyisess� tiedostossa.
+
+   myapp.mxml
+
+      Rivi 1 tiedostossa myapp.mxml.
+
+   myapp.mxml:doThat
+
+      Toiminnon doThat() ensimm�inen rivi tiedostossa myapp.mxml.
+
+   myapp.mxml:56
+
+      Rivi 56 tiedostossa myapp.mxml.
+
+   #3
+
+      Rivi 1 tiedostossa #3.
+
+   #3:doOther
+
+      Se tiedoston #3 rivi, jolla toiminto doOther() alkaa.
+
+   #3:29
+
+      Rivi 29 tiedostossa #3.
+
+Tiedostonimet ja -numerot n�et sy�tt�m�ll� 'info sources' tai 'info files'.
+
+Toimintojen nimet n�et sy�tt�m�ll� 'info functions'.
+
+Lyhennetyt tiedostojen ja toimintojen nimet hyv�ksyt��n, jos ne ovat selvi�.
+
+Tiedoston lis��minen luetteloon tekee tiedostosta nykyisen tiedoston. (Katso 
+
+komento 'cf'.)
+
+
+
+[next]
+
+
+
+Askelluta ohjelma alirutiinikutsujen l�pi.
+
+  next
+
+    Askelluta kerran.
+
+  next 3
+
+    Askelluta kolmasti, tai kunnes ohjelma pys�htyy jostain muusta syyst�.
+
+Toimii kuten komento 'step', kunhan alirutiinikutsuja ei tapahdu. Jos 
+
+alirutiinikutsu tapahtuu, sit� k�sitell��n yhten� ohjeena.
+
+
+
+[print]
+
+
+
+Tulosta muuttujan tai ilmauksen arvo.
+
+Esimerkkej�:
+
+  print i
+
+    Tulosta 'i'-arvo.
+
+  print employee.name
+
+    Tulosta 'employee.name'-arvo.
+
+  print employee
+
+    Tulosta objektin 'employee' arvo.
+
+    Tulos saattaa olla esimerkiksi [Object 10378].
+
+  print employee.
+
+    Tulosta objektin 'employee' kaikkien ominaisuuksien arvot.
+
+  print *employee
+
+    Tulosta objektin 'employee' kaikkien ominaisuuksien arvot.
+
+    Etuliiteoperaattori * on j�lkiliiteoperaattorin . etuliitevaihtoehto.
+
+  print #10378.
+
+    Tulosta kaikkien Object #10378:n ominaisuuksien arvot.
+
+K�ytett�viss� ovat valitun pinokehyksen sanastollisen ymp�rist�n muuttujat sek� 
+
+kaikki ne muuttujat, joiden vaikutusalue on yleinen tai kokonainen tiedosto.
+
+
+
+[pwd]
+
+
+
+Tulosta nykyinen ty�hakemisto.
+
+T�m� on hakemisto, josta fdb k�ynnistettiin. Hakemistoa ei voi muuttaa fdb:n 
+
+sis�ll�. Komentojen 'run' ja 'source' argumentti voidaan m��ritt�� suhteessa 
+
+t�h�n hakemistoon.
+
+T�m� komento ei hyv�ksy argumentteja.
+
+
+
+[quit]
+
+
+
+Sulje fdb.
+
+T�m� komento ei hyv�ksy argumentteja.
+
+
+
+[run]
+
+
+
+Aloita virheenkorjausistunto.
+
+Esimerkkej�:
+
+  run http://www.mysite.com/myapp.mxml
+
+    Suorittaa m��ritetyn MXML-sovelluksen.
+
+  run myapp.swf
+
+  run mydir\myapp.swf
+
+  run c:\mydir\myapp.swf
+
+    Suorittaa paikallisen SWF-tiedoston myapp.swf, joka voidaan m��ritt�� joko 
+
+    suhteessa nykyiseen hakemistoon (katso komento 'pwd') tai k�ytt�en 
+
+    absoluuttista polkua. N�iss� tapauksissa tiedoston myapp.swd 
+
+    (virheenkorjaustiedot sis�lt�v� tiedosto) pit�� sijaita samassa 
+
+    hakemistossa kuin tiedosto myapp.swf.
+
+  run
+
+    Suorita edell� komennossa 'file' m��ritetty sovellus.
+
+    Jos sovellusta ei ole m��ritetty, fdb odottaa, kunnes jokin sovellus 
+
+    muodostaa siihen yhteyden. Jos mik��n sovellus ei tee niin, fdb suorittaa 
+
+    aikakatkaisun.
+
+Komento 'run' k�ynnist�� sovelluksen selaimessa tai erillisess� Flash 
+
+Playeriss�.
+
+Heti, kun sovellus k�ynnistyy, se keskeytyy fdb-tilaan, jotta voit m��ritt�� 
+
+keskeytyskohdat.
+
+
+
+Macintosh-k�ytt�j�rjestelm�ss� komennon ainoa tuettu muoto on 'run', ilman 
+
+argumentteja.  Flash Player pit�� k�ynnist�� manuaalisesti.
+
+
+
+[set]
+
+
+
+M��rit� muuttujan tai mukavuusmuuttujan arvo.
+
+Mukavuusmuttujia esiintyy ainoastaan fdb:ss�. Ne eiv�t ole osa ohjelmaa.
+
+Mukavuusmuuttujilla on etuliite '$'. Muuttujilla voi olla mik� tahansa nimi, 
+
+joka ei ole jo olemassa olevan muuttujan nimi.  Esimerkiksi $myVar.  
+
+Mukavuusmuuttujilla voidaan hallita useita fdb:n ominaisuuksia.  
+
+
+
+Seuraavat mukavuusmuuttujat ovat fdb:n k�yt�ss�.
+
+$listsize          - komennolle 'list' n�ytett�vien l�hderivien m��r�
+
+$columnwrap        - sen sarakkeen numero, jossa tulostus rivitet��n
+
+$infostackshowthis - jos 0, pinon backtrace-luettelossa ei lue 'this'
+
+$invokegetters     - jos 0, est�� fdb:t� suorittamasta get-funktioita
+
+$bpnum             - viimeinen m��ritetty keskeytyskohdan numero
+
+$displayattributes - jos 1, 'print var.' n�ytt�� kaikki 'var'-j�senien 
+
+                     attribuutit (esim. yksityinen, staattinen)
+
+
+
+Esimerkkej�:
+
+  set i = 3
+
+    M��ritt�� muuttujan 'i' numerolle 3.
+
+  set employee.name = "Susan"
+
+    M��ritt�� muuttujan 'employee.name' merkkijonolle "Susan".
+
+  set $myVar = 20
+
+    M��ritt�� mukavuusmuuttujan '$myVar' numerolle 20.
+
+
+
+[show]
+
+
+
+Yleiskomento, jolla n�hd��n erilaisia tilatietoja fdb:st�.
+
+Luettelo show-alikomennoista:
+
+show break (sh b)       Suorituksen keskeytyksen paikka ja syy.
+
+show directories (sh d) Hakemistot, joista etsit��n l�hdetiedostoja.
+
+show files (sh f)       Kohdetiedostot ja -polut.
+
+show functions (sh fu)  Toimintorivin m��ritystiedot. 
+
+show locations (sh l)   Keskeytyskohtien paikat.
+
+show memory (sh m)      Nykyinen muistin k�ytt�.
+
+show net (sh n)         Soittimen viestitilastot. 
+
+show properties (sh p)  Ominaisuuksien arvot.
+
+show uri (sh u)         Soittimen URI t�t� istuntoa varten. 
+
+show variable (sh v)    Raw-muuttujan noutaminen.
+
+Kirjoita 'help show' ja sen j�lkeen show-alikomennon nimi, niin n�et t�ydet 
+
+k�ytt�ohjeet.
+
+
+
+[show break]
+
+
+
+N�yt� siirtym� SWF:ss�, johon ohjelma pys�htyi.
+
+
+
+[show directories]
+
+
+
+N�yt� nykyinen hakupolku l�hdetiedostojen l�yt�mist� varten.
+
+
+
+[show files]
+
+
+
+N�yt� kaikkien kohdetiedostojen polku ja tiedostonimi.
+
+
+
+[show functions]
+
+
+
+N�yt� toiminnon/rivinumeron m��ritystiedot.
+
+Esimerkkej�:
+
+  show functions .
+
+    N�ytt�� kaikkien toimintojen m��ritystiedot nykyisess� tiedostossa.
+
+  show functions myapp.mxml
+
+    N�ytt�� kaikkien toimintojen m��ritystiedot tiedostossa myapp.mxml.
+
+  show functions #3
+
+    N�ytt�� kaikkien toimintojen m��ritystiedot tiedostossa #3.
+
+  show functions
+
+    N�ytt�� kaikkien toimintojen m��ritystiedot kaikissa tiedostoissa.
+
+Tiedostonimet ja -numerot n�et sy�tt�m�ll� 'info sources' tai 'info files'.
+
+Lyhennetyt tiedostonimet hyv�ksyt��n, jos ne ovat selvi�.
+
+
+
+[show locations]
+
+
+
+N�ytt�� luettelon sijainneista, jotka kullekin keskeytyskohdalle on m��ritetty.
+
+
+
+[show memory]
+
+
+
+N�ytt�� Java-n�enn�ismuistin tilastot.
+
+
+
+[show net]
+
+
+
+N�ytt�� tiedot Flash Playeriin l�hetetyist� ja silt� vastaanotetuista 
+
+viesteist�.
+
+
+
+[show properties]
+
+
+
+N�ytt�� luettelon virheenkorjauksessa k�ytetyist� mukavuusmuuttujista. 
+
+
+
+[show uri]
+
+
+
+N�ytt�� URI:n, jonka soitin l�hetti t�t� istuntoa varten.
+
+
+
+[show variable]
+
+
+
+N�ytt�� muuttujan j�senten arvot.  Vaaditaan kaksi parametri�. Ensimm�inen on 
+
+numeroarvoinen muuttujan tunniste. Toinen on muuttujan ominaisuuden nimi.  
+
+Mukavuusmuuttujaa $invokegetters k�ytet��n m��ritt�m��n, k�ynnistet��nk� 
+
+get-ominaisuus, jos sellainen on olemassa.
+
+Esimerkki:
+
+    show variable 1 __proto__
+
+
+
+[show ?]
+
+
+
+M��ritt�m�t�n show-komento. Kokeile komentoa 'help show'.
+
+
+
+[source]
+
+
+
+Lue fdb-komennot tiedostosta ja suorita ne.
+
+  source mycommands.txt
+
+  source mydir\mycommands.txt
+
+  source c:\mydir\mycommands.txt
+
+    Lukee kohteen mycommands.txt ja suorittaa siin� olevat fdb-komennot.
+
+    Komennot sis�lt�v� tiedosto voidaan m��ritt�� joko
+
+	suhteessa nykyiseen hakemistoon (katso komento 'pwd')
+
+	tai k�ytt�en absoluuttista polkua.
+
+Tiedosto .fdbinit luetaan automaattisesti t�ll� tavalla, kun fdb k�ynnistet��n.
+
+Tiedostoa .fdbinit haetaan vain nykyisest� hakemistosta. T�m� tarkoittaa sit�, 
+
+ett� voit m��ritt�� useita .fdbinit-tiedostoja eri projekteja varten.
+
+
+
+[step]
+
+
+
+Askelluta ohjelma, kunnes ohjelma saavuttaa eri l�hderivin.
+
+Esimerkkej�:
+
+  step
+
+    Askelluta kerran.
+
+  step 3
+
+    Askelluta kolmasti, tai kunnes ohjelma pys�htyy jostain muusta syyst�.
+
+
+
+[tutorial]
+
+
+
+N�yt� opetusohjelma, jossa selitet��n fdb:n k�ytt�.
+
+T�m� komento ei hyv�ksy argumentteja.
+
+
+
+[Tutorial]
+
+
+
+Tyypillinen fdb-istunto:
+
+K�ynnist� sovellus komennolla 'run'.
+
+Tarkastele tiedostonimi� komennolla 'info sources'.
+
+Lis�� tiedosto luetteloon komenolla 'list'.
+
+M��rit� keskeytyskohdat komennolla 'break'.
+
+Suorita ohjelma komennolla 'continue', kunnes osutaan keskeytyskohtaan.
+
+Tutki ohjelman tilaa komennoilla 'where', 'print', 'info locals'.
+
+Suorita yksitt�isi� lausekkeita komennoilla 'next', 'step', 'finish'.
+
+Jatka suorittamista komennolla 'continue'.
+
+Sulje fdb komennolla 'quit'.
+
+
+
+[undisplay]
+
+
+
+Poista yksi tai usea automaattisen n�yt�n ilmaus.
+
+Esimerkkej�:
+
+  undisplay
+
+    Poista kaikki automaattisen n�yt�n ilmaukset.
+
+  undisplay 2 7
+
+    Poista automaattisen n�yt�n ilmaukset #2 ja #7.
+
+N�et automaattisen n�yt�n ilmaukset ja niiden numerot sy�tt�m�ll� 'info 
+
+display'.
+
+
+
+[up]
+
+
+
+Valitse ja tulosta t�t� kutsunut pinokehys.
+
+Seuraavat komennot 'info arguments' ja 'info locals' n�ytt�v�t
+
+valitun kehyksen paikalliset muuttujat ja argumentit.
+
+Katso komennot 'down' ja 'frame'.
+
+
+
+[viewswf]
+
+
+
+M��ritt�� tai tyhjent�� tiedostoluettelon ('info files' tai 'info sources') 
+
+suodattimen swf-nimen perusteella. 
+
+Ilman parametrej� kaikki tiedostot n�ytet��n.  Jos sama tiedosto esiintyy 
+
+useassa swf:ss�, luettelossa n�kyy vain tiedoston ensimm�inen esiintym�.  
+
+Saat tiedoston muut esiintym�t n�kyviin k�ytt�m�ll� tiedoston numeroa (esim. 
+
+'list #192') tai t�t� komentoa parametrin kanssa (katso alla). N�in voit 
+
+tarkastella jonkin tietyn swf:n tiedostoja.  Jos k�yt�ss� on vain yksi 
+
+parametri, komennon 'info swfs' n�ytt�m� swf-nimi, ainoastaan m��ritetyn swf:n 
+
+tiedostot tulevat n�kyviin luetteloon.  
+
+Muissa swf-tiedostoissa olevia tiedostoja ei n�ytet�.  T�m� komento vaikuttaa 
+
+my�s komentoihin, jotka hyv�ksyv�t parametriksi tiedoston (esim. 'break').
+
+Esimerkki:
+
+  viewswf myApp.mxml.swf
+
+    Vain tiedostossa myApp.mxml.swf olevat tiedostot n�ytet��n.
+
+  viewswf 
+
+    Kaikkien swf-tiedostojen kaikki tiedostot n�ytet��n.
+
+ 
+
+[watch]
+
+
+
+Lis�� katselukohta annettuun muuttujaan. Virheenkorjaustoiminto keskeytt�� 
+
+suorittamisen muuttujan arvon vaihtuessa.
+
+Esimerkki:
+
+  watch foo
+
+
+
+[what]
+
+
+
+N�ytt�� kontekstin, jonka sis�ll� muuttuja ratkaistaan. 
+
+
+
+[where]
+
+
+
+Pinon backtrace.
+
+
+
+[zzz]
+
+
+
+((( Keep this unused topic at the end of the file    )))
+
+((( so that the next-to-last one is parsed properly. )))
+

@@ -1,0 +1,303 @@
+Apache Royale Compiler
+====================
+
+    This Apache Royale Compiler was formerly known as the 'Falcon' compiler.  It was 
+    originally destined to be the next-generation replacement to the MXMLC compiler
+    that is currently bundled with the Apache Flex SDK.  This compiler is based on the 
+    Adobe ASC2.0 code base donated to Apache by Adobe Systems Inc.
+
+    The compiler has been modified and extended to transpile MXML and ActionScript
+    to JavaScript and potentially other output definitions and is
+    now being used as the compiler for the Apache Royale SDK.  Royale is a
+    next-generation SDK that allows the developer to leverage MXML and ActionScript
+    to build applications that not only run as a SWF, but can also be cross-compiled
+    to JavaScript and run natively in a browser or anywhere JavaScript runs.
+
+Getting the latest sources via git
+==================================
+
+    Getting the source code is the recommended way to get the Apache Royale Compiler.  
+    The compiler can also be installed by installing an Apache Royale SDK via NPM
+    or by unpacking Apache Royale binary distributions available from link on our 
+    website at http://royale.apache.org/.
+
+    You can always checkout the latest source via git using the following
+    command:
+
+	 git clone https://github.com/apache/royale-compiler.git royale-compiler
+	 cd royale-compiler
+	 git checkout develop
+
+Building the Apache Royale Compiler
+=================================
+
+    The Apache Royale Compiler is a large project. It requires some build tools 
+    which must be installed prior to building the compiler and it depends on 
+    some external software which are downloaded as part of the build process.  
+    Some of these have different licenses.  See the Software Dependencies section 
+    for more information on the external software dependencies.
+
+    Linux support is currently experimental has not been fully tested so you 
+    may run into issues.
+
+    You can build the Apache Royale Compiler with Apache Maven or Apache Ant.
+
+Building the Apache Royale Compiler with Apache Maven
+-----------------------------------------------------
+
+    Before building the Apache Royale Compiler with Apache Maven you must install 
+    the following software.
+
+    ==================================================================================
+    SOFTWARE                                
+    ==================================================================================
+
+    Java SDK 8 or greater (*1)            
+
+    Maven 3.3.9 or greater (*1)              
+
+    ==================================================================================
+
+    *1) The bin directories for Maven and Java should be added to your
+        PATH.
+
+    Then run
+
+        mvn clean install
+
+Building the Apache Royale Compiler with Ant
+----------------------------------------------
+
+    Before building the Apache Royale Compiler with Apache Ant you must install 
+    the following software and set the corresponding environment variables using 
+    absolute file paths.  Relative file paths will result in build errors.
+
+    ==================================================================================
+    SOFTWARE                                     ENVIRONMENT VARIABLE (absolute paths)
+    ==================================================================================
+
+    Java SDK 1.7 or greater (*1)                           JAVA_HOME
+        (for Java 1.7 see note at (*2))
+
+    Ant 1.7.1 or greater (*1)                              ANT_HOME
+        (for Java 1.7 see note at (*2))
+
+    ==================================================================================
+    
+    *1) The bin directories for ANT_HOME and JAVA_HOME should be added to your
+        PATH.
+
+        On Windows, set PATH to
+
+            PATH=%PATH%;%ANT_HOME%\bin;%JAVA_HOME%\bin
+
+        On the Mac (bash), set PATH to
+
+            export PATH="$PATH:$ANT_HOME/bin:$JAVA_HOME/bin"
+
+         On Linux make sure you path include ANT_HOME and JAVA_HOME.
+
+    *2)  If you are using Java SDK 1.7 or greater on a Mac you must use Ant 1.8
+         or greater. If you use Java 1.7 with Ant 1.7, ant reports the java
+         version as 1.6 so the JVM args for the data model (-d32/-d64) will not
+         be set correctly and you will get compile errors.
+
+    Once you've done that, use
+
+        ant main        (or just ant since the default target is main)
+
+    to download the third-party dependencies and build the source and run
+    some tests.  Since the third-party dependencies take a little while to 
+    download and they don't change very often, they are not cleaned with 
+     the regular clean target.
+
+    To clean the build of everything other than the downloaded third-party
+    dependencies use
+
+        ant clean
+
+    To clean the build, of everything, including the downloaded third-party
+    dependencies use
+
+        ant wipe-all (which is just thirdparty-clean followed by clean)
+
+    To get a brief listing of all the targets type
+
+        ant -projecthelp
+
+
+Running Integration Tests
+-------------------------
+
+    The build process will run some tests.  By default, the build will not
+    run feature or integration tests.  Before running some of the feature or 
+    integration tests you will need to set the environment variables described
+    below, or set up a env.properties file with those settings.
+
+    A template is found here: env-template.properties. 
+
+    Some tests of SWF output may use the Adobe Flash Player or Adobe AIR to
+    run a SWF.  If you plan to run those tests, ensure that the folder 
+    containing the source code is in your Flash Player Trust files.
+
+    ==================================================================================
+    SOFTWARE                                     ENVIRONMENT VARIABLE (absolute paths)
+    ==================================================================================
+
+    Apache Royale SDK or repository (*3)         ASJS_HOME
+
+    Adobe AIR Integration Kit (*4)               AIR_HOME
+
+    Adobe Flash Player Content Debugger (*5)     FLASHPLAYER_DEBUGGER
+
+    Adobe Flash Player playerglobal swcs (*6)    PLAYERGLOBAL_HOME
+
+    Adobe Flash Player playerglobal swcs (*6)    PLAYERGLOBAL_VERSION
+
+    Apache Flex SDK or repository (*7)           FLEX_HOME
+
+    Apache Flex TLF source (*8)                  TLF_HOME
+
+    ==================================================================================
+
+    *3) This option is only required to run additional tests to verify that the compiler
+        can output Royale applications that use Royale framework SWCs.
+        
+        Set the ASJS_HOME variable to the root of the Apache Royale SDK or 
+        royale-asjs repository.
+
+    *4) This option is only required to run additional tests to verify that the compiler
+        can output SWFs.
+        
+        The Adobe AIR integration kit for Windows can be downloaded from:
+           http://airdownload.adobe.com/air/win/download/4.0/AdobeAIRSDK.zip
+
+         The Adobe AIR integration kit for Mac can be downloaded from:
+            http://airdownload.adobe.com/air/mac/download/4.0/AdobeAIRSDK.tbz2
+
+          The Adobe AIR integration kit for Linux can be downloaded from:
+            http://airdownload.adobe.com/air/lin/download/2.6/AdobeAIRSDK.tbz2
+
+        Download the AIR SDK for your platform and unzip it. Set AIR_HOME to the
+        absolute path of the AIR SDK directory.
+
+    *5) This option is only required to run additional tests to verify that the compiler
+        can output SWFs.
+        
+        The Adobe Flash Player content debuggers can be found here:
+            http://www.adobe.com/support/flashplayer/downloads.html
+
+        On Windows, set FLASHPLAYER_DEBUGGER to the absolute path including the
+        filename of the FlashPlayerDebugger.exe. Note the filename of flash
+        player debugger maybe different.
+           e.g. C:\MyPath\FlashPlayerDebugger.exe
+
+        On the Mac, set FLASHPLAYER_DEBUGGER to the absolute path of
+        Flash Player Debugger.app/Contents/MacOS/Flash Player Debugger
+
+        On Linux, set FLASHPLAYER_DEBUGGER to the absolute path of
+        flashplayerdebugger
+
+    *6) This option is only required to run additional tests to verify that the compiler
+        can output SWFs.
+        
+        The Adobe Flash Player playerglobal.swc for 11.1 can be downloaded from:
+            http://download.macromedia.com/get/flashplayer/updaters/11/playerglobal11_1.swc
+
+        Use URL above to download playerglobal11_1.swc.
+
+        Set PLAYERGLOBAL_HOME to the absolute path of the player directory (not
+        including the version subdirectory). The target-player option controls
+        which PLAYERGLOBAL_HOME subdirectory is used.
+
+        Other more recent versions of Adobe Flash Player playerglobal.swc can be
+        downloaded from:
+            http://download.macromedia.com/get/flashplayer/updaters/<version.major>/playerglobal<version.major>_<version.minor>.swc
+
+        (e.g. http://download.macromedia.com/get/flashplayer/updaters/11/playerglobal11_1.swc)
+
+        Copy the target playerglobal.swc to the directory:
+
+           frameworks/libs/player/<version.major>.<version.minor>/playerglobal.swc
+    
+        These can be used with the Apache Royale Compiler but not all have not been fully
+        tested.
+
+        Set PLAYERGLOBAL_VERSION to the version you chose.  The default is 11.1.
+
+    *7) This option is only required to run additional tests to verify that the compiler
+        can output SWFs.
+        
+        The FLEX_HOME variable should point to a folder of the flex-sdk sources.
+        If you don’t provide this variable (and TLF_HOME and BLAZEDS_HOME), 
+        you may not be able to run all of the tests in the compiler 
+        and compiler-jx folders.
+
+    *8) This option is only required to run additional tests to verify that the compiler
+        can output SWFs.
+        
+        The TLF_HOME variable should point to a folder containing a folder
+        named textLayout that contains a src folder of the TLF sources.
+        This should be the root of the flex-tlf repository, or can be
+        the frameworks/projects folder of an IDE compatible Royale SDK.
+
+Software Dependencies
+---------------------
+
+    The Apache Royale Compiler uses third-party code that will be downloaded as 
+    part of the build.
+
+    The Apache Version 2.0 license is in the LICENSE file.
+
+    The following dependencies have licenses which are, or are compatible with,
+    the Apache Version 2.0 license.  You will not be prompted to acknowledge the
+    download.  Most of the jars are installed in lib/external when installed
+    into an Apache Royale SDK and the lib folder in the repository working copy.
+
+        antlr - https://repo1.maven.org/maven2/org/antlr/antlr-complete/3.5.2/antlr-3.5.2-complete.jar
+        args4j = http://search.maven.org/remotecontent?filepath=args4j/args4j/2.0.28/args4j-2.0.28.jar
+        commons-cli - https://repo1.maven.org/maven2/commons-cli/commons-cli/1.2/commons-cli-1.2-bin.tar.gz
+        commons-io - https://repo1.maven.org/maven2/commons-io/commons-io/2.4/commons-io-2.4.tar.gz
+        commons-lang - https://repo1.maven.org/maven2/commons-lang/commons-lang/2.6/commons-lang-2.6.tar.gz
+        commons-lang3 - https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar
+        commons-compress - https://repo1.maven.org/maven2/org/apache/commons/commons-compress/1.10/commons-compress-1.10.jar
+        guava - https://repo1.maven.org/maven2/com/google/guava/guava/17.0/guava-17.0.jar
+        jburg - https://repo1.maven.org/maven2/net/sourceforge/jburg/jburg/1.10.2/jburg-1.10.2.jar
+        jflex - https://jflex.de/jflex-1.6.0.tar.gz
+        lzma - http://www.java2s.com/Code/JarDownload/lzma/lzma-9.20.jar.zip
+        Google Closure Compiler - http://github.com/google/closure-compiler/archive/v20181210.zip
+
+    The Google Closure Compiler includes files originally from Rhino under MPL 1.1.  For
+    details see:
+       https://github.com/google/closure-compiler/blob/master/README.md.  
+    Rhino is available at:
+       https://developer.mozilla.org/en-US/docs/Mozilla/Projects/Rhino
+
+Using the Binary Distribution
+-----------------------------
+
+    The binary artifacts produced by the Maven build are then used by Maven projects
+    to build Apache Royale applications.  See the archetypes in the royale-asjs repo
+    or the examples in the royale-asjs repo.
+
+    The binaries produced by the Apache Ant build are intended to be packaged into an
+    Apache Royale SDK to create Apache Royale applications via Ant.
+
+    To temporarily use a set of binary artifacts when building Apache Royale
+    applications with Apache Ant, set the ROYALE_COMPILER_HOME property to the 
+    compiler-jx folder in the binary distribution and set ROYALE_SWF_COMPILER_HOME
+    to the compiler folder in the binary distribution either via an 
+    environment variable or property when running Ant to build the Apache Royale
+    application.
+
+    To replace the current Royale Compiler binaries in a Apache Royale SDK, 
+    run the copy-compiler target from the Ant script in the Apache Royale SDK and
+    set ROYALE_COMPILER_REPO to the root of the binary distribution when running 
+    that target.
+
+       ant -DROYALE_COMPILER_REPO=<path to binary distribution> copy-compiler
+
+Thanks for using Apache Royale.  Enjoy!
+
+                                          The Apache Royale Project
+                                          <http://royale.apache.org>

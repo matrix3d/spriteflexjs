@@ -1,0 +1,244 @@
+<?xml version="1.0"?>
+<!--
+
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-->
+
+<project name="cordova-app" default="main">
+
+	<!-- this ANT script assumes you are in the following directory structure:
+	
+	     .    /* run ANT here */
+	     ./src/<APP>.mxml   /* The main application MXML tag */
+	     ./bin/js-debug                       /* The result of building APP.mxml via mxmlc, or
+         ./target/javascript/bin/js-debug     /* The result of building APP.mxml via maven
+	     ./app/<APP>        /* The Cordova application directory
+	     
+	     1. This ANT script will build the template Cordova app/APP if it does not
+	     already exist. 
+	     
+	     2. This ANT script will compile the APP.mxml into bin/js-debug
+	     
+	     3. This ANT script will remove ./app/<APP>/www contents are replace it with
+	     the contents of bin/js-debug.
+	     
+	     Optionally, you can run the Cordova application using ant run
+	     
+	-->
+	
+	<target name="main" depends="find.cordova.mac,create,copyfiles" description="Creates the Cordova app if needed, compiles the Royale app, copies the results to Cordova app">
+	</target>
+	
+	<!-- Set up properties and conditions -->
+	
+	<property environment="env"/>
+	
+    <condition property="isWindows" value="windows">
+        <os family="windows" />
+    </condition>
+    
+    <condition property="projectdir" value="${user.dir}">
+    	<not>
+    		<isset property="projectdir" />
+    	</not>
+    </condition>
+    <condition property="target" value="target/javascript">
+        <available file="${projectdir}/target/javascript/bin/js-debug" type="dir" />
+    </condition>
+    <property name="target" value="." />
+	
+	<condition property="platform.android" value="android">
+		<not>
+			<isset property="platform.android" />
+		</not>
+    </condition>
+    <condition property="platform.ios" value="ios">
+    	<not>
+    		<isset property="platform.ios" />
+    	</not>
+    </condition>
+    
+	<!-- override with -Dappname=other-app-name -->
+	<basename property="directory.name" file="${projectdir}" />
+    <condition property="appname" value="${directory.name}">
+    	<not>
+    		<isset property="appname" />
+    	</not>
+    </condition>
+    
+    <condition property="cordova.executable" value="cordova.cmd">
+    	<isset property="isWindows" />
+    </condition>
+    <condition property="cordova.path" value="${env.APPDATA}\npm">
+    	<isset property="isWindows" />
+    </condition>
+	
+	<property name="cordova.target.dir" value="${projectdir}/app/${appname}" />
+    <available file="${cordova.target.dir}" type="dir" property="app.dir.exists"/>
+    
+    <target name="find.cordova.mac" unless="isWindows">
+        <condition property="cordova.executable" value="/usr/local/bin/cordova">
+            <available file="/usr/local/bin/cordova" type="file"/>
+        </condition>
+        <condition property="cordova.path" value="/usr/local/bin">
+            <available file="/usr/local/bin/cordova" type="file"/>
+        </condition>
+    </target>
+	
+	<condition property="app.path" value="${env.Path}">
+	    <isset property="env.Path" />
+	</condition>
+	<property name="app.path" value="${env.PATH}" />
+	
+	<!-- Create the Cordova template project unless it already exists -->
+	
+	<target name="makedir" unless="app.dir.exists">
+		<mkdir dir="${projectdir}/app" />
+	</target>
+	
+	<target name="create" unless="app.dir.exists" depends="makedir" description="Creates the Cordova application template">
+    	<!-- create the project -->
+		<exec executable="${cordova.executable}" dir="${projectdir}/app">
+            <env key="PATH" path="${app.path}:${cordova.path}"/>
+			<arg value="create" />
+			<arg value="${appname}" />
+			<arg value="org.apache.royale.examples.${appname}" />
+			<arg value="${appname}" />
+		</exec>
+    </target>
+    
+    <!-- Clean www directory -->
+    
+    <target name="purge">
+    	<delete includeEmptyDirs="true">
+    		<fileset dir="${cordova.target.dir}/www" includes="**/*" />
+    	</delete>
+    </target>
+    
+    <!-- Copy files from step above -->
+    
+    <target name="copyfiles" depends="purge">
+    	<echo message="Copying files from project" />
+    	<copy todir="${cordova.target.dir}/www">
+    		<fileset dir="${projectdir}/${target}/bin/js-debug" />
+    	</copy>
+    </target>
+    
+    <!--
+    	Check to see if the Android platform needs to be loaded.
+    -->
+    
+    <target name="check-platform.android">
+    	<property name="android.platform" value="${projectdir}/app/${appname}/platforms/android" />
+    	<available file="${android.platform}" type="dir" property="platform.loaded" />
+    </target>
+    
+    <target name="load-platform.android" depends="find.cordova.mac,check-platform.android" unless="platform.loaded">
+    	<exec executable="${cordova.executable}" dir="${cordova.target.dir}">
+            <env key="PATH" path="${app.path}:${cordova.path}"/>
+			<arg value="platform" />
+			<arg value="add" />
+			<arg value="${platform.android}" />
+		</exec>
+    </target>
+    
+    <!--
+    	Check to see if the iOS platform needs to be loaded.
+    -->
+    
+    <target name="check-platform.ios">
+    	<property name="android.ios" value="${projectdir}/app/${appname}/platforms/ios" />
+    	<available file="${ios.platform}" type="dir" property="platform.loaded" />
+    </target>
+    
+    <target name="load-platform.ios" depends="find.cordova.mac,check-platform.ios" unless="platform.loaded">
+    	<exec executable="${cordova.executable}" dir="${cordova.target.dir}">
+            <env key="PATH" path="${app.path}:${cordova.path}"/>
+			<arg value="platform" />
+			<arg value="add" />
+			<arg value="${platform.ios}" />
+		</exec>
+    </target>
+    
+    <!-- 
+    	Check to see if the Cordova File Plugin is needed and if so, load it.
+    -->
+    
+    <target name="check-fileplugin">
+    	<property name="storage.file" value="${projectdir}/${target}/bin/js-debug/org/apache.royale/storage/IPermanentStorage.js" />
+    	<available file="${storage.file}" type="file" property="file.plugin.needed" />
+    </target>
+    
+    <target name="load-fileplugin" depends="find.cordova.mac,check-fileplugin" if="file.plugin.needed">
+    	<echo message="Loading cordova file-plugin" />
+    	<exec executable="${cordova.executable}" dir="${cordova.target.dir}">
+            <env key="PATH" path="${app.path}:${cordova.path}"/>
+    		<arg value="plugin" />
+    		<arg value="add" />
+    		<arg value="cordova-plugin-file" />
+    	</exec>
+    </target>
+    
+    <target name="load-plugin" depends="find.cordova.mac">
+    	<echo message="Loading cordova plugin ${plugin}" />
+	<echo message="target dir = ${cordova.target.dir}" />
+    	<exec executable="${cordova.executable}" dir="${cordova.target.dir}">
+            <env key="PATH" path="${app.path}:${cordova.path}"/>
+    		<arg value="plugin" />
+    		<arg value="add" />
+    		<arg value="${plugin}" />
+    	</exec>
+    </target>
+
+    <!--
+    	Running the app on the platform
+    -->
+    
+    <target name="run.android" depends="find.cordova.mac,load-platform.android,load-fileplugin" description="Runs the Cordova application on the specified platform">
+    	<echo message="Launching ${appname} on platform ${platform.android}" />
+    	<exec executable="${cordova.executable}" dir="${cordova.target.dir}">
+            <env key="PATH" path="${app.path}:${cordova.path}"/>
+    		<arg value="run" />
+    		<arg value="${platform.android}" />
+    	</exec>
+    </target>
+    
+    <target name="run.ios" depends="find.cordova.mac,load-platform.ios,load-fileplugin" description="Runs the Cordova application on the specified platform">
+    	<echo message="Launching ${appname} on platform ${platform.ios}" />
+    	<exec executable="${cordova.executable}" dir="${cordova.target.dir}">
+            <env key="PATH" path="${app.path}:${cordova.path}"/>
+    		<arg value="run" />
+    		<arg value="${platform.ios}" />
+    	</exec>
+    </target>
+    
+    <!--
+    	Cleaning Tasks
+    -->
+    
+    <target name="clean" depends="purge" description="Removes files created during the build and copy">
+    	<delete dir="${projectdir}/bin-debug" failonerror="false" />
+    	<delete dir="${projectdir}/bin-release" failonerror="false" />
+    </target>
+    
+    <target name="super-clean" depends="clean" description="Removes all files and directories except src and its contents">
+    	<delete dir="${projectdir}/bin" />
+    	<delete dir="${projectdir}/app" />
+    </target>
+    
+
+</project>

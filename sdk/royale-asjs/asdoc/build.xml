@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!--
+
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+-->
+<project name="ASDocs" default="main" basedir=".">
+    <property environment="env"/>
+    <available file="${basedir}/../../sdk"
+        type="dir"
+        property="ROYALE_HOME"
+        value="${basedir}/../../sdk" />
+	<property name="ROYALE_HOME" value="${basedir}/../../royale-sdk"/>
+	<property name="lenient" value="true"/>
+	<property name="royalelib" location="${basedir}/../frameworks"/>
+
+    <property name="doc_output" location="${basedir}/../asdoc-output"   />
+    <property name="project_home" location="${basedir}/../frameworks/projects"/>
+
+    <property file="${ROYALE_HOME}/env.properties"/>
+	<property file="${ROYALE_HOME}/build.properties"/>
+	
+	<echo message="ROYALE_HOME = ${ROYALE_HOME}" />
+	<echo message="royalelib = ${royalelib}" />
+	<echo message="doc_output = ${doc_output}" />
+    <echo message="compiler.source-path = ${project_home}/*/src/main/royale" />
+
+	<target name="main" depends="clean,doc" description="Clean build of all ASDocs"/>
+
+	<target name="clean" description="Cleans all ASDocs">
+		<delete dir="${doc_output}"/>
+	</target>
+
+	<target name="doc">
+
+	    <condition property="asdoc.jvm.args" value="-Xmx512m">
+	        <os family="windows"/>
+	    </condition>
+
+	    <condition property="asdoc.jvm.args" value="-Xmx1024m">
+	        <os family="mac"/>
+	    </condition>
+
+	    <condition property="asdoc.jvm.args" value="-Xmx512m">
+	        <os family="unix"/>
+	    </condition>
+
+        <path id="flexTasks.path">
+            <fileset dir="${ROYALE_HOME}">
+                <include name="lib/royaleTasks.jar" />
+                <include name="ant/lib/royaleTasks.jar" />
+            </fileset>
+        </path>
+        <taskdef resource="flexTasks.tasks" classpathref="flexTasks.path"/>
+        
+		<!-- Call asdoc to generate dita xml files -->
+		<asdoc output="${doc_output}" lenient="true" failonerror="true" warnings="false" strict="false" locale="en_US" fork="true" keep-xml="true"
+               window-title="Apache Royale API Reference"
+               main-title="${release.name} ${release.version} API Reference "
+               footer="${manifest.Implementation-Vendor}" >
+               <arg line="+frameworks_dir=${royalelib}" />
+            <load-config filename="${royalelib}/asdoc-config.xml" />
+            
+            <jvmarg line="${asdoc.jvm.args}"/>
+            
+            <external-library-path dir="${env.AIR_HOME}/frameworks/libs/air">
+                <include name="airglobal.swc"/>
+            </external-library-path>
+            <external-library-path dir="${ROYALE_HOME}/js/libs">
+                <include name="google_maps.swc"/>
+            </external-library-path>
+            
+		</asdoc>
+	</target>
+</project>

@@ -1,0 +1,59 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+//  Licensed to the Apache Software Foundation (ASF) under one or more
+//  contributor license agreements.  See the NOTICE file distributed with
+//  this work for additional information regarding copyright ownership.
+//  The ASF licenses this file to You under the Apache License, Version 2.0
+//  (the "License"); you may not use this file except in compliance with
+//  the License.  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+////////////////////////////////////////////////////////////////////////////////
+
+/*
+ *  ***********************
+ *  **  Semantic Errors  **
+ *  ***********************
+ *
+ *  These reductions trap semantic errors
+ *  (and some syntax errors that wander into the code generator).
+ */
+
+
+//  try { } without catch or finally.
+statement = TryID(statement only_has_body) : ERROR_TRAP
+{
+    return recordError(new MissingCatchOrFinallyProblem(__p));
+}
+
+// for() or for(i) or for(i;j) or for (i;j;k;l)
+statement = ForLoopID(ContainerID(expression wrong_number_of_initializers*), statement body) : ERROR_TRAP
+{
+    return recordError(new CountedForLoopInitializerProblem(__p));
+}
+
+// for ( "a" in foo)
+statement = ForLoopID(ContainerID(Op_InID(expression not_lvalue, expression dont_care)), statement body) : ERROR_TRAP
+{
+    return recordError(new InvalidLvalueProblem(__p));
+}
+
+// for(var foo, x in bar) -- we also need a trap for for(x, y in bar)
+// but the precedence of that expression needs to be fixed first.
+statement = ForLoopID(ContainerID(ContainerID(expression leading_bandit, Op_InID(expression dc1, expression dc2), expression trailing*)), statement body): ERROR_TRAP
+{
+    return recordError(new InvalidForInInitializerProblem(__p));
+}
+
+// for (x in foo, bar)
+statement = ForLoopID(ContainerID(ContainerID(Op_InID(expression dc1, expression dc2), expression trailing+)), statement body): ERROR_TRAP
+{
+    return recordError(new InvalidForInInitializerProblem(__p));
+}

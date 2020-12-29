@@ -29,7 +29,7 @@ jobs:
           cd gh-pages
           cd auto
           python main.py
-          $className = Get-Content auto/${{ github.event.comment.id }}/main.txt -Raw
+          $className = Get-Content ${{ github.event.comment.id }}/main.txt -Raw
           echo className=$className
           cd ..
           git config user.name github-actions

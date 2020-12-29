@@ -32,7 +32,7 @@ jobs:
           cd ${{ github.event.issue.id }}
           mkdir ${{ github.event.comment.id }}
           cd ${{ github.event.comment.id }}
-          echo ${{ github.event.comment.body }}>${{ github.event.comment.id }}.js
+          echo ${{ github.event.comment.body }} >${{ github.event.comment.id }}.js
           cd ..
           cd ..
           dir

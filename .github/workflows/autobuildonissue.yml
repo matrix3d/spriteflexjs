@@ -28,9 +28,9 @@ jobs:
           tar -x -f 'apache-royale-0.9.8-bin-js.zip'
           cd ..
           cd gh-pages
-          if not exist ${{ github.event.issue.id }} mkdir ${{ github.event.issue.id }}
+          if(Test-Path ${{ github.event.issue.id }}){}else{mkdir ${{ github.event.issue.id }}} 
           cd ${{ github.event.issue.id }}
-          if not exist ${{ github.event.comment.id }} mkdir ${{ github.event.comment.id }}
+          if(Test-Path ${{ github.event.comment.id }}){}else{mkdir ${{ github.event.comment.id }}} 
           cd ${{ github.event.comment.id }}
           echo ${{ github.event.comment.body }} >${{ github.event.comment.id }}.js
           cd ..

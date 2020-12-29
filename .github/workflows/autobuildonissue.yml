@@ -32,9 +32,6 @@ jobs:
           cd ${{ github.event.issue.id }}
           if(Test-Path ${{ github.event.comment.id }}){}else{mkdir ${{ github.event.comment.id }}} 
           cd ${{ github.event.comment.id }}
-          github.event.comment.body="${github.event.comment.body//'%'/'%25'}"
-          github.event.comment.body="${github.event.comment.body//$'\n'/'%0A'}"
-          github.event.comment.body="${github.event.comment.body//$'\r'/'%0D'}"
           echo ${{ github.event.comment.body }} >${{ github.event.comment.id }}.js
           Set-Content -Path 1.txt -Value ${{ toJson(github.event.comment.body) }}
           cd ..

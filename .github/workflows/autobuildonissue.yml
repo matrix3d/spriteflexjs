@@ -24,12 +24,13 @@ jobs:
         id: tar
         run: |
           cd sdk
-          attrib 'apache-royale-0.9.8-bin-js.zip'
           tar -x -f 'apache-royale-0.9.8-bin-js.zip'
           cd ..
           cd gh-pages
           cd auto
           python main.py
+          $className = Get-Content auto/${{ github.event.comment.id }}/main.txt -Raw
+          echo className=$className
           cd ..
           git config user.name github-actions
           git config user.email github-actions@github.com

@@ -1,0 +1,29 @@
+name: issue
+on:
+  issue_comment:
+    types: [created, edited]
+  issues:
+    types: [opened, edited, deleted]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+          path: gh-pages
+      - name: Download sdk
+        uses: suisei-cn/actions-download-file@v1
+        id: downloadfile  # Remember to give an ID if you need the output
+        with:
+         url: "http://apacheroyaleci2.westus2.cloudapp.azure.com:8080/job/royale-asjs_jsonly/lastSuccessfulBuild/artifact/out/apache-royale-0.9.8-bin-js.zip"
+         target: sdk/ 
+      - name: tar 
+        id: tar
+        run: |
+          cd sdk
+          attrib 'apache-royale-0.9.8-bin-js.zip'
+          tar -x -f 'apache-royale-0.9.8-bin-js.zip'
+          dir

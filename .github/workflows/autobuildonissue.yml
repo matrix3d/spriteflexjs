@@ -34,9 +34,6 @@ jobs:
           cd ${{ github.event.comment.id }}
           echo ${{ github.event.comment.body }} >${{ github.event.comment.id }}.js
           Set-Content -Path 1.txt -Value ${{ toJson(github.event.comment.body) }}
-          ${{ github.event.comment.body }}
-          \r\n
-          \r\n
           cd ..
           cd ..
           git config user.name github-actions

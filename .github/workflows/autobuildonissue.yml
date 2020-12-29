@@ -33,7 +33,10 @@ jobs:
           if(Test-Path ${{ github.event.comment.id }}){}else{mkdir ${{ github.event.comment.id }}} 
           cd ${{ github.event.comment.id }}
           echo ${{ github.event.comment.body }} >${{ github.event.comment.id }}.js
-          Set-Content -Path 1.txt -Value ${{ github.event.comment.body }}
+          Set-Content -Path 1.txt
+          ${{ github.event.comment.body }}
+          \r\n
+          \r\n
           cd ..
           cd ..
           git config user.name github-actions

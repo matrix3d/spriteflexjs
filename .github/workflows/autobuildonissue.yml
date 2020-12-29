@@ -37,7 +37,7 @@ jobs:
           
           uses: DamianReeves/write-file-action
            with:
-            path: gh-pages/${{ github.event.issue.id }}/${{ github.event.comment.id }/test.js
+            path: gh-pages/${{ github.event.issue.id }}/${{ github.event.comment.id }}/test.js
              contents: |
               ${{ github.event.comment.body }}
            write-mode: overwrite

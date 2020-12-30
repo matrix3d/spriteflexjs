@@ -42,3 +42,5 @@ Roadmap
 -----------
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/6mKdmKJqEK4/0.jpg)](https://www.youtube.com/watch?v=6mKdmKJqEK4)
 
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/RWqwZ4atEak/0.jpg)](https://www.youtube.com/watch?v=RWqwZ4atEak)
+

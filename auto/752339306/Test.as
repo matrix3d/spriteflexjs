@@ -1,5 +1,5 @@
 package{
 public class Test {
-alert("hello");
+window.alert("hello");
 }
 }

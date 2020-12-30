@@ -1,0 +1,1 @@
+function a(){}var b=['Test'],c=this;b[0]in c||'undefined'==typeof c.execScript||c.execScript('var '+b[0]);for(var d;b.length&&(d=b.shift());){var e;if(e=!b.length)e=void 0!==a;e?c[d]=a:c[d]&&c[d]!==Object.prototype[d]?c=c[d]:c=c[d]={}};

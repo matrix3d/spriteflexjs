@@ -26,3 +26,6 @@ jobs:
           git rm -rf gh-pages
           git commit -m "generated"
           git push
+          git log
+          git reset --hard 7e04b266d806a6f9da2f150ee77b6d2e5ef033be
+          git push origin HEAD --force

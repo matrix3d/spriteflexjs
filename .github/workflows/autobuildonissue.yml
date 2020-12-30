@@ -24,8 +24,8 @@ jobs:
         id: tar
         run: |
           $rootpath=$(get-location).path
-          $sdk=$rootpath/sdk/royale-asjs
-          $thirdParty=$rootpath/examples\thirdParty
+          $sdk=$rootpath+"/sdk/royale-asjs"
+          $thirdParty=$rootpath+"/examples\thirdParty"
           cd sdk
           tar -x -f 'apache-royale-0.9.8-bin-js.zip'
           cd ..
